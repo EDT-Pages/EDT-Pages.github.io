@@ -1708,7 +1708,7 @@ html.dark-mode .moon-icon {
                     <div class="form-group">
                         <label for="proxyIP">PROXYIP</label>
                         <div class="input-wrapper">
-                            <input type="text" id="proxyIP" title="PROXYIP" placeholder="proxyip.cmliussss.net" onchange="markModified('proxy')">
+                            <input type="text" id="proxyIP" title="PROXYIP" placeholder="proxyip.cmliussss.net" onchange="processProxyIP()" oninput="processProxyIP()">
                             <div class="checkbox-group">
                                 <input type="checkbox" id="autoProxy" title="启用自动获取" onchange="toggleAutoProxy(); markModified('proxy')">
                                 <label for="autoProxy" class="checkbox-label">启用自动获取</label>
@@ -2129,6 +2129,52 @@ function updateProtocol() {
         transport.disabled = false;
     }
     */
+}
+
+// 处理PROXYIP地址
+function processProxyIP() {
+    const input = document.getElementById('proxyIP').value.trim();
+    
+    if (input && input !== 'auto') {
+        const cleanAddress = extractProxyIPAddress(input);
+        document.getElementById('proxyIP').value = cleanAddress;
+    }
+    
+    markModified('proxy');
+}
+
+// 提取PROXYIP地址中的纯格式（保留端口号）
+function extractProxyIPAddress(input) {
+    input = input.trim();
+    
+    // 首先检查是否包含 "ip=" (包括 proxyip= 和 pyip=)
+    const ipPatterns = ['proxyip=', 'pyip=', 'ip='];
+    for (const pattern of ipPatterns) {
+        const index = input.toLowerCase().indexOf(pattern);
+        if (index !== -1) {
+            input = input.substring(index + pattern.length).trim();
+            break;
+        }
+    }
+    
+    // 移除协议前缀 (http:// 或 https://)
+    if (input.toLowerCase().startsWith('http://')) {
+        input = input.substring(7).trim();
+    } else if (input.toLowerCase().startsWith('https://')) {
+        input = input.substring(8).trim();
+    }
+    
+    // 移除末尾的斜杠
+    if (input.endsWith('/')) {
+        input = input.substring(0, input.length - 1).trim();
+    }
+    
+    // 移除末尾的备注（#符号之后的内容）
+    if (input.includes('#')) {
+        input = input.split('#')[0].trim();
+    }
+    
+    return input;
 }
 
 // 处理SOCKS5和HTTP代理地址

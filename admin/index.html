@@ -1566,7 +1566,6 @@ html.dark-mode .moon-icon {
 
 .notification-controls .btn {
     flex-shrink: 0;
-    padding: 8px 16px;
     font-size: 14px;
 }
 
@@ -1576,9 +1575,24 @@ html.dark-mode .moon-icon {
     box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
 }
 
+.btn-notification-config::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
+    transition: left .5s ease
+}
+
+.btn-notification-config:hover::before {
+    left: 100%
+}
+
 .btn-notification-config:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(139, 92, 246, 0.4);
+    box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
 }
 
 .btn-notification-config:active {
@@ -1875,17 +1889,17 @@ html.dark-mode .moon-icon {
                         </div>
                     </label>
                     <div class="notification-controls">
-                        <button type="button" class="btn btn-notification-config" onclick="openTelegramConfigModal()">通知参数配置</button>
+                        <button type="button" class="btn btn-notification-config" onclick="openTelegramConfigModal()">⚙️ 通知参数配置</button>
                     </div>
                 </div>
 
                 <!-- Cloudflare 可用请求数统计 -->
                 <div class="form-group notification-row">
                     <label>
-                        Cloudflare 可用请求数统计
+                        Cloudflare Workers/Pages 可用请求数统计
                     </label>
                     <div class="notification-controls">
-                        <button type="button" class="btn btn-notification-config" onclick="openCloudflareConfigModal()">通知参数配置</button>
+                        <button type="button" class="btn btn-notification-config" onclick="openCloudflareConfigModal()">⚙️ 通知参数配置</button>
                     </div>
                 </div>
 
@@ -2033,7 +2047,7 @@ html.dark-mode .moon-icon {
 <div class="modal-overlay" id="cloudflareConfigModal" onclick="closeCloudflareConfigModal(event)">
     <div class="modal" onclick="event.stopPropagation()">
         <button type="button" class="modal-close" onclick="closeCloudflareConfigModal()">×</button>
-        <h2 class="subapi-modal-title">☁️ Cloudflare 可用请求数统计</h2>
+        <h2 class="subapi-modal-title">☁️ Workers/Pages 可用请求数统计</h2>
         <div class="form-group subapi-form-group">
             <label>API Token</label>
             <input type="text" id="cloudflareToken" placeholder="输入Cloudflare API Token">

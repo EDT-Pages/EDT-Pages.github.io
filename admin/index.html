@@ -5283,9 +5283,16 @@ https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt"
                     params.append('http', processedAddress);
                 }
                 
+                // 创建 AbortController 实现 5 秒超时
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                
                 const response = await fetch(`/admin/check?${params}`, {
-                    method: 'GET'
+                    method: 'GET',
+                    signal: controller.signal
                 });
+                
+                clearTimeout(timeoutId);
                 
                 const data = await response.json();
                 
@@ -5330,7 +5337,14 @@ https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt"
                 statusEl.style.background = 'linear-gradient(135deg, #ef4444 0, #dc2626 100%)';
                 statusEl.style.padding = '16px';
                 statusEl.style.borderRadius = '8px';
-                statusEl.innerHTML = `❌ <strong>验证失败</strong><br/><small style="opacity: 0.9;">${error.message}</small>`;
+                
+                // 判断是否为超时错误
+                if (error.name === 'AbortError') {
+                    statusEl.innerHTML = `❌ <strong>验证超时</strong><br/><small style="opacity: 0.9;">请求超过 5 秒无响应，请检查代理连接</small>`;
+                } else {
+                    statusEl.innerHTML = `❌ <strong>验证失败</strong><br/><small style="opacity: 0.9;">${error.message}</small>`;
+                }
+                
                 document.getElementById('proxyConfirmBtn').disabled = true;
                 document.getElementById('proxyConfirmBtn').style.opacity = '0.5';
             } finally {

@@ -3397,7 +3397,7 @@
                     <div id="randomIPSection" class="form-group">
                         <label for="randomCount">随机优选数量</label>
                         <input type="number" id="randomCount" title="随机优选数量" min="1" max="999" value="16"
-                            onchange="markModified('sub')">
+                            onchange="markModified('sub')" oninput="if(this.value>999){this.value=999;}">
                     </div>
 
                     <div id="customIPSection" class="form-group hidden-section">

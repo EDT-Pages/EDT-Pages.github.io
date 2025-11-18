@@ -4311,7 +4311,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
         // 返回顶部
         function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const pageWrapper = document.querySelector('.page-wrapper');
+            if (pageWrapper) {
+                pageWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
 
         async function loadConfig() {

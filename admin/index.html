@@ -5238,7 +5238,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         function toggleUserMode() {
             const cardContainer = document.querySelector('.card-container');
             const btn = document.getElementById('modeToggleBtn');
-            
+
             if (cardContainer.classList.contains('simple-mode')) {
                 // 切换到高手模式
                 cardContainer.classList.remove('simple-mode');
@@ -5252,7 +5252,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 localStorage.setItem('userMode', 'simple');
                 showToast('🐣 已切换到小白模式，只显示常用功能', 'success');
             }
-            
+
             // 使用 requestAnimationFrame 确保动画流畅
             requestAnimationFrame(() => {
                 void cardContainer.offsetHeight;
@@ -5264,7 +5264,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const userMode = localStorage.getItem('userMode') || 'simple'; // 默认为小白模式
             const cardContainer = document.querySelector('.card-container');
             const btn = document.getElementById('modeToggleBtn');
-            
+
             if (userMode === 'simple') {
                 cardContainer.classList.add('simple-mode');
                 btn.textContent = '🚀 我是高手！我就要折腾！';
@@ -5448,39 +5448,39 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         }
 
         // ==================== 代理验证模态框函数 ====================
-        
+
         // 全局变量存储当前验证的代理类型
         let currentProxyType = null;
         let currentProxyFieldId = null;
-        
+
         function openProxyVerificationModal(proxyType) {
             currentProxyType = proxyType;
             currentProxyFieldId = proxyType === 'socks5' ? 'socks5Addr' : 'httpAddr';
-            
+
             // 设置模态框标题和标签
             const title = proxyType === 'socks5' ? '🔒 SOCKS5代理验证' : '🌐 HTTP代理验证';
             const label = proxyType === 'socks5' ? 'SOCKS5代理:' : 'HTTP代理:';
-            
+
             document.getElementById('proxyVerificationTitle').textContent = title;
             document.getElementById('proxyVerificationLabel').textContent = label;
-            document.getElementById('proxyVerificationInput').placeholder = proxyType === 'socks5' 
-                ? 'user:password@127.0.0.1:1080' 
+            document.getElementById('proxyVerificationInput').placeholder = proxyType === 'socks5'
+                ? 'user:password@127.0.0.1:1080'
                 : 'user:password@127.0.0.1:8080';
-            
+
             // 设置输入框的当前值
             const currentValue = document.getElementById(currentProxyFieldId).value;
             document.getElementById('proxyVerificationInput').value = currentValue;
-            
+
             // 重置状态
             document.getElementById('proxyVerificationStatus').style.display = 'none';
             document.getElementById('proxyVerificationStatus').textContent = '';
             document.getElementById('proxyConfirmBtn').disabled = true;
             document.getElementById('proxyConfirmBtn').style.opacity = '0.5';
-            
+
             // 显示模态框
             document.getElementById('proxyVerificationModal').classList.add('show');
         }
-        
+
         function closeProxyVerificationModal(event) {
             document.getElementById('proxyVerificationModal').classList.remove('show');
             currentProxyType = null;
@@ -5488,24 +5488,24 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('proxyVerificationInput').value = '';
             document.getElementById('proxyVerificationStatus').style.display = 'none';
         }
-        
+
         async function verifyProxyAvailability() {
             const input = document.getElementById('proxyVerificationInput').value.trim();
             if (!input) {
                 showProxyVerificationStatus('请输入代理地址', 'error');
                 return;
             }
-            
+
             // 预处理代理地址
             const processedAddress = processProxyAddressForValidation(input, currentProxyType);
             if (!processedAddress) {
                 showProxyVerificationStatus('代理地址格式无效', 'error');
                 return;
             }
-            
+
             const statusEl = document.getElementById('proxyVerificationStatus');
             const verifyBtn = document.querySelector('#proxyVerificationModal .btn-verify-api');
-            
+
             try {
                 verifyBtn.disabled = true;
                 statusEl.textContent = '⏳ 验证中...';
@@ -5514,7 +5514,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 statusEl.style.color = '#fff';
                 statusEl.style.padding = '16px';
                 statusEl.style.borderRadius = '8px';
-                
+
                 // 构建请求参数
                 const params = new URLSearchParams();
                 if (currentProxyType === 'socks5') {
@@ -5522,20 +5522,20 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 } else {
                     params.append('http', processedAddress);
                 }
-                
+
                 // 创建 AbortController 实现 5 秒超时
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 12000);
-                
+
                 const response = await fetch(`/admin/check?${params}&_t=${Date.now()}`, {
                     method: 'GET',
                     signal: controller.signal
                 });
-                
+
                 clearTimeout(timeoutId);
-                
+
                 const data = await response.json();
-                
+
                 // 检查是否有 success 字段
                 if (!data.hasOwnProperty('success')) {
                     statusEl.style.background = 'linear-gradient(135deg, #ef4444 0, #dc2626 100%)';
@@ -5556,7 +5556,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     const loc = data.loc || '未知';
                     const responseTime = data.responseTime || 0;
                     const responseTimeDisplay = responseTime > 0 ? `${responseTime}ms` : '未知';
-                    
+
                     statusEl.style.background = 'linear-gradient(135deg, #10b981 0, #059669 100%)';
                     statusEl.style.padding = '16px';
                     statusEl.style.borderRadius = '8px';
@@ -5568,11 +5568,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             <div>⏱️ 响应时间: <strong>${responseTimeDisplay}</strong></div>
                         </div>
                     `;
-                    
+
                     // 启用确定按钮
                     document.getElementById('proxyConfirmBtn').disabled = false;
                     document.getElementById('proxyConfirmBtn').style.opacity = '1';
-                    
+
                     // 存储验证后的地址以备后用
                     document.getElementById('proxyConfirmBtn').dataset.validAddress = processedAddress;
                 }
@@ -5580,55 +5580,55 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 statusEl.style.background = 'linear-gradient(135deg, #ef4444 0, #dc2626 100%)';
                 statusEl.style.padding = '16px';
                 statusEl.style.borderRadius = '8px';
-                
+
                 // 判断是否为超时错误
                 if (error.name === 'AbortError') {
                     statusEl.innerHTML = `❌ <strong>验证超时</strong><br/><small style="opacity: 0.9;">请求超过 10 秒无响应，请检查代理连接</small>`;
                 } else {
                     statusEl.innerHTML = `❌ <strong>验证失败</strong><br/><small style="opacity: 0.9;">${error.message}</small>`;
                 }
-                
+
                 document.getElementById('proxyConfirmBtn').disabled = true;
                 document.getElementById('proxyConfirmBtn').style.opacity = '0.5';
             } finally {
                 verifyBtn.disabled = false;
             }
         }
-        
+
         function processProxyAddressForValidation(input, type) {
             input = input.trim();
-            
+
             // 移除开头的 "/" 或 "/"
             if (input.startsWith('/')) {
                 input = input.substring(1).trim();
             }
-            
+
             // 检测并移除协议前缀
             const socks5Prefixes = ['socks5://', 'socks5=', 'socks5://'];
             const httpPrefixes = ['http://', 'http=', 'https://'];
-            
+
             for (const prefix of socks5Prefixes) {
                 if (input.toLowerCase().startsWith(prefix)) {
                     input = input.substring(prefix.length).trim();
                     break;
                 }
             }
-            
+
             for (const prefix of httpPrefixes) {
                 if (input.toLowerCase().startsWith(prefix)) {
                     input = input.substring(prefix.length).trim();
                     break;
                 }
             }
-            
+
             // 移除末尾的备注（#符号之后的内容）
             if (input.includes('#')) {
                 input = input.split('#')[0].trim();
             }
-            
+
             return input;
         }
-        
+
         function showProxyVerificationStatus(message, type) {
             const statusEl = document.getElementById('proxyVerificationStatus');
             const prefix = type === 'error' ? '❌' : 'ℹ️';
@@ -5641,7 +5641,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
             statusEl.style.color = '#fff';
         }
-        
+
         function showIpDetailForProxy(ip) {
             // 异步获取 IP 详情
             fetch(`https://api.ipapi.cmliussss.net/?ip=${ip}`)
@@ -5652,11 +5652,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     console.error('IP查询错误:', error);
                 });
         }
-        
+
         function confirmProxyAddress() {
             const validAddress = document.getElementById('proxyConfirmBtn').dataset.validAddress;
             if (!validAddress) return;
-            
+
             document.getElementById(currentProxyFieldId).value = validAddress;
             markModified('proxy');
             closeProxyVerificationModal();
@@ -5814,12 +5814,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         function updateTelegramButtonStates(isConfigured) {
             // 获取 Telegram 按钮元素（第一组通知按钮是 Telegram）
             const buttons = document.querySelectorAll('.notification-controls');
-            
+
             if (buttons.length > 0) {
                 const telegramControls = buttons[0];
                 const configBtn = telegramControls.querySelector('.btn-notification-config');
                 const clearBtn = telegramControls.querySelector('.btn-clear-config');
-                
+
                 if (isConfigured) {
                     // 已配置：参数配置按钮为绿色，清除配置按钮为红色且可点击
                     clearBtn.classList.remove('btn-not-configured');
@@ -5842,7 +5842,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     ChatID: null,
                     启用: false
                 };
-                
+
                 try {
                     await saveConfigToServer('notification');
                     showToast('Telegram 配置已清除', 'success');
@@ -5860,11 +5860,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         function updateCloudflareButtonStates(isConfigured) {
             // 获取 Cloudflare 按钮元素（第二组通知按钮是 Cloudflare）
             const buttons = document.querySelectorAll('.notification-controls');
-            
+
             if (buttons.length > 1) {
                 const cloudflareControls = buttons[1];
                 const clearBtn = cloudflareControls.querySelector('.btn-clear-config');
-                
+
                 if (isConfigured) {
                     // 已配置：清除配置按钮为红色且可点击
                     clearBtn.classList.remove('btn-not-configured');
@@ -5886,7 +5886,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     Usage: null,
                     启用: false
                 };
-                
+
                 try {
                     await saveConfigToServer('notification');
                     showToast('Cloudflare 配置已清除', 'success');
@@ -6820,23 +6820,23 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     // 保存使用的检测域名供locations使用
                     window.detectDomain = 'speed.cloudflare.com';
                 } catch (primaryError) {
-                    console.warn('[在线优选] 主链接检测失败，尝试使用备用链接 cf.090227.xyz...', primaryError);
-                    response = await fetch(`https://cf.090227.xyz/cdn-cgi/trace?_t=${Date.now()}`, {
+                    console.warn('[在线优选] 主链接检测失败，尝试使用当前域名本地路径...', primaryError);
+                    response = await fetch(`/cdn-cgi/trace?_t=${Date.now()}`, {
                         signal: AbortSignal.timeout(5000) // 5秒超时
                     });
                     text = await response.text();
-                    console.log('[在线优选] 备用链接检测成功');
+                    console.log('[在线优选] 本地路径检测成功');
                     // 保存使用的检测域名供locations使用
-                    window.detectDomain = 'cf.090227.xyz';
+                    window.detectDomain = window.location.origin;
                 }
-                console.log('[在线优选] 检测响应:', text);
+                console.log('[在线优选] 检测响应:\n' + text);
 
                 // 解析响应
                 const lines = text.trim().split('\n');
                 const data = {};
                 lines.forEach(line => {
                     const [key, value] = line.split('=');
-                    if (key && value) data[key] = value;
+                    if (key && value) data[key.trim()] = value.trim();
                 });
 
                 const ip = data.ip || '未知';
@@ -6964,11 +6964,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         // 加载locations数据
         async function loadLocationsData() {
             try {
-                // 使用与检测相同的域名
-                const domain = window.detectDomain || 'speed.cloudflare.com';
-                console.log(`[在线优选] 使用 ${domain} 加载位置数据...`);
-                
-                const response = await fetch(`https://${domain}/locations`);
+                // 使用当前域名加载位置数据，避免跨域问题
+                const url = window.detectDomain === window.location.origin ? '/locations' : `${window.detectDomain}/locations`;
+                console.log(`[在线优选] 加载位置数据: ${url}`);
+
+                const response = await fetch(url);
                 locationsData = await response.json();
                 console.log(`[在线优选] 成功加载 ${locationsData.length} 个位置数据`);
             } catch (error) {
@@ -7456,17 +7456,17 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 showToast('已覆盖到自定义优选地址 (前16个)', 'success');
             } else if (mode === 'append') {
                 const currentValue = textarea.value.trim();
-                
+
                 // 追加保存时进行去重处理
                 if (currentValue) {
                     // 将现有内容和新内容合并
                     const existingLines = currentValue.split('\n').map(line => line.trim()).filter(line => line);
                     const newLines = newContent.split('\n').map(line => line.trim()).filter(line => line);
-                    
+
                     // 使用 Set 进行去重（基于完整行内容）
                     const uniqueLinesSet = new Set(existingLines);
                     let addedCount = 0;
-                    
+
                     // 添加新行，同时统计实际添加的数量
                     newLines.forEach(line => {
                         if (!uniqueLinesSet.has(line)) {
@@ -7474,10 +7474,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             addedCount++;
                         }
                     });
-                    
+
                     // 合并去重后的内容
                     textarea.value = Array.from(uniqueLinesSet).join('\n');
-                    
+
                     console.log(`[在线优选] 追加保存完成，新增 ${addedCount} 个IP，去重 ${newLines.length - addedCount} 个重复项`);
                     if (addedCount === 0) {
                         showToast('所有IP均已存在，未添加新内容', 'info');

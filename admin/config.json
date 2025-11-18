@@ -5,11 +5,13 @@
   "协议类型": "vless",
   "传输协议": "ws",
   "跳过证书验证": true,
+  "启用0RTT": true,
   "优选订阅生成": {
     "local": true,
     "本地IP库": {
       "随机IP": true,
-      "随机数量": 16
+      "随机数量": 16,
+      "指定端口": -1
     },
     "SUB": null,
     "SUBNAME": "edgetunnel",

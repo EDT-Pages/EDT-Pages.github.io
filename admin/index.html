@@ -614,6 +614,16 @@
             user-select: none;
         }
 
+        .checkbox-row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .checkbox-row .form-group {
+            margin-bottom: 0;
+        }
+
         /* 响应式设计 - 平板 */
         @media(max-width:768px) {
             .page-wrapper {
@@ -1226,7 +1236,7 @@
             opacity: 0
         }
 
-        .module .form-group {
+        .module .form-group, #portSection {
             margin-bottom: 20px;
             display: grid;
             grid-template-columns: 200px 1fr;
@@ -3468,6 +3478,19 @@
                             onchange="markModified('sub')" oninput="if(this.value>99){this.value=99;}">
                     </div>
 
+                    <div id="portSection" class="form-group hidden-section">
+                        <label for="specifiedPort">指定优选端口</label>
+                        <select id="specifiedPort" onchange="markModified('sub')">
+                            <option value="-1">随机端口</option>
+                            <option value="443">443</option>
+                            <option value="2053">2053</option>
+                            <option value="2083">2083</option>
+                            <option value="2087">2087</option>
+                            <option value="2096">2096</option>
+                            <option value="8443">8443</option>
+                        </select>
+                    </div>
+
                     <div id="customIPSection" class="form-group hidden-section">
                         <label for="customIPs">自定义优选地址</label>
                         <textarea id="customIPs" title="自定义优选地址" placeholder="注意：
@@ -3550,12 +3573,22 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     </select>
                 </div>
                 --->
-                    <div class="form-group">
-                        <label for="skipVerify">跳过证书验证</label>
-                        <div class="input-wrapper">
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="skipVerify" title="跳过证书验证" onchange="markModified('config')">
-                                <label for="skipVerify" class="checkbox-label">启用</label>
+                    <div class="checkbox-row">
+                        <div class="form-group">
+                            <div class="input-wrapper">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="skipVerify" title="跳过证书验证" onchange="markModified('config')">
+                                    <label for="skipVerify" class="checkbox-label">跳过证书验证</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="enable0RTTGroup" style="display: none;">
+                            <div class="input-wrapper">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="enable0RTT" title="启用0-RTT" onchange="markModified('config')">
+                                    <label for="enable0RTT" class="checkbox-label">启用0-RTT</label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -4330,6 +4363,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             } else if (randomIP) {
                 document.getElementById('ipMode').value = 'random';
                 document.getElementById('randomCount').value = currentConfig.优选订阅生成?.本地IP库?.随机数量 || 16;
+                // 设置指定端口
+                if (currentConfig.优选订阅生成?.本地IP库?.指定端口 !== undefined) {
+                    document.getElementById('specifiedPort').value = currentConfig.优选订阅生成.本地IP库.指定端口;
+                }
             } else {
                 document.getElementById('ipMode').value = 'custom';
                 loadCustomIPs();
@@ -4343,6 +4380,16 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('protocol').value = currentConfig.协议类型 || 'vless';
             //document.getElementById('transport').value = currentConfig.传输协议 || 'ws';
             document.getElementById('skipVerify').checked = currentConfig.跳过证书验证 || false;
+
+            // 检查启用0RTT字段是否存在
+            const enable0RTTGroup = document.getElementById('enable0RTTGroup');
+            const enable0RTTCheckbox = document.getElementById('enable0RTT');
+            if (currentConfig['启用0RTT'] !== undefined) {
+                enable0RTTGroup.style.display = 'block';
+                enable0RTTCheckbox.checked = currentConfig['启用0RTT'] || false;
+            } else {
+                enable0RTTGroup.style.display = 'none';
+            }
 
             // 反代落地设置
             const socksEnabled = currentConfig.反代?.SOCKS5?.启用;
@@ -4465,6 +4512,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('randomIPSection').style.display = mode === 'random' ? 'grid' : 'none';
             document.getElementById('customIPSection').style.display = mode === 'custom' ? 'block' : 'none';
             document.getElementById('generatorSection').style.display = mode === 'generator' ? 'grid' : 'none';
+
+            // 显示或隐藏指定端口
+            if (mode === 'random' && currentConfig.优选订阅生成?.本地IP库?.指定端口 !== undefined) {
+                document.getElementById('portSection').style.display = 'grid';
+            } else {
+                document.getElementById('portSection').style.display = 'none';
+            }
 
             // 显示或隐藏在线优选和优选API按钮（仅在自定义优选模式下显示）
             const onlineOptimizeBtn = document.getElementById('onlineOptimizeBtn');
@@ -4904,6 +4958,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 TOKEN: currentConfig.优选订阅生成.TOKEN
             };
 
+            // 如果指定端口存在，添加到本地IP库
+            if (currentConfig.优选订阅生成?.本地IP库?.指定端口 !== undefined) {
+                updates.本地IP库.指定端口 = parseInt(document.getElementById('specifiedPort').value);
+            }
+
             currentConfig.优选订阅生成 = { ...currentConfig.优选订阅生成, ...updates };
 
             if (mode === 'custom') {
@@ -4924,6 +4983,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             currentConfig.协议类型 = document.getElementById('protocol').value;
             //currentConfig.传输协议 = currentConfig.协议类型 === 'trojan' ? 'ws' : document.getElementById('transport').value;
             currentConfig.跳过证书验证 = document.getElementById('skipVerify').checked;
+
+            // 保存启用0RTT（如果字段存在）
+            if (currentConfig['启用0RTT'] !== undefined) {
+                currentConfig['启用0RTT'] = document.getElementById('enable0RTT').checked;
+            }
 
             await saveConfigToServer('config');
             // 更新网页标题
@@ -5026,6 +5090,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 } else if (randomIP) {
                     document.getElementById('ipMode').value = 'random';
                     document.getElementById('randomCount').value = currentConfig.优选订阅生成?.本地IP库?.随机数量 || 16;
+                    // 设置指定端口
+                    if (currentConfig.优选订阅生成?.本地IP库?.指定端口 !== undefined) {
+                        document.getElementById('specifiedPort').value = currentConfig.优选订阅生成.本地IP库.指定端口;
+                    }
                 } else {
                     document.getElementById('ipMode').value = 'custom';
                     loadCustomIPs();
@@ -5037,6 +5105,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 document.getElementById('nodeUUID').value = currentConfig.UUID || '';
                 document.getElementById('protocol').value = currentConfig.协议类型 || 'vless';
                 document.getElementById('skipVerify').checked = currentConfig.跳过证书验证 || false;
+
+                // 重置启用0RTT（如果字段存在）
+                if (currentConfig['启用0RTT'] !== undefined) {
+                    document.getElementById('enable0RTT').checked = currentConfig['启用0RTT'] || false;
+                }
+
                 updateProtocol();
             } else if (section === 'proxy') {
                 const socksEnabled = currentConfig.反代?.SOCKS5?.启用;
@@ -6373,11 +6447,40 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
         // ==================== 在线优选相关函数 ====================
 
-        // IP打码函数 - 将IP最后一位替换为*
+        // IP打码函数 - 将IP中间段打码
+        function expandIPv6(ip) {
+            // 移除可能的[]包围
+            ip = ip.replace(/^\[|\]$/g, '');
+            // 如果没有::，直接split
+            if (!ip.includes('::')) {
+                return ip.split(':').map(part => part.padStart(4, '0')).join(':');
+            }
+            // 处理::
+            const parts = ip.split('::');
+            const left = parts[0] ? parts[0].split(':') : [];
+            const right = parts[1] ? parts[1].split(':') : [];
+            const missing = 8 - left.length - right.length;
+            const middle = new Array(missing).fill('0000');
+            const full = left.concat(middle).concat(right);
+            return full.map(part => part.padStart(4, '0')).join(':');
+        }
+
         function maskIP(ip) {
-            const parts = ip.split('.');
-            if (parts.length === 4) {
-                return parts[0] + '.*.*.' + parts[3];
+            if (!ip) return ip;
+            // 检查是否为IPv4
+            if (ip.includes('.') && !ip.includes(':')) {
+                // IPv4: 例如 192.168.1.1 -> 192.*.*.1
+                const parts = ip.split('.');
+                if (parts.length === 4) {
+                    return `${parts[0]}.*.*.${parts[3]}`;
+                }
+            } else if (ip.includes(':')) {
+                // IPv6: 扩展并打码中间部分
+                const expanded = expandIPv6(ip);
+                const parts = expanded.split(':');
+                if (parts.length === 8) {
+                    return `${parts[0]}:****:****:****:****:****:${parts[6]}:${parts[7]}`;
+                }
             }
             return ip;
         }

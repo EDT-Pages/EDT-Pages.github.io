@@ -1,0 +1,16 @@
+fl=637f10
+h=speed.cloudflare.com
+ip=127.0.0.1
+ts=1763447810.547
+visit_scheme=https
+uag=Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+colo=TPE
+sliver=005-tier1
+http=http/1.1
+loc=CN
+tls=TLSv1.3
+sni=plaintext
+warp=off
+gateway=off
+rbi=off
+kex=X25519MLKEM768

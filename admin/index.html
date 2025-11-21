@@ -622,6 +622,9 @@
 
         .checkbox-row .form-group {
             margin-bottom: 0;
+            display: flex !important;
+            grid-template-columns: unset !important;
+            gap: unset !important;
         }
 
         /* 响应式设计 - 平板 */
@@ -3591,6 +3594,24 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                 </div>
                             </div>
                         </div>
+
+                        <div class="form-group" id="tlsFragmentGroup" style="display: none;">
+                            <div class="input-wrapper">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="tlsFragmentShadowrocket" title="启用分片(Shadowrocket)" onchange="handleTLSFragmentChange('Shadowrocket'); markModified('config')">
+                                    <label for="tlsFragmentShadowrocket" class="checkbox-label">启用分片(Shadowrocket)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="tlsFragmentHappGroup" style="display: none;">
+                            <div class="input-wrapper">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="tlsFragmentHapp" title="启用分片(Happ)" onchange="handleTLSFragmentChange('Happ'); markModified('config')">
+                                    <label for="tlsFragmentHapp" class="checkbox-label">启用分片(Happ)</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="module-footer">
@@ -4407,6 +4428,22 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 enable0RTTGroup.style.display = 'none';
             }
 
+            // 检查TLS分片字段是否存在
+            const tlsFragmentGroup = document.getElementById('tlsFragmentGroup');
+            const tlsFragmentHappGroup = document.getElementById('tlsFragmentHappGroup');
+            const tlsFragmentShadowrocket = document.getElementById('tlsFragmentShadowrocket');
+            const tlsFragmentHapp = document.getElementById('tlsFragmentHapp');
+            if (currentConfig['TLS分片'] !== undefined) {
+                tlsFragmentGroup.style.display = 'block';
+                tlsFragmentHappGroup.style.display = 'block';
+                // 根据当前值设置勾选状态
+                tlsFragmentShadowrocket.checked = currentConfig['TLS分片'] === 'Shadowrocket';
+                tlsFragmentHapp.checked = currentConfig['TLS分片'] === 'Happ';
+            } else {
+                tlsFragmentGroup.style.display = 'none';
+                tlsFragmentHappGroup.style.display = 'none';
+            }
+
             // 反代落地设置
             const socksEnabled = currentConfig.反代?.SOCKS5?.启用;
             if (!socksEnabled) {
@@ -4920,6 +4957,21 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             });
         }
 
+        function handleTLSFragmentChange(type) {
+            const shadowrocket = document.getElementById('tlsFragmentShadowrocket');
+            const happ = document.getElementById('tlsFragmentHapp');
+
+            if (type === 'Shadowrocket') {
+                if (shadowrocket.checked) {
+                    happ.checked = false;
+                }
+            } else if (type === 'Happ') {
+                if (happ.checked) {
+                    shadowrocket.checked = false;
+                }
+            }
+        }
+
         function showQRCode(elementId) {
             const text = document.getElementById(elementId).value;
             const container = document.getElementById('qrcodeContainer');
@@ -5005,6 +5057,20 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 currentConfig['启用0RTT'] = document.getElementById('enable0RTT').checked;
             }
 
+            // 保存TLS分片（如果字段存在）
+            if (currentConfig['TLS分片'] !== undefined) {
+                const shadowrocket = document.getElementById('tlsFragmentShadowrocket').checked;
+                const happ = document.getElementById('tlsFragmentHapp').checked;
+                
+                if (shadowrocket) {
+                    currentConfig['TLS分片'] = 'Shadowrocket';
+                } else if (happ) {
+                    currentConfig['TLS分片'] = 'Happ';
+                } else {
+                    currentConfig['TLS分片'] = null;
+                }
+            }
+
             await saveConfigToServer('config');
             // 更新网页标题
             document.title = `${currentConfig.优选订阅生成?.SUBNAME || 'edgetunnel'}设置页面 - 管理后台`;
@@ -5084,11 +5150,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 });
 
                 if (!response.ok) throw new Error('保存失败');
-                showToast('配置已保存', 'success');
+                showToast('✅ 配置已保存，请更新订阅，才能获取最新节点内容！', 'success');
                 modifiedSections.delete(section);
                 updateButtonStates();
             } catch (error) {
-                showToast('保存失败: ' + error.message, 'error');
+                showToast('😢 ' + error.message + '，请检测网络环境，或关闭代理后再试！', 'error');
             }
         }
 
@@ -5125,6 +5191,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 // 重置启用0RTT（如果字段存在）
                 if (currentConfig['启用0RTT'] !== undefined) {
                     document.getElementById('enable0RTT').checked = currentConfig['启用0RTT'] || false;
+                }
+
+                // 重置TLS分片（如果字段存在）
+                if (currentConfig['TLS分片'] !== undefined) {
+                    document.getElementById('tlsFragmentShadowrocket').checked = currentConfig['TLS分片'] === 'Shadowrocket';
+                    document.getElementById('tlsFragmentHapp').checked = currentConfig['TLS分片'] === 'Happ';
                 }
 
                 updateProtocol();
@@ -7845,15 +7917,14 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // 计算基础评分：(company + asn) / 2 * 5
             let baseScore = ((company + asn) / 2) * 5;
 
-            // 计算安全风险附加分：每个安全风险项增加 20%
+            // 计算安全风险附加分：每个安全风险项增加 15%
             let riskAddition = 0;
             const riskFlags = [
                 securityFlags.is_crawler,   // 爬虫
                 securityFlags.is_proxy,     // 代理服务器
                 securityFlags.is_vpn,       // VPN
                 securityFlags.is_tor,       // Tor 网络
-                securityFlags.is_abuser,    // 滥用 IP
-                securityFlags.is_bogon      // 虚假 IP
+                securityFlags.is_abuser     // 滥用 IP
             ];
 
             // 统计为 true 的风险项数量
@@ -7861,10 +7932,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             riskAddition = riskCount * 0.15; // 每个风险项增加 15%
 
             // 最终评分 = 基础评分 + 风险附加分
-            const finalScore = baseScore + riskAddition;
+            let finalScore = baseScore + riskAddition;
 
-            // 如果基础评分和风险附加分都是0，返回null
-            if (baseScore === 0 && riskAddition === 0) return null;
+            // 如果是虚假IP (蜜罐)，则风险值增加100%
+            if (securityFlags.is_bogon === true) {
+                finalScore += 1.0; // 增加100%
+            }
+
+            // 如果基础评分和风险附加分都是0且不是虚假IP，返回null
+            if (baseScore === 0 && riskAddition === 0 && securityFlags.is_bogon !== true) return null;
 
             return finalScore;
         }
@@ -8040,12 +8116,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                 <div class="tooltip-section">
                                     <p class="tooltip-section-title">安全风险项</p>
                                     <ul class="risk-list">
-                                        <li>爬虫 (Crawler)</li>
-                                        <li>代理 (Proxy)</li>
-                                        <li>VPN</li>
-                                        <li>Tor 网络</li>
-                                        <li>滥用IP (Abuser)</li>
-                                        <li>虚假IP (Bogon)</li>
+                                        <li>爬虫 (Crawler) - 15%</li>
+                                        <li>代理 (Proxy) - 15%</li>
+                                        <li>VPN - 15%</li>
+                                        <li>Tor 网络 - 15%</li>
+                                        <li>滥用IP (Abuser) - 15%</li>
+                                        <li>虚假IP (Bogon) - <span style="color: #ef4444; font-weight: bold;">100% (蜜罐)</span></li>
                                     </ul>
                                 </div>
                             </span>

@@ -4382,7 +4382,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             // 订阅链接
             const token = currentConfig.优选订阅生成?.TOKEN;
-            const host = currentConfig.HOST;
+            const host = window.location.host;
             const link = currentConfig.LINK;
             document.getElementById('LinkURL').value = currentConfig.LINK;
             document.getElementById('subLink').value = `https://${host}/sub?token=${token}`;

@@ -3586,6 +3586,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             </div>
                         </div>
 
+                        <div class="form-group" id="randomPathGroup" style="display: none;">
+                            <div class="input-wrapper">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="randomPath" title="随机路径" onchange="markModified('config')">
+                                    <label for="randomPath" class="checkbox-label">随机伪装路径</label>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group" id="enable0RTTGroup" style="display: none;">
                             <div class="input-wrapper">
                                 <div class="checkbox-group">
@@ -4418,6 +4427,16 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             //document.getElementById('transport').value = currentConfig.传输协议 || 'ws';
             document.getElementById('skipVerify').checked = currentConfig.跳过证书验证 || false;
 
+            // 检查随机路径字段是否存在
+            const randomPathGroup = document.getElementById('randomPathGroup');
+            const randomPathCheckbox = document.getElementById('randomPath');
+            if (currentConfig['随机路径'] !== undefined) {
+                randomPathGroup.style.display = 'block';
+                randomPathCheckbox.checked = currentConfig['随机路径'] || false;
+            } else {
+                randomPathGroup.style.display = 'none';
+            }
+
             // 检查启用0RTT字段是否存在
             const enable0RTTGroup = document.getElementById('enable0RTTGroup');
             const enable0RTTCheckbox = document.getElementById('enable0RTT');
@@ -5052,6 +5071,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             //currentConfig.传输协议 = currentConfig.协议类型 === 'trojan' ? 'ws' : document.getElementById('transport').value;
             currentConfig.跳过证书验证 = document.getElementById('skipVerify').checked;
 
+            // 保存随机路径（如果字段存在）
+            if (currentConfig['随机路径'] !== undefined) {
+                currentConfig['随机路径'] = document.getElementById('randomPath').checked;
+            }
+
             // 保存启用0RTT（如果字段存在）
             if (currentConfig['启用0RTT'] !== undefined) {
                 currentConfig['启用0RTT'] = document.getElementById('enable0RTT').checked;
@@ -5187,6 +5211,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 document.getElementById('nodeUUID').value = currentConfig.UUID || '';
                 document.getElementById('protocol').value = currentConfig.协议类型 || 'vless';
                 document.getElementById('skipVerify').checked = currentConfig.跳过证书验证 || false;
+
+                // 重置随机路径（如果字段存在）
+                if (currentConfig['随机路径'] !== undefined) {
+                    document.getElementById('randomPath').checked = currentConfig['随机路径'] || false;
+                }
 
                 // 重置启用0RTT（如果字段存在）
                 if (currentConfig['启用0RTT'] !== undefined) {

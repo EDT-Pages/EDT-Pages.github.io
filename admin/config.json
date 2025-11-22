@@ -7,6 +7,7 @@
   "跳过证书验证": true,
   "启用0RTT": true,
   "TLS分片": "Shadowrocket",
+  "随机路径": false,
   "优选订阅生成": {
     "local": true,
     "本地IP库": {

@@ -6934,7 +6934,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 try {
                     console.log('[在线优选] 尝试使用主链接 speed.cloudflare.com 检测...');
                     response = await fetch(`https://speed.cloudflare.com/cdn-cgi/trace?_t=${Date.now()}`, {
-                        signal: AbortSignal.timeout(5000) // 5秒超时
+                        signal: AbortSignal.timeout(5000), // 5秒超时
+                        cache: 'no-store', // 禁用所有缓存
+                        headers: {
+                            'Cache-Control': 'no-cache, no-store, must-revalidate',
+                            'Pragma': 'no-cache'
+                        }
                     });
                     text = await response.text();
                     console.log('[在线优选] 主链接检测成功');
@@ -6943,7 +6948,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 } catch (primaryError) {
                     console.warn('[在线优选] 主链接检测失败，尝试使用当前域名本地路径...', primaryError);
                     response = await fetch(`/cdn-cgi/trace?_t=${Date.now()}`, {
-                        signal: AbortSignal.timeout(5000) // 5秒超时
+                        signal: AbortSignal.timeout(5000), // 5秒超时
+                        cache: 'no-store', // 禁用所有缓存
+                        headers: {
+                            'Cache-Control': 'no-cache, no-store, must-revalidate',
+                            'Pragma': 'no-cache'
+                        }
                     });
                     text = await response.text();
                     console.log('[在线优选] 本地路径检测成功');

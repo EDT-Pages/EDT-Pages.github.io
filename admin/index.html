@@ -3555,7 +3555,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     </div>
 
                     <div class="form-group">
-                        <label for="nodeHost">节点域名</label>
+                        <label for="nodeHost">HOST</label>
                         <input type="text" id="nodeHost" title="节点域名" readonly>
                     </div>
 
@@ -7002,7 +7002,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 }
             } catch (error) {
                 console.error('[在线优选] 检测失败:', error);
-                detectionBox.innerHTML = '<div class="ip-detection-info">⚠️ 无法检测网络环境，请检查网络连接</div>';
+                detectionBox.innerHTML = '<div class="ip-detection-info">⚠️ 无法访问 https://speed.cloudflare.com/cdn-cgi/trace 检测网络环境，请检查网络连接或关闭代理</div>';
                 // 检测失败，禁用按钮
                 btnStart.disabled = true;
                 btnStart.textContent = '检测失败';

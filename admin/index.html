@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <title>管理后台</title>
-    <script data-cfasync="false" src="https://cdn.jsdelivr.net/npm/@keeex/qrcodejs-kx@1.0.2/qrcode.min.js"></script>
+    <script data-cfasync="false" src="https://github.cmliussss.net/raw.githubusercontent.com/cmliu/cmliu/main/js/qrcode.min.js"></script>
     <style>
         /* 基础重置 */
         * {
@@ -3740,10 +3740,16 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="subConfig">订阅转换配置文件</label>
-                        <input type="text" id="subConfig" title="订阅转换配置文件"
-                            placeholder="https://raw.githubusercontent.com/..." onchange="markModified('convert')">
+                    <div class="form-group" style="align-items: start;">
+                        <label for="subConfigSelect" style="padding-top: 10px;">订阅转换配置文件</label>
+                        <div class="input-wrapper" style="flex-direction: column; align-items: stretch;">
+                            <select id="subConfigSelect" title="订阅转换配置文件" style="display: none;">
+                                <option value="">正在加载...</option>
+                            </select>
+                            <input type="text" id="subConfigCustomInput" title="自定义订阅转换配置文件URL"
+                                placeholder="https://raw.githubusercontent.com/..." onchange="onSubConfigCustomInput()" style="display: none; margin-top: 8px;">
+                            <input type="hidden" id="subConfig">
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -4174,8 +4180,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <h2 id="proxyVerificationTitle" style="margin-bottom: 20px; font-size: 18px; font-weight: 600; text-align: center;"></h2>
             
             <div class="form-group" style="margin-bottom: 20px;">
-                <label id="proxyVerificationLabel" style="display: block; margin-bottom: 10px; font-weight: 600;"></label>
-                <input type="text" id="proxyVerificationInput" placeholder="" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px;">
+                <label id="proxyVerificationLabel" for="proxyVerificationInput" style="display: block; margin-bottom: 10px; font-weight: 600;"></label>
+                <input type="text" id="proxyVerificationInput" title="代理地址" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px;">
             </div>
             
             <div id="proxyVerificationStatus" style="margin-bottom: 20px; padding: 12px; border-radius: 8px; display: none; font-size: 14px;">
@@ -4312,6 +4318,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         let currentConfig = {};
         let originalConfig = {};
         let modifiedSections = new Set();
+        let subConfigData = null;
 
         // 初始化主题
         function initializeTheme() {
@@ -4520,6 +4527,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             // 从 localStorage 加载模块展开/折叠状态
             loadModuleStates();
+            
+            // 填充 SubConfig 下拉框（如果数据已加载，会自动设置选中值）
+            populateSubConfigSelect();
         }
 
         // CF 使用情况显示函数
@@ -5154,6 +5164,99 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             await saveConfigToServer('proxy');
         }
 
+        // 加载SubConfig JSON数据
+        async function loadSubConfigData() {
+            try {
+                const response = await fetch('https://github.cmliussss.net/raw.githubusercontent.com/cmliu/cmliu/main/SUBCONFIG.json');
+                if (!response.ok) throw new Error('Failed to fetch SUBCONFIG');
+                subConfigData = await response.json();
+                populateSubConfigSelect();
+            } catch (error) {
+                console.error('Error loading SubConfig:', error);
+                // 加载失败时，仍然显示下拉框（只有自定义选项）
+                subConfigData = null;
+                populateSubConfigSelect();
+            }
+        }
+
+        // 填充SubConfig下拉框
+        function populateSubConfigSelect() {
+            const select = document.getElementById('subConfigSelect');
+            const customInput = document.getElementById('subConfigCustomInput');
+            if (!select) return; // 元素还不存在，等待后续调用
+            
+            // 始终添加"自定义"选项作为第一项
+            select.innerHTML = '<option value="custom">&nbsp;&nbsp;&nbsp;&nbsp;自定义</option>';
+            
+            // 如果有数据，添加分组选项
+            if (subConfigData && Array.isArray(subConfigData)) {
+                subConfigData.forEach(group => {
+                    const optgroup = document.createElement('optgroup');
+                    optgroup.label = group.label;
+                    
+                    if (group.options && Array.isArray(group.options)) {
+                        group.options.forEach(option => {
+                            const opt = document.createElement('option');
+                            opt.value = option.value;
+                            opt.textContent = option.label;
+                            optgroup.appendChild(opt);
+                        });
+                    }
+                    
+                    select.appendChild(optgroup);
+                });
+            }
+            
+            // 显示下拉框
+            select.style.display = 'block';
+            
+            // 如果已有保存的配置值，设置选中状态
+            const savedSubConfig = currentConfig.订阅转换配置?.SUBCONFIG || '';
+            if (savedSubConfig) {
+                // 尝试在下拉框中找到匹配的选项
+                select.value = savedSubConfig;
+                
+                // 如果没有匹配到（值不在列表中），选择"自定义"并显示输入框
+                if (select.value !== savedSubConfig) {
+                    select.value = 'custom';
+                    customInput.value = savedSubConfig;
+                    customInput.style.display = 'block';
+                    document.getElementById('subConfig').value = savedSubConfig;
+                } else {
+                    // 匹配成功，隐藏自定义输入框
+                    customInput.style.display = 'none';
+                    customInput.value = '';
+                    document.getElementById('subConfig').value = savedSubConfig;
+                }
+            } else {
+                // 没有保存值，默认选择"自定义"
+                select.value = 'custom';
+                customInput.style.display = 'block';
+            }
+            
+            // 设置change事件监听
+            select.onchange = function() {
+                if (this.value === 'custom') {
+                    // 选择自定义，显示输入框
+                    customInput.style.display = 'block';
+                    document.getElementById('subConfig').value = customInput.value;
+                } else {
+                    // 选择预设值，隐藏输入框并更新值
+                    customInput.style.display = 'none';
+                    customInput.value = '';
+                    document.getElementById('subConfig').value = this.value;
+                }
+                markModified('convert');
+            };
+        }
+        
+        // 自定义输入框变化时的处理
+        function onSubConfigCustomInput() {
+            const customInput = document.getElementById('subConfigCustomInput');
+            document.getElementById('subConfig').value = customInput.value;
+            markModified('convert');
+        }
+
         async function saveConvert() {
             currentConfig.订阅转换配置 = {
                 SUBAPI: document.getElementById('subAPI').value,
@@ -5256,6 +5359,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 document.getElementById('subAPI').value = currentConfig.订阅转换配置?.SUBAPI || '';
                 document.getElementById('subConfig').value = currentConfig.订阅转换配置?.SUBCONFIG || '';
                 document.getElementById('emoji').checked = currentConfig.订阅转换配置?.SUBEMOJI || false;
+                // 重新填充下拉框以恢复正确的选中状态
+                populateSubConfigSelect();
             }
 
             modifiedSections.delete(section);
@@ -7643,6 +7748,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         window.addEventListener('DOMContentLoaded', () => {
             loadConfig();
             initUserMode();
+            // 独立预加载 SubConfig 数据，不阻塞主流程
+            loadSubConfigData().catch(err => console.error('SubConfig预加载失败:', err));
         });
 
         // 启动倒计时更新

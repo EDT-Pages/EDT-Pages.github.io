@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <title>管理后台</title>
-    <script data-cfasync="false" src="https://github.cmliussss.net/raw.githubusercontent.com/cmliu/cmliu/main/js/qrcode.min.js"></script>
+    <script data-cfasync="false" src="https://cdn.bootcdn.net/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         /* 基础重置 */
         * {
@@ -5014,15 +5014,32 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const text = document.getElementById(elementId).value;
             const container = document.getElementById('qrcodeContainer');
             container.innerHTML = '';
-            new QRCode(container, {
-                text: text,
-                width: 300,
-                height: 300,
-                colorDark: '#000',
-                colorLight: '#fff',
-                correctLevel: QRCode.CorrectLevel.H
-            });
-            document.getElementById('qrcodeModal').classList.add('show');
+            
+            // 如果文本过长，使用较低的纠错等级来支持更长的内容
+            let correctLevel = QRCode.CorrectLevel.H;
+            if (text.length > 1500) {
+                correctLevel = QRCode.CorrectLevel.M;
+            }
+            if (text.length > 2500) {
+                correctLevel = QRCode.CorrectLevel.L;
+            }
+            
+            try {
+                new QRCode(container, {
+                    text: text,
+                    width: 300,
+                    height: 300,
+                    colorDark: '#000',
+                    colorLight: '#fff',
+                    correctLevel: correctLevel
+                });
+                document.getElementById('qrcodeModal').classList.add('show');
+            } catch (error) {
+                // 如果文本过长，显示错误提示
+                console.error('二维码生成失败:', error);
+                showToast('链接过长，无法生成二维码。联系项目作者修复问题。', 'error');
+                container.innerHTML = '<div style="padding:20px;text-align:center;color:#f44336;">二维码生成失败：内容过长</div>';
+            }
         }
 
         function closeQRCode(event) {

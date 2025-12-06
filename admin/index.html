@@ -7221,17 +7221,44 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
         // 加载locations数据
         async function loadLocationsData() {
+            const backupUrl = 'https://zip.cm.edu.kg/locations.json';
+            
             try {
                 // 使用当前域名加载位置数据，避免跨域问题
                 const url = `${window.detectDomain}/locations`;
                 console.log(`[在线优选] 加载位置数据: ${url}`);
 
                 const response = await fetch(url);
-                locationsData = await response.json();
+                const data = await response.json();
+                
+                // 检查返回的数据是否为空对象或空数组
+                if (!data || (Array.isArray(data) && data.length === 0) || (typeof data === 'object' && !Array.isArray(data) && Object.keys(data).length === 0)) {
+                    console.warn('[在线优选] 主接口返回空数据，尝试备份接口...');
+                    throw new Error('主接口返回空数据');
+                }
+                
+                locationsData = data;
                 console.log(`[在线优选] 成功加载 ${locationsData.length} 个位置数据`);
             } catch (error) {
                 console.error('[在线优选] 加载locations数据失败:', error);
-                locationsData = [];
+                
+                // 尝试从备份接口获取
+                try {
+                    console.log(`[在线优选] 尝试从备份接口加载: ${backupUrl}`);
+                    const backupResponse = await fetch(backupUrl);
+                    const backupData = await backupResponse.json();
+                    
+                    if (backupData && Array.isArray(backupData) && backupData.length > 0) {
+                        locationsData = backupData;
+                        console.log(`[在线优选] 从备份接口成功加载 ${locationsData.length} 个位置数据`);
+                    } else {
+                        console.error('[在线优选] 备份接口也返回空数据');
+                        locationsData = [];
+                    }
+                } catch (backupError) {
+                    console.error('[在线优选] 备份接口加载失败:', backupError);
+                    locationsData = [];
+                }
             }
         }
 

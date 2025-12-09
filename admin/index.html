@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
     <title>管理后台</title>
-    <script data-cfasync="false" src="https://cdn.bootcdn.net/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script data-cfasync="false" src="https://cdn.jsdelivr.net/npm/@keeex/qrcodejs-kx@1.0.2/qrcode.min.js"></script>
     <style>
         /* 基础重置 */
         * {
@@ -497,6 +497,10 @@
             position: relative
         }
 
+        #qrcodeModal .modal {
+            background: #808080;
+        }
+
         .modal-close {
             position: absolute;
             top: 15px;
@@ -923,6 +927,10 @@
             background: var(--bg-secondary);
             color: var(--text-primary);
             border-color: var(--border-color)
+        }
+
+        html.dark-mode #qrcodeModal .modal {
+            background: #808080;
         }
 
         html.dark-mode .modal input,
@@ -1913,7 +1921,7 @@
             justify-content: center;
             align-items: center;
             min-height: 350px;
-            background: #FFFFFF;
+            background: #808080;
         }
 
         /* 重置配置弹窗 */
@@ -2611,7 +2619,7 @@
         }
 
         html.dark-mode .qrcode-container {
-            background: #FFFFFF;
+            background: #808080;
         }
 
         /* 网络信息卡片样式 */
@@ -6517,7 +6525,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
         function showIpDetailForProxy(ip) {
             // 异步获取 IP 详情
-            fetch(`https://api.ipapi.cmliussss.net/?ip=${ip}`)
+            fetch(`https://api.ipapi.is/?ip=${ip}`)
                 .then(response => response.json())
                 .then(data => showIpDetailModal(data))
                 .catch(error => {
@@ -8736,7 +8744,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     this.appendChild(spinner);
 
                     try {
-                        const response = await fetch(`https://api.ipapi.cmliussss.net/?ip=${cleanIp}`);
+                        const response = await fetch(`https://api.ipapi.is/?ip=${cleanIp}`);
 
                         if (!response.ok) {
                             throw new Error('查询失败');

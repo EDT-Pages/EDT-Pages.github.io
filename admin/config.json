@@ -1,6 +1,13 @@
 {
   "TIME": "2025-11-02T04:46:32.555Z",
   "HOST": "edt-pages.github.io",
+  "HOSTS": [
+    "edt-pages.github.io",
+    "www.baidu.com",
+    "www.google.com",
+    "www.youtube.com",
+    "www.hao123.com"
+  ],
   "UUID": "7b102311-43fd-4e8f-977e-8090623c101d",
   "协议类型": "vless",
   "传输协议": "ws",
@@ -57,11 +64,5 @@
   },
   "PATH": "/",
   "LINK": "vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tls&type=ws&host=edt-pages.github.io&sni=edt-pages.github.io&path=%2F&fragment=1%2C40-60%2C30-50%2Ctlshello&encryption=none&allowInsecure=1#edgetunnel",
-  "加载时间": "278.00ms",
-  "HOSTS": [
-    "www.baidu.com",
-    "www.google.com",
-    "www.youtube.com",
-    "www.hao123.com"
-  ]
+  "加载时间": "278.00ms"
 }

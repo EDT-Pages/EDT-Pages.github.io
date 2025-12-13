@@ -516,15 +516,14 @@
             color: #1f2937
         }
 
-        /* 社交链接 */
+        /* 社交链接 - 重构为统一风格 */
         .social-links {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
-            margin-top: 15px;
-            padding: 10px 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.1)
+            gap: 16px;
+            padding: 20px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.08)
         }
 
         .social-text {
@@ -534,27 +533,110 @@
         }
 
         .social-link {
-            display: inline-block;
-            background: none;
-            border: none;
-            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(249, 250, 251, 0.9) 100%);
+            border: 1px solid rgba(229, 231, 235, 0.8);
+            border-radius: 12px;
+            color: #6b7280;
             text-decoration: none;
             cursor: pointer;
-            transition: color 0.3s ease;
-            border-radius: 8px;
-            padding: 6px;
-            border: 1px solid transparent
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04)
+        }
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(250, 171, 65, 0) 0%, rgba(246, 130, 31, 0) 100%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            border-radius: 11px
         }
 
         .social-link:hover {
-            color: #faab41;
-            border-color: #faab41;
-            transform: translateY(-2px)
+            transform: translateY(-4px) scale(1.05);
+            border-color: rgba(250, 171, 65, 0.5);
+            box-shadow: 0 8px 24px rgba(250, 171, 65, 0.25), 0 4px 12px rgba(246, 130, 31, 0.15);
+            color: #f6821f
+        }
+
+        .social-link:hover::before {
+            opacity: 0.08
+        }
+
+        .social-link:active {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 4px 12px rgba(250, 171, 65, 0.2)
         }
 
         .social-link svg {
-            width: 20px;
-            height: 20px
+            width: 22px;
+            height: 22px;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.35s ease
+        }
+
+        .social-link:hover svg {
+            transform: scale(1.08)
+        }
+
+        /* 主题图标特殊样式 */
+        .social-link.theme-toggle .theme-icon {
+            transition: all 0.35s ease
+        }
+
+        .social-link.theme-toggle:hover .sun-icon {
+            color: #faab41
+        }
+
+        .social-link.theme-toggle:hover .moon-icon {
+            color: #7c3aed
+        }
+
+        /* GitHub图标样式 */
+        .social-link[title="GitHub"]:hover {
+            color: #1f2937;
+            border-color: rgba(31, 41, 55, 0.4);
+            box-shadow: 0 8px 24px rgba(31, 41, 55, 0.2), 0 4px 12px rgba(31, 41, 55, 0.1)
+        }
+
+        .social-link[title="GitHub"]:hover::before {
+            background: linear-gradient(135deg, rgba(31, 41, 55, 0.05) 0%, rgba(31, 41, 55, 0.02) 100%);
+            opacity: 1
+        }
+
+        /* Telegram图标样式 */
+        .social-link[title="Telegram"]:hover {
+            border-color: rgba(42, 171, 238, 0.4);
+            box-shadow: 0 8px 24px rgba(42, 171, 238, 0.25), 0 4px 12px rgba(34, 158, 217, 0.15)
+        }
+
+        .social-link[title="Telegram"]:hover::before {
+            background: linear-gradient(135deg, rgba(42, 171, 238, 0.08) 0%, rgba(34, 158, 217, 0.04) 100%);
+            opacity: 1
+        }
+
+        /* 返回顶部图标样式 */
+        .social-link[title="返回顶部"]:hover {
+            color: #10b981;
+            border-color: rgba(16, 185, 129, 0.4);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25), 0 4px 12px rgba(5, 150, 105, 0.15)
+        }
+
+        .social-link[title="返回顶部"]:hover::before {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(5, 150, 105, 0.04) 100%);
+            opacity: 1
         }
 
         /* 复选框样式 */
@@ -989,17 +1071,46 @@
             color: var(--text-primary)
         }
 
+        html.dark-mode .social-links {
+            border-top-color: rgba(255, 255, 255, 0.1)
+        }
+
         html.dark-mode .social-link {
-            color: #e5e7eb
+            background: linear-gradient(135deg, rgba(42, 42, 42, 0.95) 0%, rgba(34, 34, 34, 0.9) 100%);
+            border-color: rgba(75, 75, 75, 0.6);
+            color: #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15)
         }
 
         html.dark-mode .social-link:hover {
             color: #ffffff;
-            border-color: #7c3aed
+            border-color: rgba(124, 58, 237, 0.6);
+            box-shadow: 0 8px 24px rgba(124, 58, 237, 0.3), 0 4px 12px rgba(91, 33, 182, 0.2)
         }
 
-        html.dark-mode .social-links {
-            border-color: rgba(255, 255, 255, 0.1)
+        html.dark-mode .social-link::before {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(91, 33, 182, 0.04) 100%)
+        }
+
+        html.dark-mode .social-link.theme-toggle:hover .moon-icon {
+            color: #a78bfa
+        }
+
+        html.dark-mode .social-link[title="GitHub"]:hover {
+            color: #ffffff;
+            border-color: rgba(229, 231, 235, 0.4);
+            box-shadow: 0 8px 24px rgba(229, 231, 235, 0.15), 0 4px 12px rgba(229, 231, 235, 0.1)
+        }
+
+        html.dark-mode .social-link[title="Telegram"]:hover {
+            border-color: rgba(42, 171, 238, 0.5);
+            box-shadow: 0 8px 24px rgba(42, 171, 238, 0.3), 0 4px 12px rgba(34, 158, 217, 0.2)
+        }
+
+        html.dark-mode .social-link[title="返回顶部"]:hover {
+            color: #34d399;
+            border-color: rgba(52, 211, 153, 0.5);
+            box-shadow: 0 8px 24px rgba(52, 211, 153, 0.3), 0 4px 12px rgba(16, 185, 129, 0.2)
         }
 
         html.dark-mode .btn-secondary {
@@ -1087,6 +1198,11 @@
         }
 
         html.dark-mode .subapi-input {
+            background-color: var(--input-bg) !important;
+            color: var(--text-primary) !important;
+        }
+
+        html.dark-mode .form-group input[readonly].subapi-input {
             background-color: var(--input-bg) !important;
             color: var(--text-primary) !important;
         }
@@ -3584,6 +3700,138 @@
         .latency-bar.loading {
             animation: latencyPulse 1.5s ease-in-out infinite;
         }
+
+        /* HOSTS 编辑模态框样式 */
+        .hosts-edit-modal {
+            overflow-y: auto;
+            width: 90vw;
+            max-width: 500px;
+            margin: 0 auto;
+            max-height: 90vh;
+        }
+
+        .hosts-edit-modal-title {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .hosts-edit-container {
+            margin: 20px 0;
+        }
+
+        .hosts-edit-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        .hosts-edit-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            height: 200px;
+            background-color: #f9fafb;
+            color: #1f2937;
+            resize: vertical;
+            overflow-y: auto;
+            box-sizing: border-box;
+            line-height: 1.6;
+        }
+
+        .hosts-edit-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .hosts-edit-hint {
+            font-size: 12px;
+            color: #9ca3af;
+            text-align: left;
+        }
+
+        .hosts-edit-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        .hosts-edit-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-hosts-confirm {
+            background: linear-gradient(135deg, #3b82f6 0, #1d4ed8 100%);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-hosts-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5);
+        }
+
+        .btn-hosts-cancel {
+            background: linear-gradient(135deg, #e5e7eb 0, #d1d5db 100%);
+            color: #374151;
+        }
+
+        .btn-hosts-cancel:hover {
+            background: linear-gradient(135deg, #d1d5db 0, #b3b8be 100%);
+        }
+
+        .form-group input[readonly].nodeHost-clickable {
+            cursor: pointer;
+            background-color: #ffffff !important;
+            color: #1f2937 !important;
+        }
+
+        html.dark-mode .hosts-edit-modal {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        html.dark-mode .hosts-edit-modal-title {
+            color: var(--text-primary);
+        }
+
+        html.dark-mode .hosts-edit-label {
+            color: var(--text-primary);
+        }
+
+        html.dark-mode .hosts-edit-textarea {
+            background: var(--input-bg);
+            color: var(--text-primary);
+            border-color: var(--input-border);
+        }
+
+        html.dark-mode .hosts-edit-hint {
+            color: #6b7280;
+        }
+
+        html.dark-mode .btn-hosts-cancel {
+            background: var(--input-bg);
+            color: var(--text-primary);
+        }
+
+        html.dark-mode .btn-hosts-cancel:hover {
+            background: var(--border-color);
+        }
+
+        html.dark-mode .form-group input[readonly].nodeHost-clickable {
+            background-color: var(--input-bg) !important;
+            color: var(--text-primary) !important;
+        }
     </style>
 </head>
 
@@ -3740,7 +3988,8 @@
                         <div class="latency-cards" id="latency-cards">
                             <!-- 卡片将通过JavaScript动态生成 -->
                         </div>
-                        <small style="font-size: 12px; color: #9ca3af; margin-top: 6px; display: block;">💡 更多测试项目，可前往
+                        <small
+                            style="font-size: 12px; color: #9ca3af; margin-top: 6px; display: block;">💡<b>更多测试项目</b>，可前往
                             <a href="https://ip.skk.moe/" target="_blank" rel="noopener"
                                 style="font-weight: bold; color: #6b7280;">ip.skk.moe</a> 自行测试。
                         </small>
@@ -3911,12 +4160,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                     <div class="form-group">
                         <label for="nodeUUID">UUID</label>
-                        <input type="text" id="nodeUUID" title="用户ID" readonly>
+                        <input type="text" id="nodeUUID" title="用于节点验证的UUID 仅可通过 'UUID'环境变量 进行修改" readonly>
                     </div>
 
                     <div class="form-group">
                         <label for="nodePATH">PATH</label>
-                        <input type="text" id="nodePATH" title="节点路径" readonly>
+                        <input type="text" id="nodePATH" title="节点的伪装路径 仅可通过 'PATH'环境变量 进行修改" readonly>
                     </div>
 
                     <div class="form-group">
@@ -4025,9 +4274,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                 <input type="text" id="proxyIP" title="PROXYIP" placeholder="proxyip.cmliussss.net"
                                     onchange="processProxyIP()" oninput="processProxyIP()">
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="autoProxy" title="启用自动获取"
+                                    <input type="checkbox" id="autoProxy" title="启用自动获取: 使用默认内置的PROXYIP"
                                         onchange="toggleAutoProxy(); markModified('proxy')">
-                                    <label for="autoProxy" class="checkbox-label">启用自动获取</label>
+                                    <label for="autoProxy" class="checkbox-label"
+                                        title="启用自动获取: 使用默认内置的PROXYIP">启用自动获取</label>
                                 </div>
                             </div>
                         </div>
@@ -4044,9 +4294,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                         placeholder="user:password@127.0.0.1:1080" readonly class="subapi-input">
                                 </div>
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="globalSocks5" title="启用全局代理"
+                                    <input type="checkbox" id="globalSocks5" title="启用全局代理: 将非CFCDN站点的流量也走SOCKS5代理"
                                         onchange="markModified('proxy')">
-                                    <label for="globalSocks5" class="checkbox-label">启用全局代理</label>
+                                    <label for="globalSocks5" class="checkbox-label"
+                                        title="启用全局代理: 将非CFCDN站点的流量也走SOCKS5代理">启用全局代理</label>
                                 </div>
                             </div>
                         </div>
@@ -4062,9 +4313,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                         placeholder="user:password@127.0.0.1:8080" readonly class="subapi-input">
                                 </div>
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="globalHTTP" title="启用全局代理"
+                                    <input type="checkbox" id="globalHTTP" title="启用全局代理: 将非CFCDN站点的流量也走HTTP代理"
                                         onchange="markModified('proxy')">
-                                    <label for="globalHTTP" class="checkbox-label">启用全局代理</label>
+                                    <label for="globalHTTP" class="checkbox-label"
+                                        title="启用全局代理: 将非CFCDN站点的流量也走HTTP代理">启用全局代理</label>
                                 </div>
                             </div>
                         </div>
@@ -4209,6 +4461,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             </div>
 
             <div class="social-links">
+                <!-- 主题切换按钮 -->
                 <button type="button" class="social-link theme-toggle" id="themeToggle" title="切换夜间模式"
                     onclick="toggleTheme()">
                     <!-- 太阳图标 (日间模式显示) -->
@@ -4230,32 +4483,26 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <path fill="currentColor" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                     </svg>
                 </button>
+                <!-- GitHub 链接 -->
                 <a href="https://github.com/cmliu/edgetunnel" target="_blank" rel="noopener" class="social-link"
                     title="GitHub">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-                        <path fill="currentColor" fill-rule="evenodd"
-                            d="M7.976 0A7.977 7.977 0 0 0 0 7.976c0 3.522 2.3 6.507 5.431 7.584c.392.049.538-.196.538-.392v-1.37c-2.201.49-2.69-1.076-2.69-1.076c-.343-.93-.881-1.175-.881-1.175c-.734-.489.048-.489.048-.489c.783.049 1.224.832 1.224.832c.734 1.223 1.859.88 2.3.685c.048-.538.293-.88.489-1.076c-1.762-.196-3.621-.881-3.621-3.964c0-.88.293-1.566.832-2.153c-.05-.147-.343-.978.098-2.055c0 0 .685-.196 2.201.832c.636-.196 1.322-.245 2.007-.245s1.37.098 2.006.245c1.517-1.027 2.202-.832 2.202-.832c.44 1.077.146 1.908.097 2.104a3.16 3.16 0 0 1 .832 2.153c0 3.083-1.86 3.719-3.62 3.915c.293.244.538.733.538 1.467v2.202c0 .196.146.44.538.392A7.98 7.98 0 0 0 16 7.976C15.951 3.572 12.38 0 7.976 0"
-                            clip-rule="evenodd" />
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                            d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385c.6.105.825-.255.825-.57c0-.285-.015-1.23-.015-2.235c-3.015.555-3.795-.735-4.035-1.41c-.135-.345-.72-1.41-1.23-1.695c-.42-.225-1.02-.78-.015-.795c.945-.015 1.62.87 1.845 1.23c1.08 1.815 2.805 1.305 3.495.99c.105-.78.42-1.305.765-1.605c-2.67-.3-5.46-1.335-5.46-5.925c0-1.305.465-2.385 1.23-3.225c-.12-.3-.54-1.53.12-3.18c0 0 1.005-.315 3.3 1.23c.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23c.66 1.65.24 2.88.12 3.18c.765.84 1.23 1.905 1.23 3.225c0 4.605-2.805 5.625-5.475 5.925c.435.375.81 1.095.81 2.22c0 1.605-.015 2.895-.015 3.3c0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12Z" />
                     </svg>
                 </a>
+                <!-- Telegram 链接 -->
                 <a href="https://t.me/CMLiussss" target="_blank" rel="noopener" class="social-link" title="Telegram">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-                        <defs>
-                            <linearGradient id="telegramGradient" x1="50%" x2="50%" y1="0%" y2="100%">
-                                <stop offset="0%" stop-color="#2AABEE" />
-                                <stop offset="100%" stop-color="#229ED9" />
-                            </linearGradient>
-                        </defs>
-                        <path fill="url(#telegramGradient)"
-                            d="M128 0C94.06 0 61.48 13.494 37.5 37.49A128.04 128.04 0 0 0 0 128c0 33.934 13.5 66.514 37.5 90.51C61.48 242.506 94.06 256 128 256s66.52-13.494 90.5-37.49c24-23.996 37.5-56.576 37.5-90.51s-13.5-66.514-37.5-90.51C194.52 13.494 161.94 0 128 0" />
-                        <path fill="#FFF"
-                            d="M57.94 126.648q55.98-24.384 74.64-32.152c35.56-14.786 42.94-17.354 47.76-17.441c1.06-.017 3.42.245 4.96 1.49c1.28 1.05 1.64 2.47 1.82 3.467c.16.996.38 3.266.2 5.038c-1.92 20.24-10.26 69.356-14.5 92.026c-1.78 9.592-5.32 12.808-8.74 13.122c-7.44.684-13.08-4.912-20.28-9.63c-11.26-7.386-17.62-11.982-28.56-19.188c-12.64-8.328-4.44-12.906 2.76-20.386c1.88-1.958 34.64-31.748 35.26-34.45c.08-.338.16-1.598-.6-2.262c-.74-.666-1.84-.438-2.64-.258c-1.14.256-19.12 12.152-54 35.686c-5.1 3.508-9.72 5.218-13.88 5.128c-4.56-.098-13.36-2.584-19.9-4.708c-8-2.606-14.38-3.984-13.82-8.41c.28-2.304 3.46-4.662 9.52-7.072" />
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                            d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12a12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472c-.18 1.898-.962 6.502-1.36 8.627c-.168.9-.499 1.201-.82 1.23c-.696.065-1.225-.46-1.9-.902c-1.056-.693-1.653-1.124-2.678-1.8c-1.185-.78-.417-1.21.258-1.91c.177-.184 3.247-2.977 3.307-3.23c.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345c-.48.33-.913.49-1.302.48c-.428-.008-1.252-.241-1.865-.44c-.752-.245-1.349-.374-1.297-.789c.027-.216.325-.437.893-.663c3.498-1.524 5.83-2.529 6.998-3.014c3.332-1.386 4.025-1.627 4.476-1.635z" />
                     </svg>
                 </a>
+                <!-- 返回顶部按钮 -->
                 <button type="button" class="social-link" title="返回顶部" onclick="scrollToTop()">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="1.5" />
-                        <path fill="currentColor" d="M12 7l-4.5 4.5h2.5V16h4v-4.5h2.5L12 7z" />
+                        <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" d="M12 19V5M5 12l7-7l7 7" />
                     </svg>
                 </button>
             </div>
@@ -4690,11 +4937,33 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         </div>
     </div>
 
+    <!-- HOSTS 编辑模态框 -->
+    <div class="modal-overlay" id="hostsEditModal">
+        <div class="modal hosts-edit-modal" onclick="event.stopPropagation()">
+            <button type="button" class="modal-close" onclick="closeHostsEditModal()">×</button>
+            <h2 class="hosts-edit-modal-title">✏️ 编辑域名列表</h2>
+
+            <div class="hosts-edit-container">
+                <label class="hosts-edit-label">域名列表:</label>
+                <textarea id="hostsEditTextarea" class="hosts-edit-textarea" placeholder="每行输入一个域名"></textarea>
+            </div>
+
+            <div class="hosts-edit-footer">
+                <div class="hosts-edit-hint">💡 一行一个节点域名，无需添加逗号</div>
+                <div class="hosts-edit-buttons">
+                    <button type="button" class="btn btn-hosts-cancel" onclick="closeHostsEditModal()">取消</button>
+                    <button type="button" class="btn btn-hosts-confirm" onclick="confirmHostsEdit()">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script data-cfasync="false">
         let currentConfig = {};
         let originalConfig = {};
         let modifiedSections = new Set();
         let subConfigData = null;
+        let hasMultipleHosts = false; // 标记是否存在多个 HOSTS
 
         // 延迟测试数据
         const latencySites = [
@@ -4732,7 +5001,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 name: 'Facebook',
                 region: '国际',
                 icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#0A66C2" d="M12 0C5.4 0 0 5.4 0 12c0 6.6 5.4 12 12 12s12-5.4 12-12-5.4-12-12-12zm3.6 12.3h-2.4v8.1h-3.3v-8.1H9v-2.8h1.5v-1.8c0-1.3.3-3.3 3.3-3.3h2.6v2.6h-1.9c-.3 0-.5.2-.5.5v1.4h2.4l-.3 2.8z"></path></svg>',
-                url: 'https://scontent.xx.fbcdn.net/hads-ak-prn2/1487645_6012475414660_1439393861_n.png'
+                url: 'https://www.facebook.com/rsrc.php/v4/yU/r/O7nelmd9XSI.png'
             },
             {
                 name: 'X.com',
@@ -4863,7 +5132,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
 
             if (avgLatency === -1) {
-                valueElement.textContent = '-ms';
+                valueElement.textContent = '--ms';
                 valueElement.style.color = 'var(--destructive)';
             } else {
                 valueElement.textContent = `${Math.round(avgLatency)}ms`;
@@ -4997,7 +5266,27 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             // 详细配置
             document.getElementById('subName').value = currentConfig.优选订阅生成?.SUBNAME || '';
-            document.getElementById('nodeHost').value = currentConfig.HOST || '';
+
+            // 检查 HOSTS 数组是否存在
+            hasMultipleHosts = Array.isArray(currentConfig.HOSTS) && currentConfig.HOSTS.length > 0;
+
+            const nodeHostInput = document.getElementById('nodeHost');
+            if (hasMultipleHosts) {
+                // 如果存在 HOSTS 数组，用逗号连接显示所有 host
+                nodeHostInput.value = currentConfig.HOSTS.join(',');
+                // 添加可点击样式和事件
+                nodeHostInput.classList.add('nodeHost-clickable');
+                nodeHostInput.title = '点击 可编辑多个节点域名';
+                nodeHostInput.onclick = openHostsEditModal;
+            } else {
+                // 否则显示单个 HOST
+                nodeHostInput.value = currentConfig.HOST || '';
+                // 移除可点击样式和事件
+                nodeHostInput.classList.remove('nodeHost-clickable');
+                nodeHostInput.title = '节点域名';
+                nodeHostInput.onclick = null;
+            }
+
             document.getElementById('nodeUUID').value = currentConfig.UUID || '';
             document.getElementById('nodePATH').value = currentConfig.PATH || '';
             document.getElementById('protocol').value = currentConfig.协议类型 || 'vless';
@@ -5678,6 +5967,79 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             if (!event || event.target.id === 'qrcodeModal') {
                 document.getElementById('qrcodeModal').classList.remove('show');
             }
+        }
+
+        // HOSTS 编辑模态框相关函数
+        function openHostsEditModal(event) {
+            if (event) event.stopPropagation();
+            const modal = document.getElementById('hostsEditModal');
+            const textarea = document.getElementById('hostsEditTextarea');
+
+            // 将 HOSTS 数组内容填入文本框，每行一个
+            if (currentConfig.HOSTS && Array.isArray(currentConfig.HOSTS)) {
+                textarea.value = currentConfig.HOSTS.join('\n');
+            } else {
+                textarea.value = '';
+            }
+
+            modal.classList.add('show');
+            textarea.focus();
+        }
+
+        function closeHostsEditModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            const modal = document.getElementById('hostsEditModal');
+            modal.classList.remove('show');
+        }
+
+        function confirmHostsEdit() {
+            const textarea = document.getElementById('hostsEditTextarea');
+            const nodeHostInput = document.getElementById('nodeHost');
+
+            // 将文本框内容按行分割成数组，过滤空行，并清理域名格式
+            const lines = textarea.value.split('\n')
+                .map(line => cleanHostDomain(line.trim()))
+                .filter(line => line.length > 0);
+
+            if (lines.length === 0) {
+                showToast('请至少输入一个域名', 'error');
+                return;
+            }
+
+            // 更新 currentConfig.HOSTS 数组
+            currentConfig.HOSTS = lines;
+
+            // 更新输入框显示（用逗号连接）
+            nodeHostInput.value = lines.join(',');
+
+            // 关闭模态框
+            closeHostsEditModal();
+
+            // 标记配置已修改
+            markModified('config');
+
+            showToast('域名列表已更新，请保存配置', 'success');
+        }
+
+        // 清理域名格式：去掉协议、路径、端口号，只保留纯域名
+        function cleanHostDomain(input) {
+            if (!input) return '';
+
+            let domain = input;
+
+            // 去掉协议前缀 (http:// 或 https://)
+            domain = domain.replace(/^https?:\/\//i, '');
+
+            // 去掉路径部分（第一个 / 及之后的内容）
+            const slashIndex = domain.indexOf('/');
+            if (slashIndex !== -1) {
+                domain = domain.substring(0, slashIndex);
+            }
+
+            // 去掉端口号（: 及之后的数字）
+            domain = domain.replace(/:\d+$/, '');
+
+            return domain.trim();
         }
 
         async function saveSub() {

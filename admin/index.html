@@ -4462,7 +4462,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             <div class="social-links">
                 <!-- 主题切换按钮 -->
-                <button type="button" class="social-link theme-toggle" id="themeToggle" title="切换夜间模式"
+                <button type="button" class="social-link theme-toggle" id="themeToggle" title="切换日间模式"
                     onclick="toggleTheme()">
                     <!-- 太阳图标 (日间模式显示) -->
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="theme-icon sun-icon">
@@ -5035,9 +5035,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             if (theme === 'dark') {
                 document.documentElement.classList.add('dark-mode');
                 localStorage.setItem('theme', 'dark');
+                document.getElementById('themeToggle').title = '切换日间模式';
             } else {
                 document.documentElement.classList.remove('dark-mode');
                 localStorage.setItem('theme', 'light');
+                document.getElementById('themeToggle').title = '切换夜间模式';
             }
         }
 

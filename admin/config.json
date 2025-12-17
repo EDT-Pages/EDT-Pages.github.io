@@ -2,11 +2,11 @@
   "TIME": "2025-11-02T04:46:32.555Z",
   "HOST": "edt-pages.github.io",
   "HOSTS": [
-    "edt-pages.github.io",
-    "www.baidu.com",
-    "www.google.com",
-    "www.youtube.com",
-    "www.hao123.com"
+    "edt1.pages.dev",
+    "edt2.pages.dev",
+    "edt3.pages.dev",
+    "edt4.pages.dev",
+    "edt5.pages.dev"
   ],
   "UUID": "7b102311-43fd-4e8f-977e-8090623c101d",
   "协议类型": "vless",

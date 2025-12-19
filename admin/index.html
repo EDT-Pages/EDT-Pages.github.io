@@ -5998,21 +5998,23 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const textarea = document.getElementById('hostsEditTextarea');
             const nodeHostInput = document.getElementById('nodeHost');
 
-            // 将文本框内容按行分割成数组，过滤空行，并清理域名格式
-            const lines = textarea.value.split('\n')
-                .map(line => cleanHostDomain(line.trim()))
-                .filter(line => line.length > 0);
+            // 将文本框内容按 逗号、中文逗号 和 换行 分割成数组
+            const text = textarea.value;
+            // 使用正则表达式，将 , 、， 和 \n 都作为分隔符
+            const items = text.split(/[ ,，。\n]+/)
+                .map(item => cleanHostDomain(item.trim()))
+                .filter(item => item.length > 0);
 
-            if (lines.length === 0) {
+            if (items.length === 0) {
                 showToast('请至少输入一个域名', 'error');
                 return;
             }
 
             // 更新 currentConfig.HOSTS 数组
-            currentConfig.HOSTS = lines;
+            currentConfig.HOSTS = items;
 
             // 更新输入框显示（用逗号连接）
-            nodeHostInput.value = lines.join(',');
+            nodeHostInput.value = items.join(',');
 
             // 关闭模态框
             closeHostsEditModal();

@@ -4188,9 +4188,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <div class="form-group">
                             <div class="input-wrapper">
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="skipVerify" title="跳过证书验证"
+                                    <input type="checkbox" id="skipVerify" title="跳过TLS证书验证"
                                         onchange="markModified('config')">
-                                    <label for="skipVerify" class="checkbox-label">跳过证书验证</label>
+                                    <label for="skipVerify" class="checkbox-label" title="跳过TLS证书验证">跳过证书验证</label>
                                 </div>
                             </div>
                         </div>
@@ -4198,9 +4198,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <div class="form-group" id="randomPathGroup" style="display: none;">
                             <div class="input-wrapper">
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="randomPath" title="随机路径"
+                                    <input type="checkbox" id="randomPath" title="随机伪装路径(自慰功能)"
                                         onchange="markModified('config')">
-                                    <label for="randomPath" class="checkbox-label">随机伪装路径</label>
+                                    <label for="randomPath" class="checkbox-label" title="随机伪装路径(自慰功能)">随机伪装路径</label>
                                 </div>
                             </div>
                         </div>
@@ -4208,9 +4208,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <div class="form-group" id="enable0RTTGroup" style="display: none;">
                             <div class="input-wrapper">
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="enable0RTT" title="启用0-RTT"
+                                    <input type="checkbox" id="enable0RTT" title="启用0-RTT(小白勿用)"
                                         onchange="markModified('config')">
-                                    <label for="enable0RTT" class="checkbox-label">启用0-RTT(ed=2560)</label>
+                                    <label for="enable0RTT" class="checkbox-label" title="启用0-RTT(小白勿用)">启用0-RTT(ed=2560)</label>
                                 </div>
                             </div>
                         </div>
@@ -4218,10 +4218,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <div class="form-group" id="tlsFragmentGroup" style="display: none;">
                             <div class="input-wrapper">
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="tlsFragmentShadowrocket" title="启用分片(Shadowrocket)"
+                                    <input type="checkbox" id="tlsFragmentShadowrocket" title="Shadowrocket(小火箭)专用的TLS分片功能"
                                         onchange="handleTLSFragmentChange('Shadowrocket'); markModified('config')">
                                     <label for="tlsFragmentShadowrocket"
-                                        class="checkbox-label">启用分片(Shadowrocket)</label>
+                                        class="checkbox-label" title="Shadowrocket(小火箭)专用的TLS分片功能">启用分片(Shadowrocket)</label>
                                 </div>
                             </div>
                         </div>
@@ -4229,9 +4229,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <div class="form-group" id="tlsFragmentHappGroup" style="display: none;">
                             <div class="input-wrapper">
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="tlsFragmentHapp" title="启用分片(Happ)"
+                                    <input type="checkbox" id="tlsFragmentHapp" title="Happ客户端专用的TLS分片功能"
                                         onchange="handleTLSFragmentChange('Happ'); markModified('config')">
-                                    <label for="tlsFragmentHapp" class="checkbox-label">启用分片(Happ)</label>
+                                    <label for="tlsFragmentHapp" class="checkbox-label" title="Happ客户端专用的TLS分片功能">启用分片(Happ)</label>
                                 </div>
                             </div>
                         </div>
@@ -5071,7 +5071,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <div class="latency-bars" id="bars-${siteName}">
                             ${Array(9).fill().map(() => '<div class="latency-bar loading" style="background-color: rgba(250, 171, 65, 0.5);"></div>').join('')}
                         </div>
-                        <p class="latency-value" id="latency-${siteName}">准备测试...</p>
+                        <p class="latency-value" id="latency-${siteName}">--ms</p>
                     </div>
                 `;
                 container.appendChild(card);

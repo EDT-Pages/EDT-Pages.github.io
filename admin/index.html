@@ -3832,7 +3832,185 @@
             background-color: var(--input-bg) !important;
             color: var(--text-primary) !important;
         }
+
+        /* 增强型文本编辑器样式 */
+        .line-editor {
+            display: flex;
+            gap: 0;
+            align-items: stretch;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #ffffff;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            margin-top: 8px;
+            min-height: 300px;
+        }
+
+        .line-editor:focus-within {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .line-editor .gutter {
+            display: none;
+            /* 移除旧的独立 gutter */
+        }
+
+        .line-editor .editor-area {
+            position: relative;
+            flex-grow: 1;
+            background: transparent;
+            min-height: 300px;
+            z-index: 1;
+        }
+
+        /* 模拟左侧 gutter 背景 - 固定位置 */
+        .line-editor .editor-area::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 48px;
+            background: #f9fafb;
+            border-right: 1px solid #e5e7eb;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .line-editor .mirror {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 12px 12px 12px 60px !important;
+            /* 左侧预留给行号 */
+            margin: 0 !important;
+            white-space: pre-wrap !important;
+            word-break: break-all !important;
+            pointer-events: none;
+            font-family: 'Monaco', 'Courier New', monospace !important;
+            font-size: 14px !important;
+            line-height: 24px !important;
+            color: transparent;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            box-sizing: border-box !important;
+            border: none !important;
+            scrollbar-width: none;
+            z-index: 2;
+            width: 100%;
+            /* 初始宽度，后续由 JS 动态调整 */
+            /* 确保在最上层，包括在 textarea 背景之上 */
+        }
+
+        .line-editor .mirror::-webkit-scrollbar {
+            display: none;
+        }
+
+        .line-editor .mirror .logical-line {
+            display: block;
+            margin: 0 !important;
+            padding: 0 !important;
+            position: relative;
+            color: transparent;
+            word-wrap: break-word;
+            min-height: 24px;
+            box-sizing: border-box;
+        }
+
+        .line-editor .mirror .logical-line:nth-child(even) {
+            background: rgba(59, 130, 246, 0.06);
+        }
+
+        html.dark-mode .line-editor .mirror .logical-line:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .line-editor .mirror .logical-line::before {
+            content: attr(data-line-number);
+            position: absolute;
+            left: -60px;
+            /* 相对于 mirror 的 padding-left */
+            top: 0;
+            width: 48px;
+            height: 24px;
+            line-height: 24px;
+            text-align: right;
+            padding-right: 12px;
+            color: #9ca3af;
+            font-size: 13px;
+            box-sizing: border-box;
+            z-index: 1;
+        }
+
+        html.dark-mode .line-editor .mirror .logical-line::before {
+            color: #6b7280;
+        }
+
+        /* 在真实换行处显示一个微小的符号 */
+        .line-editor .mirror .logical-line::after {
+            content: "↵";
+            position: absolute;
+            right: -4px;
+            bottom: 0;
+            color: rgba(59, 130, 246, 0.3);
+            font-size: 12px;
+            display: none;
+        }
+
+        .line-editor textarea {
+            width: 100% !important;
+            min-height: 300px;
+            border: none !important;
+            background: transparent !important;
+            padding: 12px 12px 12px 60px !important;
+            /* 对齐 mirror */
+            margin: 0 !important;
+            font-family: 'Monaco', 'Courier New', monospace !important;
+            font-size: 14px !important;
+            line-height: 24px !important;
+            color: #1f2937;
+            resize: vertical !important;
+            outline: none !important;
+            box-sizing: border-box !important;
+            display: block;
+            white-space: pre-wrap !important;
+            word-break: break-all !important;
+            scrollbar-width: thin;
+            position: relative;
+            z-index: 1;
+            overflow-y: scroll;
+        }
+
+        html.dark-mode .line-editor {
+            border-color: var(--input-border);
+            background: var(--input-bg);
+        }
+
+        html.dark-mode .line-editor .gutter {
+            background: rgba(255, 255, 255, 0.03);
+            border-right-color: var(--border-color);
+            color: #6b7280;
+        }
+
+        html.dark-mode .line-editor textarea {
+            color: var(--text-primary);
+        }
+
+        html.dark-mode .line-editor .mirror .logical-line:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        html.dark-mode .line-editor .editor-area::before {
+            background: rgba(255, 255, 255, 0.03);
+            border-right-color: var(--border-color);
+        }
     </style>
+
 </head>
 
 <body>
@@ -4098,8 +4276,12 @@
 
                     <div id="customIPSection" class="form-group hidden-section">
                         <label for="customIPs">自定义优选地址</label>
-                        <textarea id="customIPs" title="自定义优选地址"
-                            placeholder="注意：
+                        <div class="line-editor" id="subCustomEditor">
+                            <div class="gutter" aria-hidden="true"></div>
+                            <div class="editor-area">
+                                <pre class="mirror" aria-hidden="true"></pre>
+                                <textarea id="customIPs" title="自定义优选地址"
+                                    placeholder="注意：
 每行一个地址，如：地址:端口#备注
 IPv6地址需要用中括号括起来，如：[2606:4700::]:2053
 端口不写，默认为 443 端口，如：www.visa.cn#优选域名
@@ -4114,7 +4296,9 @@ https://raw.githubusercontent.com/cmliu/WorkerVless2sub/main/addressesapi.txt
 
 其他节点示例：
 vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tls&type=ws&host=edt-pages.github.io&path=%2F#edgetunnel"
-                            onchange="markModified('sub')"></textarea>
+                                    onchange="markModified('sub')"></textarea>
+                            </div>
+                        </div>
                     </div>
 
                     <div id="generatorSection" class="form-group hidden-section">
@@ -4210,7 +4394,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                 <div class="checkbox-group">
                                     <input type="checkbox" id="enable0RTT" title="启用0-RTT(小白勿用)"
                                         onchange="markModified('config')">
-                                    <label for="enable0RTT" class="checkbox-label" title="启用0-RTT(小白勿用)">启用0-RTT(ed=2560)</label>
+                                    <label for="enable0RTT" class="checkbox-label"
+                                        title="启用0-RTT(小白勿用)">启用0-RTT(ed=2560)</label>
                                 </div>
                             </div>
                         </div>
@@ -4218,10 +4403,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <div class="form-group" id="tlsFragmentGroup" style="display: none;">
                             <div class="input-wrapper">
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="tlsFragmentShadowrocket" title="Shadowrocket(小火箭)专用的TLS分片功能"
+                                    <input type="checkbox" id="tlsFragmentShadowrocket"
+                                        title="Shadowrocket(小火箭)专用的TLS分片功能"
                                         onchange="handleTLSFragmentChange('Shadowrocket'); markModified('config')">
-                                    <label for="tlsFragmentShadowrocket"
-                                        class="checkbox-label" title="Shadowrocket(小火箭)专用的TLS分片功能">启用分片(Shadowrocket)</label>
+                                    <label for="tlsFragmentShadowrocket" class="checkbox-label"
+                                        title="Shadowrocket(小火箭)专用的TLS分片功能">启用分片(Shadowrocket)</label>
                                 </div>
                             </div>
                         </div>
@@ -4231,7 +4417,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                 <div class="checkbox-group">
                                     <input type="checkbox" id="tlsFragmentHapp" title="Happ客户端专用的TLS分片功能"
                                         onchange="handleTLSFragmentChange('Happ'); markModified('config')">
-                                    <label for="tlsFragmentHapp" class="checkbox-label" title="Happ客户端专用的TLS分片功能">启用分片(Happ)</label>
+                                    <label for="tlsFragmentHapp" class="checkbox-label"
+                                        title="Happ客户端专用的TLS分片功能">启用分片(Happ)</label>
                                 </div>
                             </div>
                         </div>
@@ -5196,6 +5383,62 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
         }
 
+        // 初始化增强型文本编辑器
+        function initLineEditor(textareaId) {
+            const ta = document.getElementById(textareaId);
+            if (!ta) return;
+            const container = ta.closest('.line-editor');
+            if (!container) return;
+            const mirror = container.querySelector('.mirror');
+
+            function escapeHtml(str) {
+                return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            }
+
+            function render() {
+                const value = ta.value || '';
+                const lines = value.split(/\r\n|\r|\n/);
+
+                mirror.style.width = ta.clientWidth + 'px';
+
+                mirror.innerHTML = lines.map((l, i) => `<div class="logical-line" data-line-number="${i + 1}">${escapeHtml(l) || ' '}</div>`).join('');
+
+                syncScroll();
+            }
+
+            function syncScroll() {
+                mirror.scrollTop = ta.scrollTop;
+            }
+
+            let throttleTimeout;
+            const debouncedRender = () => {
+                cancelAnimationFrame(throttleTimeout);
+                throttleTimeout = requestAnimationFrame(render);
+            };
+
+            // 监听输入、滚动
+            ta.addEventListener('input', debouncedRender);
+            ta.addEventListener('scroll', syncScroll);
+
+            // 监听高度变化（ResizeObserver），解决拖拽角标后的同步问题
+            if (window.ResizeObserver) {
+                const ro = new ResizeObserver(() => {
+                    // 当 textarea 高度或宽度变化时，重新渲染以确保宽度同步
+                    render();
+                });
+                ro.observe(ta);
+            }
+
+            // 窗口缩放时也刷新一下
+            window.addEventListener('resize', debouncedRender);
+
+            // 暴露渲染函数
+            ta._refreshLineEditor = render;
+
+            // 初始渲染
+            render();
+        }
+
         async function loadConfig() {
             try {
                 // 禁用 Rocket Loader 对该请求的影响
@@ -5428,6 +5671,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const textarea = document.getElementById('customIPs');
             textarea.disabled = true;
             textarea.value = '正在加载...';
+            if (textarea._refreshLineEditor) textarea._refreshLineEditor();
 
             try {
                 const response = await fetch('/admin/ADD.txt?_t=' + Date.now(), {
@@ -5447,20 +5691,42 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 textarea.value = '';
             } finally {
                 textarea.disabled = false;
+                if (textarea._refreshLineEditor) textarea._refreshLineEditor();
             }
         }
 
         function updateIPMode() {
             const mode = document.getElementById('ipMode').value;
-            document.getElementById('randomIPSection').style.display = mode === 'random' ? 'grid' : 'none';
-            document.getElementById('customIPSection').style.display = mode === 'custom' ? 'block' : 'none';
-            document.getElementById('generatorSection').style.display = mode === 'generator' ? 'grid' : 'none';
+
+            const sections = {
+                'random': document.getElementById('randomIPSection'),
+                'custom': document.getElementById('customIPSection'),
+                'generator': document.getElementById('generatorSection')
+            };
+
+            Object.keys(sections).forEach(key => {
+                const el = sections[key];
+                if (el) {
+                    if (key === mode) {
+                        el.classList.remove('hidden-section');
+                        el.style.display = (key === 'custom') ? 'block' : 'grid';
+                    } else {
+                        el.classList.add('hidden-section');
+                        el.style.display = 'none';
+                    }
+                }
+            });
 
             // 显示或隐藏指定端口
-            if (mode === 'random' && currentConfig.优选订阅生成?.本地IP库?.指定端口 !== undefined) {
-                document.getElementById('portSection').style.display = 'grid';
-            } else {
-                document.getElementById('portSection').style.display = 'none';
+            const portSection = document.getElementById('portSection');
+            if (portSection) {
+                if (mode === 'random' && currentConfig.优选订阅生成?.本地IP库?.指定端口 !== undefined) {
+                    portSection.classList.remove('hidden-section');
+                    portSection.style.display = 'grid';
+                } else {
+                    portSection.classList.add('hidden-section');
+                    portSection.style.display = 'none';
+                }
             }
 
             // 显示或隐藏在线优选和优选API按钮（仅在自定义优选模式下显示）
@@ -8840,6 +9106,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         window.addEventListener('DOMContentLoaded', () => {
             loadConfig();
             initUserMode();
+            initLineEditor('customIPs');
             // 独立预加载 SubConfig 数据，不阻塞主流程
             loadSubConfigData().catch(err => console.error('SubConfig预加载失败:', err));
         });

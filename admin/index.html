@@ -4954,8 +4954,14 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <!-- 结果显示区域 -->
             <div class="api-results-container">
                 <label class="api-results-label">接口结果:</label>
-                <textarea id="apiOptimizeResults" class="api-results-textarea" readonly
-                    placeholder="接口返回结果将显示在这里，每行一个地址"></textarea>
+                <div class="line-editor" id="apiResultsEditor">
+                    <div class="gutter" aria-hidden="true"></div>
+                    <div class="editor-area">
+                        <pre class="mirror" aria-hidden="true"></pre>
+                        <textarea id="apiOptimizeResults" title="API接口结果"
+                            placeholder="接口返回结果将显示在这里，每行一个地址" readonly></textarea>
+                    </div>
+                </div>
             </div>
 
             <!-- 按钮组 -->
@@ -8058,6 +8064,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('apiOptimizeResults').value = '';
             document.getElementById('btnAppendAPI').disabled = true;
             document.getElementById('btnAppendResults').disabled = true;
+            // 初始化line-editor
+            initLineEditor('apiOptimizeResults');
         }
 
         // 关闭API优选模态框
@@ -8225,12 +8233,22 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     // 接口可用
                     const results = data.data.join('\n');
                     document.getElementById('apiOptimizeResults').value = results;
+                    // 刷新line-editor行数
+                    const resultsTA = document.getElementById('apiOptimizeResults');
+                    if (resultsTA._refreshLineEditor) {
+                        resultsTA._refreshLineEditor();
+                    }
                     document.getElementById('btnAppendAPI').disabled = false;
                     document.getElementById('btnAppendResults').disabled = false;
                     showToast('✅ API接口验证成功！', 'success');
                 } else {
                     // 接口不可用
                     document.getElementById('apiOptimizeResults').value = '❌ 接口不可用，请检查URL和端口是否正确';
+                    // 刷新line-editor行数
+                    const resultsTA = document.getElementById('apiOptimizeResults');
+                    if (resultsTA._refreshLineEditor) {
+                        resultsTA._refreshLineEditor();
+                    }
                     document.getElementById('btnAppendAPI').disabled = true;
                     document.getElementById('btnAppendResults').disabled = true;
                     showToast('❌ API接口验证失败，请检查接口', 'error');
@@ -8238,6 +8256,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             } catch (error) {
                 console.error('API验证错误:', error);
                 document.getElementById('apiOptimizeResults').value = `❌ 验证出错: ${error.message}`;
+                // 刷新line-editor行数
+                const resultsTA = document.getElementById('apiOptimizeResults');
+                if (resultsTA._refreshLineEditor) {
+                    resultsTA._refreshLineEditor();
+                }
                 document.getElementById('btnAppendAPI').disabled = true;
                 document.getElementById('btnAppendResults').disabled = true;
                 showToast('❌ 验证出错，请稍后重试', 'error');
@@ -8281,6 +8304,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 customIPsTextarea.value = completeURL;
             }
 
+            // 刷新line-editor行数
+            if (customIPsTextarea._refreshLineEditor) {
+                customIPsTextarea._refreshLineEditor();
+            }
+
             // 标记为已修改
             markModified('sub');
 
@@ -8306,6 +8334,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 customIPsTextarea.value = currentValue + '\n' + results;
             } else {
                 customIPsTextarea.value = results;
+            }
+
+            // 刷新line-editor行数
+            if (customIPsTextarea._refreshLineEditor) {
+                customIPsTextarea._refreshLineEditor();
             }
 
             // 标记为已修改

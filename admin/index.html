@@ -4311,7 +4311,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <button type="button" class="btn btn-online-optimize hidden-section" id="onlineOptimizeBtn"
                             onclick="openOnlineOptimizeModal()">在线优选</button>
                         <button type="button" class="btn btn-api-optimize hidden-section" id="apiOptimizeBtn"
-                            onclick="openAPIOptimizeModal()">优选API</button>
+                            onclick="openAPIOptimizeModal()">订阅接口</button>
                         <div class="btn-group">
                             <button type="button" class="btn btn-secondary" onclick="cancelEdit('sub')" disabled
                                 id="cancelSubBtn">取消</button>
@@ -4931,13 +4931,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
     <div class="modal-overlay" id="apiOptimizeModal">
         <div class="modal api-optimize-modal" onclick="event.stopPropagation()">
             <button type="button" class="modal-close" onclick="closeAPIOptimizeModal()">×</button>
-            <h2 class="api-optimize-modal-title">🔌 优选API</h2>
+            <h2 class="api-optimize-modal-title">🔌 订阅接口</h2>
 
             <!-- API URL 输入 -->
             <div class="api-form-group">
                 <div class="api-form-row">
                     <label>API URL:</label>
-                    <input type="text" id="apiOptimizeURL" placeholder="输入API接口URL" title="API接口URL"
+                    <input type="text" id="apiOptimizeURL" placeholder="请输入 优选API地址 或 需要汇聚的订阅地址" title="请输入 优选API地址 或 需要汇聚的订阅地址"
                         oninput="autoConvertGitHubURL(); autoDetectPortFromURL()">
                 </div>
             </div>
@@ -5735,7 +5735,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 }
             }
 
-            // 显示或隐藏在线优选和优选API按钮（仅在自定义优选模式下显示）
+            // 显示或隐藏在线优选和订阅接口按钮（仅在自定义优选模式下显示）
             const onlineOptimizeBtn = document.getElementById('onlineOptimizeBtn');
             const apiOptimizeBtn = document.getElementById('apiOptimizeBtn');
             if (onlineOptimizeBtn) {

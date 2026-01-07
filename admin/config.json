@@ -55,11 +55,13 @@
     "GlobalAPIKey": null,
     "AccountID": "6d7***************************90",
     "APIToken": "duN***********************************fs",
+    "UsageAPI": null,
     "Usage": {
       "success": true,
       "pages": 10900,
       "workers": 9670,
-      "total": 20510
+      "total": 20510,
+      "max": 100000
     }
   },
   "PATH": "/",

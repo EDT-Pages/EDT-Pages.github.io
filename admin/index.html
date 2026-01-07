@@ -4073,7 +4073,7 @@
                                 </div>
                                 <div class="cf-stat-item">
                                     <div class="cf-stat-label">日配额</div>
-                                    <div class="cf-stat-value cf-value-orange">100,000</div>
+                                    <div class="cf-stat-value cf-value-orange" id="cfDailyQuota">100,000</div>
                                 </div>
                             </div>
                         </div>
@@ -5643,11 +5643,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const workers = cfUsage.workers || 0;
             const pages = cfUsage.pages || 0;
             const total = cfUsage.total || 0;
-            const dailyQuota = 100000;
+            const dailyQuota = cfUsage.max || 100000;
 
             // 更新显示数值
             document.getElementById('cfWorkerCount').textContent = workers.toLocaleString();
             document.getElementById('cfPagesCount').textContent = pages.toLocaleString();
+            document.getElementById('cfDailyQuota').textContent = dailyQuota.toLocaleString();
             document.getElementById('cfTotalDisplay').textContent = total.toLocaleString();
 
             // 计算百分比
@@ -7702,8 +7703,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 if (data.success) {
                     // 验证成功
                     statusEl.style.background = 'linear-gradient(135deg, #10b981 0, #059669 100%)';
-                    const percentage = (data.total / 100000 * 100).toFixed(2);
-                    statusEl.textContent = `✅ 验证成功！ 今天的请求配额: ${data.total}/100000 (${percentage}%)`;
+                    const maxQuota = data.max || 100000;
+                    const percentage = (data.total / maxQuota * 100).toFixed(2);
+                    statusEl.textContent = `✅ 验证成功！ 今天的请求配额: ${data.total}/${maxQuota} (${percentage}%)`;
                     confirmBtn.disabled = false;
                     confirmBtn.style.opacity = '1';
                     confirmBtn.dataset.testPassed = 'true';

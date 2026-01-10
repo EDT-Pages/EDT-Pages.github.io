@@ -4811,6 +4811,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 <select id="cloudflareAuthMethod" title="请求方案" onchange="updateCloudflareAuthMethod()">
                     <option value="accountid">Account ID + API Token</option>
                     <option value="email">Email + Global API Key</option>
+                    <option value="usageapi">UsageAPI</option>
                 </select>
             </div>
 
@@ -4837,6 +4838,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     <input type="password" id="cloudflareAPIToken" placeholder="输入API Token">
                     <small style="font-size: 12px; color: #9ca3af; margin-top: 6px; display: block;">💡 API令牌权限 使用
                         "阅读分析数据和日志" 模板即可</small>
+                </div>
+            </div>
+
+            <!-- UsageAPI 方案 -->
+            <div id="cloudflareUsageAPISection" class="hidden-section">
+                <div class="form-group subapi-form-group">
+                    <label>UsageAPI地址</label>
+                    <input type="text" id="cloudflareUsageAPI" placeholder="例如: https://usage-panel.xxx.workers.dev/usage.json?token=xxx">
+                    <small style="font-size: 12px; color: #9ca3af; margin-top: 6px; display: block;">💡 可通过部署 <a href="https://github.com/cmliu/CF-Workers-UsagePanel" target="_blank" rel="noopener" style="color: #3b82f6; text-decoration: none;">UsagePanel</a> 项目获取 UsageAPI 地址</small>
                 </div>
             </div>
 
@@ -7589,6 +7599,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('cloudflareGlobalAPIKey').value = '';
             document.getElementById('cloudflareAccountID').value = '';
             document.getElementById('cloudflareAPIToken').value = '';
+            document.getElementById('cloudflareUsageAPI').value = '';
 
             // 重置状态和保存按钮
             document.getElementById('cloudflareStatus').style.display = 'none';
@@ -7605,12 +7616,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // 隐藏所有方案的输入框
             document.getElementById('cloudflareEmailSection').style.display = 'none';
             document.getElementById('cloudflareAccountIDSection').style.display = 'none';
+            document.getElementById('cloudflareUsageAPISection').style.display = 'none';
 
             // 显示选中方案的输入框
             if (method === 'email') {
                 document.getElementById('cloudflareEmailSection').style.display = 'block';
             } else if (method === 'accountid') {
                 document.getElementById('cloudflareAccountIDSection').style.display = 'block';
+            } else if (method === 'usageapi') {
+                document.getElementById('cloudflareUsageAPISection').style.display = 'block';
             }
 
             // 切换方案时重置验证状态和保存按钮
@@ -7631,6 +7645,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('cloudflareGlobalAPIKey').value = '';
             document.getElementById('cloudflareAccountID').value = '';
             document.getElementById('cloudflareAPIToken').value = '';
+            document.getElementById('cloudflareUsageAPI').value = '';
             document.getElementById('cloudflareStatus').style.display = 'none';
             document.getElementById('cloudflareStatus').textContent = '';
         }
@@ -7638,7 +7653,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         // 测试 Cloudflare 连接
         async function testCloudflareConfig() {
             const method = document.getElementById('cloudflareAuthMethod').value;
-            let email = '', globalAPIKey = '', accountID = '', apiToken = '';
+            let email = '', globalAPIKey = '', accountID = '', apiToken = '', usageAPI = '';
 
             const statusEl = document.getElementById('cloudflareStatus');
             const confirmBtn = document.getElementById('cloudflareConfirmBtn');
@@ -7673,6 +7688,19 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     confirmBtn.dataset.testPassed = 'false';
                     return;
                 }
+            } else if (method === 'usageapi') {
+                usageAPI = document.getElementById('cloudflareUsageAPI').value.trim();
+
+                if (!usageAPI) {
+                    statusEl.textContent = '❌ 请填写 UsageAPI 地址';
+                    statusEl.style.display = 'block';
+                    statusEl.style.background = 'linear-gradient(135deg, #ef4444 0, #dc2626 100%)';
+                    statusEl.style.color = '#fff';
+                    confirmBtn.disabled = true;
+                    confirmBtn.style.opacity = '0.5';
+                    confirmBtn.dataset.testPassed = 'false';
+                    return;
+                }
             }
 
             try {
@@ -7682,17 +7710,24 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 statusEl.style.background = 'linear-gradient(135deg, #3b82f6 0, #1d4ed8 100%)';
                 statusEl.style.color = '#fff';
 
-                // 构建请求 URL
-                let queryParams = new URLSearchParams();
-                if (method === 'email') {
-                    queryParams.append('Email', email);
-                    queryParams.append('GlobalAPIKey', globalAPIKey);
-                } else if (method === 'accountid') {
-                    queryParams.append('AccountID', accountID);
-                    queryParams.append('APIToken', apiToken);
-                }
+                let response;
 
-                const response = await fetch('/admin/getCloudflareUsage?' + queryParams.toString());
+                if (method === 'usageapi') {
+                    // UsageAPI 方案：直接请求外部 API
+                    response = await fetch(usageAPI);
+                } else {
+                    // 构建请求 URL
+                    let queryParams = new URLSearchParams();
+                    if (method === 'email') {
+                        queryParams.append('Email', email);
+                        queryParams.append('GlobalAPIKey', globalAPIKey);
+                    } else if (method === 'accountid') {
+                        queryParams.append('AccountID', accountID);
+                        queryParams.append('APIToken', apiToken);
+                    }
+
+                    response = await fetch('/admin/getCloudflareUsage?' + queryParams.toString());
+                }
 
                 if (!response.ok) {
                     throw new Error('请求失败 (HTTP ' + response.status + ')');
@@ -7716,10 +7751,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     confirmBtn.dataset.globalAPIKey = globalAPIKey;
                     confirmBtn.dataset.accountID = accountID;
                     confirmBtn.dataset.apiToken = apiToken;
+                    confirmBtn.dataset.usageAPI = usageAPI;
                 } else {
                     // 验证失败
                     statusEl.style.background = 'linear-gradient(135deg, #ef4444 0, #dc2626 100%)';
-                    statusEl.textContent = '❌ 验证失败：凭证无效或无权限';
+                    statusEl.textContent = '❌ 验证失败：' + (data.msg || '凭证无效或无权限');
                     confirmBtn.disabled = true;
                     confirmBtn.style.opacity = '0.5';
                     confirmBtn.dataset.testPassed = 'false';
@@ -7750,18 +7786,31 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const globalAPIKey = confirmBtn.dataset.globalAPIKey || '';
             const accountID = confirmBtn.dataset.accountID || '';
             const apiToken = confirmBtn.dataset.apiToken || '';
+            const usageAPI = confirmBtn.dataset.usageAPI || '';
 
             try {
                 confirmBtn.disabled = true;
                 confirmBtn.textContent = '保存中...';
 
                 // 构建请求体
-                const payload = {
-                    Email: method === 'email' ? email : null,
-                    GlobalAPIKey: method === 'email' ? globalAPIKey : null,
-                    AccountID: method === 'accountid' ? accountID : null,
-                    APIToken: method === 'accountid' ? apiToken : null
-                };
+                let payload;
+                if (method === 'usageapi') {
+                    payload = {
+                        Email: null,
+                        GlobalAPIKey: null,
+                        AccountID: null,
+                        APIToken: null,
+                        UsageAPI: usageAPI
+                    };
+                } else {
+                    payload = {
+                        Email: method === 'email' ? email : null,
+                        GlobalAPIKey: method === 'email' ? globalAPIKey : null,
+                        AccountID: method === 'accountid' ? accountID : null,
+                        APIToken: method === 'accountid' ? apiToken : null,
+                        UsageAPI: null
+                    };
+                }
 
                 // 提交到后端
                 const response = await fetch('/admin/cf.json', {

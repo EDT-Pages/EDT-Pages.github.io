@@ -4809,9 +4809,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <div class="form-group subapi-form-group">
                 <label>请求方案</label>
                 <select id="cloudflareAuthMethod" title="请求方案" onchange="updateCloudflareAuthMethod()">
+                    <option id="usageapiOption" value="usageapi">UsageAPI</option>
                     <option value="accountid">Account ID + API Token</option>
                     <option value="email">Email + Global API Key</option>
-                    <option value="usageapi">UsageAPI</option>
                 </select>
             </div>
 
@@ -4845,8 +4845,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <div id="cloudflareUsageAPISection" class="hidden-section">
                 <div class="form-group subapi-form-group">
                     <label>UsageAPI地址</label>
-                    <input type="text" id="cloudflareUsageAPI" placeholder="例如: https://usage-panel.xxx.workers.dev/usage.json?token=xxx">
-                    <small style="font-size: 12px; color: #9ca3af; margin-top: 6px; display: block;">💡 可通过部署 <a href="https://github.com/cmliu/CF-Workers-UsagePanel" target="_blank" rel="noopener" style="color: #3b82f6; text-decoration: none;">UsagePanel</a> 项目获取 UsageAPI 地址</small>
+                    <input type="text" id="cloudflareUsageAPI" placeholder="https://usage-panel.xxx.workers.dev/usage.json?token=xxx">
+                    <small style="font-size: 12px; color: #9ca3af; margin-top: 6px; display: block;">💡 支持多账号汇总，可通过部署 <a href="https://github.com/cmliu/CF-Workers-UsagePanel" target="_blank" rel="noopener" style="color: #3b82f6; text-decoration: none;">UsagePanel</a> 项目获取 UsageAPI 地址</small>
                 </div>
             </div>
 
@@ -5493,6 +5493,17 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 cfUsageModule.style.display = 'none';
                 cfUsageModule.classList.add('cf-usage-module');
                 updateCloudflareButtonStates(false);
+            }
+
+            // 检查 CF.UsageAPI 字段是否存在，向下兼容旧版本
+            const usageapiOption = document.getElementById('usageapiOption');
+            if (usageapiOption) {
+                // 如果 CF.UsageAPI 字段不存在（旧版本），隐藏 UsageAPI 选项
+                if (currentConfig.CF?.UsageAPI === undefined) {
+                    usageapiOption.style.display = 'none';
+                } else {
+                    usageapiOption.style.display = '';
+                }
             }
 
             // 订阅链接

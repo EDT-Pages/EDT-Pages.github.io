@@ -4422,6 +4422,17 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                 </div>
                             </div>
                         </div>
+
+                        <div class="form-group" id="enableECHGroup" style="display: none;">
+                            <div class="input-wrapper">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="enableECH" title="启用ECH可以无视域名阻断，仅支持 v2rayN v7.17.0 或更高版本"
+                                        onchange="markModified('config')">
+                                    <label for="enableECH" class="checkbox-label"
+                                        title="启用ECH可以无视域名阻断，仅支持 v2rayN v7.17.0 或更高版本">启用ECH(v2rayN)</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="module-footer">
@@ -5601,6 +5612,16 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 tlsFragmentHappGroup.style.setProperty('display', 'none', 'important');
             }
 
+            // 检查ECH字段是否存在
+            const enableECHGroup = document.getElementById('enableECHGroup');
+            const enableECHCheckbox = document.getElementById('enableECH');
+            if (currentConfig['ECH'] !== undefined) {
+                enableECHGroup.style.setProperty('display', 'flex', 'important');
+                enableECHCheckbox.checked = currentConfig['ECH'] || false;
+            } else {
+                enableECHGroup.style.setProperty('display', 'none', 'important');
+            }
+
             // 反代落地设置
             const socksEnabled = currentConfig.反代?.SOCKS5?.启用;
             if (!socksEnabled) {
@@ -6423,6 +6444,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 }
             }
 
+            // 保存ECH（如果字段存在）
+            if (currentConfig['ECH'] !== undefined) {
+                currentConfig['ECH'] = document.getElementById('enableECH').checked;
+            }
+
             await saveConfigToServer('config');
             // 更新网页标题
             document.title = `${currentConfig.优选订阅生成?.SUBNAME || 'edgetunnel'}设置页面 - 管理后台`;
@@ -6649,6 +6675,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 if (currentConfig['TLS分片'] !== undefined) {
                     document.getElementById('tlsFragmentShadowrocket').checked = currentConfig['TLS分片'] === 'Shadowrocket';
                     document.getElementById('tlsFragmentHapp').checked = currentConfig['TLS分片'] === 'Happ';
+                }
+
+                // 重置ECH（如果字段存在）
+                if (currentConfig['ECH'] !== undefined) {
+                    document.getElementById('enableECH').checked = currentConfig['ECH'] || false;
                 }
 
                 updateProtocol();

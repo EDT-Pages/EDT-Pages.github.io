@@ -4359,6 +4359,23 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             <option value="trojan">Trojan</option>
                         </select>
                     </div>
+
+                    <div class="form-group" id="fingerprintGroup">
+                        <label for="fingerprint">指纹伪装</label>
+                        <select id="fingerprint" title="浏览器指纹" onchange="handleFingerprintChange(); markModified('config')">
+                            <option value="chrome">chrome（支持ECH）</option>
+                            <option value="firefox">firefox（支持ECH）</option>
+                            <option value="safari">safari</option>
+                            <option value="ios">ios</option>
+                            <option value="android">android</option>
+                            <option value="edge">edge</option>
+                            <option value="360">360</option>
+                            <option value="qq">qq</option>
+                            <option value="random">random（支持ECH）</option>
+                            <option value="randomized">randomized</option>
+                        </select>
+                    </div>
+
                     <!--- 节点配置 
                 <div class="form-group">
                     <label>传输协议</label>
@@ -4426,10 +4443,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <div class="form-group" id="enableECHGroup" style="display: none;">
                             <div class="input-wrapper">
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="enableECH" title="启用ECH可以无视域名阻断，仅支持 v2rayN v7.17.0 或更高版本"
+                                    <input type="checkbox" id="enableECH" title="启用ECH可以避免域名阻断-1现象，但是节点有效期大幅缩短，需要频繁更新订阅！&#10;&#10;支持版本&#10;v2rayN v7.17.0+&#10;v2rayNG v2.0.0+&#10;Clash.Meta(Mihomo)&#10;Singbox"
                                         onchange="markModified('config')">
                                     <label for="enableECH" class="checkbox-label"
-                                        title="启用ECH可以无视域名阻断，仅支持 v2rayN v7.17.0 或更高版本">启用ECH(v2rayN)</label>
+                                        title="启用ECH可以避免域名阻断-1现象，但是节点有效期大幅缩短，需要频繁更新订阅！&#10;&#10;支持版本&#10;v2rayN v7.17.0+&#10;v2rayNG v2.0.0+&#10;Clash.Meta(Mihomo)&#10;Singbox">启用ECH</label>
                                 </div>
                             </div>
                         </div>
@@ -4856,8 +4873,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <div id="cloudflareUsageAPISection" class="hidden-section">
                 <div class="form-group subapi-form-group">
                     <label>UsageAPI地址</label>
-                    <input type="text" id="cloudflareUsageAPI" placeholder="https://usage-panel.xxx.workers.dev/usage.json?token=xxx">
-                    <small style="font-size: 12px; color: #9ca3af; margin-top: 6px; display: block;">💡 支持多账号汇总，可通过部署 <a href="https://github.com/cmliu/CF-Workers-UsagePanel" target="_blank" rel="noopener" style="color: #3b82f6; text-decoration: none;">UsagePanel</a> 项目获取 UsageAPI 地址</small>
+                    <input type="text" id="cloudflareUsageAPI"
+                        placeholder="https://usage-panel.xxx.workers.dev/usage.json?token=xxx">
+                    <small style="font-size: 12px; color: #9ca3af; margin-top: 6px; display: block;">💡 支持多账号汇总，可通过部署 <a
+                            href="https://github.com/cmliu/CF-Workers-UsagePanel" target="_blank" rel="noopener"
+                            style="color: #3b82f6; text-decoration: none;">UsagePanel</a> 项目获取 UsageAPI 地址</small>
                 </div>
             </div>
 
@@ -4958,8 +4978,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <div class="api-form-group">
                 <div class="api-form-row">
                     <label>API URL:</label>
-                    <input type="text" id="apiOptimizeURL" placeholder="请输入 优选API地址 或 需要汇聚的订阅地址" title="请输入 优选API地址 或 需要汇聚的订阅地址"
-                        oninput="autoConvertGitHubURL(); autoDetectPortFromURL()">
+                    <input type="text" id="apiOptimizeURL" placeholder="请输入 优选API地址 或 需要汇聚的订阅地址"
+                        title="请输入 优选API地址 或 需要汇聚的订阅地址" oninput="autoConvertGitHubURL(); autoDetectPortFromURL()">
                 </div>
             </div>
 
@@ -4979,8 +4999,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     <div class="gutter" aria-hidden="true"></div>
                     <div class="editor-area">
                         <pre class="mirror" aria-hidden="true"></pre>
-                        <textarea id="apiOptimizeResults" title="API接口结果"
-                            placeholder="接口返回结果将显示在这里，每行一个地址" readonly></textarea>
+                        <textarea id="apiOptimizeResults" title="API接口结果" placeholder="接口返回结果将显示在这里，每行一个地址"
+                            readonly></textarea>
                     </div>
                 </div>
             </div>
@@ -5576,6 +5596,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             //document.getElementById('transport').value = currentConfig.传输协议 || 'ws';
             document.getElementById('skipVerify').checked = currentConfig.跳过证书验证 || false;
 
+            // 检查Fingerprint字段是否存在
+            const fingerprintGroup = document.getElementById('fingerprintGroup');
+            const fingerprintSelect = document.getElementById('fingerprint');
+            if (currentConfig['Fingerprint'] == undefined) {
+                fingerprintGroup.style.setProperty('display', 'none', 'important');
+            } else {
+                fingerprintSelect.value = currentConfig['Fingerprint'] || 'chrome';
+            }
+
             // 检查随机路径字段是否存在
             const randomPathGroup = document.getElementById('randomPathGroup');
             const randomPathCheckbox = document.getElementById('randomPath');
@@ -5616,10 +5645,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const enableECHGroup = document.getElementById('enableECHGroup');
             const enableECHCheckbox = document.getElementById('enableECH');
             if (currentConfig['ECH'] !== undefined) {
-                enableECHGroup.style.setProperty('display', 'flex', 'important');
+                enableECHGroup.style.display = 'flex';
                 enableECHCheckbox.checked = currentConfig['ECH'] || false;
+                // 根据Fingerprint值初始化ECH选项的禁用状态
+                updateECHOptionState();
             } else {
-                enableECHGroup.style.setProperty('display', 'none', 'important');
+                enableECHGroup.style.display = 'none';
             }
 
             // 反代落地设置
@@ -5880,6 +5911,45 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 transport.disabled = false;
             }
             */
+        }
+
+        // 处理浏览器指纹变化，联动ECH选项
+        function handleFingerprintChange() {
+            updateECHOptionState();
+        }
+
+        // 更新ECH选项的状态（禁用/启用）
+        function updateECHOptionState() {
+            const fingerprint = document.getElementById('fingerprint').value;
+            const enableECHCheckbox = document.getElementById('enableECH');
+            const enableECHLabel = document.querySelector('label[for="enableECH"]');
+            const enableECHGroup = document.getElementById('enableECHGroup');
+            
+            // 支持ECH的指纹类型
+            const supportECH = ['chrome', 'firefox', 'random'];
+            
+            if (enableECHGroup && enableECHCheckbox) {
+                if (supportECH.includes(fingerprint)) {
+                    // 启用ECH选项
+                    enableECHCheckbox.disabled = false;
+                    enableECHGroup.style.opacity = '1';
+                    enableECHGroup.style.pointerEvents = 'auto';
+                    if (enableECHLabel) {
+                        enableECHLabel.style.opacity = '1';
+                        enableECHLabel.style.cursor = 'pointer';
+                    }
+                } else {
+                    // 禁用ECH选项，取消勾选，变成灰色
+                    enableECHCheckbox.disabled = true;
+                    enableECHCheckbox.checked = false;
+                    enableECHGroup.style.opacity = '0.5';
+                    enableECHGroup.style.pointerEvents = 'none';
+                    if (enableECHLabel) {
+                        enableECHLabel.style.opacity = '0.5';
+                        enableECHLabel.style.cursor = 'not-allowed';
+                    }
+                }
+            }
         }
 
         // 处理PROXYIP地址
@@ -6419,6 +6489,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             currentConfig.协议类型 = document.getElementById('protocol').value;
             //currentConfig.传输协议 = currentConfig.协议类型 === 'trojan' ? 'ws' : document.getElementById('transport').value;
             currentConfig.跳过证书验证 = document.getElementById('skipVerify').checked;
+
+            // 保存Fingerprint（如果字段存在）
+            if (currentConfig['Fingerprint'] !== undefined) {
+                currentConfig['Fingerprint'] = document.getElementById('fingerprint').value;
+            }
 
             // 保存随机路径（如果字段存在）
             if (currentConfig['随机路径'] !== undefined) {

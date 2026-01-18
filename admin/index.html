@@ -9466,7 +9466,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             setStatus('status-twitter', 'loading');
             try {
                 const timestamp = Date.now();
-                const response = await fetch(`https://x.com/cdn-cgi/trace?_t=${timestamp}`);
+                const response = await fetch(`https://help.x.com/cdn-cgi/trace?_t=${timestamp}`);
                 const text = await response.text();
 
                 // 解析文本格式的响应 (key=value 格式,每行一个)

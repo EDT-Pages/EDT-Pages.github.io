@@ -7,6 +7,11 @@
     <meta name="robots" content="noindex, nofollow">
     <title>管理后台</title>
     <script data-cfasync="false" src="https://cdn.jsdelivr.net/npm/@keeex/qrcodejs-kx@1.0.2/qrcode.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&family=Orbitron:wght@700;800;900&display=swap"
+        rel="stylesheet">
     <style>
         /* 基础重置 */
         * {
@@ -16,7 +21,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             overflow: hidden
         }
 
@@ -906,11 +911,11 @@
             --input-border: #e5e7eb;
             --overlay-bg: rgba(255, 255, 255, 0.7);
             --blur-overlay: rgba(0, 0, 0, 0.3);
-            --latency-49: #008236;
-            --latency-149: #7ccf00;
-            --latency-299: #fdc700;
-            --latency-999: #fb2c36;
-            --latency-1000: #82181a;
+            --latency-49: #4CAF50;
+            --latency-149: #83DA00;
+            --latency-299: #f58722;
+            --latency-999: #ff404a;
+            --latency-1000: #c40003;
         }
 
         html.dark-mode {
@@ -1373,7 +1378,7 @@
 
         .module-content {
             display: block;
-            overflow: hidden;
+            /* overflow: hidden; */
             max-height: 2000px;
             opacity: 1;
             transition: max-height 320ms cubic-bezier(.2, .8, .2, 1), opacity 220ms ease
@@ -2760,56 +2765,12 @@
 
         .network-cards-container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 16px;
             margin-bottom: 10px;
             margin-top: 2px;
         }
 
-        .network-card {
-            background: rgba(255, 255, 255, 0.6);
-            -webkit-backdrop-filter: blur(10px);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
-            position: relative;
-            border-left: 4px solid transparent;
-        }
-
-        .network-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(250, 171, 65, 0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .network-card:hover {
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.12), 0 0 12px rgba(250, 171, 65, 0.08);
-            transform: translateY(-4px);
-            border-left-color: #faab41;
-        }
-
-        .network-card:hover::before {
-            left: 100%;
-        }
-
-        html.dark-mode .network-card {
-            background: rgba(39, 39, 39, 0.7);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
-            border-left-color: transparent;
-        }
-
-        html.dark-mode .network-card:hover {
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4), 0 0 12px rgba(250, 171, 65, 0.15);
-            border-left-color: #faab41;
-        }
 
         .network-card-title {
             display: flex;
@@ -2873,6 +2834,10 @@
             margin-bottom: 8px;
             cursor: default;
             transition: all 0.2s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
         }
 
         html.dark-mode .ip-text {
@@ -2907,6 +2872,14 @@
             margin-bottom: 8px;
             font-size: 14px;
             color: #666;
+            min-width: 0;
+        }
+
+        .country-text {
+            color: var(--text-color-secondary);
+            font-size: 0.875rem;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         html.dark-mode .location-text {
@@ -2916,6 +2889,10 @@
         .country-text,
         .city-text {
             flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
         }
 
         .network-tip {
@@ -3395,15 +3372,146 @@
             }
         }
 
-        /* 延迟测试卡片样式 */
+        /* 网络信息和延迟测试样式 */
+        .network-cards-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        @media (max-width: 1200px) {
+            .network-cards-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .network-cards-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .network-card,
+        .latency-card {
+            background: var(--bg-secondary);
+            border: 1.5px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            position: relative;
+            overflow: hidden;
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        html.dark-mode .network-card,
+        html.dark-mode .latency-card {
+            background: rgba(39, 39, 39, 0.7);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+        }
+
+        .latency-card {
+            padding: 12px 16px;
+            min-height: 80px;
+            flex-direction: row;
+            /* 延迟卡片内部通常是横向排列 header 和 graph */
+            align-items: center;
+        }
+
+        .network-card:hover,
+        .latency-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            border-color: #f6821f;
+            box-shadow: 0 12px 20px rgba(246, 130, 31, 0.15);
+        }
+
+        .network-card-title {
+            font-size: 14px;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .status-loading {
+            background: #fbbf24;
+            animation: pulse-loading 1.5s ease-in-out infinite;
+        }
+
+        .status-success {
+            background: #10b981;
+        }
+
+        .status-error {
+            background: #ef4444;
+        }
+
+        @keyframes pulse-loading {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .network-info-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ip-text {
+            color: var(--text-primary);
+            font-weight: 700;
+            font-family: 'Fira Code', monospace;
+            font-size: 15px;
+            word-break: break-all;
+        }
+
+        .location-text {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .network-tip {
+            margin-top: 4px;
+            font-size: 11px;
+            color: #9ca3af;
+            line-height: 1.4;
+        }
+
         .latency-cards {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-top: 20px;
+            gap: 16px;
+            row-gap: 8px;
+            margin-top: 16px;
         }
 
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
             .latency-cards {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -3415,273 +3523,177 @@
             }
         }
 
-        .latency-card {
-            background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255, 255, 255, 0.8) 100%);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 10px;
+        .latency-card-header {
             display: flex;
-            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+
+        .latency-card-info {
+            display: flex;
+            align-items: center;
             gap: 8px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
-        .latency-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-color: var(--text-primary);
-        }
-
-        .latency-card-icon {
-            width: 28px;
-            height: 28px;
+        .latency-card-icon-wrapper {
+            width: 36px;
+            height: 36px;
+            background: var(--border-color);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 8px;
-            background: transparent;
-            flex-shrink: 0;
+            border: 1.5px solid var(--border-color);
+            transition: all 0.3s ease;
         }
 
-        .latency-card-icon svg {
-            width: 16px;
-            height: 16px;
+        .latency-card:hover .latency-card-icon-wrapper {
+            background: white;
+            border-color: #f6821f;
+            transform: rotate(5deg);
         }
 
-        .latency-card-header {
+        html.dark-mode .latency-card:hover .latency-card-icon-wrapper {
+            background: #333;
+        }
+
+        .latency-card-icon-wrapper svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .latency-card-text {
             display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            width: 100%;
-        }
-
-        .latency-card-title {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            width: 100%;
-            justify-content: flex-start;
+            flex-direction: row;
+            align-items: flex-end;
+            gap: 4px;
         }
 
         .latency-card-name {
-            font-weight: 700;
-            color: var(--text-primary);
             font-size: 14px;
-            white-space: nowrap;
+            font-weight: 800;
+            color: var(--text-primary);
+            /*letter-spacing: 0.5px;*/
         }
 
         .latency-card-region {
             font-size: 12px;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-weight: 600;
-            white-space: nowrap;
-            flex-shrink: 0;
-            border: 1.5px solid;
-        }
-
-        .latency-card-region-domestic {
-            color: #10b981;
-            border-color: #10b981;
-            background: #ecfdf5;
-        }
-
-        .latency-card-region-international {
-            color: #3b82f6;
-            border-color: #3b82f6;
-            background: #eff6ff;
-        }
-
-        /* 深色模式使用深色底色 */
-        html.dark-mode .latency-card-region-domestic {
-            background: #1e312d;
-        }
-
-        html.dark-mode .latency-card-region-international {
-            background: #1e2633;
-        }
-
-        .latency-value {
-            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             font-weight: 700;
             white-space: nowrap;
-            min-width: 55px;
-            text-align: left;
-            order: 2;
         }
 
-        .latency-bars {
-            display: flex;
-            gap: 3px;
-            flex-shrink: 0;
-            order: 1;
+        .latency-card-region[data-region="国内"] {
+            color: #16a34a;
         }
 
-        .latency-card-content {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 8px;
+        .latency-card-region[data-region="国际"] {
+            color: #3b82f6;
+        }
+
+        html.dark-mode .latency-card-region[data-region="国内"] {
+            color: #4ade80;
+        }
+
+        html.dark-mode .latency-card-region[data-region="国际"] {
+            color: #60a5fa;
+        }
+
+        .latency-status {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            font-style: italic;
+            color: #f6821f;
+            text-shadow: var(--bg-secondary);
+            z-index: 3;
+        }
+
+        html.dark-mode .latency-status {
+            text-shadow: rgba(39, 39, 39, 0.7),
+        }
+
+        .latency-status .unit {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-style: normal;
+            margin-left: 1px;
+            opacity: 0.7;
+            vertical-align: baseline;
+            text-transform: lowercase;
+        }
+
+        .latency-graph-container {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-        }
-
-        .latency-bar {
-            flex: none;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--latency-90);
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-
-        .latency-bar:hover {
-            transform: scale(1.5);
-        }
-
-        /* 响应式设计 - 与IP卡片保持一致 */
-        @media (max-width: 1024px) {
-            .latency-card {
-                padding: 8px;
-                gap: 6px;
-            }
-
-            /* 宽度足够时，延迟卡片改为单行布局 */
-            #latency-cards .latency-card {
-                flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
-                gap: 10px;
-            }
-
-            #latency-cards .latency-card-header {
-                flex: 1;
-            }
-
-            #latency-cards .latency-card-content {
-                flex: 0 0 auto;
-                width: auto;
-                justify-content: flex-end;
-            }
-
-            .latency-card-icon {
-                width: 24px;
-                height: 24px;
-            }
-
-            .latency-card-icon svg {
-                width: 14px;
-                height: 14px;
-            }
-
-            .latency-card-name {
-                font-size: 13px;
-            }
-
-            .latency-card-region {
-                font-size: 11px;
-                padding: 1px 4px;
-            }
-
-            .latency-value {
-                font-size: 14px;
-                min-width: 45px;
-            }
-
-            .latency-bars {
-                gap: 2px;
-            }
-
-            .latency-bar {
-                width: 8px;
-                height: 8px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .latency-card {
-                padding: 8px;
-                gap: 6px;
-            }
-
-            /* 单列布局时，延迟卡片也使用单行布局 */
-            #latency-cards .latency-card {
-                flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
-                gap: 10px;
-            }
-
-            #latency-cards .latency-card-header {
-                flex: 1;
-            }
-
-            #latency-cards .latency-card-content {
-                flex: 0 0 auto;
-                width: auto;
-                justify-content: flex-end;
-            }
-
-            .latency-card-title {
-                gap: 4px;
-            }
-
-            .latency-card-icon {
-                width: 22px;
-                height: 22px;
-            }
-
-            .latency-card-icon svg {
-                width: 12px;
-                height: 12px;
-            }
-
-            .latency-card-name {
-                font-size: 12px;
-            }
-
-            .latency-card-region {
-                font-size: 10px;
-                padding: 1px 3px;
-            }
-
-            .latency-value {
-                font-size: 13px;
-                min-width: 40px;
-            }
-
-            .latency-bars {
-                gap: 2px;
-            }
-
-            .latency-bar {
-                width: 7px;
-                height: 7px;
-            }
-        }
-
-        html.dark-mode .latency-card {
-            background: linear-gradient(135deg, rgba(39, 39, 39, 0.95) 0%, rgba(50, 50, 50, 0.9) 100%);
-            border-color: #333333;
-        }
-
-        html.dark-mode .latency-card:hover {
-            border-color: #555555;
-        }
-
-        html.dark-mode .latency-card-icon {
+            height: 100%;
+            z-index: 1;
             background: transparent;
+            pointer-events: none;
+            opacity: 0.15;
+        }
+
+        .ecg-path {
+            fill: none;
+            stroke: #f6821f;
+            stroke-width: 3.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: d 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .ecg-path-bg {
+            fill: none;
+            stroke: var(--border-color);
+            stroke-width: 1;
+            opacity: 0.3;
+        }
+
+        .graph-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(var(--border-color) 0.5px, transparent 0.5px),
+                linear-gradient(90deg, var(--border-color) 0.5px, transparent 0.5px);
+            background-size: 15px 15px;
+            pointer-events: none;
+            opacity: 0.1;
+        }
+
+        .ecg-cursor {
+            fill: #f6821f;
+            filter: drop-shadow(0 0 5px #f6821f);
         }
 
         /* GitHub logo 在浅色模式下显示为黑色 */
-        .latency-card:has(svg path[fill="#181717"]) svg path {
-            fill: #181717;
+        .latency-card-icon-wrapper[data-site="github"] {
+            color: #181717 !important;
         }
 
-        /* 深色模式下 GitHub logo 保持白色 */
-        html.dark-mode .latency-card:has(svg path[fill="#181717"]) svg path {
-            fill: #ffffff;
+        .latency-card-icon-wrapper[data-site="github"] svg path {
+            fill: #181717 !important;
+        }
+
+        html.dark-mode .latency-card-icon-wrapper[data-site="github"] {
+            color: #ffffff !important;
+        }
+
+        html.dark-mode .latency-card-icon-wrapper[data-site="github"] svg path {
+            fill: #ffffff !important;
         }
 
         /* 加载动画 */
@@ -4102,7 +4114,7 @@
                 </div>
                 <div class="module-content">
                     <div class="network-cards-container">
-                        <div class="latency-card">
+                        <div class="network-card">
                             <div class="network-card-title">
                                 <span class="status-indicator" id="status-ipip"></span>
                                 国内测试
@@ -4116,7 +4128,7 @@
                             </div>
                         </div>
 
-                        <div class="latency-card">
+                        <div class="network-card">
                             <div class="network-card-title">
                                 <span class="status-indicator" id="status-edgeone"></span>
                                 国外测试
@@ -4130,7 +4142,7 @@
                             </div>
                         </div>
 
-                        <div class="latency-card">
+                        <div class="network-card">
                             <div class="network-card-title">
                                 <span class="status-indicator" id="status-cf"></span>
                                 CloudFlare(ProxyIP)
@@ -4144,7 +4156,7 @@
                             </div>
                         </div>
 
-                        <div class="latency-card">
+                        <div class="network-card">
                             <div class="network-card-title">
                                 <span class="status-indicator" id="status-twitter"></span>
                                 X.com(推特)
@@ -4362,7 +4374,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                     <div class="form-group" id="fingerprintGroup">
                         <label for="fingerprint">指纹伪装</label>
-                        <select id="fingerprint" title="浏览器指纹" onchange="handleFingerprintChange(); markModified('config')">
+                        <select id="fingerprint" title="浏览器指纹"
+                            onchange="handleFingerprintChange(); markModified('config')">
                             <option value="chrome">chrome（支持ECH）</option>
                             <option value="firefox">firefox（支持ECH）</option>
                             <option value="safari">safari</option>
@@ -4443,7 +4456,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <div class="form-group" id="enableECHGroup" style="display: none;">
                             <div class="input-wrapper">
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="enableECH" title="启用ECH可以避免域名阻断-1现象！&#10;&#10;支持版本&#10;v2rayN v7.17.0+&#10;v2rayNG v2.0.0+&#10;Clash.Meta(Mihomo)&#10;Singbox"
+                                    <input type="checkbox" id="enableECH"
+                                        title="启用ECH可以避免域名阻断-1现象！&#10;&#10;支持版本&#10;v2rayN v7.17.0+&#10;v2rayNG v2.0.0+&#10;Clash.Meta(Mihomo)&#10;Singbox"
                                         onchange="markModified('config')">
                                     <label for="enableECH" class="checkbox-label"
                                         title="启用ECH可以避免域名阻断-1现象！&#10;&#10;支持版本&#10;v2rayN v7.17.0+&#10;v2rayNG v2.0.0+&#10;Clash.Meta(Mihomo)&#10;Singbox">启用ECH(实验性质)</label>
@@ -5199,10 +5213,21 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         let subConfigData = null;
         let hasMultipleHosts = false; // 标记是否存在多个 HOSTS
 
+        // 延迟测试配置
+        const latencyTestConfig = {
+            count: 16  // 采样和显示数量
+        };
+
+        // 追踪延迟显示的动画状态
+        const latencyUIState = {};
+
+        // 标记延迟测试是否已经开始，防止重复执行
+        let latencyTestStarted = false;
+
         // 延迟测试数据
         const latencySites = [
             {
-                name: '字节跳动',
+                name: '字节抖音',
                 region: '国内',
                 icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#1677FF" d="m19.9 1.5 4.1 1v19l-4.1 1zM6.5 10.9l4.1 1v9l-4 1.1zM0 2.6l4.1 1v16.8l-4.1 1zm17.5 5.6v11.1l-4.2-1v-9z"></path></svg>',
                 url: 'https://lf3-zlink-tos.ugurl.cn/obj/zebra-public/resource_lmmizj_1632398893.png'
@@ -5214,13 +5239,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 url: 'https://i0.hdslb.com/bfs/face/member/noface.jpg@24w_24h_1c'
             },
             {
-                name: '微信',
+                name: '腾讯微信',
                 region: '国内',
                 icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#09B83E" d="M8.7 2.19C3.9 2.19 0 5.48 0 9.53c0 2.21 1.17 4.2 3 5.55a.6.6 0 0 1 .21.66l-.39 1.48q-.03.11-.04.22c0 .16.13.3.29.3a.3.3 0 0 0 .16-.06l1.9-1.11a.9.9 0 0 1 .72-.1 10 10 0 0 0 2.84.4q.41-.01.81-.05a5.85 5.85 0 0 1 1.93-6.45 8.3 8.3 0 0 1 5.86-1.83c-.58-3.59-4.2-6.35-8.6-6.35m-2.9 3.8c.64 0 1.16.53 1.16 1.18a1.17 1.17 0 0 1-1.16 1.18 1.17 1.17 0 0 1-1.17-1.18c0-.65.52-1.18 1.17-1.18m5.8 0c.65 0 1.17.53 1.17 1.18a1.17 1.17 0 0 1-1.16 1.18 1.17 1.17 0 0 1-1.16-1.18c0-.65.52-1.18 1.16-1.18m5.34 2.87a8 8 0 0 0-5.28 1.78 5.5 5.5 0 0 0-1.78 6.22c.94 2.46 3.66 4.23 6.88 4.23q1.25 0 2.36-.33a.7.7 0 0 1 .6.08l1.59.93.14.04c.13 0 .24-.1.24-.24q-.01-.09-.04-.18l-.33-1.23-.02-.16a.5.5 0 0 1 .2-.4 5.8 5.8 0 0 0 2.5-4.62c0-3.21-2.93-5.84-6.66-6.09zm-2.53 3.27c.53 0 .97.44.97.98a1 1 0 0 1-.97.99 1 1 0 0 1-.97-.99c0-.54.43-.98.97-.98zm4.84 0c.54 0 .97.44.97.98a1 1 0 0 1-.97.99 1 1 0 0 1-.97-.99c0-.54.44-.98.97-.98"></path></svg>',
                 url: 'https://res.wx.qq.com/a/wx_fed/assets/res/NTI4MWU5.ico'
             },
             {
-                name: '淘宝',
+                name: '阿里淘宝',
                 region: '国内',
                 icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="#E16322" d="M21.31 9.9a3 3 0 1 1 0 1.92.96.96 0 0 1 0-1.92m2.39 3.05H13.3v-.96h4.14V9.76h-2.89v-.77h2.9v-.92h-2.52v.2H13.3v-2.9h1.64v.35l2.52-.3V4.6h1.85v.64c.93-.08 1.76-.13 2.21-.1 1.5.06 2.45.27 2.49 1.26.03 1-1.43 1.9-1.43 1.9l-.45-.43v.2h-2.8v.92h3.22v.77h-3.23v2.23h4.39zM21.53 7.3l-.02-.01s1.38-.76.35-1.27c-.87-.43-5.54.3-6.93.62v.66zM1.88 6.42a1 1 0 0 0 0-2 1 1 0 0 0-1 1 1 1 0 0 0 1 1m3.41-.86a7 7 0 0 0 .37-.72L4.2 4.42s-.6 1.93-1.65 2.83c0 0 1.02.6 1.01.58a10 10 0 0 0 .78-.88l.68-.3a9 9 0 0 1-1.14 1.69l.61.54s.42-.4.88-.9h.53v.9H3.86v.73H5.9v1.72h-.08c-.23-.01-.58-.05-.71-.27-.17-.26-.05-.75-.04-1.04h-1.4l-.06.02s-.52 2.32 1.5 2.27a5.3 5.3 0 0 0 3.46-.92l.2.76 1.17-.48-.79-1.92-.94.3.18.65a3 3 0 0 1-.82.42V9.6h2v-.72h-2v-.9h2v-.72H6.01c.26-.31.46-.6.51-.78l-.62-.17c2.67-.95 4.15-.79 4.13.77v4.12s.16 1.4-1.46 1.3l-.87-.18-.21.83s3.78 1.08 4.1-1.82-.09-4.76-.09-4.76-.34-2.68-6.2-1.02zm-5.23 6.6 1.58.98c1.1-2.38 1.03-2.06 1.3-2.92.29-.87.35-1.54-.13-2.02a10 10 0 0 0-1.6-1.36L.55 7.86l1.21.75s.82.42.43 1.2c-.36.73-2.13 2.34-2.13 2.34M20 19s-.02.53-.67.53c-.6 0-.64-.42-.64-.42q-.39.45-1.07.46c-.76 0-1.3-.51-1.3-1.3 0-.78.56-1.27 1.4-1.27.39 0 .73.15.93.4l.01-.2c0-.56-.3-.8-1-.8q-.51 0-1.02.13.16-.33.3-.45.18-.14.94-.14c1.27 0 1.74.42 1.74 1.42v1.2c0 .32.03.44.38.44m-1.33-.74c0-.48-.25-.75-.64-.75-.4 0-.66.28-.66.76 0 .47.27.76.65.76.39 0 .65-.27.65-.77m5.27-.5c0 1.15-.7 1.82-1.78 1.82-1.1 0-1.77-.67-1.77-1.82 0-1.16.68-1.83 1.77-1.83s1.78.67 1.78 1.83m-1.08 0q0-1.3-.7-1.3t-.69 1.3.7 1.3.69-1.3m-7.14-.05c0 1.17-.65 1.86-1.57 1.86q-.66-.01-1.05-.47s-.1.42-.66.42c-.69 0-.67-.52-.67-.52.4.02.38-.21.38-.43v-2.89c0-.36-.07-.48-.43-.49.02-.1.08-.53.68-.53.82 0 .76.91.76.91v.79q.34-.4 1-.4c.96 0 1.56.65 1.56 1.75m-1.09.08q-.01-1.35-.76-1.35c-.44 0-.74.4-.74 1.1v.36c0 .72.31 1.12.76 1.12q.73 0 .74-1.23m-3.24-.03c0 1.15-.7 1.82-1.78 1.82-1.1 0-1.78-.67-1.78-1.82 0-1.16.68-1.83 1.78-1.83s1.78.67 1.78 1.83m-1.09 0q0-1.3-.7-1.3-.69 0-.68 1.3t.69 1.3q.7 0 .7-1.3m-6-2.72q-.4.11-1.55.1-1.38-.02-1.85-.04c-.52 0-.73.13-.91.66q.45-.13 1.13-.11c.36 0 .42.04.42.3v2.9c0 .28.11.67.72.67.71 0 .84-.52.84-.52-.36 0-.43-.13-.43-.49v-2.56c0-.27.1-.28.47-.28h.26c.55 0 .7-.1.9-.63M7.46 19s-.02.52-.67.52c-.56 0-.64-.4-.64-.4q-.39.45-1.07.45c-.76 0-1.3-.52-1.3-1.3S4.33 17 5.17 17c.39 0 .73.14.93.4v-.2c0-.56-.3-.8-1-.8q-.5 0-1.01.13.15-.33.3-.46.17-.14.94-.14c1.26 0 1.74.43 1.74 1.43v1.2c0 .32.03.44.38.44m-1.33-.75c0-.48-.26-.74-.64-.74-.4 0-.67.28-.67.76 0 .46.28.76.66.76.39 0 .65-.28.65-.78"></path></svg>',
                 url: 'https://img.alicdn.com/imgextra/i2/O1CN01qnQCrN1VkzAWiU4Hs_!!6000000002692-2-tps-33-33.png'
@@ -5280,6 +5305,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         // 生成延迟卡片
         function generateLatencyCards() {
             const container = document.getElementById('latency-cards');
+            if (!container) return;
             container.innerHTML = '';
 
             // 按地区排序：国内优先，然后国际
@@ -5295,17 +5321,24 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 const siteName = site.name.toLowerCase().replace(/\s+/g, '-');
                 card.innerHTML = `
                     <div class="latency-card-header">
-                        <div class="latency-card-title">
-                            <div class="latency-card-icon">${site.icon}</div>
-                            <div class="latency-card-name">${site.name}</div>
-                            <span class="latency-card-region latency-card-region-${site.region === '国内' ? 'domestic' : 'international'}">${site.region}</span>
+                        <div class="latency-card-info">
+                            <div class="latency-card-icon-wrapper" data-site="${siteName}">
+                                ${site.icon}
+                            </div>
+                            <div class="latency-card-text">
+                                <span class="latency-card-name">${site.name}</span>
+                                <span class="latency-card-region" data-region="${site.region}">${site.region}</span>
+                            </div>
                         </div>
+                        <div class="latency-status" id="latency-${siteName}">...<span class="unit">ms</span></div>
                     </div>
-                    <div class="latency-card-content">
-                        <div class="latency-bars" id="bars-${siteName}">
-                            ${Array(9).fill().map(() => '<div class="latency-bar loading" style="background-color: rgba(250, 171, 65, 0.5);"></div>').join('')}
-                        </div>
-                        <p class="latency-value" id="latency-${siteName}">--ms</p>
+                    <div class="latency-graph-container">
+                        <div class="graph-grid"></div>
+                        <svg class="latency-ecg" viewBox="0 0 400 60" preserveAspectRatio="none">
+                            <path class="ecg-path-bg" d="M0,30 L400,30"></path>
+                            <path class="ecg-path" id="path-${siteName}" d="M0,30 L400,30"></path>
+                            <circle class="ecg-cursor" id="cursor-${siteName}" r="3" cx="0" cy="30" style="display:none"></circle>
+                        </svg>
                     </div>
                 `;
                 container.appendChild(card);
@@ -5342,76 +5375,163 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         // 更新延迟显示
         function updateLatencyDisplay(siteName, latencies) {
             const valueElement = document.getElementById(`latency-${siteName}`);
-            const barsElement = document.getElementById(`bars-${siteName}`);
+            const pathElement = document.getElementById(`path-${siteName}`);
+            const cursorElement = document.getElementById(`cursor-${siteName}`);
 
-            if (!valueElement || !barsElement) return;
+            if (!valueElement || !pathElement) return;
 
-            // 计算平均延迟：先过滤有效的延迟值（排除-1表示失败的情况、排除第一个测试结果）
-            const validLatencies = latencies.filter((l, index) => l !== -1 && index !== 0);
+            // 计算平均延迟
+            const lastLatency = latencies[latencies.length - 1];
+            const validLatencies = latencies.filter(l => l !== -1);
             let avgLatency = -1;
 
             if (validLatencies.length > 0) {
-                // 如果有有效的数据，去掉最高和最低延迟
-                if (validLatencies.length > 2) {
+                // 如果有足够的数据，去掉最高和最低延迟以获得更稳定的平均值
+                if (validLatencies.length > 5) {
                     const sorted = [...validLatencies].sort((a, b) => a - b);
-                    // 移除最低和最高
-                    const trimmedLatencies = sorted.slice(1, sorted.length - 1);
-                    // 对剩余数据计算平均值
-                    avgLatency = trimmedLatencies.reduce((a, b) => a + b, 0) / trimmedLatencies.length;
-                } else if (validLatencies.length === 2) {
-                    // 如果只有2个有效数据，去掉最高和最低后就没有数据了，使用所有有效数据
-                    avgLatency = validLatencies.reduce((a, b) => a + b, 0) / validLatencies.length;
+                    const trimmed = sorted.slice(1, -1);
+                    avgLatency = trimmed.reduce((a, b) => a + b, 0) / trimmed.length;
                 } else {
-                    // 如果只有1个或更少有效数据，直接使用
-                    avgLatency = validLatencies[0];
+                    avgLatency = validLatencies.reduce((a, b) => a + b, 0) / validLatencies.length;
                 }
             }
 
-            if (avgLatency === -1) {
-                valueElement.textContent = '--ms';
-                valueElement.style.color = 'var(--destructive)';
+            const targetValue = Math.round(avgLatency);
+
+            // 更新文字显示
+            if (validLatencies.length === 0) {
+                if (lastLatency === -1) {
+                    valueElement.innerHTML = 'TIMEOUT';
+                    valueElement.style.color = 'var(--latency-999)';
+                } else {
+                    valueElement.innerHTML = '...<span class="unit">ms</span>';
+                    valueElement.style.color = '#f6821f';
+                }
             } else {
-                valueElement.textContent = `${Math.round(avgLatency)}ms`;
-                valueElement.style.color = getLatencyColor(avgLatency);
+                const siteState = latencyUIState[siteName] || { current: targetValue, timer: null };
+                latencyUIState[siteName] = siteState;
+
+                // 设置颜色
+                const avgColor = getLatencyColor(targetValue);
+                valueElement.style.color = avgColor;
+
+                // 如果数值变化较小，直接显示
+                if (Math.abs(siteState.current - targetValue) < 2) {
+                    siteState.current = targetValue;
+                    valueElement.innerHTML = `${targetValue}<span class="unit">ms</span>`;
+                } else {
+                    // 清除旧的计时器
+                    if (siteState.timer) clearInterval(siteState.timer);
+
+                    // 每 30ms 更新一次数字，实现滚动的动态效果
+                    const step = () => {
+                        if (siteState.current < targetValue) {
+                            siteState.current += Math.ceil((targetValue - siteState.current) / 5);
+                        } else if (siteState.current > targetValue) {
+                            siteState.current -= Math.ceil((siteState.current - targetValue) / 5);
+                        }
+
+                        valueElement.innerHTML = `${siteState.current}<span class="unit">ms</span>`;
+
+                        if (siteState.current === targetValue) {
+                            clearInterval(siteState.timer);
+                            siteState.timer = null;
+                        }
+                    };
+
+                    siteState.timer = setInterval(step, 30);
+                }
             }
 
-            const bars = barsElement.querySelectorAll('.latency-bar');
-            bars.forEach((bar, displayIndex) => {
-                // displayIndex 是显示的索引（0-8），实际测试索引需要加1
-                const actualIndex = displayIndex + 1;
-                const latency = latencies[actualIndex];
-                if (latency !== undefined) {
-                    bar.style.backgroundColor = getLatencyColor(latency);
-                    bar.title = latency === -1 ? '连接失败' : `${latency}ms`;
-                    // 移除loading动画类
-                    bar.classList.remove('loading');
+            // 更新 SVG 路径
+            const width = 400;
+            const height = 60;
+            const padding = 10;
+            const step = width / (latencyTestConfig.count - 1);
+
+            let points = [];
+            latencies.forEach((l, i) => {
+                const x = i * step;
+                let y;
+                if (l === -1) {
+                    y = height - 5;
+                } else {
+                    // 映射 0-500ms 到高度，高延迟在上，低延迟在下？通常ECG是越高表示值越大或者越快？
+                    // demo里是 height - padding - (Math.min(l, 500) / 500 * (height - 2 * padding))
+                    // 这意味着延迟越低，y越大（越靠下）。延迟越高，y越小（越靠上）。
+                    y = height - padding - (Math.min(l, 500) / 800 * (height - 2 * padding));
                 }
+                points.push({ x, y });
             });
+
+            if (points.length > 0) {
+                // 生成平滑曲线路径 (Bezier)
+                let d = `M${points[0].x},${points[0].y}`;
+                for (let i = 0; i < points.length - 1; i++) {
+                    const x_mid = (points[i].x + points[i + 1].x) / 2;
+                    const y_mid = (points[i].y + points[i + 1].y) / 2;
+                    d += ` Q${points[i].x},${points[i].y} ${x_mid},${y_mid}`;
+                }
+                const lastPoint = points[points.length - 1];
+                d += ` L${lastPoint.x},${lastPoint.y}`;
+
+                pathElement.setAttribute('d', d);
+                const avgColor = getLatencyColor(targetValue);
+                pathElement.style.stroke = avgColor;
+
+                // 更新光标位置
+                if (cursorElement) {
+                    cursorElement.style.display = 'block';
+                    cursorElement.setAttribute('cx', lastPoint.x);
+                    cursorElement.setAttribute('cy', lastPoint.y);
+                    cursorElement.style.fill = avgColor;
+                }
+            }
         }
 
         // 开始延迟测试
         async function startLatencyTest() {
+            if (latencyTestStarted) return;
+            latencyTestStarted = true;
+
             generateLatencyCards();
 
-            // 为所有网站并发执行10次测试
-            const testPromises = latencySites.map(async (site) => {
+            // 为每个网站维护最新的N个延迟数据
+            const siteLatencies = {};
+            latencySites.forEach(site => {
                 const siteName = site.name.toLowerCase().replace(/\s+/g, '-');
-                const latencies = [];
+                siteLatencies[siteName] = [];
+            });
 
-                // 10次测试，每个间隔382ms
-                for (let i = 0; i < 10; i++) {
+            // 初始采样测试
+            const initialPromises = latencySites.map(async (site) => {
+                const siteName = site.name.toLowerCase().replace(/\s+/g, '-');
+                for (let i = 0; i < latencyTestConfig.count; i++) {
                     const latency = await testLatency(site);
-                    latencies.push(latency);
-                    updateLatencyDisplay(siteName, latencies);
-                    // 除了最后一次测试外，每次后延迟382ms
-                    if (i < 9) {
-                        await new Promise(resolve => setTimeout(resolve, 382));
+                    siteLatencies[siteName].push(latency);
+                    updateLatencyDisplay(siteName, siteLatencies[siteName]);
+                    if (i < latencyTestConfig.count - 1) {
+                        await new Promise(resolve => setTimeout(resolve, 0));
                     }
                 }
             });
 
-            // 等待所有测试完成
-            await Promise.all(testPromises);
+            await Promise.all(initialPromises);
+
+            // 之后每 3.09 秒测试一次，更新最新的数据 (保持 ECG 曲线流动)
+            setInterval(async () => {
+                const updatePromises = latencySites.map(async (site) => {
+                    const siteName = site.name.toLowerCase().replace(/\s+/g, '-');
+                    const latency = await testLatency(site);
+                    // 添加新数据，保持只有N个
+                    siteLatencies[siteName].push(latency);
+                    if (siteLatencies[siteName].length > latencyTestConfig.count) {
+                        siteLatencies[siteName].shift(); // 移除最旧的
+                    }
+                    updateLatencyDisplay(siteName, siteLatencies[siteName]);
+                });
+                await Promise.all(updatePromises);
+            }, 618 * 3);
         }
 
         // 切换主题
@@ -5924,10 +6044,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const enableECHCheckbox = document.getElementById('enableECH');
             const enableECHLabel = document.querySelector('label[for="enableECH"]');
             const enableECHGroup = document.getElementById('enableECHGroup');
-            
+
             // 支持ECH的指纹类型
             const supportECH = ['chrome', 'firefox', 'random'];
-            
+
             if (enableECHGroup && enableECHCheckbox) {
                 if (supportECH.includes(fingerprint)) {
                     // 启用ECH选项

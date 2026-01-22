@@ -4480,7 +4480,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             <div class="checkbox-group">
                                 <input type="checkbox" id="enableECH"
                                     title="启用ECH可以避免域名阻断-1现象！&#10;&#10;支持版本&#10;v2rayN v7.17.0+&#10;v2rayNG v2.0.0+&#10;Clash.Meta(Mihomo)&#10;Singbox"
-                                    onchange="markModified('ech')">
+                                    onchange="handleECHEnableChange()">
                                 <label for="enableECH" class="checkbox-label"
                                     title="启用ECH可以避免域名阻断-1现象！&#10;&#10;支持版本&#10;v2rayN v7.17.0+&#10;v2rayNG v2.0.0+&#10;Clash.Meta(Mihomo)&#10;Singbox">启用</label>
                             </div>
@@ -4492,12 +4492,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <div class="input-wrapper" style="flex-direction: column; align-items: stretch;">
                             <select id="echDNSSelect" title="ECH DNS服务" style="display: none;" onchange="onEchDNSSelectChange()">
                                 <option value="custom">自定义</option>
-                                <option value="tls://dns.alidns.com">阿里 DoT</option>
-                                <option value="tls://dot.pub">腾讯 DoT</option>
-                                <option value="https://sm2.doh.pub/dns-query">腾讯(国密) DoH</option>
-                                <option value="https://dns.google/dns-query">Google DoH</option>
-                                <option value="https://doh.cmliussss.com/CMLiussss">Google DoH(CMLiussss DoH 镜像服务)</option>
-                                <option value="https://doh.cmliussss.net/CMLiussss">Cloudflare DoH(CMLiussss DoH 镜像服务)</option>
+                                <option value="tls://dns.alidns.com">tls://dns.alidns.com（阿里 DoT）</option>
+                                <option value="tls://dot.pub">tls://dot.pub（腾讯 DoT）</option>
+                                <option value="https://sm2.doh.pub/dns-query">https://sm2.doh.pub/dns-query（腾讯国密 DoH）</option>
+                                <option value="https://dns.google/dns-query">https://dns.google/dns-query（Google DoH）</option>
+                                <option value="https://doh.cmliussss.com/CMLiussss">https://doh.cmliussss.com/CMLiussss（Google DoH CM镜像）</option>
+                                <option value="https://doh.cmliussss.net/CMLiussss">https://doh.cmliussss.net/CMLiussss（Cloudflare DoH CM镜像）</option>
                             </select>
                             <input type="text" id="echDNSCustomInput" title="自定义ECH DNS服务" placeholder="tls://... 或 https://..." onchange="onEchDNSCustomInput()" style="display: none; margin-top: 8px;">
                             <input type="hidden" id="echDNSValue">
@@ -6095,36 +6095,40 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             updateECHOptionState();
         }
 
+        // 处理ECH启用状态变化
+        function handleECHEnableChange() {
+            const enableECHCheckbox = document.getElementById('enableECH');
+            const fingerprintSelect = document.getElementById('fingerprint');
+            
+            // 支持ECH的指纹类型
+            const supportECH = ['chrome', 'firefox', 'random'];
+            
+            // 如果用户开启ECH，但当前指纹不支持ECH，自动切换到chrome
+            if (enableECHCheckbox && enableECHCheckbox.checked) {
+                const currentFingerprint = fingerprintSelect?.value;
+                if (currentFingerprint && !supportECH.includes(currentFingerprint)) {
+                    fingerprintSelect.value = 'chrome';
+                    // 同时标记详细配置模块为已修改
+                    markModified('config');
+                }
+            }
+            
+            markModified('ech');
+        }
+
         // 更新ECH选项的状态（禁用/启用）
         function updateECHOptionState() {
             const fingerprint = document.getElementById('fingerprint').value;
             const enableECHCheckbox = document.getElementById('enableECH');
-            const enableECHLabel = document.querySelector('label[for="enableECH"]');
-            const enableECHGroup = document.getElementById('enableECHGroup');
 
             // 支持ECH的指纹类型
             const supportECH = ['chrome', 'firefox', 'random'];
 
-            if (enableECHGroup && enableECHCheckbox) {
-                if (supportECH.includes(fingerprint)) {
-                    // 启用ECH选项
-                    enableECHCheckbox.disabled = false;
-                    enableECHGroup.style.opacity = '1';
-                    enableECHGroup.style.pointerEvents = 'auto';
-                    if (enableECHLabel) {
-                        enableECHLabel.style.opacity = '1';
-                        enableECHLabel.style.cursor = 'pointer';
-                    }
-                } else {
-                    // 禁用ECH选项，取消勾选，变成灰色
-                    enableECHCheckbox.disabled = true;
+            if (enableECHCheckbox) {
+                // 当指纹不支持ECH时，自动取消勾选
+                if (!supportECH.includes(fingerprint) && enableECHCheckbox.checked) {
                     enableECHCheckbox.checked = false;
-                    enableECHGroup.style.opacity = '0.5';
-                    enableECHGroup.style.pointerEvents = 'none';
-                    if (enableECHLabel) {
-                        enableECHLabel.style.opacity = '0.5';
-                        enableECHLabel.style.cursor = 'not-allowed';
-                    }
+                    markModified('ech');
                 }
             }
         }

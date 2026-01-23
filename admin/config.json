@@ -16,6 +16,10 @@
   "TLS分片": "Shadowrocket",
   "随机路径": false,
   "ECH": false,
+  "ECHConfig": {
+    "DNS": "https://doh.cmliussss.net/CMLiussss",
+    "SNI": null
+  },
   "Fingerprint": "chrome",
   "优选订阅生成": {
     "local": true,

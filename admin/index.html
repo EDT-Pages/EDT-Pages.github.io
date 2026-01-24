@@ -1570,9 +1570,39 @@
             }
         }
 
+        @media(max-width:768px) {
+            .ech-tabs::-webkit-scrollbar {
+                height: 3px;
+            }
+
+            .ech-tab {
+                padding: 7px 12px;
+                font-size: 12px;
+            }
+
+            .ech-tab-content {
+                min-height: 80px;
+                max-height: calc(100vh - 220px);
+            }
+        }
+
         @media(max-width:480px) {
             .card-container {
                 padding: 15px
+            }
+
+            .ech-tabs::-webkit-scrollbar {
+                height: 2px;
+            }
+
+            .ech-tab {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+
+            .ech-tab-content {
+                min-height: 60px;
+                max-height: calc(100vh - 240px);
             }
         }
 
@@ -1837,7 +1867,33 @@
             box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
         }
 
+        .btn-ech-help {
+            background: linear-gradient(135deg, #3b82f6 0, #1d4ed8 100%);
+            color: #fff !important;
+            padding: 10px 16px;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-ech-help:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5);
+        }
+
+        .btn-ech-help:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.4);
+        }
+
         .proxyip-help-modal {
+            max-width: 1200px;
+            width: 90vw;
+            max-height: 100vh;
+            overflow-y: auto;
+        }
+
+        .ech-help-modal {
             max-width: 1200px;
             width: 90vw;
             max-height: 100vh;
@@ -1949,7 +2005,22 @@
             box-shadow: 0 6px 25px rgba(16, 185, 129, 0.5);
         }
 
+        html.dark-mode .btn-ech-help {
+            background: linear-gradient(135deg, #3b82f6 0, #1d4ed8 100%);
+            color: #fff !important;
+        }
+
+        html.dark-mode .btn-ech-help:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.5);
+        }
+
         html.dark-mode .api-optimize-modal {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        html.dark-mode .ech-help-modal {
             background: var(--bg-secondary);
             color: var(--text-primary);
         }
@@ -2281,6 +2352,83 @@
             text-align: left;
         }
 
+        .ech-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 15px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 8px;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .ech-tabs.dragging {
+            cursor: grabbing;
+        }
+
+        .ech-tabs::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .ech-tabs::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .ech-tabs::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 2px;
+        }
+
+        .ech-tabs::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+
+        .ech-tab {
+            padding: 8px 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+            pointer-events: auto;
+        }
+
+        .ech-tab:hover {
+            border-color: #3b82f6;
+        }
+
+        .ech-tab.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .ech-tab-content {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 100px;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        .ech-tab-pane {
+            display: none;
+        }
+
+        .ech-tab-pane.active {
+            display: block;
+        }
+
         .optimize-result-item {
             padding: 1px 0;
             color: #1f2937;
@@ -2361,6 +2509,29 @@
 
         html.dark-mode .optimize-result-item {
             color: var(--text-primary);
+        }
+
+        html.dark-mode .ech-tab {
+            background: var(--input-bg);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        html.dark-mode .ech-tab.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+        }
+
+        html.dark-mode .ech-tab-content {
+            background: var(--input-bg);
+        }
+
+        html.dark-mode .ech-tabs::-webkit-scrollbar-thumb {
+            background: #4b5563;
+        }
+
+        html.dark-mode .ech-tabs::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
         }
 
         /* 消息通知设置样式 */
@@ -4491,15 +4662,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <label for="echDNSSelect" style="padding-top: 10px;">ECH DNS服务</label>
                         <div class="input-wrapper" style="flex-direction: column; align-items: stretch;">
                             <select id="echDNSSelect" title="ECH DNS服务" style="display: none;" onchange="onEchDNSSelectChange()">
-                                <option value="custom">自定义</option>
-                                <option value="https://dns.alidns.com/dns-query">https://dns.alidns.com/dns-query（阿里云）</option>
-                                <option value="tls://dot.pub">tls://dot.pub（腾讯云）</option>
-                                <option value="https://sm2.doh.pub/dns-query">https://sm2.doh.pub/dns-query（腾讯国密）</option>
-                                <option value="https://dns.google/dns-query">https://dns.google/dns-query（Google）</option>
-                                <option value="https://basic.rethinkdns.com/">https://basic.rethinkdns.com/（RethinkDNS）</option>
-                                <option value="https://v.recipes/dns-query">https://v.recipes/dns-query（V.recipes）</option>
-                                <option value="https://doh.cmliussss.com/CMLiussss">https://doh.cmliussss.com/CMLiussss（Google CM镜像）</option>
                                 <option value="https://doh.cmliussss.net/CMLiussss">https://doh.cmliussss.net/CMLiussss（Cloudflare CM镜像）小白推荐选这个！！！</option>
+                                <option value="https://doh.cmliussss.com/CMLiussss">https://doh.cmliussss.com/CMLiussss（Google CM镜像）</option>
+                                <option value="https://basic.rethinkdns.com/CMLiussss">https://basic.rethinkdns.com/CMLiussss（RethinkDNS）</option>
+                                <option value="https://v.recipes/dns-query">https://v.recipes/dns-query（V.recipes）</option>
+                                <option value="custom">自定义</option>
                             </select>
                             <input type="text" id="echDNSCustomInput" title="自定义ECH DNS服务" placeholder="tls://... 或 https://..." onchange="onEchDNSCustomInput()" style="display: none; margin-top: 8px;">
                             <input type="hidden" id="echDNSValue">
@@ -4510,9 +4677,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <label for="echSNISelect" style="padding-top: 10px;">ECH 解析域名</label>
                         <div class="input-wrapper" style="flex-direction: column; align-items: stretch;">
                             <select id="echSNISelect" title="ECH 解析域名" style="display: none;" onchange="onEchSNISelectChange()">
-                                <option value="custom">自定义</option>
-                                <option value="cloudflare-ech.com">cloudflare-ech.com 小白推荐选这个！！！</option>
                                 <option value="__AUTO__">自动获取</option>
+                                <option value="cloudflare-ech.com">cloudflare-ech.com 小白推荐选这个！！！</option>
+                                <option value="custom">自定义</option>
                             </select>
                             <input type="text" id="echSNICustomInput" title="自定义ECH 解析域名" placeholder="cloudflare-ech.com" onchange="onEchSNICustomInput()" style="display: none; margin-top: 8px;">
                             <input type="hidden" id="echSNIValue">
@@ -4520,6 +4687,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     </div>
 
                     <div class="module-footer">
+                        <button type="button" class="btn btn-ech-help" onclick="showECHHelpModal()"
+                            title="了解 ECH 的相关信息">
+                            💡 为什么需要ECH？ECH又是什么？
+                        </button>
                         <div class="btn-group">
                             <button type="button" class="btn btn-secondary" onclick="cancelEdit('ech')" disabled
                                 id="cancelEchBtn">取消</button>
@@ -5234,6 +5405,233 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             </div>
 
             <button type="button" class="btn btn-primary btn-close-modal" onclick="closeProxyIPHelpModal()"
+                style="margin-top: 20px;">关闭</button>
+        </div>
+    </div>
+
+    <!-- ECH 帮助模态框 -->
+    <div class="modal-overlay" id="echHelpModal" onclick="closeECHHelpModal(event)">
+        <div class="modal ech-help-modal" onclick="event.stopPropagation()">
+            <button type="button" class="modal-close" onclick="closeECHHelpModal()">×</button>
+
+            <!-- 选项卡 -->
+            <div class="ech-tabs">
+                <button class="ech-tab active" onclick="switchECHTab(0)">什么是ECH？</button>
+                <button class="ech-tab" onclick="switchECHTab(1)">如何使用？</button>
+                <button class="ech-tab" onclick="switchECHTab(2)">是否生效？</button>
+            </div>
+
+            <!-- 选项卡内容 -->
+            <div class="ech-tab-content">
+                <div class="ech-tab-pane active" id="echTab0">
+                    <div class="api-docs">
+                        <h2 class="section-title">🔐 什么是 ECH？</h2>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            <strong>ECH（Encrypted Client Hello，加密客户端问候）</strong> 是 TLS 的一项新特性，用来 <strong>将原本会明文暴露的域名信息一起加密</strong>。
+                        </p>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            如果你希望了解更完整、偏技术细节的说明，可以参考 Cloudflare 官方博客：<br>
+                            👉 <a href="https://blog.cloudflare.com/zh-cn/announcing-encrypted-client-hello/" target="_blank" rel="noopener" style="color: var(--primary-color); text-decoration: none;">https://blog.cloudflare.com/zh-cn/announcing-encrypted-client-hello/</a>
+                        </p>
+
+                        <h3 style="color: var(--text-primary); margin: 24px 0 16px;">📖 背景说明</h3>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            当我们使用 <strong>WS + TLS</strong> 的节点进行代理时：
+                        </p>
+
+                        <ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
+                            <li style="margin-bottom: 8px; color: var(--text-secondary);">✅ 实际通信内容已经被 TLS 加密，GFW <strong>无法看到你访问的具体内容</strong></li>
+                            <li style="color: var(--text-secondary);">❌ 但在 TLS 握手阶段，仍然会暴露一个关键信息：<strong>SNI</strong></li>
+                        </ul>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            <strong>SNI 就是节点的伪装域名（HOST）</strong>
+                        </p>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            也就是说：
+                        </p>
+
+                        <div class="code-block" style="background: #fff3cd; color: #856404; border-left-color: #ffc107;">
+                            GFW 虽然不知道你在访问什么，但知道你在"扶墙"，并且知道你连接的是哪个域名。
+                        </div>
+
+                        <h3 style="color: var(--text-primary); margin: 24px 0 16px;">⚠️ 会带来什么问题？</h3>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            这就是为什么在以下场景中经常出现异常情况：
+                        </p>
+
+                        <ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
+                            <li style="margin-bottom: 8px; color: var(--text-secondary);">❌ v2rayN 批量测速</li>
+                            <li style="color: var(--text-secondary);">❌ Clash 策略组自动选择节点</li>
+                        </ul>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            表现通常为：
+                        </p>
+
+                        <div class="code-block" style="background: #f8d7da; color: #721c24; border-left-color: #dc3545;">
+                            所有节点瞬间 -1，全部无法使用
+                        </div>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            其原因并不是节点真的失效，而是 <strong>运营商 / GFW 通过阻断节点域名的访问来干扰代理连接</strong>。<br>
+                            由于这种阻断大多是自动化策略，容易误判，因此 <strong>过一段时间节点又可能恢复正常</strong>，反复循环。
+                        </p>
+
+                        <h3 style="color: var(--text-primary); margin: 24px 0 16px;">💡 ECH 的作用</h3>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            ECH 的核心作用是：
+                        </p>
+
+                        <div class="code-block" style="background: #d1ecf1; color: #0c5460; border-left-color: #17a2b8;">
+                            将 SNI（也就是节点域名）加密
+                        </div>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            启用 ECH 后：
+                        </p>
+
+                        <ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
+                            <li style="margin-bottom: 8px; color: var(--text-secondary);">✅ GFW <strong>无法获取真实的节点域名</strong></li>
+                            <li style="color: var(--text-secondary);">✅ 外部观察到的域名将统一显示为：<br><code style="background: #e9ecef; padding: 2px 4px; border-radius: 3px;">cloudflare-ech.com</code></li>
+                        </ul>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            这从源头上 <strong>阻断了通过域名精准封锁节点的手段</strong>。
+                        </p>
+
+                        <h3 style="color: var(--text-primary); margin: 24px 0 16px;">🤔 ECH 会不会被封？</h3>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            理论上，GFW 只需 <strong>直接阻断 <code>cloudflare-ech.com</code></strong> 即可。
+                        </p>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            但这样会：
+                        </p>
+
+                        <ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
+                            <li style="margin-bottom: 8px; color: var(--text-secondary);">❌ 误伤大量正常使用 ECH 的网站和服务</li>
+                            <li style="color: var(--text-secondary);">❌ 带来较高的封锁成本和副作用</li>
+                        </ul>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            因此，<strong>ECH 能持续多久，取决于 GFW 的取舍与策略</strong>，至少在目前阶段仍然非常有效。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="ech-tab-pane" id="echTab1">
+                    <div class="api-docs">
+                        <h2 class="section-title">🚀 如何使用 ECH？</h2>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            使用 ECH 非常简单，只需要 <strong>ECH 设置</strong> 为 <strong>开启</strong> 后更新订阅即可。
+                        </p>
+
+                        <h3 style="color: var(--text-primary); margin: 24px 0 16px;">📱 支持 ECH 的客户端</h3>
+
+                        <h4 style="color: var(--text-primary); margin: 20px 0 12px;">Windows：</h4>
+                        <ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
+                            <li style="margin-bottom: 8px; color: var(--text-secondary);">
+                                <strong>v2rayN ≥ v7.17.0</strong><br>
+                                <a href="https://github.com/2dust/v2rayN/releases" target="_blank" rel="noopener" style="color: var(--primary-color); text-decoration: none;">https://github.com/2dust/v2rayN/releases</a>
+                            </li>
+                        </ul>
+
+                        <h4 style="color: var(--text-primary); margin: 20px 0 12px;">Android：</h4>
+                        <ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
+                            <li style="margin-bottom: 8px; color: var(--text-secondary);">
+                                <strong>v2rayNG ≥ v2.0.0</strong><br>
+                                <a href="https://github.com/2dust/v2rayNG/releases" target="_blank" rel="noopener" style="color: var(--primary-color); text-decoration: none;">https://github.com/2dust/v2rayNG/releases</a>
+                            </li>
+                        </ul>
+
+                        <h4 style="color: var(--text-primary); margin: 20px 0 12px;">Clash.Meta（mihomo 内核）：</h4>
+                        <ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
+                            <li style="margin-bottom: 8px; color: var(--text-secondary);">
+                                所有使用 <strong>clash.meta / mihomo 内核</strong> 的客户端均支持 ECH
+                            </li>
+                            <li style="color: var(--text-secondary);">
+                                ⚠️ <strong>需要 DNS 配合使用</strong>
+                            </li>
+                        </ul>
+
+                        <h3 style="color: var(--text-primary); margin: 24px 0 16px;">⚠️ Clash 用户注意事项</h3>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            当前订阅配置中已 <strong>内置 ECH 所需的 DNS 设置</strong>。
+                        </p>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            如果出现以下情况：
+                        </p>
+
+                        <ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
+                            <li style="margin-bottom: 8px; color: var(--text-secondary);">✅ 已开启 ECH</li>
+                            <li style="margin-bottom: 8px; color: var(--text-secondary);">✅ 已更新订阅</li>
+                            <li style="color: var(--text-secondary);">❌ ECH 节点仍然无法使用</li>
+                        </ul>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            请检查：
+                        </p>
+
+                        <div class="code-block" style="background: #fff3cd; color: #856404; border-left-color: #ffc107;">
+                            是否在更新订阅时覆盖了原有的 DNS 配置
+                        </div>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            建议：<strong>不要覆盖订阅中自带的 DNS 设置</strong>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="ech-tab-pane" id="echTab2">
+                    <div class="api-docs">
+                        <h2 class="section-title">🔍 如何确认 ECH 是否已经生效？</h2>
+
+                        <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
+                            可以通过一个 <strong>简单且直观的方法</strong> 来验证 ECH 是否正常工作。
+                        </p>
+
+                        <h3 style="color: var(--text-primary); margin: 24px 0 16px;">📋 验证步骤</h3>
+
+                        <ol style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
+                            <li style="margin-bottom: 12px; color: var(--text-secondary);">打开节点的 <strong>「⚙️ 详细配置信息」</strong></li>
+                            <li style="margin-bottom: 12px; color: var(--text-secondary);">在 <strong>HOST</strong> 中手动填写一个 <strong>已被墙的域名</strong>，例如： <code style="background: #e9ecef; padding: 2px 4px; border-radius: 3px;">*.workers.dev</code></li>
+                            <li style="margin-bottom: 12px; color: var(--text-secondary);">保存配置后 <strong>重新更新订阅</strong></li>
+                            <li style="color: var(--text-secondary);">在节点列表中查找：
+                                <ul style="margin: 8px 0 0 20px; padding-left: 0;">
+                                    <li style="margin-bottom: 4px;">- HOST 为 <code style="background: #e9ecef; padding: 2px 4px; border-radius: 3px;">*.workers.dev</code> 的节点</li>
+                                    <li>- 并尝试连接该节点</li>
+                                </ul>
+                            </li>
+                        </ol>
+
+                        <h3 style="color: var(--text-primary); margin: 24px 0 16px;">✅ 如何判断结果？</h3>
+
+                        <ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
+                            <li style="margin-bottom: 12px; color: var(--text-secondary);">
+                                <strong style="color: #28a745;">✅ 如果节点可以正常连接使用</strong><br>
+                                说明 <strong>ECH 已成功生效</strong>，真实被墙的域名已被隐藏，对外仅显示为 <code style="background: #e9ecef; padding: 2px 4px; border-radius: 3px;">cloudflare-ech.com</code>
+                            </li>
+                            <li style="color: var(--text-secondary);">
+                                <strong style="color: #dc3545;">❌ 如果节点无法连接</strong><br>
+                                说明 ECH 未生效，或客户端版本、DNS 配置存在问题
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-primary btn-close-modal" onclick="closeECHHelpModal()"
                 style="margin-top: 20px;">关闭</button>
         </div>
     </div>
@@ -7720,6 +8118,173 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 simpleDiv.style.display = 'none';
                 detailDiv.style.display = 'block';
             }
+        }
+
+        // ECH 帮助模态框函数
+        function showECHHelpModal() {
+            document.getElementById('echHelpModal').classList.add('show');
+            
+            // 计算并设置内容高度以适应浏览器高度
+            setTimeout(() => {
+                calculateECHContentHeight();
+                // 窗口大小改变时重新计算
+                window.addEventListener('resize', calculateECHContentHeight);
+            }, 0);
+        }
+
+        function calculateECHContentHeight() {
+            const modal = document.querySelector('.ech-help-modal');
+            const tabContent = document.querySelector('.ech-tab-content');
+            const tabs = document.querySelector('.ech-tabs');
+            const closeBtn = document.querySelector('#echHelpModal .modal-close');
+            const bottomBtn = document.querySelector('#echHelpModal .btn-close-modal');
+            
+            if (!modal || !tabContent) return;
+            
+            // 获取浏览器视口高度
+            const viewportHeight = window.innerHeight;
+            
+            // 计算各个元素的高度（带上下文margin/padding）
+            const modalPadding = 20; // 模态框内边距
+            const tabsHeight = tabs ? tabs.offsetHeight + 15 : 50; // 选项卡高度 + margin
+            const closeBtnHeight = 40; // 关闭按钮高度
+            const bottomBtnHeight = bottomBtn ? bottomBtn.offsetHeight + 20 : 60; // 底部按钮高度 + margin
+            const headerHeight = 20; // 其他上边距
+            
+            // 计算可用的内容高度
+            // viewportHeight - (顶部padding + 选项卡 + 底部按钮 + 底部padding)
+            const availableHeight = viewportHeight - (modalPadding * 2 + tabsHeight + bottomBtnHeight + headerHeight);
+            
+            // 设置最大高度，确保不超出视口
+            tabContent.style.maxHeight = Math.max(200, availableHeight) + 'px';
+        }
+
+        function closeECHHelpModal(event) {
+            if (event && event.target.id !== 'echHelpModal') return;
+            document.getElementById('echHelpModal').classList.remove('show');
+        }
+
+        function switchECHTab(tabIndex) {
+            // 切换选项卡按钮状态
+            const tabs = document.querySelectorAll('.ech-tab');
+            tabs.forEach((tab, index) => {
+                if (index === tabIndex) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            // 切换选项卡内容
+            const panes = document.querySelectorAll('.ech-tab-pane');
+            panes.forEach((pane, index) => {
+                if (index === tabIndex) {
+                    pane.classList.add('active');
+                } else {
+                    pane.classList.remove('active');
+                }
+            });
+
+            // 自动滚动到活跃选项卡
+            const activeTab = tabs[tabIndex];
+            if (activeTab) {
+                const tabsContainer = document.querySelector('.ech-tabs');
+                if (tabsContainer) {
+                    activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+            }
+        }
+
+        // ECH 选项卡拖拽功能
+        function initECHTabsDrag() {
+            const tabsContainer = document.querySelector('.ech-tabs');
+            if (!tabsContainer) return;
+
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+            let isDragged = false;
+
+            tabsContainer.addEventListener('mousedown', (e) => {
+                // 如果点击的是按钮，不启动拖拽
+                if (e.target.closest('.ech-tab')) {
+                    isDown = true;
+                    isDragged = false;
+                    startX = e.pageX - tabsContainer.offsetLeft;
+                    scrollLeft = tabsContainer.scrollLeft;
+                    tabsContainer.classList.add('dragging');
+                }
+            });
+
+            tabsContainer.addEventListener('mouseleave', () => {
+                isDown = false;
+                tabsContainer.classList.remove('dragging');
+            });
+
+            tabsContainer.addEventListener('mouseup', () => {
+                isDown = false;
+                tabsContainer.classList.remove('dragging');
+            });
+
+            tabsContainer.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                
+                const x = e.pageX - tabsContainer.offsetLeft;
+                const walk = (x - startX) * 1; // 拖拽速度
+                
+                if (Math.abs(walk) > 5) {
+                    isDragged = true;
+                }
+                
+                tabsContainer.scrollLeft = scrollLeft - walk;
+            });
+
+            // 触摸设备支持
+            tabsContainer.addEventListener('touchstart', (e) => {
+                isDown = true;
+                isDragged = false;
+                startX = e.touches[0].pageX - tabsContainer.offsetLeft;
+                scrollLeft = tabsContainer.scrollLeft;
+            });
+
+            tabsContainer.addEventListener('touchend', () => {
+                isDown = false;
+            });
+
+            tabsContainer.addEventListener('touchmove', (e) => {
+                if (!isDown) return;
+                
+                const x = e.touches[0].pageX - tabsContainer.offsetLeft;
+                const walk = (x - startX) * 1;
+                
+                if (Math.abs(walk) > 5) {
+                    isDragged = true;
+                }
+                
+                tabsContainer.scrollLeft = scrollLeft - walk;
+            });
+
+            // 为选项卡按钮添加点击拦截，防止拖拽时误触发
+            const tabs = document.querySelectorAll('.ech-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    if (isDragged) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        isDragged = false;
+                    }
+                });
+            });
+        }
+
+        // 在模态框显示时初始化拖拽
+        const echHelpModalOriginal = showECHHelpModal;
+        showECHHelpModal = function() {
+            echHelpModalOriginal.call(this);
+            setTimeout(() => {
+                initECHTabsDrag();
+            }, 0);
         }
 
         function normalizeSubAPIURL(url) {

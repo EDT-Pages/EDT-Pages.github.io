@@ -4661,14 +4661,21 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     <div class="form-group" id="echDNSGroup" style="display: none; align-items: start;">
                         <label for="echDNSSelect" style="padding-top: 10px;">ECH DNS服务</label>
                         <div class="input-wrapper" style="flex-direction: column; align-items: stretch;">
-                            <select id="echDNSSelect" title="ECH DNS服务" style="display: none;" onchange="onEchDNSSelectChange()">
-                                <option value="https://doh.cmliussss.net/CMLiussss">https://doh.cmliussss.net/CMLiussss（Cloudflare CM镜像）小白推荐选这个！！！</option>
-                                <option value="https://doh.cmliussss.com/CMLiussss">https://doh.cmliussss.com/CMLiussss（Google CM镜像）</option>
-                                <option value="https://basic.rethinkdns.com/CMLiussss">https://basic.rethinkdns.com/CMLiussss（RethinkDNS）</option>
-                                <option value="https://v.recipes/dns-query">https://v.recipes/dns-query（V.recipes）</option>
+                            <select id="echDNSSelect" title="ECH DNS服务" style="display: none;"
+                                onchange="onEchDNSSelectChange()">
+                                <option value="https://doh.cmliussss.net/CMLiussss">
+                                    https://doh.cmliussss.net/CMLiussss（Cloudflare CM镜像）小白推荐选这个！！！</option>
+                                <option value="https://doh.cmliussss.com/CMLiussss">
+                                    https://doh.cmliussss.com/CMLiussss（Google CM镜像）</option>
+                                <option value="https://basic.rethinkdns.com/CMLiussss">
+                                    https://basic.rethinkdns.com/CMLiussss（RethinkDNS）</option>
+                                <option value="https://v.recipes/dns-query">https://v.recipes/dns-query（V.recipes）
+                                </option>
                                 <option value="custom">自定义</option>
                             </select>
-                            <input type="text" id="echDNSCustomInput" title="自定义ECH DNS服务" placeholder="tls://... 或 https://..." onchange="onEchDNSCustomInput()" style="display: none; margin-top: 8px;">
+                            <input type="text" id="echDNSCustomInput" title="自定义ECH DNS服务"
+                                placeholder="tls://... 或 https://..." onchange="onEchDNSCustomInput()"
+                                style="display: none; margin-top: 8px;">
                             <input type="hidden" id="echDNSValue">
                         </div>
                     </div>
@@ -4676,12 +4683,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     <div class="form-group" id="echSNIGroup" style="display: none; align-items: start;">
                         <label for="echSNISelect" style="padding-top: 10px;">ECH 解析域名</label>
                         <div class="input-wrapper" style="flex-direction: column; align-items: stretch;">
-                            <select id="echSNISelect" title="ECH 解析域名" style="display: none;" onchange="onEchSNISelectChange()">
+                            <select id="echSNISelect" title="ECH 解析域名" style="display: none;"
+                                onchange="onEchSNISelectChange()">
                                 <option value="__AUTO__">自动获取</option>
                                 <option value="cloudflare-ech.com">cloudflare-ech.com 小白推荐选这个！！！</option>
                                 <option value="custom">自定义</option>
                             </select>
-                            <input type="text" id="echSNICustomInput" title="自定义ECH 解析域名" placeholder="cloudflare-ech.com" onchange="onEchSNICustomInput()" style="display: none; margin-top: 8px;">
+                            <input type="text" id="echSNICustomInput" title="自定义ECH 解析域名"
+                                placeholder="cloudflare-ech.com" onchange="onEchSNICustomInput()"
+                                style="display: none; margin-top: 8px;">
                             <input type="hidden" id="echSNIValue">
                         </div>
                     </div>
@@ -5418,7 +5428,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <div class="ech-tabs">
                 <button class="ech-tab active" onclick="switchECHTab(0)">什么是ECH？</button>
                 <button class="ech-tab" onclick="switchECHTab(1)">如何使用？</button>
-                <button class="ech-tab" onclick="switchECHTab(2)">是否生效？</button>
+                <button class="ech-tab" onclick="switchECHTab(2)">如何确认 ECH 是否已经生效？</button>
             </div>
 
             <!-- 选项卡内容 -->
@@ -5428,12 +5438,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <h2 class="section-title">🔐 什么是 ECH？</h2>
 
                         <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-                            <strong>ECH（Encrypted Client Hello，加密客户端问候）</strong> 是 TLS 的一项新特性，用来 <strong>将原本会明文暴露的域名信息一起加密</strong>。
+                            <strong>ECH（Encrypted Client Hello，加密客户端问候）</strong> 是 TLS 的一项新特性，用来
+                            <strong>将原本会明文暴露的域名信息一起加密</strong>。
                         </p>
 
                         <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
                             如果你希望了解更完整、偏技术细节的说明，可以参考 Cloudflare 官方博客：<br>
-                            👉 <a href="https://blog.cloudflare.com/zh-cn/announcing-encrypted-client-hello/" target="_blank" rel="noopener" style="color: var(--primary-color); text-decoration: none;">https://blog.cloudflare.com/zh-cn/announcing-encrypted-client-hello/</a>
+                            👉 <a href="https://blog.cloudflare.com/zh-cn/announcing-encrypted-client-hello/"
+                                target="_blank" rel="noopener"
+                                style="color: var(--primary-color); text-decoration: none;">https://blog.cloudflare.com/zh-cn/announcing-encrypted-client-hello/</a>
                         </p>
 
                         <h3 style="color: var(--text-primary); margin: 24px 0 16px;">📖 背景说明</h3>
@@ -5443,8 +5456,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         </p>
 
                         <ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
-                            <li style="margin-bottom: 8px; color: var(--text-secondary);">✅ 实际通信内容已经被 TLS 加密，GFW <strong>无法看到你访问的具体内容</strong></li>
-                            <li style="color: var(--text-secondary);">❌ 但在 TLS 握手阶段，仍然会暴露一个关键信息：<strong>SNI</strong></li>
+                            <li style="margin-bottom: 8px; color: var(--text-secondary);">✅ 实际通信内容已经被 TLS 加密，GFW
+                                <strong>无法看到你访问的具体内容</strong>
+                            </li>
+                            <li style="color: var(--text-secondary);">❌ 但在 TLS 握手阶段，仍然会暴露一个关键信息：<strong>SNI</strong>
+                            </li>
                         </ul>
 
                         <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
@@ -5455,7 +5471,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             也就是说：
                         </p>
 
-                        <div class="code-block" style="background: #fff3cd; color: #856404; border-left-color: #ffc107;">
+                        <div class="code-block"
+                            style="background: #fff3cd; color: #856404; border-left-color: #ffc107;">
                             GFW 虽然不知道你在访问什么，但知道你在"扶墙"，并且知道你连接的是哪个域名。
                         </div>
 
@@ -5474,7 +5491,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             表现通常为：
                         </p>
 
-                        <div class="code-block" style="background: #f8d7da; color: #721c24; border-left-color: #dc3545;">
+                        <div class="code-block"
+                            style="background: #f8d7da; color: #721c24; border-left-color: #dc3545;">
                             所有节点瞬间 -1，全部无法使用
                         </div>
 
@@ -5489,7 +5507,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             ECH 的核心作用是：
                         </p>
 
-                        <div class="code-block" style="background: #d1ecf1; color: #0c5460; border-left-color: #17a2b8;">
+                        <div class="code-block"
+                            style="background: #d1ecf1; color: #0c5460; border-left-color: #17a2b8;">
                             将 SNI（也就是节点域名）加密
                         </div>
 
@@ -5498,8 +5517,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         </p>
 
                         <ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
-                            <li style="margin-bottom: 8px; color: var(--text-secondary);">✅ GFW <strong>无法获取真实的节点域名</strong></li>
-                            <li style="color: var(--text-secondary);">✅ 外部观察到的域名将统一显示为：<br><code style="background: #e9ecef; padding: 2px 4px; border-radius: 3px;">cloudflare-ech.com</code></li>
+                            <li style="margin-bottom: 8px; color: var(--text-secondary);">✅ GFW
+                                <strong>无法获取真实的节点域名</strong>
+                            </li>
+                            <li style="color: var(--text-secondary);">✅ 外部观察到的域名将统一显示为：<br><code
+                                    style="background: #e9ecef; padding: 2px 4px; border-radius: 3px;">cloudflare-ech.com</code>
+                            </li>
                         </ul>
 
                         <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
@@ -5541,7 +5564,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
                             <li style="margin-bottom: 8px; color: var(--text-secondary);">
                                 <strong>v2rayN ≥ v7.17.0</strong><br>
-                                <a href="https://github.com/2dust/v2rayN/releases" target="_blank" rel="noopener" style="color: var(--primary-color); text-decoration: none;">https://github.com/2dust/v2rayN/releases</a>
+                                <a href="https://github.com/2dust/v2rayN/releases" target="_blank" rel="noopener"
+                                    style="color: var(--primary-color); text-decoration: none;">https://github.com/2dust/v2rayN/releases</a>
                             </li>
                         </ul>
 
@@ -5549,7 +5573,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
                             <li style="margin-bottom: 8px; color: var(--text-secondary);">
                                 <strong>v2rayNG ≥ v2.0.0</strong><br>
-                                <a href="https://github.com/2dust/v2rayNG/releases" target="_blank" rel="noopener" style="color: var(--primary-color); text-decoration: none;">https://github.com/2dust/v2rayNG/releases</a>
+                                <a href="https://github.com/2dust/v2rayNG/releases" target="_blank" rel="noopener"
+                                    style="color: var(--primary-color); text-decoration: none;">https://github.com/2dust/v2rayNG/releases</a>
                             </li>
                         </ul>
 
@@ -5583,7 +5608,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             请检查：
                         </p>
 
-                        <div class="code-block" style="background: #fff3cd; color: #856404; border-left-color: #ffc107;">
+                        <div class="code-block"
+                            style="background: #fff3cd; color: #856404; border-left-color: #ffc107;">
                             是否在更新订阅时覆盖了原有的 DNS 配置
                         </div>
 
@@ -5604,12 +5630,19 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <h3 style="color: var(--text-primary); margin: 24px 0 16px;">📋 验证步骤</h3>
 
                         <ol style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
-                            <li style="margin-bottom: 12px; color: var(--text-secondary);">打开节点的 <strong>「⚙️ 详细配置信息」</strong></li>
-                            <li style="margin-bottom: 12px; color: var(--text-secondary);">在 <strong>HOST</strong> 中手动填写一个 <strong>已被墙的域名</strong>，例如： <code style="background: #e9ecef; padding: 2px 4px; border-radius: 3px;">*.workers.dev</code></li>
-                            <li style="margin-bottom: 12px; color: var(--text-secondary);">保存配置后 <strong>重新更新订阅</strong></li>
+                            <li style="margin-bottom: 12px; color: var(--text-secondary);">打开节点的 <strong>「⚙️
+                                    详细配置信息」</strong></li>
+                            <li style="margin-bottom: 12px; color: var(--text-secondary);">在 <strong>HOST</strong>
+                                中手动填写一个 <strong>已被墙的域名</strong>，例如： <code
+                                    style="background: #e9ecef; padding: 2px 4px; border-radius: 3px;">*.workers.dev</code>
+                            </li>
+                            <li style="margin-bottom: 12px; color: var(--text-secondary);">保存配置后 <strong>重新更新订阅</strong>
+                            </li>
                             <li style="color: var(--text-secondary);">在节点列表中查找：
                                 <ul style="margin: 8px 0 0 20px; padding-left: 0;">
-                                    <li style="margin-bottom: 4px;">- HOST 为 <code style="background: #e9ecef; padding: 2px 4px; border-radius: 3px;">*.workers.dev</code> 的节点</li>
+                                    <li style="margin-bottom: 4px;">- HOST 为 <code
+                                            style="background: #e9ecef; padding: 2px 4px; border-radius: 3px;">*.workers.dev</code>
+                                        的节点</li>
                                     <li>- 并尝试连接该节点</li>
                                 </ul>
                             </li>
@@ -5620,7 +5653,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
                             <li style="margin-bottom: 12px; color: var(--text-secondary);">
                                 <strong style="color: #28a745;">✅ 如果节点可以正常连接使用</strong><br>
-                                说明 <strong>ECH 已成功生效</strong>，真实被墙的域名已被隐藏，对外仅显示为 <code style="background: #e9ecef; padding: 2px 4px; border-radius: 3px;">cloudflare-ech.com</code>
+                                说明 <strong>ECH 已成功生效</strong>，真实被墙的域名已被隐藏，对外仅显示为 <code
+                                    style="background: #e9ecef; padding: 2px 4px; border-radius: 3px;">cloudflare-ech.com</code>
                             </li>
                             <li style="color: var(--text-secondary);">
                                 <strong style="color: #dc3545;">❌ 如果节点无法连接</strong><br>
@@ -5801,7 +5835,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const start = Date.now();
             try {
                 const response = await fetch(site.url + '?t=' + Date.now(), {
-                    method: 'GET',
+                    method: 'HEAD',
                     cache: 'no-cache',
                     mode: 'no-cors',
                     referrerPolicy: 'no-referrer'
@@ -6223,7 +6257,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                 // 填充ECH DNS下拉框
                 populateEchDNSSelect();
-                
+
                 // 填充ECH SNI下拉框
                 populateEchSNISelect();
             } else {
@@ -6499,10 +6533,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         function handleECHEnableChange() {
             const enableECHCheckbox = document.getElementById('enableECH');
             const fingerprintSelect = document.getElementById('fingerprint');
-            
+
             // 支持ECH的指纹类型
             const supportECH = ['chrome', 'firefox', 'random'];
-            
+
             // 如果用户开启ECH，但当前指纹不支持ECH，自动切换到chrome
             if (enableECHCheckbox && enableECHCheckbox.checked) {
                 const currentFingerprint = fingerprintSelect?.value;
@@ -6512,7 +6546,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     markModified('config');
                 }
             }
-            
+
             markModified('ech');
         }
 
@@ -6539,7 +6573,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const select = document.getElementById('echDNSSelect');
             const customInput = document.getElementById('echDNSCustomInput');
             const hiddenValue = document.getElementById('echDNSValue');
-            
+
             if (!select || !formGroup) return;
 
             // 检查ECHConfig.DNS字段是否存在
@@ -6583,7 +6617,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const select = document.getElementById('echSNISelect');
             const customInput = document.getElementById('echSNICustomInput');
             const hiddenValue = document.getElementById('echSNIValue');
-            
+
             if (!select || !formGroup) return;
 
             // 检查ECHConfig.SNI字段是否存在
@@ -6634,7 +6668,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const select = document.getElementById('echDNSSelect');
             const customInput = document.getElementById('echDNSCustomInput');
             const hiddenValue = document.getElementById('echDNSValue');
-            
+
             if (select.value === 'custom') {
                 customInput.style.display = 'block';
                 hiddenValue.value = customInput.value;
@@ -6659,7 +6693,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const select = document.getElementById('echSNISelect');
             const customInput = document.getElementById('echSNICustomInput');
             const hiddenValue = document.getElementById('echSNIValue');
-            
+
             if (select.value === '__AUTO__') {
                 customInput.style.display = 'none';
                 customInput.value = '';
@@ -8123,7 +8157,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         // ECH 帮助模态框函数
         function showECHHelpModal() {
             document.getElementById('echHelpModal').classList.add('show');
-            
+
             // 计算并设置内容高度以适应浏览器高度
             setTimeout(() => {
                 calculateECHContentHeight();
@@ -8138,23 +8172,23 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const tabs = document.querySelector('.ech-tabs');
             const closeBtn = document.querySelector('#echHelpModal .modal-close');
             const bottomBtn = document.querySelector('#echHelpModal .btn-close-modal');
-            
+
             if (!modal || !tabContent) return;
-            
+
             // 获取浏览器视口高度
             const viewportHeight = window.innerHeight;
-            
+
             // 计算各个元素的高度（带上下文margin/padding）
             const modalPadding = 20; // 模态框内边距
             const tabsHeight = tabs ? tabs.offsetHeight + 15 : 50; // 选项卡高度 + margin
             const closeBtnHeight = 40; // 关闭按钮高度
             const bottomBtnHeight = bottomBtn ? bottomBtn.offsetHeight + 20 : 60; // 底部按钮高度 + margin
             const headerHeight = 20; // 其他上边距
-            
+
             // 计算可用的内容高度
             // viewportHeight - (顶部padding + 选项卡 + 底部按钮 + 底部padding)
             const availableHeight = viewportHeight - (modalPadding * 2 + tabsHeight + bottomBtnHeight + headerHeight);
-            
+
             // 设置最大高度，确保不超出视口
             tabContent.style.maxHeight = Math.max(200, availableHeight) + 'px';
         }
@@ -8229,14 +8263,14 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             tabsContainer.addEventListener('mousemove', (e) => {
                 if (!isDown) return;
                 e.preventDefault();
-                
+
                 const x = e.pageX - tabsContainer.offsetLeft;
                 const walk = (x - startX) * 1; // 拖拽速度
-                
+
                 if (Math.abs(walk) > 5) {
                     isDragged = true;
                 }
-                
+
                 tabsContainer.scrollLeft = scrollLeft - walk;
             });
 
@@ -8254,14 +8288,14 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             tabsContainer.addEventListener('touchmove', (e) => {
                 if (!isDown) return;
-                
+
                 const x = e.touches[0].pageX - tabsContainer.offsetLeft;
                 const walk = (x - startX) * 1;
-                
+
                 if (Math.abs(walk) > 5) {
                     isDragged = true;
                 }
-                
+
                 tabsContainer.scrollLeft = scrollLeft - walk;
             });
 
@@ -8280,7 +8314,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
         // 在模态框显示时初始化拖拽
         const echHelpModalOriginal = showECHHelpModal;
-        showECHHelpModal = function() {
+        showECHHelpModal = function () {
             echHelpModalOriginal.call(this);
             setTimeout(() => {
                 initECHTabsDrag();

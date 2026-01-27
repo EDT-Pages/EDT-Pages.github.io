@@ -4663,29 +4663,29 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <div class="input-wrapper" style="flex-direction: column; align-items: stretch;">
                             <select id="echDNSSelect" title="ECH DNS服务" style="display: none;"
                                 onchange="onEchDNSSelectChange()">
-                                <option value="udp://45.90.28.0:5353">
+                                <option value="udp://45.90.28.0:5353" data-region="international">
                                     udp://45.90.28.0:5353（NextDNS）小白推荐选这个！！！</option>
-                                <option value="udp://208.67.220.220:443">
+                                <option value="udp://208.67.220.220:443" data-region="international">
                                     udp://208.67.220.220:443（OpenDNS）</option>
-                                <option value="udp://149.112.112.112:9953">
+                                <option value="udp://149.112.112.112:9953" data-region="international">
                                     udp://149.112.112.112:9953（Quad9）</option>
-                                <option value="udp://188.166.206.224:5003">
+                                <option value="udp://188.166.206.224:5003" data-region="international">
                                     udp://188.166.206.224:5003（Tiarap）</option>
-                                <option value="https://doh.applied-privacy.net/query">
+                                <option value="https://doh.applied-privacy.net/query" data-region="international">
                                     https://doh.applied-privacy.net/query（Applied Privacy DoH）</option>
-                                <option value="https://odvr.nic.cz/doh">
+                                <option value="https://odvr.nic.cz/doh" data-region="international">
                                     https://odvr.nic.cz/doh（CZ.NIC DoH）</option>
-                                <option value="https://doh.cmliussss.net/CMLiussss">
+                                <option value="https://doh.cmliussss.net/CMLiussss" data-region="international">
                                     https://doh.cmliussss.net/CMLiussss（Cloudflare DoH：CM镜像）</option>
-                                <option value="https://doh.cmliussss.com/CMLiussss">
+                                <option value="https://doh.cmliussss.com/CMLiussss" data-region="international">
                                     https://doh.cmliussss.com/CMLiussss（Google DoH：CM镜像）</option>
-                                <option value="https://dns.alidns.com/dns-query">
+                                <option value="https://dns.alidns.com/dns-query" data-region="domestic">
                                     https://dns.alidns.com/dns-query（阿里 DoH：国内DNS需搭配设置ECH解析域名，是否可用需自行验证）</option>
-                                <option value="https://sm2.doh.pub/dns-query">
+                                <option value="https://sm2.doh.pub/dns-query" data-region="domestic">
                                     https://sm2.doh.pub/dns-query（腾讯国密 DoH：国内DNS需搭配设置ECH解析域名，是否可用需自行验证）</option>
-                                <option value="https://doh.360.cn/dns-query">
+                                <option value="https://doh.360.cn/dns-query" data-region="domestic">
                                     https://doh.360.cn/dns-query（360 DoH：国内DNS需搭配设置ECH解析域名，是否可用需自行验证）</option>
-                                <option value="https://doh.onedns.net/dns-query">
+                                <option value="https://doh.onedns.net/dns-query" data-region="domestic">
                                     https://doh.onedns.net/dns-query（OneDNS DoH：国内DNS需搭配设置ECH解析域名，是否可用需自行验证）</option>
                                 <option value="custom">自定义</option>
                             </select>
@@ -5499,7 +5499,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         </p>
 
                         <ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
-                            <li style="margin-bottom: 8px; color: var(--text-secondary);">❌ v2rayN 批量测速</li>
+                            <li style="margin-bottom: 8px; color: var(--text-secondary);">❌ v2rayN 批量测试真链接延迟</li>
                             <li style="color: var(--text-secondary);">❌ Clash 策略组自动选择节点</li>
                         </ul>
 
@@ -5536,7 +5536,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             <li style="margin-bottom: 8px; color: var(--text-secondary);">✅ GFW
                                 <strong>无法获取真实的节点域名</strong>
                             </li>
-                            <li style="color: var(--text-secondary);">✅ 外部观察到的域名将统一显示为：<br><code
+                            <li style="color: var(--text-secondary);">✅ 外部观察到的域名将统一显示为：<code
                                     style="background: #e9ecef; padding: 2px 4px; border-radius: 3px;">cloudflare-ech.com</code>
                             </li>
                         </ul>
@@ -6693,6 +6693,20 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 customInput.value = '';
                 hiddenValue.value = select.value;
             }
+
+            // 检查是否选择了国内DNS，若是则自动调整ECH解析域名
+            const selectedOption = select.options[select.selectedIndex];
+            const region = selectedOption.dataset.region;
+
+            if (region === 'domestic') {
+                const echSNISelect = document.getElementById('echSNISelect');
+                // 如果当前选择是 __AUTO__，自动改为 cloudflare-ech.com
+                if (echSNISelect.value === '__AUTO__') {
+                    echSNISelect.value = 'cloudflare-ech.com';
+                    onEchSNISelectChange();
+                }
+            }
+
             markModified('ech');
         }
 
@@ -6714,6 +6728,16 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 customInput.style.display = 'none';
                 customInput.value = '';
                 hiddenValue.value = null;
+
+                // 检查当前DNS服务是否为国内DNS
+                const echDNSSelect = document.getElementById('echDNSSelect');
+                const selectedDNSOption = echDNSSelect.options[echDNSSelect.selectedIndex];
+                const dnsRegion = selectedDNSOption.dataset.region;
+
+                if (dnsRegion === 'domestic') {
+                    alert('⚠️ ECH 配置提示\n\n默认使用节点HOST伪装域名 配合 国内 DNS 可能导致 ECH 解析失败。\n\n解决方案（任选其一）：\n① 将 ECH 解析域名改为 cloudflare-ech.com（推荐）\n② 将 ECH DNS 切换为国际服务（如 NextDNS）');
+                    select.value = 'cloudflare-ech.com';
+                }
             } else if (select.value === 'custom') {
                 customInput.style.display = 'block';
                 hiddenValue.value = customInput.value;

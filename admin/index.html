@@ -329,6 +329,7 @@
             border-radius: 12px;
             font-size: 16px;
             font-weight: 600;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             cursor: pointer;
             transition: all .3s ease;
             box-sizing: border-box;
@@ -377,6 +378,25 @@
 
         .btn-secondary:hover {
             background: #d1d5db
+        }
+
+        .btn-search-proxy {
+            background: linear-gradient(135deg, #8b5cf6 0, #6d28d9 100%);
+            color: #fff !important;
+            padding: 10px 16px;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-search-proxy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-search-proxy:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(139, 92, 246, 0.4);
         }
 
         .btn:disabled {
@@ -1571,6 +1591,24 @@
         }
 
         @media(max-width:768px) {
+            .module-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .module-footer .btn-group {
+                margin-left: auto;
+                width: auto;
+                align-self: flex-end;
+            }
+
+            .module-footer .btn-ech-help,
+            .module-footer .btn-proxyip-help,
+            .module-footer .btn-search-proxy {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
             .ech-tabs::-webkit-scrollbar {
                 height: 3px;
             }
@@ -1865,6 +1903,44 @@
         .btn-proxyip-help:active {
             transform: translateY(0);
             box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-fofa {
+            background: linear-gradient(135deg, #439aff 0, #05f2f2 100%);
+            color: #fff !important;
+            padding: 10px 16px;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgb(67, 154, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-fofa:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(5, 244, 244, 0.5);
+        }
+
+        .btn-fofa:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(5, 244, 244, 0.4);
+        }
+
+        .btn-360quake {
+            background: linear-gradient(135deg, #00AB7A 0, #00AB7A 100%);
+            color: #fff !important;
+            padding: 10px 16px;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0, 171, 122, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-360quake:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 171, 122, 0.5);
+        }
+
+        .btn-360quake:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(0, 171, 122, 0.4);
         }
 
         .btn-ech-help {
@@ -4532,7 +4608,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                     <div class="form-group">
                         <label for="nodePATH">PATH</label>
-                        <input type="text" id="nodePATH" title="节点的伪装路径 仅可通过 'PATH'环境变量 进行修改" readonly>
+                        <input type="text" id="nodePATH" title="节点的伪装路径 仅可通过 'PATH'环境变量 进行修改">
                     </div>
 
                     <div class="form-group">
@@ -4805,6 +4881,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <button type="button" class="btn btn-proxyip-help" onclick="showProxyIPHelpModal()"
                             title="了解 ProxyIP 的相关信息">
                             💡 为什么需要反代模式？PROXYIP又是什么？
+                        </button>
+                        <button type="button" class="btn btn-search-proxy" id="getMoreProxyIPBtn"
+                            onclick="showGetMoreProxyIPModal()" style="display: none;"
+                            title="使用网络测绘引擎寻找可用的PROXYIP">
+                            🗺️ 探索更多 PROXYIP
                         </button>
                         <div class="btn-group">
                             <button type="button" class="btn btn-secondary" onclick="cancelEdit('proxy')" disabled
@@ -5707,6 +5788,70 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         </div>
     </div>
 
+    <!-- 获取更多 PROXYIP 弹窗 -->
+    <div class="modal-overlay" id="getMoreProxyIPModal" onclick="closeGetMoreProxyIPModal(event)">
+        <div class="modal" onclick="event.stopPropagation()" style="max-width: 420px; text-align: left;">
+            <button type="button" class="modal-close" onclick="closeGetMoreProxyIPModal()">×</button>
+            <h2 class="section-title" style="margin-bottom: 15px; text-align: center;">🗺️ 探索更多 PROXYIP</h2>
+            <p style="text-align: center; color: #666; font-size: 14px; margin-bottom: 25px;">
+                通过网络测绘搜索引擎，查找指定地区的 反代IP 资源。<br>
+                <span style="font-size: 12px; color: #999;">(搜索结果仅供参考，请自行验证连通性)</span>
+            </p>
+
+            <div class="form-group">
+                <label for="proxyRegionSelect">🏳️‍🌈 选择目标地区</label>
+                <div class="input-wrapper">
+                    <select id="proxyRegionSelect" onchange="onProxyRegionChange()" style="padding-left: 16px;">
+                        <option value="custom">✍️ 自定义地区代码</option>
+                        <option disabled>──────────</option>
+                        <optgroup label="🌏 亚洲 / Asia">
+                            <option value="HK">HK - 香港 (HongKong)</option>
+                            <option value="TW">TW - 台湾 (Taiwan)</option>
+                            <option value="KR">KR - 韩国 (Korea)</option>
+                            <option value="JP">JP - 日本 (Japan)</option>
+                            <option value="SG">SG - 新加坡 (Singapore)</option>
+                        </optgroup>
+                        <optgroup label="🌎 北美 / North America">
+                            <option value="US">US - 美国 (United States)</option>
+                            <option value="CA">CA - 加拿大 (Canada)</option>
+                        </optgroup>
+                        <optgroup label="🌍 欧洲 / Europe">
+                            <option value="GB">GB - 英国 (United Kingdom)</option>
+                            <option value="DE">DE - 德国 (Germany)</option>
+                            <option value="FR">FR - 法国 (France)</option>
+                        </optgroup>
+                        <optgroup label="🌏 大洋洲 / Oceania">
+                            <option value="AU">AU - 澳大利亚 (Australia)</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group" id="customRegionInputGroup" style="display: none;">
+                <label for="customRegionInput">⌨️ 输入国家代码</label>
+                <div class="input-wrapper">
+                    <input type="text" id="customRegionInput" placeholder="请输入两位字母代码，例如: US" maxlength="2"
+                        style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase();">
+                </div>
+            </div>
+
+            <div class="btn-group" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-top: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                <button type="button" class="btn btn-fofa" onclick="openFOFA()" style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
+                    FOFA 测绘
+                </button>
+                <button type="button" class="btn btn-360quake" onclick="open360Quake()" style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
+                    360 测绘
+                </button>
+                <button type="button" class="btn btn-ech-help" onclick="window.open('https://check.proxyip.cmliussss.net/', '_blank')" style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
+                    可用性验证
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="closeGetMoreProxyIPModal()" style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script data-cfasync="false">
         let currentConfig = {};
         let originalConfig = {};
@@ -6216,6 +6361,20 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('protocol').value = currentConfig.协议类型 || 'vless';
             //document.getElementById('transport').value = currentConfig.传输协议 || 'ws';
             document.getElementById('skipVerify').checked = currentConfig.跳过证书验证 || false;
+
+            // 检查"完整节点路径"字段是否存在，判断PATH是否可编辑
+            const nodePathInput = document.getElementById('nodePATH');
+            if (currentConfig['完整节点路径'] !== undefined) {
+                // 存在该字段，表示后端支持编辑PATH，移除readonly属性
+                nodePathInput.removeAttribute('readonly');
+                nodePathInput.title = '节点的伪装路径';
+                nodePathInput.onchange = handlePathChange;
+            } else {
+                // 不存在该字段，PATH保持只读状态
+                nodePathInput.setAttribute('readonly', '');
+                nodePathInput.title = '节点的伪装路径 仅可通过 \'PATH\'环境变量 进行修改';
+                nodePathInput.onchange = null;
+            }
 
             // 检查Fingerprint字段是否存在
             const fingerprintGroup = document.getElementById('fingerprintGroup');
@@ -6893,6 +7052,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('proxyIPSection').style.display = mode === 'auto' ? 'block' : 'none';
             document.getElementById('socks5Section').style.display = mode === 'socks5' ? 'block' : 'none';
             document.getElementById('httpSection').style.display = mode === 'http' ? 'block' : 'none';
+
+            // 更新 "获取更多PROXYIP" 按钮的显示状态
+            const getMoreBtn = document.getElementById('getMoreProxyIPBtn');
+            if (getMoreBtn) {
+                getMoreBtn.style.display = mode === 'auto' ? 'inline-block' : 'none';
+            }
+
             markModified('proxy');
         }
 
@@ -7052,6 +7218,40 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 content._transitionHandler = onEnd;
                 content.addEventListener('transitionend', onEnd);
             }
+        }
+
+        // 规范化PATH字段
+        function normalizePath(path) {
+            // 如果为空，返回原值
+            if (!path) return path;
+
+            // 移除 '#' 及其之后的所有内容（注释）
+            let normalizedPath = path.split('#')[0];
+
+            // 去除首尾空格
+            normalizedPath = normalizedPath.trim();
+
+            // 如果第一个字符不是 '/'，则添加 '/'
+            if (normalizedPath && !normalizedPath.startsWith('/')) {
+                normalizedPath = '/' + normalizedPath;
+            }
+
+            return normalizedPath;
+        }
+
+        // 处理PATH输入完成后的规范化
+        function handlePathChange() {
+            const nodePathInput = document.getElementById('nodePATH');
+            const originalValue = nodePathInput.value;
+            const normalizedValue = normalizePath(originalValue);
+
+            // 如果规范化后的值与原值不同，更新输入框
+            if (normalizedValue !== originalValue) {
+                nodePathInput.value = normalizedValue;
+            }
+
+            // 标记为已修改
+            markModified('config');
         }
 
         function markModified(section) {
@@ -7299,6 +7499,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             currentConfig.协议类型 = document.getElementById('protocol').value;
             //currentConfig.传输协议 = currentConfig.协议类型 === 'trojan' ? 'ws' : document.getElementById('transport').value;
             currentConfig.跳过证书验证 = document.getElementById('skipVerify').checked;
+
+            // 保存PATH（如果"完整节点路径"字段存在，表示后端支持编辑PATH）
+            if (currentConfig['完整节点路径'] !== undefined) {
+                currentConfig.PATH = document.getElementById('nodePATH').value;
+            }
 
             // 保存Fingerprint（如果字段存在）
             if (currentConfig['Fingerprint'] !== undefined) {
@@ -7563,6 +7768,18 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 document.getElementById('nodePATH').value = currentConfig.PATH || '';
                 document.getElementById('protocol').value = currentConfig.协议类型 || 'vless';
                 document.getElementById('skipVerify').checked = currentConfig.跳过证书验证 || false;
+
+                // 处理PATH字段的只读状态
+                const nodePathInput = document.getElementById('nodePATH');
+                if (currentConfig['完整节点路径'] !== undefined) {
+                    nodePathInput.removeAttribute('readonly');
+                    nodePathInput.title = '节点的伪装路径';
+                    nodePathInput.onchange = handlePathChange;
+                } else {
+                    nodePathInput.setAttribute('readonly', '');
+                    nodePathInput.title = '节点的伪装路径 仅可通过 \'PATH\'环境变量 进行修改';
+                    nodePathInput.onchange = null;
+                }
 
                 // 重置随机路径（如果字段存在）
                 if (currentConfig['随机路径'] !== undefined) {
@@ -11091,6 +11308,108 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.addEventListener('keydown', closeHandler);
 
             document.body.appendChild(modal);
+        }
+
+        // ==================== 获取更多 PROXYIP 相关函数 ====================
+
+        function showGetMoreProxyIPModal() {
+            document.getElementById('getMoreProxyIPModal').classList.add('show');
+            // 默认选中第一个非自定义选项 (HK) 并隐藏自定义输入
+            const select = document.getElementById('proxyRegionSelect');
+            // 查找 HK 选项并选中
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].value === 'HK') {
+                    select.selectedIndex = i;
+                    break;
+                }
+            }
+            // 触发一次变更处理，确保UI状态正确
+            onProxyRegionChange();
+        }
+
+        function closeGetMoreProxyIPModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('getMoreProxyIPModal').classList.remove('show');
+        }
+
+        function onProxyRegionChange() {
+            const select = document.getElementById('proxyRegionSelect');
+            const customGroup = document.getElementById('customRegionInputGroup');
+
+            if (select.value === 'custom') {
+                customGroup.style.display = 'block';
+            } else {
+                customGroup.style.display = 'none';
+            }
+        }
+
+        function openFOFA() {
+            const select = document.getElementById('proxyRegionSelect');
+            let region = select.value;
+
+            if (region === 'custom') {
+                const customInput = document.getElementById('customRegionInput');
+                region = customInput.value.trim().toUpperCase();
+                if (!region || region.length !== 2) {
+                    showToast('请输入有效的两位国家代码', 'error');
+                    return;
+                }
+            }
+
+            // 构建查询语句
+            let query = '';
+            // HK 和 TW 使用 region 字段，其他使用 country 字段
+            if (region === 'HK' || region === 'TW') {
+                query = `server=="cloudflare" && header="Forbidden" && asn!="13335" && asn!="209242" && region="${region}"`;
+            } else {
+                query = `server=="cloudflare" && header="Forbidden" && asn!="13335" && asn!="209242" && country="${region}"`;
+            }
+
+            // Base64 编码
+            const qbase64 = btoa(query);
+
+            // 构建 URL
+            const url = `https://fofa.info/result?qbase64=${encodeURIComponent(qbase64)}`;
+
+            // 打开新窗口
+            window.open(url, '_blank');
+        }
+
+        function open360Quake() {
+            const select = document.getElementById('proxyRegionSelect');
+            let region = select.value;
+
+            if (region === 'custom') {
+                const customInput = document.getElementById('customRegionInput');
+                region = customInput.value.trim().toUpperCase();
+                if (!region || region.length !== 2) {
+                    showToast('请输入有效的两位国家代码', 'error');
+                    return;
+                }
+            }
+
+            // 基础查询语句
+            const baseQuery = `((app:"Cloudflare" AND header:"Forbidden" AND asn!=13335 AND asn!=209242) AND service: "http/ssl")`;
+            let query = '';
+            
+            // HK 和 TW 使用 province 字段，其他使用 country 字段
+            if (region === 'HK') {
+                query = `${baseQuery} AND province: "HongKong"`;
+            } else if (region === 'TW') {
+                query = `${baseQuery} AND province: "TaiWan"`;
+            } else {
+                query = `${baseQuery} AND country: "${region}"`;
+            }
+
+            // URL 编码
+            const searchVal = encodeURIComponent(query);
+            const timestamp = Date.now();
+
+            // 构建 URL
+            const url = `https://quake.360.net/quake/#/searchResult?searchVal=${searchVal}&selectIndex=quake_service&ignore_cache=false&timeRange=&timeRange=&latest=true&t=${timestamp}`;
+
+            // 打开新窗口
+            window.open(url, '_blank');
         }
 
     </script>

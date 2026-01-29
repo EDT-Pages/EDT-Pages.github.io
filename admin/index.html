@@ -430,6 +430,67 @@
             color: #f6821f
         }
 
+        /* HOSTS badge 样式 */
+        .hosts-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: #fff;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .hosts-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+        }
+
+        html.dark-mode .hosts-badge {
+            background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+            box-shadow: 0 2px 8px rgba(30, 136, 229, 0.4);
+        }
+
+        html.dark-mode .hosts-badge:hover {
+            box-shadow: 0 4px 12px rgba(30, 136, 229, 0.5);
+        }
+
+        /* HOSTS 警告按钮样式 */
+        .btn-hosts-warning {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%) !important;
+            color: #fff !important;
+            border: 2px solid #b71c1c !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .btn-hosts-warning:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 16px rgba(244, 67, 54, 0.5) !important;
+            background: linear-gradient(135deg, #e53935 0%, #c62828 100%) !important;
+        }
+
+        .btn-hosts-warning:active {
+            transform: translateY(0) !important;
+            box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3) !important;
+        }
+
+        html.dark-mode .btn-hosts-warning {
+            background: linear-gradient(135deg, #ef5350 0%, #e53935 100%) !important;
+            border-color: #c62828 !important;
+            box-shadow: 0 4px 12px rgba(239, 83, 80, 0.4) !important;
+        }
+
+        html.dark-mode .btn-hosts-warning:hover {
+            box-shadow: 0 6px 16px rgba(239, 83, 80, 0.5) !important;
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%) !important;
+        }
+
         /* Toast 通知 */
         .toast {
             position: fixed;
@@ -519,7 +580,10 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             text-align: center;
             z-index: 2000000001;
-            position: relative
+            position: relative;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
 
         #qrcodeModal .modal {
@@ -539,6 +603,32 @@
 
         .modal-close:hover {
             color: #1f2937
+        }
+
+        /* SOCKS5 模态框样式 */
+        #exploreSocks5Modal .modal {
+            max-width: 550px;
+        }
+
+        .socks5-list-container {
+            width: 100%;
+        }
+
+        .socks5-loading-info {
+            display: none;
+            padding: 12px;
+            background: rgba(255, 193, 7, 0.1);
+            border-left: 3px solid #ffc107;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+            margin: 12px 0;
+        }
+
+        html.dark-mode .socks5-loading-info {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ccc;
+            border-left-color: #ffb300;
         }
 
         /* 社交链接 - 重构为统一风格 */
@@ -4887,6 +4977,16 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             title="使用网络测绘引擎寻找可用的PROXYIP">
                             🗺️ 探索更多 PROXYIP
                         </button>
+                        <button type="button" class="btn btn-search-proxy" id="exploreSocks5Btn"
+                            onclick="showExploreSocks5Modal()" style="display: none;"
+                            title="从SOCKS5列表中选择可用的代理">
+                            🧩 探索更多 SOCKS5
+                        </button>
+                        <button type="button" class="btn btn-search-proxy" id="exploreHTTPBtn"
+                            onclick="showExploreHTTPModal()" style="display: none;"
+                            title="从HTTP列表中选择可用的代理">
+                            🧩 探索更多 HTTP
+                        </button>
                         <div class="btn-group">
                             <button type="button" class="btn btn-secondary" onclick="cancelEdit('proxy')" disabled
                                 id="cancelProxyBtn">取消</button>
@@ -5789,7 +5889,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
     </div>
 
     <!-- 获取更多 PROXYIP 弹窗 -->
-    <div class="modal-overlay" id="getMoreProxyIPModal" onclick="closeGetMoreProxyIPModal(event)">
+    <div class="modal-overlay" id="getMoreProxyIPModal">
         <div class="modal" onclick="event.stopPropagation()" style="max-width: 420px; text-align: left;">
             <button type="button" class="modal-close" onclick="closeGetMoreProxyIPModal()">×</button>
             <h2 class="section-title" style="margin-bottom: 15px; text-align: center;">🗺️ 探索更多 PROXYIP</h2>
@@ -5802,36 +5902,46 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 <label for="proxyRegionSelect">🏳️‍🌈 选择目标地区</label>
                 <div class="input-wrapper">
                     <select id="proxyRegionSelect" onchange="onProxyRegionChange()" style="padding-left: 16px;">
-                        <option value="custom">✍️ 自定义地区代码</option>
-                        <option disabled>──────────</option>
-                        <optgroup label="🌏 亚洲 / Asia">
-                            <option value="HK">HK - 香港 (HongKong)</option>
-                            <option value="TW">TW - 台湾 (Taiwan)</option>
-                            <option value="KR">KR - 韩国 (Korea)</option>
-                            <option value="JP">JP - 日本 (Japan)</option>
-                            <option value="SG">SG - 新加坡 (Singapore)</option>
+                        <option value="custom">✍️ 自定义地区</option>
+                        <optgroup label="🌏 亚洲 / AS">
+                            <option value="HK">🇭🇰 香港</option>
+                            <option value="TW">🇨🇳 台湾</option>
+                            <option value="KR">🇰🇷 韩国</option>
+                            <option value="JP">🇯🇵 日本</option>
+                            <option value="SG">🇸🇬 新加坡</option>
+                            <option value="IN">🇮🇳 印度</option>
                         </optgroup>
-                        <optgroup label="🌎 北美 / North America">
-                            <option value="US">US - 美国 (United States)</option>
-                            <option value="CA">CA - 加拿大 (Canada)</option>
+                        <optgroup label="🌎 北美 / NA">
+                            <option value="US">🇺🇸 美国</option>
+                            <option value="CA">🇨🇦 加拿大</option>
                         </optgroup>
-                        <optgroup label="🌍 欧洲 / Europe">
-                            <option value="GB">GB - 英国 (United Kingdom)</option>
-                            <option value="DE">DE - 德国 (Germany)</option>
-                            <option value="FR">FR - 法国 (France)</option>
+                        <optgroup label="🌍 欧洲 / EU">
+                            <option value="GB">🇬🇧 英国</option>
+                            <option value="DE">🇩🇪 德国</option>
+                            <option value="FR">🇫🇷 法国</option>
                         </optgroup>
-                        <optgroup label="🌏 大洋洲 / Oceania">
-                            <option value="AU">AU - 澳大利亚 (Australia)</option>
+                        <optgroup label="🌏 大洋洲 / OC">
+                            <option value="AU">🇦🇺 澳大利亚</option>
                         </optgroup>
                     </select>
                 </div>
             </div>
 
-            <div class="form-group" id="customRegionInputGroup" style="display: none;">
-                <label for="customRegionInput">⌨️ 输入国家代码</label>
+            <div class="form-group" id="customRegionInputGroup">
+                <label for="customRegionInput">⌨️ 输入地区代码</label>
                 <div class="input-wrapper">
                     <input type="text" id="customRegionInput" placeholder="请输入两位字母代码，例如: US" maxlength="2"
-                        style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase();">
+                        style="text-transform: uppercase;" disabled oninput="this.value = this.value.toUpperCase();">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="proxyPortSelect">🔌 选择目标端口</label>
+                <div class="input-wrapper">
+                    <select id="proxyPortSelect" style="padding-left: 16px;">
+                        <option value="443">443</option>
+                        <option value="nonstandard">非标</option>
+                    </select>
                 </div>
             </div>
 
@@ -5848,6 +5958,114 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 <button type="button" class="btn btn-secondary" onclick="closeGetMoreProxyIPModal()" style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
                     关闭
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 探索SOCKS5弹窗 -->
+    <div class="modal-overlay" id="exploreSocks5Modal">
+        <div class="modal" style="max-width: 550px; text-align: left;">
+            <button type="button" class="modal-close" onclick="closeExploreSocks5Modal(event)" style="cursor: pointer;">×</button>
+            <h2 class="section-title" style="margin-bottom: 15px; text-align: center;">🗺️ 探索更多 SOCKS5</h2>
+            
+            <div class="socks5-list-container">
+                <div class="form-group">
+                    <label for="socks5RegionSelect">🏳️‍🌈 选择目标地区</label>
+                    <div class="input-wrapper">
+                        <select id="socks5RegionSelect" onchange="onSocks5RegionChange()" style="padding-left: 16px;">
+                            <option value="">加载中...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="socks5ProxySelectGroup" style="display: none;">
+                    <label for="socks5ProxySelect">🌐 选择目标代理</label>
+                    <div class="input-wrapper">
+                        <select id="socks5ProxySelect" onchange="updateSocks5ConfirmButton()" style="padding-left: 16px; font-family: 'Fira Code', monospace; font-size: 12px;">
+                            <option value="">加载中...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="socks5-loading-info" id="socks5LoadingInfo" style="display: none; padding: 12px; background: rgba(255,193,7,0.1); border-radius: 4px; font-size: 12px; color: #666; margin: 12px 0;">
+                    正在验证SOCKS5可用性，请稍候...
+                </div>
+            </div>
+
+            <div class="btn-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 30px;">
+                <button type="button" class="btn btn-primary" id="socks5ConfirmBtn" onclick="confirmSelectSocks5()" disabled style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
+                    确定
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="closeExploreSocks5Modal(event)" style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
+                    取消
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 探索HTTP弹窗 -->
+    <div class="modal-overlay" id="exploreHTTPModal">
+        <div class="modal" style="max-width: 550px; text-align: left;">
+            <button type="button" class="modal-close" onclick="closeExploreHTTPModal(event)" style="cursor: pointer;">×</button>
+            <h2 class="section-title" style="margin-bottom: 15px; text-align: center;">🗺️ 探索更多 HTTP</h2>
+            
+            <div class="http-list-container">
+                <div class="form-group">
+                    <label for="httpRegionSelect">🏳️‍🌈 选择目标地区</label>
+                    <div class="input-wrapper">
+                        <select id="httpRegionSelect" onchange="onHTTPRegionChange()" style="padding-left: 16px;">
+                            <option value="">加载中...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="httpProxySelectGroup" style="display: none;">
+                    <label for="httpProxySelect">🌐 选择目标代理</label>
+                    <div class="input-wrapper">
+                        <select id="httpProxySelect" onchange="updateHTTPConfirmButton()" style="padding-left: 16px; font-family: 'Fira Code', monospace; font-size: 12px;">
+                            <option value="">加载中...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="http-loading-info" id="httpLoadingInfo" style="display: none; padding: 12px; background: rgba(255,193,7,0.1); border-radius: 4px; font-size: 12px; color: #666; margin: 12px 0;">
+                    正在验证HTTP可用性，请稍候...
+                </div>
+            </div>
+
+            <div class="btn-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 30px;">
+                <button type="button" class="btn btn-primary" id="httpConfirmBtn" onclick="confirmSelectHTTP()" disabled style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
+                    确定
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="closeExploreHTTPModal(event)" style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
+                    取消
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HOSTS 检查提示弹窗 -->
+    <div class="modal-overlay" id="hostsMismatchModal" onclick="closeHostsMismatchModal(event)">
+        <div class="modal" onclick="event.stopPropagation()" style="max-width: 500px;">
+            <button type="button" class="modal-close" onclick="closeHostsMismatchModal()">×</button>
+            <div style="text-align: center; padding: 20px 0;">
+                <h2 style="color: #f44336; margin: 0 0 16px 0; font-size: 22px; font-weight: 700;">⚠️ 域名配置提示</h2>
+                <p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.6; text-align: left;">
+                    您当前访问管理面板使用的域名是：<strong id="currentHostname" style="color: #2196F3;"></strong>
+                </p>
+                <p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.6; text-align: left; color: #f44336;">
+                    <strong>⚠️ 注意：</strong>该域名 <strong>未配置为节点伪装域名</strong>。这意味着生成的订阅配置将 <strong>不会使用当前域名</strong> 作为 <strong>节点域名</strong>。
+                </p>
+                <p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.6; text-align: left;">
+                    <strong>当前配置的节点伪装域名：</strong>
+                </p>
+                <div id="currentHosts" style="margin: 0 0 16px 0; padding: 12px; background-color: transparent; border-radius: 0; text-align: left; font-size: 13px; max-height: 120px; overflow-y: auto; word-break: break-all; display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start;"></div>
+                <p style="margin: 0 0 16px 0; font-size: 13px; line-height: 1.6; text-align: left;">
+                    <strong>如何修改？</strong>请在高手模式下的"⚙️ 详细配置信息"，在"HOST"里添加您的域名"<strong id="hostToAdd" style="color: #2196F3;"></strong>"，保存配置后即可生效。
+                </p>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button type="button" class="btn btn-hosts-warning" onclick="dismissHostsMismatchNotification()" style="flex: 1; background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); color: #fff; border: none; padding: 12px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3); transition: all 0.3s ease;">我知道了！24小时内不再提示！</button>
             </div>
         </div>
     </div>
@@ -6342,7 +6560,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const nodeHostInput = document.getElementById('nodeHost');
             if (hasMultipleHosts) {
                 // 如果存在 HOSTS 数组，用逗号连接显示所有 host
-                nodeHostInput.value = currentConfig.HOSTS.join(',');
+                nodeHostInput.value = currentConfig.HOSTS.join('、');
                 // 添加可点击样式和事件
                 nodeHostInput.classList.add('nodeHost-clickable');
                 nodeHostInput.title = '点击 可编辑多个节点域名';
@@ -6495,6 +6713,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             // 填充 SubConfig 下拉框（如果数据已加载，会自动设置选中值）
             populateSubConfigSelect();
+
+            // 检查当前域名是否在 HOSTS 数组中
+            checkHostsMismatch();
         }
 
         // CF 使用情况显示函数
@@ -7059,6 +7280,18 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 getMoreBtn.style.display = mode === 'auto' ? 'inline-block' : 'none';
             }
 
+            // 更新 "探索更多SOCKS5" 按钮的显示状态
+            const exploreSocks5Btn = document.getElementById('exploreSocks5Btn');
+            if (exploreSocks5Btn) {
+                exploreSocks5Btn.style.display = mode === 'socks5' ? 'inline-block' : 'none';
+            }
+
+            // 更新 "探索更多HTTP" 按钮的显示状态
+            const exploreHTTPBtn = document.getElementById('exploreHTTPBtn');
+            if (exploreHTTPBtn) {
+                exploreHTTPBtn.style.display = mode === 'http' ? 'inline-block' : 'none';
+            }
+
             markModified('proxy');
         }
 
@@ -7409,7 +7642,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             currentConfig.HOSTS = items;
 
             // 更新输入框显示（用逗号连接）
-            nodeHostInput.value = items.join(',');
+            nodeHostInput.value = items.join('、');
 
             // 关闭模态框
             closeHostsEditModal();
@@ -11327,25 +11560,31 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             onProxyRegionChange();
         }
 
-        function closeGetMoreProxyIPModal(event) {
-            if (event && event.target !== event.currentTarget) return;
+        function closeGetMoreProxyIPModal() {
             document.getElementById('getMoreProxyIPModal').classList.remove('show');
         }
 
         function onProxyRegionChange() {
             const select = document.getElementById('proxyRegionSelect');
-            const customGroup = document.getElementById('customRegionInputGroup');
+            const customInput = document.getElementById('customRegionInput');
 
             if (select.value === 'custom') {
-                customGroup.style.display = 'block';
+                // 自定义模式：启用输入
+                customInput.value = '';
+                customInput.disabled = false;
+                customInput.focus();
             } else {
-                customGroup.style.display = 'none';
+                // 预选地区模式：禁用输入，自动填充地区代码
+                customInput.value = select.value;
+                customInput.disabled = true;
             }
         }
 
         function openFOFA() {
             const select = document.getElementById('proxyRegionSelect');
+            const portSelect = document.getElementById('proxyPortSelect');
             let region = select.value;
+            let port = portSelect.value;
 
             if (region === 'custom') {
                 const customInput = document.getElementById('customRegionInput');
@@ -11359,11 +11598,22 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // 构建查询语句
             let query = '';
             // HK 和 TW 使用 region 字段，其他使用 country 字段
+            let regionQuery = '';
             if (region === 'HK' || region === 'TW') {
-                query = `server=="cloudflare" && header="Forbidden" && asn!="13335" && asn!="209242" && region="${region}"`;
+                regionQuery = `region="${region}"`;
             } else {
-                query = `server=="cloudflare" && header="Forbidden" && asn!="13335" && asn!="209242" && country="${region}"`;
+                regionQuery = `country="${region}"`;
             }
+            
+            // 根据端口选择构建查询
+            let portQuery = '';
+            if (port === '443') {
+                portQuery = `port="443"`;
+            } else if (port === 'nonstandard') {
+                portQuery = `(port!="80" && port!="8080" && port!="8880" && port!="2052" && port!="2082" && port!="2086" && port!="2095" && port!="443" && port!="2053" && port!="2083" && port!="2087" && port!="2096" && port!="8443")`;
+            }
+            
+            query = `server=="cloudflare" && header="Forbidden" && asn!="13335" && asn!="209242" && ${regionQuery} && ${portQuery}`;
 
             // Base64 编码
             const qbase64 = btoa(query);
@@ -11377,7 +11627,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
         function open360Quake() {
             const select = document.getElementById('proxyRegionSelect');
+            const portSelect = document.getElementById('proxyPortSelect');
             let region = select.value;
+            let port = portSelect.value;
 
             if (region === 'custom') {
                 const customInput = document.getElementById('customRegionInput');
@@ -11389,17 +11641,29 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
 
             // 基础查询语句
-            const baseQuery = `((app:"Cloudflare" AND header:"Forbidden" AND asn!=13335 AND asn!=209242) AND service: "http/ssl")`;
-            let query = '';
+            const baseQuery = `(app:"Cloudflare" AND header:"Forbidden" AND asn!=13335 AND asn!=209242 AND service: "http/ssl")`;
+            let regionQuery = '';
             
             // HK 和 TW 使用 province 字段，其他使用 country 字段
             if (region === 'HK') {
-                query = `${baseQuery} AND province: "HongKong"`;
+                regionQuery = `province: "HongKong"`;
             } else if (region === 'TW') {
-                query = `${baseQuery} AND province: "TaiWan"`;
+                regionQuery = `province: "TaiWan"`;
+            }  else if (region === 'MO') {
+                regionQuery = `province: "Macao"`;
             } else {
-                query = `${baseQuery} AND country: "${region}"`;
+                regionQuery = `country: "${region}"`;
             }
+            
+            // 根据端口选择构建查询
+            let portQuery = '';
+            if (port === '443') {
+                portQuery = `port: 443`;
+            } else if (port === 'nonstandard') {
+                portQuery = `NOT (port: 80 OR port: 8080 OR port: 8880 OR port: 2052 OR port: 2082 OR port: 2086 OR port: 2095 OR port: 443 OR port: 2053 OR port: 2083 OR port: 2087 OR port: 2096 OR port: 8443)`;
+            }
+            
+            let query = `${baseQuery} AND ${regionQuery} AND ${portQuery}`;
 
             // URL 编码
             const searchVal = encodeURIComponent(query);
@@ -11410,6 +11674,732 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             // 打开新窗口
             window.open(url, '_blank');
+        }
+
+        // ==================== SOCKS5 相关函数 ====================
+        
+        // 存储SOCKS5数据
+        let socks5ListData = [];
+        let socks5CountryMap = {};
+        let socks5VerificationStatus = {}; // 存储验证状态
+        let socks5VerificationTimeouts = {}; // 存储超时计时器
+
+        function showExploreSocks5Modal() {
+            const modal = document.getElementById('exploreSocks5Modal');
+            if (!modal) return;
+
+            // 重置状态
+            socks5ListData = [];
+            socks5CountryMap = {};
+            socks5VerificationStatus = {};
+            socks5VerificationTimeouts = {};
+            
+            modal.classList.add('show');
+            document.getElementById('socks5RegionSelect').innerHTML = '<option value="">加载中...</option>';
+            document.getElementById('socks5ProxySelectGroup').style.display = 'none';
+            document.getElementById('socks5LoadingInfo').style.display = 'none';
+            document.getElementById('socks5ConfirmBtn').disabled = true;
+
+            // 加载SOCKS5列表
+            loadSocks5List();
+        }
+
+        function closeExploreSocks5Modal(event) {
+            event.preventDefault();
+            const modal = document.getElementById('exploreSocks5Modal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+            // 清除所有超时计时器
+            for (let timeout of Object.values(socks5VerificationTimeouts)) {
+                clearTimeout(timeout);
+            }
+        }
+
+        function loadSocks5List() {
+            const url = 'https://raw.githubusercontent.com/EDT-Pages/Proxy-List/main/data/socks5.json';
+            
+            fetchWithAutoMirror(url, 'SOCKS5列表')
+                .then(text => {
+                    const data = JSON.parse(text);
+                    socks5ListData = data;
+                    buildCountryMap();
+                    populateSocks5RegionSelect();
+                })
+                .catch(error => {
+                    console.error('加载SOCKS5列表失败:', error);
+                    showToast('加载SOCKS5列表失败: ' + error.message, 'error');
+                    document.getElementById('socks5RegionSelect').innerHTML = '<option value="">加载失败</option>';
+                });
+        }
+
+        function buildCountryMap() {
+            socks5CountryMap = {};
+            
+            // 统计每个国家的SOCKS5数量
+            socks5ListData.forEach(item => {
+                const country = item.country;
+                if (!socks5CountryMap[country]) {
+                    socks5CountryMap[country] = [];
+                }
+                socks5CountryMap[country].push(item);
+            });
+
+            // 按数量排序（多到少）
+            socks5CountryMap = Object.fromEntries(
+                Object.entries(socks5CountryMap).sort((a, b) => b[1].length - a[1].length)
+            );
+        }
+
+        function populateSocks5RegionSelect() {
+            const select = document.getElementById('socks5RegionSelect');
+            let html = '<option value="">-- 请选择地区 --</option>';
+            
+            for (const [country, proxies] of Object.entries(socks5CountryMap)) {
+                html += `<option value="${country}">${country}(${proxies.length})</option>`;
+            }
+            
+            select.innerHTML = html;
+        }
+
+        function onSocks5RegionChange() {
+            const selectedCountry = document.getElementById('socks5RegionSelect').value;
+            
+            if (!selectedCountry) {
+                document.getElementById('socks5ProxySelectGroup').style.display = 'none';
+                document.getElementById('socks5LoadingInfo').style.display = 'none';
+                document.getElementById('socks5ConfirmBtn').disabled = true;
+                return;
+            }
+
+            const proxies = socks5CountryMap[selectedCountry] || [];
+            
+            // 显示加载信息
+            document.getElementById('socks5LoadingInfo').style.display = 'block';
+            document.getElementById('socks5ProxySelectGroup').style.display = 'block';
+            
+            // 初始化每个代理的验证状态
+            proxies.forEach(proxy => {
+                if (!socks5VerificationStatus[proxy.proxy]) {
+                    socks5VerificationStatus[proxy.proxy] = {
+                        status: 'pending', // pending, success, failed, timeout
+                        responseTime: null
+                    };
+                }
+            });
+
+            // 显示代理列表
+            populateSocks5ProxySelect(selectedCountry);
+            
+            // 开始验证所有代理
+            verifySocks5Proxies(proxies);
+        }
+
+        function populateSocks5ProxySelect(selectedCountry) {
+            const select = document.getElementById('socks5ProxySelect');
+            const proxies = socks5CountryMap[selectedCountry] || [];
+            
+            let html = '<option value="">-- 请选择 --</option>';
+            
+            // 获取当前地区的所有代理，并按状态和延迟排序
+            const sortedProxies = [...proxies].sort((a, b) => {
+                const statusA = socks5VerificationStatus[a.proxy];
+                const statusB = socks5VerificationStatus[b.proxy];
+                
+                // 可用的在前面，且按延迟从低到高
+                if (statusA.status === 'success' && statusB.status === 'success') {
+                    return (statusA.responseTime || 0) - (statusB.responseTime || 0);
+                }
+                if (statusA.status === 'success') return -1;
+                if (statusB.status === 'success') return 1;
+                
+                return 0;
+            });
+            
+            sortedProxies.forEach(proxy => {
+                const status = socks5VerificationStatus[proxy.proxy];
+                let emoji = '⏳';
+                let statusText = '验证中';
+                
+                if (status.status === 'success') {
+                    emoji = '✅';
+                    statusText = `${status.responseTime}ms`;
+                } else if (status.status === 'timeout') {
+                    emoji = '🔴';
+                    statusText = '已超时';
+                } else if (status.status === 'failed') {
+                    emoji = '🔴';
+                    statusText = '不可用';
+                }
+                
+                const label = `${emoji}(${statusText}) ${proxy.city} AS${proxy.asn} ${proxy.asOrganization}`;
+                const disabled = status.status !== 'success';
+                html += `<option value="${proxy.proxy}" ${disabled ? 'disabled' : ''}>${label}</option>`;
+            });
+            
+            select.innerHTML = html;
+        }
+
+        function verifySocks5Proxies(proxies) {
+            // 并发控制：最多4个并发请求
+            const maxConcurrent = 4;
+            let currentIndex = 0;
+            let activeRequests = 0;
+
+            function startNextProxy() {
+                if (currentIndex >= proxies.length || activeRequests >= maxConcurrent) {
+                    return;
+                }
+
+                activeRequests++;
+                const proxy = proxies[currentIndex++];
+                
+                verifySingleSocks5(proxy).finally(() => {
+                    activeRequests--;
+                    startNextProxy();
+                });
+            }
+
+            // 启动初始4个请求
+            for (let i = 0; i < Math.min(maxConcurrent, proxies.length); i++) {
+                startNextProxy();
+            }
+        }
+
+        function verifySingleSocks5(proxy) {
+            return new Promise((resolve) => {
+                const { protocol, proxy: proxyUrl } = proxy;
+                const cleanProxy = proxyUrl.replace(protocol + '://', '');
+                const checkUrl = `./admin/check?${protocol}=${encodeURIComponent(cleanProxy)}&_t=${Date.now()}`;
+                
+                // 设置15秒超时
+                const timeoutId = setTimeout(() => {
+                    socks5VerificationStatus[proxyUrl] = {
+                        status: 'timeout',
+                        responseTime: null
+                    };
+                    updateSocks5Display();
+                    resolve();
+                }, 15000);
+                
+                socks5VerificationTimeouts[proxyUrl] = timeoutId;
+                
+                fetch(checkUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        clearTimeout(timeoutId);
+                        delete socks5VerificationTimeouts[proxyUrl];
+                        
+                        if (data.success) {
+                            socks5VerificationStatus[proxyUrl] = {
+                                status: 'success',
+                                responseTime: data.responseTime
+                            };
+                        } else {
+                            socks5VerificationStatus[proxyUrl] = {
+                                status: 'failed',
+                                responseTime: null
+                            };
+                        }
+                        updateSocks5Display();
+                        resolve();
+                    })
+                    .catch(error => {
+                        clearTimeout(timeoutId);
+                        delete socks5VerificationTimeouts[proxyUrl];
+                        
+                        socks5VerificationStatus[proxyUrl] = {
+                            status: 'failed',
+                            responseTime: null
+                        };
+                        updateSocks5Display();
+                        resolve();
+                    });
+            });
+        }
+
+        function updateSocks5Display() {
+            const selectedCountry = document.getElementById('socks5RegionSelect').value;
+            if (selectedCountry) {
+                populateSocks5ProxySelect(selectedCountry);
+            }
+            
+            // 检查是否所有代理都验证完成
+            const proxies = socks5CountryMap[selectedCountry] || [];
+            const allVerified = proxies.every(p => {
+                const status = socks5VerificationStatus[p.proxy];
+                return status && status.status !== 'pending';
+            });
+            
+            if (allVerified) {
+                document.getElementById('socks5LoadingInfo').style.display = 'none';
+            }
+            
+            // 更新确定按钮状态
+            const select = document.getElementById('socks5ProxySelect');
+            const selectedValue = select.value;
+            const isValidSelected = selectedValue && 
+                socks5VerificationStatus[selectedValue] &&
+                socks5VerificationStatus[selectedValue].status === 'success';
+            document.getElementById('socks5ConfirmBtn').disabled = !isValidSelected;
+        }
+
+        function confirmSelectSocks5() {
+            const select = document.getElementById('socks5ProxySelect');
+            const selectedProxy = select.value;
+            
+            if (!selectedProxy) {
+                showToast('请选择一个有效的SOCKS5代理', 'error');
+                return;
+            }
+            
+            // 填入SOCKS5地址
+            const socks5Input = document.getElementById('socks5Addr');
+            if (socks5Input) {
+                socks5Input.value = selectedProxy;
+                socks5Input.dispatchEvent(new Event('change', { bubbles: true }));
+                markModified('proxy');
+            }
+            
+            // 关闭模态框
+            closeExploreSocks5Modal({ preventDefault: () => {} });
+            
+            // 亮起保存和取消按钮
+            const saveBtn = document.getElementById('saveProxyBtn');
+            const cancelBtn = document.getElementById('cancelProxyBtn');
+            if (saveBtn) saveBtn.disabled = false;
+            if (cancelBtn) cancelBtn.disabled = false;
+        }
+
+        function updateSocks5ConfirmButton() {
+            const select = document.getElementById('socks5ProxySelect');
+            const selectedValue = select.value;
+            const confirmBtn = document.getElementById('socks5ConfirmBtn');
+            
+            // 检查选中的代理是否可用
+            const isValidSelected = selectedValue && 
+                socks5VerificationStatus[selectedValue] &&
+                socks5VerificationStatus[selectedValue].status === 'success';
+            
+            if (confirmBtn) {
+                confirmBtn.disabled = !isValidSelected;
+            }
+        }
+
+        // ==================== HTTP 相关函数 ====================
+        
+        // 存储HTTP数据
+        let httpListData = [];
+        let httpCountryMap = {};
+        let httpVerificationStatus = {}; // 存储验证状态
+        let httpVerificationTimeouts = {}; // 存储超时计时器
+
+        function showExploreHTTPModal() {
+            const modal = document.getElementById('exploreHTTPModal');
+            if (!modal) return;
+
+            // 重置状态
+            httpListData = [];
+            httpCountryMap = {};
+            httpVerificationStatus = {};
+            httpVerificationTimeouts = {};
+            
+            modal.classList.add('show');
+            document.getElementById('httpRegionSelect').innerHTML = '<option value="">加载中...</option>';
+            document.getElementById('httpProxySelectGroup').style.display = 'none';
+            document.getElementById('httpLoadingInfo').style.display = 'none';
+            document.getElementById('httpConfirmBtn').disabled = true;
+
+            // 加载HTTP列表
+            loadHTTPList();
+        }
+
+        function closeExploreHTTPModal(event) {
+            event.preventDefault();
+            const modal = document.getElementById('exploreHTTPModal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+            // 清除所有超时计时器
+            for (let timeout of Object.values(httpVerificationTimeouts)) {
+                clearTimeout(timeout);
+            }
+        }
+
+        function loadHTTPList() {
+            const url = 'https://raw.githubusercontent.com/EDT-Pages/Proxy-List/main/data/http.json';
+            
+            fetchWithAutoMirror(url, 'HTTP列表')
+                .then(text => {
+                    const data = JSON.parse(text);
+                    httpListData = data;
+                    buildHTTPCountryMap();
+                    populateHTTPRegionSelect();
+                })
+                .catch(error => {
+                    console.error('加载HTTP列表失败:', error);
+                    showToast('加载HTTP列表失败: ' + error.message, 'error');
+                    document.getElementById('httpRegionSelect').innerHTML = '<option value="">加载失败</option>';
+                });
+        }
+
+        function buildHTTPCountryMap() {
+            httpCountryMap = {};
+            
+            // 统计每个国家的HTTP数量
+            httpListData.forEach(item => {
+                const country = item.country;
+                if (!httpCountryMap[country]) {
+                    httpCountryMap[country] = [];
+                }
+                httpCountryMap[country].push(item);
+            });
+
+            // 按数量排序（多到少）
+            httpCountryMap = Object.fromEntries(
+                Object.entries(httpCountryMap).sort((a, b) => b[1].length - a[1].length)
+            );
+        }
+
+        function populateHTTPRegionSelect() {
+            const select = document.getElementById('httpRegionSelect');
+            let html = '<option value="">-- 请选择地区 --</option>';
+            
+            for (const [country, proxies] of Object.entries(httpCountryMap)) {
+                html += `<option value="${country}">${country}(${proxies.length})</option>`;
+            }
+            
+            select.innerHTML = html;
+        }
+
+        function onHTTPRegionChange() {
+            const selectedCountry = document.getElementById('httpRegionSelect').value;
+            
+            if (!selectedCountry) {
+                document.getElementById('httpProxySelectGroup').style.display = 'none';
+                document.getElementById('httpLoadingInfo').style.display = 'none';
+                document.getElementById('httpConfirmBtn').disabled = true;
+                return;
+            }
+
+            const proxies = httpCountryMap[selectedCountry] || [];
+            
+            // 显示加载信息
+            document.getElementById('httpLoadingInfo').style.display = 'block';
+            document.getElementById('httpProxySelectGroup').style.display = 'block';
+            
+            // 初始化每个代理的验证状态
+            proxies.forEach(proxy => {
+                if (!httpVerificationStatus[proxy.proxy]) {
+                    httpVerificationStatus[proxy.proxy] = {
+                        status: 'pending', // pending, success, failed, timeout
+                        responseTime: null
+                    };
+                }
+            });
+
+            // 显示代理列表
+            populateHTTPProxySelect(selectedCountry);
+            
+            // 开始验证所有代理
+            verifyHTTPProxies(proxies);
+        }
+
+        function populateHTTPProxySelect(selectedCountry) {
+            const select = document.getElementById('httpProxySelect');
+            const proxies = httpCountryMap[selectedCountry] || [];
+            
+            let html = '<option value="">-- 请选择 --</option>';
+            
+            // 获取当前地区的所有代理，并按状态和延迟排序
+            const sortedProxies = [...proxies].sort((a, b) => {
+                const statusA = httpVerificationStatus[a.proxy];
+                const statusB = httpVerificationStatus[b.proxy];
+                
+                // 可用的在前面，且按延迟从低到高
+                if (statusA.status === 'success' && statusB.status === 'success') {
+                    return (statusA.responseTime || 0) - (statusB.responseTime || 0);
+                }
+                if (statusA.status === 'success') return -1;
+                if (statusB.status === 'success') return 1;
+                
+                return 0;
+            });
+            
+            sortedProxies.forEach(proxy => {
+                const status = httpVerificationStatus[proxy.proxy];
+                let emoji = '⏳';
+                let statusText = '验证中';
+                
+                if (status.status === 'success') {
+                    emoji = '✅';
+                    statusText = `${status.responseTime}ms`;
+                } else if (status.status === 'timeout') {
+                    emoji = '🔴';
+                    statusText = '已超时';
+                } else if (status.status === 'failed') {
+                    emoji = '🔴';
+                    statusText = '不可用';
+                }
+                
+                const label = `${emoji}(${statusText}) ${proxy.city} AS${proxy.asn} ${proxy.asOrganization}`;
+                const disabled = status.status !== 'success';
+                html += `<option value="${proxy.proxy}" ${disabled ? 'disabled' : ''}>${label}</option>`;
+            });
+            
+            select.innerHTML = html;
+        }
+
+        function verifyHTTPProxies(proxies) {
+            // 并发控制：最多4个并发请求
+            const maxConcurrent = 4;
+            let currentIndex = 0;
+            let activeRequests = 0;
+
+            function startNextProxy() {
+                if (currentIndex >= proxies.length || activeRequests >= maxConcurrent) {
+                    return;
+                }
+
+                activeRequests++;
+                const proxy = proxies[currentIndex++];
+                
+                verifySingleHTTP(proxy).finally(() => {
+                    activeRequests--;
+                    startNextProxy();
+                });
+            }
+
+            // 启动初始4个请求
+            for (let i = 0; i < Math.min(maxConcurrent, proxies.length); i++) {
+                startNextProxy();
+            }
+        }
+
+        function verifySingleHTTP(proxy) {
+            return new Promise((resolve) => {
+                const { protocol, proxy: proxyUrl } = proxy;
+                const cleanProxy = proxyUrl.replace(protocol + '://', '');
+                const checkUrl = `./admin/check?${protocol}=${encodeURIComponent(cleanProxy)}&_t=${Date.now()}`;
+                
+                // 设置15秒超时
+                const timeoutId = setTimeout(() => {
+                    httpVerificationStatus[proxyUrl] = {
+                        status: 'timeout',
+                        responseTime: null
+                    };
+                    updateHTTPDisplay();
+                    resolve();
+                }, 15000);
+                
+                httpVerificationTimeouts[proxyUrl] = timeoutId;
+                
+                fetch(checkUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        clearTimeout(timeoutId);
+                        delete httpVerificationTimeouts[proxyUrl];
+                        
+                        if (data.success) {
+                            httpVerificationStatus[proxyUrl] = {
+                                status: 'success',
+                                responseTime: data.responseTime
+                            };
+                        } else {
+                            httpVerificationStatus[proxyUrl] = {
+                                status: 'failed',
+                                responseTime: null
+                            };
+                        }
+                        updateHTTPDisplay();
+                        resolve();
+                    })
+                    .catch(error => {
+                        clearTimeout(timeoutId);
+                        delete httpVerificationTimeouts[proxyUrl];
+                        
+                        httpVerificationStatus[proxyUrl] = {
+                            status: 'failed',
+                            responseTime: null
+                        };
+                        updateHTTPDisplay();
+                        resolve();
+                    });
+            });
+        }
+
+        function updateHTTPDisplay() {
+            const selectedCountry = document.getElementById('httpRegionSelect').value;
+            if (selectedCountry) {
+                populateHTTPProxySelect(selectedCountry);
+            }
+            
+            // 检查是否所有代理都验证完成
+            const proxies = httpCountryMap[selectedCountry] || [];
+            const allVerified = proxies.every(p => {
+                const status = httpVerificationStatus[p.proxy];
+                return status && status.status !== 'pending';
+            });
+            
+            if (allVerified) {
+                document.getElementById('httpLoadingInfo').style.display = 'none';
+            }
+            
+            // 更新确定按钮状态
+            const select = document.getElementById('httpProxySelect');
+            const selectedValue = select.value;
+            const isValidSelected = selectedValue && 
+                httpVerificationStatus[selectedValue] &&
+                httpVerificationStatus[selectedValue].status === 'success';
+            document.getElementById('httpConfirmBtn').disabled = !isValidSelected;
+        }
+
+        function confirmSelectHTTP() {
+            const select = document.getElementById('httpProxySelect');
+            const selectedProxy = select.value;
+            
+            if (!selectedProxy) {
+                showToast('请选择一个有效的HTTP代理', 'error');
+                return;
+            }
+            
+            // 填入HTTP地址
+            const httpInput = document.getElementById('httpAddr');
+            if (httpInput) {
+                httpInput.value = selectedProxy;
+                httpInput.dispatchEvent(new Event('change', { bubbles: true }));
+                markModified('proxy');
+            }
+            
+            // 关闭模态框
+            closeExploreHTTPModal({ preventDefault: () => {} });
+            
+            // 亮起保存和取消按钮
+            const saveBtn = document.getElementById('saveProxyBtn');
+            const cancelBtn = document.getElementById('cancelProxyBtn');
+            if (saveBtn) saveBtn.disabled = false;
+            if (cancelBtn) cancelBtn.disabled = false;
+        }
+
+        function updateHTTPConfirmButton() {
+            const select = document.getElementById('httpProxySelect');
+            const selectedValue = select.value;
+            const confirmBtn = document.getElementById('httpConfirmBtn');
+            
+            // 检查选中的代理是否可用
+            const isValidSelected = selectedValue && 
+                httpVerificationStatus[selectedValue] &&
+                httpVerificationStatus[selectedValue].status === 'success';
+            
+            if (confirmBtn) {
+                confirmBtn.disabled = !isValidSelected;
+            }
+        }
+
+        // ============ HOSTS 检查相关函数 ============
+
+        // 检查当前访问域名是否在 HOSTS 数组中
+        function checkHostsMismatch() {
+            const currentHostname = window.location.hostname;
+            const hosts = currentConfig.HOSTS || [];
+            
+            // 检查当前 hostname 是否存在于 HOSTS 数组中
+            const isHostInArray = hosts.some(host => {
+                // 移除端口号后进行比较
+                const hostWithoutPort = host.split(':')[0];
+                return hostWithoutPort === currentHostname;
+            });
+
+            if (!isHostInArray && hosts.length > 0) {
+                // 检查缓存，是否在 24 小时内已提示过
+                if (shouldShowHostsMismatchNotification()) {
+                    showHostsMismatchNotification(currentHostname, hosts);
+                }
+            }
+        }
+
+        // 检查是否应该显示 HOSTS 不匹配提示
+        function shouldShowHostsMismatchNotification() {
+            const cacheKey = 'hostsMismatchNotificationTime';
+            const cachedTime = localStorage.getItem(cacheKey);
+            
+            if (!cachedTime) {
+                // 没有缓存，应该显示
+                return true;
+            }
+
+            const lastNotificationTime = parseInt(cachedTime, 10);
+            const currentTime = Date.now();
+            const twentyFourHours = 24 * 60 * 60 * 1000; // 24 小时毫秒数
+
+            // 检查是否超过 24 小时
+            return (currentTime - lastNotificationTime) > twentyFourHours;
+        }
+
+        // 显示 HOSTS 不匹配提示
+        function showHostsMismatchNotification(currentHostname, hosts) {
+            // 填充模态框中的内容
+            const currentHostnameEl = document.getElementById('currentHostname');
+            const hostToAddEl = document.getElementById('hostToAdd');
+            const currentHostsEl = document.getElementById('currentHosts');
+            
+            if (currentHostnameEl) {
+                currentHostnameEl.textContent = currentHostname;
+            }
+            if (hostToAddEl) {
+                hostToAddEl.textContent = currentHostname;
+            }
+            
+            // 填充当前 HOSTS 列表 - 用 HTML badge 而不是纯文本
+            if (currentHostsEl) {
+                // 清空并用 HTML 结构重新填充
+                currentHostsEl.innerHTML = '';
+                
+                hosts.forEach((host) => {
+                    const badge = document.createElement('span');
+                    badge.className = 'hosts-badge';
+                    badge.textContent = host;
+                    currentHostsEl.appendChild(badge);
+                });
+            }
+            
+            // 显示模态框
+            const overlay = document.getElementById('hostsMismatchModal');
+            if (overlay) {
+                const modal = overlay.querySelector('.modal');
+                overlay.classList.add('show');
+                console.log('✓ 域名不匹配提示已显示');
+            } else {
+                console.error('✗ 无法找到 hostsMismatchModal 元素');
+            }
+        }
+
+        // 关闭 HOSTS 不匹配提示模态框
+        function closeHostsMismatchModal(event) {
+            // 如果有事件对象且点击的不是 overlay 本身，则返回
+            if (event && event.target && event.target.id !== 'hostsMismatchModal') {
+                return;
+            }
+            
+            const overlay = document.getElementById('hostsMismatchModal');
+            if (overlay) {
+                overlay.classList.remove('show');
+            }
+        }
+
+        // 处理"知道了！24小时内不提示"按钮
+        function dismissHostsMismatchNotification() {
+            const cacheKey = 'hostsMismatchNotificationTime';
+            const currentTime = Date.now();
+            
+            // 将当前时间戳保存到 localStorage
+            localStorage.setItem(cacheKey, currentTime.toString());
+            
+            // 关闭模态框
+            closeHostsMismatchModal({ target: { id: 'hostsMismatchModal' } });
+            
+            // 显示确认提示
+            showToast('24小时内不会再提示', 'info');
         }
 
     </script>

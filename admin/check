@@ -2,5 +2,6 @@
   "success": true,
   "proxy": "http://45.32.19.198:30005",
   "ip": "2001:19f0:7001:19dc:9ebd:ebbd:10b:b855",
-  "loc": "JP"
+  "loc": "JP",
+  "responseTime": 454
 }

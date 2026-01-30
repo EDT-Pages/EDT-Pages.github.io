@@ -12069,7 +12069,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // 填入代理地址
             const input = document.getElementById(config.inputId);
             if (input) {
-                input.value = selectedProxy;
+                input.value = selectedProxy.replace(/^socks5:\/\/|^http:\/\/|^https:\/\//, '');
                 input.dispatchEvent(new Event('change', { bubbles: true }));
                 markModified('proxy');
             }

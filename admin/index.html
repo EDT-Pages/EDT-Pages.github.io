@@ -11898,7 +11898,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     statusText = '不可用';
                 }
 
-                const label = `${emoji}(${statusText}) ${proxy.city} AS${proxy.asn} ${proxy.asOrganization}`;
+                const label = `${emoji}[${statusText}]${proxy.city},AS${proxy.asn},${proxy.asOrganization}`;
                 const disabled = status.status !== 'success';
                 html += `<option value="${proxy.proxy}" ${disabled ? 'disabled' : ''}>${label}</option>`;
             });

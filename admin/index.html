@@ -430,6 +430,43 @@
             color: #f6821f
         }
 
+        /* 段落内链接样式 */
+        p a {
+            color: #2196F3;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(33, 150, 243, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            padding: 0 2px
+        }
+
+        p a:hover {
+            color: #1976D2;
+            border-bottom-color: #1976D2;
+            background: rgba(33, 150, 243, 0.08);
+            border-radius: 2px
+        }
+
+        p a:active {
+            color: #0d47a1
+        }
+
+        /* Modal 中的段落链接样式 */
+        .modal p a {
+            color: #1E88E5;
+            border-bottom-color: rgba(30, 136, 229, 0.3)
+        }
+
+        .modal p a:hover {
+            color: #1565C0;
+            border-bottom-color: #1565C0;
+            background: rgba(30, 136, 229, 0.08)
+        }
+
+        .modal p a:active {
+            color: #0D47A1
+        }
+
         /* HOSTS badge 样式 */
         .hosts-badge {
             display: inline-flex;
@@ -612,23 +649,6 @@
 
         .socks5-list-container {
             width: 100%;
-        }
-
-        .socks5-loading-info {
-            display: none;
-            padding: 12px;
-            background: rgba(255, 193, 7, 0.1);
-            border-left: 3px solid #ffc107;
-            border-radius: 4px;
-            font-size: 12px;
-            color: #666;
-            margin: 12px 0;
-        }
-
-        html.dark-mode .socks5-loading-info {
-            background: rgba(255, 193, 7, 0.15);
-            color: #ccc;
-            border-left-color: #ffb300;
         }
 
         /* 社交链接 - 重构为统一风格 */
@@ -1344,6 +1364,38 @@
 
         html.dark-mode .footer-hint a:hover {
             color: #9f7aea !important
+        }
+
+        /* 暗模式段落内链接样式 */
+        html.dark-mode p a {
+            color: #64B5F6;
+            border-bottom-color: rgba(100, 181, 246, 0.4)
+        }
+
+        html.dark-mode p a:hover {
+            color: #90CAF9;
+            border-bottom-color: #90CAF9;
+            background: rgba(100, 181, 246, 0.12)
+        }
+
+        html.dark-mode p a:active {
+            color: #42A5F5
+        }
+
+        /* 暗模式 Modal 中的段落链接样式 */
+        html.dark-mode .modal p a {
+            color: #64B5F6;
+            border-bottom-color: rgba(100, 181, 246, 0.4)
+        }
+
+        html.dark-mode .modal p a:hover {
+            color: #90CAF9;
+            border-bottom-color: #90CAF9;
+            background: rgba(100, 181, 246, 0.12)
+        }
+
+        html.dark-mode .modal p a:active {
+            color: #42A5F5
         }
 
         .theme-icon {
@@ -4973,18 +5025,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             💡 为什么需要反代模式？PROXYIP又是什么？
                         </button>
                         <button type="button" class="btn btn-search-proxy" id="getMoreProxyIPBtn"
-                            onclick="showGetMoreProxyIPModal()" style="display: none;"
-                            title="使用网络测绘引擎寻找可用的PROXYIP">
+                            onclick="showGetMoreProxyIPModal()" style="display: none;" title="使用网络测绘引擎寻找可用的PROXYIP">
                             🗺️ 探索更多 PROXYIP
                         </button>
                         <button type="button" class="btn btn-search-proxy" id="exploreSocks5Btn"
-                            onclick="showExploreSocks5Modal()" style="display: none;"
-                            title="从SOCKS5列表中选择可用的代理">
+                            onclick="showExploreSocks5Modal()" style="display: none;" title="从SOCKS5列表中选择可用的代理">
                             🧩 探索更多 SOCKS5
                         </button>
                         <button type="button" class="btn btn-search-proxy" id="exploreHTTPBtn"
-                            onclick="showExploreHTTPModal()" style="display: none;"
-                            title="从HTTP列表中选择可用的代理">
+                            onclick="showExploreHTTPModal()" style="display: none;" title="从HTTP列表中选择可用的代理">
                             🧩 探索更多 HTTP
                         </button>
                         <div class="btn-group">
@@ -5901,7 +5950,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <div class="form-group">
                 <label for="proxyRegionSelect">🏳️‍🌈 选择目标地区</label>
                 <div class="input-wrapper">
-                    <select id="proxyRegionSelect" onchange="onProxyRegionChange()" style="padding-left: 16px;">
+                    <select id="proxyRegionSelect" onchange="onProxyIPRegionChange()" style="padding-left: 16px;">
                         <option value="custom">✍️ 自定义地区</option>
                         <optgroup label="🌏 亚洲 / AS">
                             <option value="HK">🇭🇰 香港</option>
@@ -5945,17 +5994,23 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 </div>
             </div>
 
-            <div class="btn-group" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-top: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
-                <button type="button" class="btn btn-fofa" onclick="openFOFA()" style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
+            <div class="btn-group"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-top: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                <button type="button" class="btn btn-fofa" onclick="openFOFA()"
+                    style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
                     FOFA 测绘
                 </button>
-                <button type="button" class="btn btn-360quake" onclick="open360Quake()" style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
+                <button type="button" class="btn btn-360quake" onclick="open360Quake()"
+                    style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
                     360 测绘
                 </button>
-                <button type="button" class="btn btn-ech-help" onclick="window.open('https://check.proxyip.cmliussss.net/', '_blank')" style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
+                <button type="button" class="btn btn-ech-help"
+                    onclick="window.open('https://check.proxyip.cmliussss.net/', '_blank')"
+                    style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
                     可用性验证
                 </button>
-                <button type="button" class="btn btn-secondary" onclick="closeGetMoreProxyIPModal()" style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
+                <button type="button" class="btn btn-secondary" onclick="closeGetMoreProxyIPModal()"
+                    style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
                     关闭
                 </button>
             </div>
@@ -5965,9 +6020,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
     <!-- 探索SOCKS5弹窗 -->
     <div class="modal-overlay" id="exploreSocks5Modal">
         <div class="modal" style="max-width: 550px; text-align: left;">
-            <button type="button" class="modal-close" onclick="closeExploreSocks5Modal(event)" style="cursor: pointer;">×</button>
-            <h2 class="section-title" style="margin-bottom: 15px; text-align: center;">🗺️ 探索更多 SOCKS5</h2>
-            
+            <button type="button" class="modal-close" onclick="closeExploreSocks5Modal(event)"
+                style="cursor: pointer;">×</button>
+            <h2 class="section-title" style="margin-bottom: 15px; text-align: center;">🧩 探索更多 SOCKS5</h2>
+            <p style="text-align: center; color: #666; font-size: 14px; margin-bottom: 25px;">
+                代理资源列表来自Github、<a href="https://t.me/Enkelte_notif" target="_blank" rel="noopener noreferrer">Notif 💬</a>频道 等开源社区。<br>
+            </p>
             <div class="socks5-list-container">
                 <div class="form-group">
                     <label for="socks5RegionSelect">🏳️‍🌈 选择目标地区</label>
@@ -5981,22 +6039,21 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 <div class="form-group" id="socks5ProxySelectGroup" style="display: none;">
                     <label for="socks5ProxySelect">🌐 选择目标代理</label>
                     <div class="input-wrapper">
-                        <select id="socks5ProxySelect" onchange="updateSocks5ConfirmButton()" style="padding-left: 16px; font-family: 'Fira Code', monospace; font-size: 12px;">
+                        <select id="socks5ProxySelect" onchange="updateSocks5ConfirmButton()"
+                            style="padding-left: 16px; font-family: 'Fira Code', monospace; font-size: 12px;">
                             <option value="">加载中...</option>
                         </select>
                     </div>
                 </div>
-
-                <div class="socks5-loading-info" id="socks5LoadingInfo" style="display: none; padding: 12px; background: rgba(255,193,7,0.1); border-radius: 4px; font-size: 12px; color: #666; margin: 12px 0;">
-                    正在验证SOCKS5可用性，请稍候...
-                </div>
             </div>
 
             <div class="btn-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 30px;">
-                <button type="button" class="btn btn-primary" id="socks5ConfirmBtn" onclick="confirmSelectSocks5()" disabled style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
+                <button type="button" class="btn btn-primary" id="socks5ConfirmBtn" onclick="confirmSelectSocks5()"
+                    disabled style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
                     确定
                 </button>
-                <button type="button" class="btn btn-secondary" onclick="closeExploreSocks5Modal(event)" style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
+                <button type="button" class="btn btn-secondary" onclick="closeExploreSocks5Modal(event)"
+                    style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
                     取消
                 </button>
             </div>
@@ -6006,9 +6063,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
     <!-- 探索HTTP弹窗 -->
     <div class="modal-overlay" id="exploreHTTPModal">
         <div class="modal" style="max-width: 550px; text-align: left;">
-            <button type="button" class="modal-close" onclick="closeExploreHTTPModal(event)" style="cursor: pointer;">×</button>
-            <h2 class="section-title" style="margin-bottom: 15px; text-align: center;">🗺️ 探索更多 HTTP</h2>
-            
+            <button type="button" class="modal-close" onclick="closeExploreHTTPModal(event)"
+                style="cursor: pointer;">×</button>
+            <h2 class="section-title" style="margin-bottom: 15px; text-align: center;">🧩 探索更多 HTTP</h2>
+            <p style="text-align: center; color: #666; font-size: 14px; margin-bottom: 25px;">
+                代理资源列表来自Github、<a href="https://t.me/Enkelte_notif" target="_blank" rel="noopener noreferrer">Notif 💬</a>频道 等开源社区。<br>
+            </p>
             <div class="http-list-container">
                 <div class="form-group">
                     <label for="httpRegionSelect">🏳️‍🌈 选择目标地区</label>
@@ -6022,22 +6082,21 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 <div class="form-group" id="httpProxySelectGroup" style="display: none;">
                     <label for="httpProxySelect">🌐 选择目标代理</label>
                     <div class="input-wrapper">
-                        <select id="httpProxySelect" onchange="updateHTTPConfirmButton()" style="padding-left: 16px; font-family: 'Fira Code', monospace; font-size: 12px;">
+                        <select id="httpProxySelect" onchange="updateHTTPConfirmButton()"
+                            style="padding-left: 16px; font-family: 'Fira Code', monospace; font-size: 12px;">
                             <option value="">加载中...</option>
                         </select>
                     </div>
                 </div>
-
-                <div class="http-loading-info" id="httpLoadingInfo" style="display: none; padding: 12px; background: rgba(255,193,7,0.1); border-radius: 4px; font-size: 12px; color: #666; margin: 12px 0;">
-                    正在验证HTTP可用性，请稍候...
-                </div>
             </div>
 
             <div class="btn-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 30px;">
-                <button type="button" class="btn btn-primary" id="httpConfirmBtn" onclick="confirmSelectHTTP()" disabled style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
+                <button type="button" class="btn btn-primary" id="httpConfirmBtn" onclick="confirmSelectHTTP()" disabled
+                    style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
                     确定
                 </button>
-                <button type="button" class="btn btn-secondary" onclick="closeExploreHTTPModal(event)" style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
+                <button type="button" class="btn btn-secondary" onclick="closeExploreHTTPModal(event)"
+                    style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
                     取消
                 </button>
             </div>
@@ -6054,18 +6113,23 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     您当前访问管理面板使用的域名是：<strong id="currentHostname" style="color: #2196F3;"></strong>
                 </p>
                 <p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.6; text-align: left; color: #f44336;">
-                    <strong>⚠️ 注意：</strong>该域名 <strong>未配置为节点伪装域名</strong>。这意味着生成的订阅配置将 <strong>不会使用当前域名</strong> 作为 <strong>节点域名</strong>。
+                    <strong>⚠️ 注意：</strong>该域名 <strong>未配置为节点伪装域名</strong>。这意味着生成的订阅配置将 <strong>不会使用当前域名</strong> 作为
+                    <strong>节点域名</strong>。
                 </p>
                 <p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.6; text-align: left;">
                     <strong>当前配置的节点伪装域名：</strong>
                 </p>
-                <div id="currentHosts" style="margin: 0 0 16px 0; padding: 12px; background-color: transparent; border-radius: 0; text-align: left; font-size: 13px; max-height: 120px; overflow-y: auto; word-break: break-all; display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start;"></div>
+                <div id="currentHosts"
+                    style="margin: 0 0 16px 0; padding: 12px; background-color: transparent; border-radius: 0; text-align: left; font-size: 13px; max-height: 120px; overflow-y: auto; word-break: break-all; display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start;">
+                </div>
                 <p style="margin: 0 0 16px 0; font-size: 13px; line-height: 1.6; text-align: left;">
-                    <strong>如何修改？</strong>请在高手模式下的"⚙️ 详细配置信息"，在"HOST"里添加您的域名"<strong id="hostToAdd" style="color: #2196F3;"></strong>"，保存配置后即可生效。
+                    <strong>如何修改？</strong>请在高手模式下的"⚙️ 详细配置信息"，在"HOST"里添加您的域名"<strong id="hostToAdd"
+                        style="color: #2196F3;"></strong>"，保存配置后即可生效。
                 </p>
             </div>
             <div style="display: flex; gap: 12px; justify-content: center;">
-                <button type="button" class="btn btn-hosts-warning" onclick="dismissHostsMismatchNotification()" style="flex: 1; background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); color: #fff; border: none; padding: 12px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3); transition: all 0.3s ease;">我知道了！24小时内不再提示！</button>
+                <button type="button" class="btn btn-hosts-warning" onclick="dismissHostsMismatchNotification()"
+                    style="flex: 1; background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); color: #fff; border: none; padding: 12px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3); transition: all 0.3s ease;">我知道了！24小时内不再提示！</button>
             </div>
         </div>
     </div>
@@ -11557,14 +11621,14 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 }
             }
             // 触发一次变更处理，确保UI状态正确
-            onProxyRegionChange();
+            onProxyIPRegionChange();
         }
 
         function closeGetMoreProxyIPModal() {
             document.getElementById('getMoreProxyIPModal').classList.remove('show');
         }
 
-        function onProxyRegionChange() {
+        function onProxyIPRegionChange() {
             const select = document.getElementById('proxyRegionSelect');
             const customInput = document.getElementById('customRegionInput');
 
@@ -11604,7 +11668,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             } else {
                 regionQuery = `country="${region}"`;
             }
-            
+
             // 根据端口选择构建查询
             let portQuery = '';
             if (port === '443') {
@@ -11612,7 +11676,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             } else if (port === 'nonstandard') {
                 portQuery = `(port!="80" && port!="8080" && port!="8880" && port!="2052" && port!="2082" && port!="2086" && port!="2095" && port!="443" && port!="2053" && port!="2083" && port!="2087" && port!="2096" && port!="8443")`;
             }
-            
+
             query = `server=="cloudflare" && header="Forbidden" && asn!="13335" && asn!="209242" && ${regionQuery} && ${portQuery}`;
 
             // Base64 编码
@@ -11643,18 +11707,18 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // 基础查询语句
             const baseQuery = `(app:"Cloudflare" AND header:"Forbidden" AND asn!=13335 AND asn!=209242 AND service: "http/ssl")`;
             let regionQuery = '';
-            
+
             // HK 和 TW 使用 province 字段，其他使用 country 字段
             if (region === 'HK') {
                 regionQuery = `province: "HongKong"`;
             } else if (region === 'TW') {
                 regionQuery = `province: "TaiWan"`;
-            }  else if (region === 'MO') {
+            } else if (region === 'MO') {
                 regionQuery = `province: "Macao"`;
             } else {
                 regionQuery = `country: "${region}"`;
             }
-            
+
             // 根据端口选择构建查询
             let portQuery = '';
             if (port === '443') {
@@ -11662,7 +11726,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             } else if (port === 'nonstandard') {
                 portQuery = `NOT (port: 80 OR port: 8080 OR port: 8880 OR port: 2052 OR port: 2082 OR port: 2086 OR port: 2095 OR port: 443 OR port: 2053 OR port: 2083 OR port: 2087 OR port: 2096 OR port: 8443)`;
             }
-            
+
             let query = `${baseQuery} AND ${regionQuery} AND ${portQuery}`;
 
             // URL 编码
@@ -11677,7 +11741,41 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         }
 
         // ==================== SOCKS5 相关函数 ====================
-        
+
+        // 代理类型配置
+        const proxyConfigs = {
+            socks5: {
+                modalId: 'exploreSocks5Modal',
+                regionSelectId: 'socks5RegionSelect',
+                proxySelectId: 'socks5ProxySelect',
+                proxySelectGroupId: 'socks5ProxySelectGroup',
+                confirmBtnId: 'socks5ConfirmBtn',
+                listData: 'socks5ListData',
+                countryMap: 'socks5CountryMap',
+                verificationStatus: 'socks5VerificationStatus',
+                verificationTimeouts: 'socks5VerificationTimeouts',
+                url: 'https://raw.githubusercontent.com/EDT-Pages/Proxy-List/main/data/socks5.json',
+                description: 'SOCKS5列表',
+                inputId: 'socks5Addr',
+                verifySingleFunction: (proxy) => verifySingleProxy(proxy, 'socks5')
+            },
+            http: {
+                modalId: 'exploreHTTPModal',
+                regionSelectId: 'httpRegionSelect',
+                proxySelectId: 'httpProxySelect',
+                proxySelectGroupId: 'httpProxySelectGroup',
+                confirmBtnId: 'httpConfirmBtn',
+                listData: 'httpListData',
+                countryMap: 'httpCountryMap',
+                verificationStatus: 'httpVerificationStatus',
+                verificationTimeouts: 'httpVerificationTimeouts',
+                url: 'https://raw.githubusercontent.com/EDT-Pages/Proxy-List/main/data/http.json',
+                description: 'HTTP列表',
+                inputId: 'httpAddr',
+                verifySingleFunction: (proxy) => verifySingleProxy(proxy, 'http')
+            }
+        };
+
         // 存储SOCKS5数据
         let socks5ListData = [];
         let socks5CountryMap = {};
@@ -11685,142 +11783,110 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         let socks5VerificationTimeouts = {}; // 存储超时计时器
 
         function showExploreSocks5Modal() {
-            const modal = document.getElementById('exploreSocks5Modal');
-            if (!modal) return;
-
-            // 重置状态
-            socks5ListData = [];
-            socks5CountryMap = {};
-            socks5VerificationStatus = {};
-            socks5VerificationTimeouts = {};
-            
-            modal.classList.add('show');
-            document.getElementById('socks5RegionSelect').innerHTML = '<option value="">加载中...</option>';
-            document.getElementById('socks5ProxySelectGroup').style.display = 'none';
-            document.getElementById('socks5LoadingInfo').style.display = 'none';
-            document.getElementById('socks5ConfirmBtn').disabled = true;
-
-            // 加载SOCKS5列表
-            loadSocks5List();
+            showExploreProxyModal('socks5');
         }
 
         function closeExploreSocks5Modal(event) {
-            event.preventDefault();
-            const modal = document.getElementById('exploreSocks5Modal');
-            if (modal) {
-                modal.classList.remove('show');
-            }
-            // 清除所有超时计时器
-            for (let timeout of Object.values(socks5VerificationTimeouts)) {
-                clearTimeout(timeout);
-            }
+            closeExploreProxyModal('socks5', event);
         }
 
         function loadSocks5List() {
-            const url = 'https://raw.githubusercontent.com/EDT-Pages/Proxy-List/main/data/socks5.json';
-            
-            fetchWithAutoMirror(url, 'SOCKS5列表')
-                .then(text => {
-                    const data = JSON.parse(text);
-                    socks5ListData = data;
-                    buildCountryMap();
-                    populateSocks5RegionSelect();
-                })
-                .catch(error => {
-                    console.error('加载SOCKS5列表失败:', error);
-                    showToast('加载SOCKS5列表失败: ' + error.message, 'error');
-                    document.getElementById('socks5RegionSelect').innerHTML = '<option value="">加载失败</option>';
-                });
+            loadProxyList('socks5');
         }
 
-        function buildCountryMap() {
-            socks5CountryMap = {};
-            
-            // 统计每个国家的SOCKS5数量
-            socks5ListData.forEach(item => {
+        function buildCountryMap(listData, countryMap) {
+            countryMap = {};
+
+            // 统计每个国家的代理数量
+            listData.forEach(item => {
                 const country = item.country;
-                if (!socks5CountryMap[country]) {
-                    socks5CountryMap[country] = [];
+                if (!countryMap[country]) {
+                    countryMap[country] = [];
                 }
-                socks5CountryMap[country].push(item);
+                countryMap[country].push(item);
             });
 
             // 按数量排序（多到少）
-            socks5CountryMap = Object.fromEntries(
-                Object.entries(socks5CountryMap).sort((a, b) => b[1].length - a[1].length)
+            countryMap = Object.fromEntries(
+                Object.entries(countryMap).sort((a, b) => b[1].length - a[1].length)
             );
+
+            return countryMap;
         }
 
         function populateSocks5RegionSelect() {
-            const select = document.getElementById('socks5RegionSelect');
-            let html = '<option value="">-- 请选择地区 --</option>';
-            
-            for (const [country, proxies] of Object.entries(socks5CountryMap)) {
-                html += `<option value="${country}">${country}(${proxies.length})</option>`;
-            }
-            
-            select.innerHTML = html;
+            populateProxyRegionSelect('socks5');
         }
 
         function onSocks5RegionChange() {
-            const selectedCountry = document.getElementById('socks5RegionSelect').value;
-            
-            if (!selectedCountry) {
-                document.getElementById('socks5ProxySelectGroup').style.display = 'none';
-                document.getElementById('socks5LoadingInfo').style.display = 'none';
-                document.getElementById('socks5ConfirmBtn').disabled = true;
-                return;
-            }
-
-            const proxies = socks5CountryMap[selectedCountry] || [];
-            
-            // 显示加载信息
-            document.getElementById('socks5LoadingInfo').style.display = 'block';
-            document.getElementById('socks5ProxySelectGroup').style.display = 'block';
-            
-            // 初始化每个代理的验证状态
-            proxies.forEach(proxy => {
-                if (!socks5VerificationStatus[proxy.proxy]) {
-                    socks5VerificationStatus[proxy.proxy] = {
-                        status: 'pending', // pending, success, failed, timeout
-                        responseTime: null
-                    };
-                }
-            });
-
-            // 显示代理列表
-            populateSocks5ProxySelect(selectedCountry);
-            
-            // 开始验证所有代理
-            verifySocks5Proxies(proxies);
+            onProxyRegionChange('socks5');
         }
 
         function populateSocks5ProxySelect(selectedCountry) {
-            const select = document.getElementById('socks5ProxySelect');
-            const proxies = socks5CountryMap[selectedCountry] || [];
-            
-            let html = '<option value="">-- 请选择 --</option>';
-            
+            populateProxySelect(selectedCountry, 'socks5ProxySelect', socks5CountryMap, socks5VerificationStatus, 'socks5');
+        }
+
+        function verifySocks5Proxies(proxies) {
+            verifyProxies(proxies, verifySingleSocks5);
+        }
+
+        function verifySingleSocks5(proxy) {
+            return verifySingleProxy(proxy, 'socks5');
+        }
+
+        function updateSocks5Display() {
+            updateProxyDisplay('socks5');
+        }
+
+        function confirmSelectSocks5() {
+            confirmSelectProxy('socks5');
+        }
+
+        function updateSocks5ConfirmButton() {
+            updateProxyConfirmButton('socks5');
+        }
+
+        // 通用代理选择器填充函数
+        function populateProxySelect(selectedCountry, selectId, countryMap, verificationStatus, type) {
+            const select = document.getElementById(selectId);
+            const proxies = countryMap[selectedCountry] || [];
+
+            // 保存当前选中的值
+            const currentValue = select.value;
+
+            // 检查是否所有代理都验证完成
+            const allVerified = proxies.every(p => {
+                const status = verificationStatus[p.proxy];
+                return status && status.status !== 'pending';
+            });
+
+            let html;
+            if (allVerified) {
+                html = '<option value="">可用性验证完成，请选择...</option>';
+            } else {
+                html = '<option value="">正在验证可用性，请稍候...</option>';
+            }
+
             // 获取当前地区的所有代理，并按状态和延迟排序
             const sortedProxies = [...proxies].sort((a, b) => {
-                const statusA = socks5VerificationStatus[a.proxy];
-                const statusB = socks5VerificationStatus[b.proxy];
-                
+                const statusA = verificationStatus[a.proxy];
+                const statusB = verificationStatus[b.proxy];
+
                 // 可用的在前面，且按延迟从低到高
                 if (statusA.status === 'success' && statusB.status === 'success') {
                     return (statusA.responseTime || 0) - (statusB.responseTime || 0);
                 }
                 if (statusA.status === 'success') return -1;
                 if (statusB.status === 'success') return 1;
-                
+
                 return 0;
             });
-            
+
             sortedProxies.forEach(proxy => {
-                const status = socks5VerificationStatus[proxy.proxy];
+                const status = verificationStatus[proxy.proxy];
                 let emoji = '⏳';
                 let statusText = '验证中';
-                
+
                 if (status.status === 'success') {
                     emoji = '✅';
                     statusText = `${status.responseTime}ms`;
@@ -11831,18 +11897,27 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     emoji = '🔴';
                     statusText = '不可用';
                 }
-                
+
                 const label = `${emoji}(${statusText}) ${proxy.city} AS${proxy.asn} ${proxy.asOrganization}`;
                 const disabled = status.status !== 'success';
                 html += `<option value="${proxy.proxy}" ${disabled ? 'disabled' : ''}>${label}</option>`;
             });
-            
+
             select.innerHTML = html;
+
+            // 恢复用户的选择（如果该选项仍然存在且有效）
+            if (currentValue && currentValue !== '') {
+                const optionExists = Array.from(select.options).some(option => option.value === currentValue);
+                if (optionExists) {
+                    select.value = currentValue;
+                }
+            }
         }
 
-        function verifySocks5Proxies(proxies) {
-            // 并发控制：最多4个并发请求
-            const maxConcurrent = 4;
+        // 通用代理验证函数
+        function verifyProxies(proxies, verifySingleFunction) {
+            // 并发控制：最多8个并发请求
+            const maxConcurrent = 8;
             let currentIndex = 0;
             let activeRequests = 0;
 
@@ -11853,8 +11928,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                 activeRequests++;
                 const proxy = proxies[currentIndex++];
-                
-                verifySingleSocks5(proxy).finally(() => {
+
+                verifySingleFunction(proxy).finally(() => {
                     activeRequests--;
                     startNextProxy();
                 });
@@ -11866,104 +11941,145 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
         }
 
-        function verifySingleSocks5(proxy) {
-            return new Promise((resolve) => {
-                const { protocol, proxy: proxyUrl } = proxy;
-                const cleanProxy = proxyUrl.replace(protocol + '://', '');
-                const checkUrl = `./admin/check?${protocol}=${encodeURIComponent(cleanProxy)}&_t=${Date.now()}`;
-                
-                // 设置15秒超时
-                const timeoutId = setTimeout(() => {
-                    socks5VerificationStatus[proxyUrl] = {
-                        status: 'timeout',
-                        responseTime: null
-                    };
-                    updateSocks5Display();
-                    resolve();
-                }, 15000);
-                
-                socks5VerificationTimeouts[proxyUrl] = timeoutId;
-                
-                fetch(checkUrl)
-                    .then(response => response.json())
-                    .then(data => {
-                        clearTimeout(timeoutId);
-                        delete socks5VerificationTimeouts[proxyUrl];
-                        
-                        if (data.success) {
-                            socks5VerificationStatus[proxyUrl] = {
-                                status: 'success',
-                                responseTime: data.responseTime
-                            };
-                        } else {
-                            socks5VerificationStatus[proxyUrl] = {
-                                status: 'failed',
-                                responseTime: null
-                            };
-                        }
-                        updateSocks5Display();
-                        resolve();
-                    })
-                    .catch(error => {
-                        clearTimeout(timeoutId);
-                        delete socks5VerificationTimeouts[proxyUrl];
-                        
-                        socks5VerificationStatus[proxyUrl] = {
-                            status: 'failed',
-                            responseTime: null
-                        };
-                        updateSocks5Display();
-                        resolve();
-                    });
-            });
+        // 通用代理探索函数
+        function showExploreProxyModal(type) {
+            const config = proxyConfigs[type];
+            const modal = document.getElementById(config.modalId);
+            if (!modal) return;
+
+            // 重置状态
+            window[config.listData] = [];
+            window[config.countryMap] = {};
+            window[config.verificationStatus] = {};
+            window[config.verificationTimeouts] = {};
+
+            modal.classList.add('show');
+            document.getElementById(config.regionSelectId).innerHTML = '<option value="">加载中...</option>';
+            document.getElementById(config.proxySelectGroupId).style.display = 'none';
+            document.getElementById(config.confirmBtnId).disabled = true;
+
+            // 加载列表
+            loadProxyList(type);
         }
 
-        function updateSocks5Display() {
-            const selectedCountry = document.getElementById('socks5RegionSelect').value;
-            if (selectedCountry) {
-                populateSocks5ProxySelect(selectedCountry);
+        function closeExploreProxyModal(type, event) {
+            event.preventDefault();
+            const config = proxyConfigs[type];
+            const modal = document.getElementById(config.modalId);
+            if (modal) {
+                modal.classList.remove('show');
             }
-            
-            // 检查是否所有代理都验证完成
-            const proxies = socks5CountryMap[selectedCountry] || [];
-            const allVerified = proxies.every(p => {
-                const status = socks5VerificationStatus[p.proxy];
-                return status && status.status !== 'pending';
-            });
-            
-            if (allVerified) {
-                document.getElementById('socks5LoadingInfo').style.display = 'none';
+            // 清除所有超时计时器
+            for (let timeout of Object.values(window[config.verificationTimeouts])) {
+                clearTimeout(timeout);
             }
-            
-            // 更新确定按钮状态
-            const select = document.getElementById('socks5ProxySelect');
-            const selectedValue = select.value;
-            const isValidSelected = selectedValue && 
-                socks5VerificationStatus[selectedValue] &&
-                socks5VerificationStatus[selectedValue].status === 'success';
-            document.getElementById('socks5ConfirmBtn').disabled = !isValidSelected;
         }
 
-        function confirmSelectSocks5() {
-            const select = document.getElementById('socks5ProxySelect');
-            const selectedProxy = select.value;
-            
-            if (!selectedProxy) {
-                showToast('请选择一个有效的SOCKS5代理', 'error');
+        function loadProxyList(type) {
+            const config = proxyConfigs[type];
+            const url = config.url;
+
+            fetchWithAutoMirror(url, config.description)
+                .then(text => {
+                    const data = JSON.parse(text);
+                    window[config.listData] = data;
+                    window[config.countryMap] = buildCountryMap(window[config.listData], window[config.countryMap]);
+                    populateProxyRegionSelect(type);
+                })
+                .catch(error => {
+                    console.error(`${config.description}加载失败:`, error);
+                    document.getElementById(config.regionSelectId).innerHTML = '<option value="">加载失败</option>';
+                });
+        }
+
+        function populateProxyRegionSelect(type) {
+            const config = proxyConfigs[type];
+            const select = document.getElementById(config.regionSelectId);
+            let html = '<option value="">-- 请选择地区 --</option>';
+
+            for (const [country, proxies] of Object.entries(window[config.countryMap])) {
+                html += `<option value="${country}">${country}(${proxies.length})</option>`;
+            }
+
+            select.innerHTML = html;
+        }
+
+        function onProxyRegionChange(type) {
+            const config = proxyConfigs[type];
+            const selectedCountry = document.getElementById(config.regionSelectId).value;
+
+            if (!selectedCountry) {
+                document.getElementById(config.proxySelectGroupId).style.display = 'none';
+                document.getElementById(config.confirmBtnId).disabled = true;
                 return;
             }
-            
-            // 填入SOCKS5地址
-            const socks5Input = document.getElementById('socks5Addr');
-            if (socks5Input) {
-                socks5Input.value = selectedProxy;
-                socks5Input.dispatchEvent(new Event('change', { bubbles: true }));
+
+            const proxies = window[config.countryMap][selectedCountry] || [];
+
+            // 显示代理选择组
+            document.getElementById(config.proxySelectGroupId).style.display = 'block';
+
+            // 初始化每个代理的验证状态
+            proxies.forEach(proxy => {
+                if (!window[config.verificationStatus][proxy.proxy]) {
+                    window[config.verificationStatus][proxy.proxy] = {
+                        status: 'pending', // pending, success, failed, timeout
+                        responseTime: null
+                    };
+                }
+            });
+
+            // 设置select为验证中状态
+            const select = document.getElementById(config.proxySelectId);
+            select.innerHTML = '<option value="">正在验证可用性，请稍候...</option>';
+
+            // 显示代理列表
+            populateProxySelect(selectedCountry, config.proxySelectId, window[config.countryMap], window[config.verificationStatus]);
+
+            // 开始验证所有代理
+            verifyProxies(proxies, config.verifySingleFunction);
+        }
+
+        function updateProxyDisplay(type) {
+            const config = proxyConfigs[type];
+            const selectedCountry = document.getElementById(config.regionSelectId).value;
+            if (selectedCountry) {
+                populateProxySelect(selectedCountry, config.proxySelectId, window[config.countryMap], window[config.verificationStatus], type);
+
+                // 更新确定按钮状态
+                const select = document.getElementById(config.proxySelectId);
+                const selectedValue = select.value;
+                const isValidSelected = selectedValue &&
+                    window[config.verificationStatus][selectedValue] &&
+                    window[config.verificationStatus][selectedValue].status === 'success';
+                document.getElementById(config.confirmBtnId).disabled = !isValidSelected;
+            }
+        }
+
+        function confirmSelectProxy(type) {
+            const config = proxyConfigs[type];
+            const select = document.getElementById(config.proxySelectId);
+            const selectedProxy = select.value;
+
+            if (!selectedProxy) {
+                showToast(`请选择一个有效的${type.toUpperCase()}代理`, 'error');
+                return;
+            }
+
+            // 填入代理地址
+            const input = document.getElementById(config.inputId);
+            if (input) {
+                input.value = selectedProxy;
+                input.dispatchEvent(new Event('change', { bubbles: true }));
                 markModified('proxy');
             }
-            
+
             // 关闭模态框
-            closeExploreSocks5Modal({ preventDefault: () => {} });
-            
+            const modal = document.getElementById(config.modalId);
+            if (modal) {
+                modal.classList.remove('show');
+            }
+
             // 亮起保存和取消按钮
             const saveBtn = document.getElementById('saveProxyBtn');
             const cancelBtn = document.getElementById('cancelProxyBtn');
@@ -11971,23 +12087,78 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             if (cancelBtn) cancelBtn.disabled = false;
         }
 
-        function updateSocks5ConfirmButton() {
-            const select = document.getElementById('socks5ProxySelect');
+        function updateProxyConfirmButton(type) {
+            const config = proxyConfigs[type];
+            const select = document.getElementById(config.proxySelectId);
             const selectedValue = select.value;
-            const confirmBtn = document.getElementById('socks5ConfirmBtn');
-            
+            const confirmBtn = document.getElementById(config.confirmBtnId);
+
             // 检查选中的代理是否可用
-            const isValidSelected = selectedValue && 
-                socks5VerificationStatus[selectedValue] &&
-                socks5VerificationStatus[selectedValue].status === 'success';
-            
+            const isValidSelected = selectedValue &&
+                window[config.verificationStatus][selectedValue] &&
+                window[config.verificationStatus][selectedValue].status === 'success';
+
             if (confirmBtn) {
                 confirmBtn.disabled = !isValidSelected;
             }
         }
 
+        // 通用单个代理验证函数
+        function verifySingleProxy(proxy, type) {
+            return new Promise((resolve) => {
+                const config = proxyConfigs[type];
+                const { protocol, proxy: proxyUrl } = proxy;
+                const cleanProxy = proxyUrl.replace(protocol + '://', '');
+                const checkUrl = `/admin/check?${protocol}=${encodeURIComponent(cleanProxy)}&_t=${Date.now()}`;
+
+                // 设置15秒超时
+                const timeoutId = setTimeout(() => {
+                    window[config.verificationStatus][proxyUrl] = {
+                        status: 'timeout',
+                        responseTime: null
+                    };
+                    updateProxyDisplay(type);
+                    resolve();
+                }, 15000);
+
+                window[config.verificationTimeouts][proxyUrl] = timeoutId;
+
+                fetch(checkUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        clearTimeout(timeoutId);
+                        delete window[config.verificationTimeouts][proxyUrl];
+
+                        if (data.success) {
+                            window[config.verificationStatus][proxyUrl] = {
+                                status: 'success',
+                                responseTime: data.responseTime
+                            };
+                        } else {
+                            window[config.verificationStatus][proxyUrl] = {
+                                status: 'failed',
+                                responseTime: null
+                            };
+                        }
+                        updateProxyDisplay(type);
+                        resolve();
+                    })
+                    .catch(error => {
+                        clearTimeout(timeoutId);
+                        delete window[config.verificationTimeouts][proxyUrl];
+
+                        window[config.verificationStatus][proxyUrl] = {
+                            status: 'failed',
+                            responseTime: null
+                        };
+                        updateProxyDisplay(type);
+                        resolve();
+                    });
+            });
+        }
+
         // ==================== HTTP 相关函数 ====================
-        
+
         // 存储HTTP数据
         let httpListData = [];
         let httpCountryMap = {};
@@ -11995,305 +12166,48 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         let httpVerificationTimeouts = {}; // 存储超时计时器
 
         function showExploreHTTPModal() {
-            const modal = document.getElementById('exploreHTTPModal');
-            if (!modal) return;
-
-            // 重置状态
-            httpListData = [];
-            httpCountryMap = {};
-            httpVerificationStatus = {};
-            httpVerificationTimeouts = {};
-            
-            modal.classList.add('show');
-            document.getElementById('httpRegionSelect').innerHTML = '<option value="">加载中...</option>';
-            document.getElementById('httpProxySelectGroup').style.display = 'none';
-            document.getElementById('httpLoadingInfo').style.display = 'none';
-            document.getElementById('httpConfirmBtn').disabled = true;
-
-            // 加载HTTP列表
-            loadHTTPList();
+            showExploreProxyModal('http');
         }
 
         function closeExploreHTTPModal(event) {
-            event.preventDefault();
-            const modal = document.getElementById('exploreHTTPModal');
-            if (modal) {
-                modal.classList.remove('show');
-            }
-            // 清除所有超时计时器
-            for (let timeout of Object.values(httpVerificationTimeouts)) {
-                clearTimeout(timeout);
-            }
+            closeExploreProxyModal('http', event);
         }
 
         function loadHTTPList() {
-            const url = 'https://raw.githubusercontent.com/EDT-Pages/Proxy-List/main/data/http.json';
-            
-            fetchWithAutoMirror(url, 'HTTP列表')
-                .then(text => {
-                    const data = JSON.parse(text);
-                    httpListData = data;
-                    buildHTTPCountryMap();
-                    populateHTTPRegionSelect();
-                })
-                .catch(error => {
-                    console.error('加载HTTP列表失败:', error);
-                    showToast('加载HTTP列表失败: ' + error.message, 'error');
-                    document.getElementById('httpRegionSelect').innerHTML = '<option value="">加载失败</option>';
-                });
+            loadProxyList('http');
         }
 
-        function buildHTTPCountryMap() {
-            httpCountryMap = {};
-            
-            // 统计每个国家的HTTP数量
-            httpListData.forEach(item => {
-                const country = item.country;
-                if (!httpCountryMap[country]) {
-                    httpCountryMap[country] = [];
-                }
-                httpCountryMap[country].push(item);
-            });
-
-            // 按数量排序（多到少）
-            httpCountryMap = Object.fromEntries(
-                Object.entries(httpCountryMap).sort((a, b) => b[1].length - a[1].length)
-            );
-        }
 
         function populateHTTPRegionSelect() {
-            const select = document.getElementById('httpRegionSelect');
-            let html = '<option value="">-- 请选择地区 --</option>';
-            
-            for (const [country, proxies] of Object.entries(httpCountryMap)) {
-                html += `<option value="${country}">${country}(${proxies.length})</option>`;
-            }
-            
-            select.innerHTML = html;
+            populateProxyRegionSelect('http');
         }
 
         function onHTTPRegionChange() {
-            const selectedCountry = document.getElementById('httpRegionSelect').value;
-            
-            if (!selectedCountry) {
-                document.getElementById('httpProxySelectGroup').style.display = 'none';
-                document.getElementById('httpLoadingInfo').style.display = 'none';
-                document.getElementById('httpConfirmBtn').disabled = true;
-                return;
-            }
-
-            const proxies = httpCountryMap[selectedCountry] || [];
-            
-            // 显示加载信息
-            document.getElementById('httpLoadingInfo').style.display = 'block';
-            document.getElementById('httpProxySelectGroup').style.display = 'block';
-            
-            // 初始化每个代理的验证状态
-            proxies.forEach(proxy => {
-                if (!httpVerificationStatus[proxy.proxy]) {
-                    httpVerificationStatus[proxy.proxy] = {
-                        status: 'pending', // pending, success, failed, timeout
-                        responseTime: null
-                    };
-                }
-            });
-
-            // 显示代理列表
-            populateHTTPProxySelect(selectedCountry);
-            
-            // 开始验证所有代理
-            verifyHTTPProxies(proxies);
+            onProxyRegionChange('http');
         }
 
         function populateHTTPProxySelect(selectedCountry) {
-            const select = document.getElementById('httpProxySelect');
-            const proxies = httpCountryMap[selectedCountry] || [];
-            
-            let html = '<option value="">-- 请选择 --</option>';
-            
-            // 获取当前地区的所有代理，并按状态和延迟排序
-            const sortedProxies = [...proxies].sort((a, b) => {
-                const statusA = httpVerificationStatus[a.proxy];
-                const statusB = httpVerificationStatus[b.proxy];
-                
-                // 可用的在前面，且按延迟从低到高
-                if (statusA.status === 'success' && statusB.status === 'success') {
-                    return (statusA.responseTime || 0) - (statusB.responseTime || 0);
-                }
-                if (statusA.status === 'success') return -1;
-                if (statusB.status === 'success') return 1;
-                
-                return 0;
-            });
-            
-            sortedProxies.forEach(proxy => {
-                const status = httpVerificationStatus[proxy.proxy];
-                let emoji = '⏳';
-                let statusText = '验证中';
-                
-                if (status.status === 'success') {
-                    emoji = '✅';
-                    statusText = `${status.responseTime}ms`;
-                } else if (status.status === 'timeout') {
-                    emoji = '🔴';
-                    statusText = '已超时';
-                } else if (status.status === 'failed') {
-                    emoji = '🔴';
-                    statusText = '不可用';
-                }
-                
-                const label = `${emoji}(${statusText}) ${proxy.city} AS${proxy.asn} ${proxy.asOrganization}`;
-                const disabled = status.status !== 'success';
-                html += `<option value="${proxy.proxy}" ${disabled ? 'disabled' : ''}>${label}</option>`;
-            });
-            
-            select.innerHTML = html;
+            populateProxySelect(selectedCountry, 'httpProxySelect', httpCountryMap, httpVerificationStatus, 'http');
         }
 
         function verifyHTTPProxies(proxies) {
-            // 并发控制：最多4个并发请求
-            const maxConcurrent = 4;
-            let currentIndex = 0;
-            let activeRequests = 0;
-
-            function startNextProxy() {
-                if (currentIndex >= proxies.length || activeRequests >= maxConcurrent) {
-                    return;
-                }
-
-                activeRequests++;
-                const proxy = proxies[currentIndex++];
-                
-                verifySingleHTTP(proxy).finally(() => {
-                    activeRequests--;
-                    startNextProxy();
-                });
-            }
-
-            // 启动初始4个请求
-            for (let i = 0; i < Math.min(maxConcurrent, proxies.length); i++) {
-                startNextProxy();
-            }
+            verifyProxies(proxies, verifySingleHTTP);
         }
 
         function verifySingleHTTP(proxy) {
-            return new Promise((resolve) => {
-                const { protocol, proxy: proxyUrl } = proxy;
-                const cleanProxy = proxyUrl.replace(protocol + '://', '');
-                const checkUrl = `./admin/check?${protocol}=${encodeURIComponent(cleanProxy)}&_t=${Date.now()}`;
-                
-                // 设置15秒超时
-                const timeoutId = setTimeout(() => {
-                    httpVerificationStatus[proxyUrl] = {
-                        status: 'timeout',
-                        responseTime: null
-                    };
-                    updateHTTPDisplay();
-                    resolve();
-                }, 15000);
-                
-                httpVerificationTimeouts[proxyUrl] = timeoutId;
-                
-                fetch(checkUrl)
-                    .then(response => response.json())
-                    .then(data => {
-                        clearTimeout(timeoutId);
-                        delete httpVerificationTimeouts[proxyUrl];
-                        
-                        if (data.success) {
-                            httpVerificationStatus[proxyUrl] = {
-                                status: 'success',
-                                responseTime: data.responseTime
-                            };
-                        } else {
-                            httpVerificationStatus[proxyUrl] = {
-                                status: 'failed',
-                                responseTime: null
-                            };
-                        }
-                        updateHTTPDisplay();
-                        resolve();
-                    })
-                    .catch(error => {
-                        clearTimeout(timeoutId);
-                        delete httpVerificationTimeouts[proxyUrl];
-                        
-                        httpVerificationStatus[proxyUrl] = {
-                            status: 'failed',
-                            responseTime: null
-                        };
-                        updateHTTPDisplay();
-                        resolve();
-                    });
-            });
+            return verifySingleProxy(proxy, 'http');
         }
 
         function updateHTTPDisplay() {
-            const selectedCountry = document.getElementById('httpRegionSelect').value;
-            if (selectedCountry) {
-                populateHTTPProxySelect(selectedCountry);
-            }
-            
-            // 检查是否所有代理都验证完成
-            const proxies = httpCountryMap[selectedCountry] || [];
-            const allVerified = proxies.every(p => {
-                const status = httpVerificationStatus[p.proxy];
-                return status && status.status !== 'pending';
-            });
-            
-            if (allVerified) {
-                document.getElementById('httpLoadingInfo').style.display = 'none';
-            }
-            
-            // 更新确定按钮状态
-            const select = document.getElementById('httpProxySelect');
-            const selectedValue = select.value;
-            const isValidSelected = selectedValue && 
-                httpVerificationStatus[selectedValue] &&
-                httpVerificationStatus[selectedValue].status === 'success';
-            document.getElementById('httpConfirmBtn').disabled = !isValidSelected;
+            updateProxyDisplay('http');
         }
 
         function confirmSelectHTTP() {
-            const select = document.getElementById('httpProxySelect');
-            const selectedProxy = select.value;
-            
-            if (!selectedProxy) {
-                showToast('请选择一个有效的HTTP代理', 'error');
-                return;
-            }
-            
-            // 填入HTTP地址
-            const httpInput = document.getElementById('httpAddr');
-            if (httpInput) {
-                httpInput.value = selectedProxy;
-                httpInput.dispatchEvent(new Event('change', { bubbles: true }));
-                markModified('proxy');
-            }
-            
-            // 关闭模态框
-            closeExploreHTTPModal({ preventDefault: () => {} });
-            
-            // 亮起保存和取消按钮
-            const saveBtn = document.getElementById('saveProxyBtn');
-            const cancelBtn = document.getElementById('cancelProxyBtn');
-            if (saveBtn) saveBtn.disabled = false;
-            if (cancelBtn) cancelBtn.disabled = false;
+            confirmSelectProxy('http');
         }
 
         function updateHTTPConfirmButton() {
-            const select = document.getElementById('httpProxySelect');
-            const selectedValue = select.value;
-            const confirmBtn = document.getElementById('httpConfirmBtn');
-            
-            // 检查选中的代理是否可用
-            const isValidSelected = selectedValue && 
-                httpVerificationStatus[selectedValue] &&
-                httpVerificationStatus[selectedValue].status === 'success';
-            
-            if (confirmBtn) {
-                confirmBtn.disabled = !isValidSelected;
-            }
+            updateProxyConfirmButton('http');
         }
 
         // ============ HOSTS 检查相关函数 ============
@@ -12302,7 +12216,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         function checkHostsMismatch() {
             const currentHostname = window.location.hostname;
             const hosts = currentConfig.HOSTS || [];
-            
+
             // 检查当前 hostname 是否存在于 HOSTS 数组中
             const isHostInArray = hosts.some(host => {
                 // 移除端口号后进行比较
@@ -12322,7 +12236,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         function shouldShowHostsMismatchNotification() {
             const cacheKey = 'hostsMismatchNotificationTime';
             const cachedTime = localStorage.getItem(cacheKey);
-            
+
             if (!cachedTime) {
                 // 没有缓存，应该显示
                 return true;
@@ -12342,19 +12256,19 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const currentHostnameEl = document.getElementById('currentHostname');
             const hostToAddEl = document.getElementById('hostToAdd');
             const currentHostsEl = document.getElementById('currentHosts');
-            
+
             if (currentHostnameEl) {
                 currentHostnameEl.textContent = currentHostname;
             }
             if (hostToAddEl) {
                 hostToAddEl.textContent = currentHostname;
             }
-            
+
             // 填充当前 HOSTS 列表 - 用 HTML badge 而不是纯文本
             if (currentHostsEl) {
                 // 清空并用 HTML 结构重新填充
                 currentHostsEl.innerHTML = '';
-                
+
                 hosts.forEach((host) => {
                     const badge = document.createElement('span');
                     badge.className = 'hosts-badge';
@@ -12362,7 +12276,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     currentHostsEl.appendChild(badge);
                 });
             }
-            
+
             // 显示模态框
             const overlay = document.getElementById('hostsMismatchModal');
             if (overlay) {
@@ -12380,7 +12294,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             if (event && event.target && event.target.id !== 'hostsMismatchModal') {
                 return;
             }
-            
+
             const overlay = document.getElementById('hostsMismatchModal');
             if (overlay) {
                 overlay.classList.remove('show');
@@ -12391,13 +12305,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         function dismissHostsMismatchNotification() {
             const cacheKey = 'hostsMismatchNotificationTime';
             const currentTime = Date.now();
-            
+
             // 将当前时间戳保存到 localStorage
             localStorage.setItem(cacheKey, currentTime.toString());
-            
+
             // 关闭模态框
             closeHostsMismatchModal({ target: { id: 'hostsMismatchModal' } });
-            
+
             // 显示确认提示
             showToast('24小时内不会再提示', 'info');
         }

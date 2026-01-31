@@ -12,6 +12,9 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&family=Orbitron:wght@700;800;900&display=swap"
         rel="stylesheet">
+    <!-- Leaflet Map Resources -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         /* 基础重置 */
         * {
@@ -643,11 +646,106 @@
         }
 
         /* SOCKS5 模态框样式 */
-        #exploreSocks5Modal .modal {
-            max-width: 550px;
+        #exploreSocks5Modal .modal,
+        #exploreHTTPModal .modal {
+            max-width: 900px;
+            width: 95%;
+            padding: 0;
+            overflow: hidden;
+            display: flex !important;
+            flex-direction: row;
         }
 
-        .socks5-list-container {
+        .modal-map-side {
+            flex: 1.2;
+            height: 500px;
+            background: #f0f0f0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .modal-content-side {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-primary, #fff);
+            color: var(--text-primary, #1f2937);
+            max-height: 500px;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+
+        html.dark-mode .modal-content-side {
+            background: var(--bg-secondary, #1a1a1a);
+            border-left: 1px solid var(--border-color, #333);
+        }
+
+        html.dark-mode .modal-content-side .section-title {
+            color: var(--text-primary, #fff);
+        }
+
+        html.dark-mode .modal-content-side p {
+            color: var(--text-secondary, #a0a0a0);
+        }
+
+        html.dark-mode .modal-content-side label {
+            color: var(--text-primary, #e5e5e5);
+        }
+
+        html.dark-mode .modal-content-side select {
+            background-color: var(--input-bg, #2a2a2a) !important;
+            border-color: var(--input-border, #333) !important;
+            color: var(--text-primary, #e5e5e5) !important;
+        }
+
+        /* 地图夜间模式全面修补 */
+        html.dark-mode .proxy-map-container {
+            background-color: #1a1a1a !important;
+        }
+
+        /* 强制反转瓦片颜色：浅色底图 -> 深色底图，黑色文字 -> 白色文字 */
+        html.dark-mode .leaflet-tile-pane {
+            filter: invert(100%) hue-rotate(180deg) brightness(0.85) contrast(1.1) !important;
+        }
+
+        /* 修正 Leaflet Popup 在夜间模式下的样式 */
+        html.dark-mode .leaflet-popup-content-wrapper,
+        html.dark-mode .leaflet-popup-tip {
+            background: #2a2a2a !important;
+            color: #fff !important;
+            box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        .proxy-map-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 隐藏 Leaflet 标识 */
+        .leaflet-control-attribution {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+
+            #exploreSocks5Modal .modal,
+            #exploreHTTPModal .modal {
+                flex-direction: column;
+                max-width: 550px;
+            }
+
+            .modal-map-side {
+                height: 200px;
+            }
+
+            .modal-content-side {
+                max-height: none;
+            }
+        }
+
+        .socks5-list-container,
+        .http-list-container {
             width: 100%;
         }
 
@@ -2050,8 +2148,6 @@
         .btn-fofa {
             background: linear-gradient(135deg, #439aff 0, #05f2f2 100%);
             color: #fff !important;
-            padding: 10px 16px;
-            font-size: 14px;
             box-shadow: 0 4px 15px rgb(67, 154, 255, 0.3);
             transition: all 0.3s ease;
         }
@@ -2069,8 +2165,6 @@
         .btn-360quake {
             background: linear-gradient(135deg, #00AB7A 0, #00AB7A 100%);
             color: #fff !important;
-            padding: 10px 16px;
-            font-size: 14px;
             box-shadow: 0 4px 15px rgba(0, 171, 122, 0.3);
             transition: all 0.3s ease;
         }
@@ -2578,11 +2672,10 @@
             overflow-x: auto;
             overflow-y: hidden;
             padding-bottom: 8px;
-            -webkit-overflow-scrolling: touch;
             scroll-behavior: smooth;
             cursor: grab;
-            user-select: none;
             -webkit-user-select: none;
+            user-select: none;
         }
 
         .ech-tabs.dragging {
@@ -4773,7 +4866,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             <option value="edge">edge</option>
                             <option value="360">360</option>
                             <option value="qq">qq</option>
-                            <option value="random">random（支持ECH）</option>
+                            <option value="random">random</option>
                             <option value="randomized">randomized</option>
                         </select>
                     </div>
@@ -5022,18 +5115,21 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     <div class="module-footer">
                         <button type="button" class="btn btn-proxyip-help" onclick="showProxyIPHelpModal()"
                             title="了解 ProxyIP 的相关信息">
-                            💡 为什么需要反代模式？PROXYIP又是什么？
+                            💡 为什么需要反代？PROXYIP又是什么？
                         </button>
                         <button type="button" class="btn btn-search-proxy" id="getMoreProxyIPBtn"
-                            onclick="showGetMoreProxyIPModal()" style="display: none;" title="使用网络测绘引擎寻找可用的PROXYIP">
+                            onclick="showGetMoreProxyIPModal()" style="display: none; padding: 10px 16px;"
+                            title="使用网络测绘引擎寻找可用的PROXYIP">
                             🗺️ 探索更多 PROXYIP
                         </button>
                         <button type="button" class="btn btn-search-proxy" id="exploreSocks5Btn"
-                            onclick="showExploreSocks5Modal()" style="display: none;" title="从SOCKS5列表中选择可用的代理">
+                            onclick="showExploreSocks5Modal()" style="display: none; padding: 10px 16px;"
+                            title="从SOCKS5列表中选择可用的代理">
                             🧩 探索更多 SOCKS5
                         </button>
                         <button type="button" class="btn btn-search-proxy" id="exploreHTTPBtn"
-                            onclick="showExploreHTTPModal()" style="display: none;" title="从HTTP列表中选择可用的代理">
+                            onclick="showExploreHTTPModal()" style="display: none; padding: 10px 16px;"
+                            title="从HTTP列表中选择可用的代理">
                             🧩 探索更多 HTTP
                         </button>
                         <div class="btn-group">
@@ -5996,109 +6092,113 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             <div class="btn-group"
                 style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-top: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
-                <button type="button" class="btn btn-fofa" onclick="openFOFA()"
-                    style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
-                    FOFA 测绘
-                </button>
-                <button type="button" class="btn btn-360quake" onclick="open360Quake()"
-                    style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
-                    360 测绘
-                </button>
+                <button type="button" class="btn btn-fofa" onclick="openFOFA()">FOFA 测绘</button>
+                <button type="button" class="btn btn-360quake" onclick="open360Quake()">360 测绘</button>
                 <button type="button" class="btn btn-ech-help"
                     onclick="window.open('https://check.proxyip.cmliussss.net/', '_blank')"
-                    style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
+                    style="padding: 10px 20px; font-size: 16px; font-weight: 600; white-space: nowrap;">
                     可用性验证
                 </button>
-                <button type="button" class="btn btn-secondary" onclick="closeGetMoreProxyIPModal()"
-                    style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
-                    关闭
-                </button>
+                <button type="button" class="btn btn-secondary" onclick="closeGetMoreProxyIPModal()">关闭</button>
             </div>
         </div>
     </div>
 
     <!-- 探索SOCKS5弹窗 -->
     <div class="modal-overlay" id="exploreSocks5Modal">
-        <div class="modal" style="max-width: 550px; text-align: left;">
-            <button type="button" class="modal-close" onclick="closeExploreSocks5Modal(event)"
-                style="cursor: pointer;">×</button>
-            <h2 class="section-title" style="margin-bottom: 15px; text-align: center;">🧩 探索更多 SOCKS5</h2>
-            <p style="text-align: center; color: #666; font-size: 14px; margin-bottom: 25px;">
-                代理资源列表来自Github、<a href="https://t.me/Enkelte_notif" target="_blank" rel="noopener noreferrer">Notif 💬</a>频道 等开源社区。<br>
-            </p>
-            <div class="socks5-list-container">
-                <div class="form-group">
-                    <label for="socks5RegionSelect">🏳️‍🌈 选择目标地区</label>
-                    <div class="input-wrapper">
-                        <select id="socks5RegionSelect" onchange="onSocks5RegionChange()" style="padding-left: 16px;">
-                            <option value="">加载中...</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group" id="socks5ProxySelectGroup" style="display: none;">
-                    <label for="socks5ProxySelect">🌐 选择目标代理</label>
-                    <div class="input-wrapper">
-                        <select id="socks5ProxySelect" onchange="updateSocks5ConfirmButton()"
-                            style="padding-left: 16px; font-family: 'Fira Code', monospace; font-size: 12px;">
-                            <option value="">加载中...</option>
-                        </select>
-                    </div>
-                </div>
+        <div class="modal">
+            <div class="modal-map-side">
+                <div id="proxy-map-socks5" class="proxy-map-container"></div>
             </div>
+            <div class="modal-content-side">
+                <button type="button" class="modal-close" onclick="closeExploreSocks5Modal(event)"
+                    style="cursor: pointer;">×</button>
+                <h2 class="section-title" style="margin-bottom: 10px; text-align: center;">🧩 探索更多 SOCKS5</h2>
+                <p style="text-align: center; color: #666; font-size: 13px; margin-bottom: 20px;">
+                    代理资源列表来自 Github、<a href="https://t.me/Enkelte_notif" target="_blank" rel="noopener noreferrer">Notif
+                        💬</a>频道、OTC大佬 等开源社区。
+                </p>
+                <div class="socks5-list-container">
+                    <div class="form-group">
+                        <label for="socks5RegionSelect">🏳️‍🌈 选择目标地区</label>
+                        <div class="input-wrapper">
+                            <select id="socks5RegionSelect" onchange="onSocks5RegionChange()"
+                                style="padding-left: 16px;">
+                                <option value="">加载中...</option>
+                            </select>
+                        </div>
+                    </div>
 
-            <div class="btn-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 30px;">
-                <button type="button" class="btn btn-primary" id="socks5ConfirmBtn" onclick="confirmSelectSocks5()"
-                    disabled style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
-                    确定
-                </button>
-                <button type="button" class="btn btn-secondary" onclick="closeExploreSocks5Modal(event)"
-                    style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
-                    取消
-                </button>
+                    <div class="form-group" id="socks5ProxySelectGroup" style="display: none;">
+                        <label for="socks5ProxySelect">🌐 选择目标代理</label>
+                        <div class="input-wrapper">
+                            <select id="socks5ProxySelect"
+                                onchange="updateSocks5ConfirmButton(); updateProxyMap('socks5');"
+                                style="padding-left: 16px; font-family: 'Fira Code', monospace; font-size: 12px;">
+                                <option value="">加载中...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group"
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: auto; padding-top: 20px;">
+                    <button type="button" class="btn btn-primary" id="socks5ConfirmBtn" onclick="confirmSelectSocks5()">
+                        确定
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeExploreSocks5Modal(event)">
+                        取消
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- 探索HTTP弹窗 -->
     <div class="modal-overlay" id="exploreHTTPModal">
-        <div class="modal" style="max-width: 550px; text-align: left;">
-            <button type="button" class="modal-close" onclick="closeExploreHTTPModal(event)"
-                style="cursor: pointer;">×</button>
-            <h2 class="section-title" style="margin-bottom: 15px; text-align: center;">🧩 探索更多 HTTP</h2>
-            <p style="text-align: center; color: #666; font-size: 14px; margin-bottom: 25px;">
-                代理资源列表来自Github、<a href="https://t.me/Enkelte_notif" target="_blank" rel="noopener noreferrer">Notif 💬</a>频道 等开源社区。<br>
-            </p>
-            <div class="http-list-container">
-                <div class="form-group">
-                    <label for="httpRegionSelect">🏳️‍🌈 选择目标地区</label>
-                    <div class="input-wrapper">
-                        <select id="httpRegionSelect" onchange="onHTTPRegionChange()" style="padding-left: 16px;">
-                            <option value="">加载中...</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group" id="httpProxySelectGroup" style="display: none;">
-                    <label for="httpProxySelect">🌐 选择目标代理</label>
-                    <div class="input-wrapper">
-                        <select id="httpProxySelect" onchange="updateHTTPConfirmButton()"
-                            style="padding-left: 16px; font-family: 'Fira Code', monospace; font-size: 12px;">
-                            <option value="">加载中...</option>
-                        </select>
-                    </div>
-                </div>
+        <div class="modal">
+            <div class="modal-map-side">
+                <div id="proxy-map-http" class="proxy-map-container"></div>
             </div>
+            <div class="modal-content-side">
+                <button type="button" class="modal-close" onclick="closeExploreHTTPModal(event)"
+                    style="cursor: pointer;">×</button>
+                <h2 class="section-title" style="margin-bottom: 10px; text-align: center;">🧩 探索更多 HTTP</h2>
+                <p style="text-align: center; color: #666; font-size: 13px; margin-bottom: 20px;">
+                    代理资源列表来自 Github、<a href="https://t.me/Enkelte_notif" target="_blank" rel="noopener noreferrer">Notif
+                        💬</a>频道、OTC大佬 等开源社区。
+                </p>
+                <div class="http-list-container">
+                    <div class="form-group">
+                        <label for="httpRegionSelect">🏳️‍🌈 选择目标地区</label>
+                        <div class="input-wrapper">
+                            <select id="httpRegionSelect" onchange="onHTTPRegionChange()" style="padding-left: 16px;">
+                                <option value="">加载中...</option>
+                            </select>
+                        </div>
+                    </div>
 
-            <div class="btn-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 30px;">
-                <button type="button" class="btn btn-primary" id="httpConfirmBtn" onclick="confirmSelectHTTP()" disabled
-                    style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
-                    确定
-                </button>
-                <button type="button" class="btn btn-secondary" onclick="closeExploreHTTPModal(event)"
-                    style="padding: 12px 16px; font-size: 14px; font-weight: 500; white-space: nowrap;">
-                    取消
-                </button>
+                    <div class="form-group" id="httpProxySelectGroup" style="display: none;">
+                        <label for="httpProxySelect">🌐 选择目标代理</label>
+                        <div class="input-wrapper">
+                            <select id="httpProxySelect" onchange="updateHTTPConfirmButton(); updateProxyMap('http');"
+                                style="padding-left: 16px; font-family: 'Fira Code', monospace; font-size: 12px;">
+                                <option value="">加载中...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group"
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: auto; padding-top: 20px;">
+                    <button type="button" class="btn btn-primary" id="httpConfirmBtn" onclick="confirmSelectHTTP()"
+                        disabled>
+                        确定
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeExploreHTTPModal(event)">
+                        取消
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -6995,7 +7095,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const fingerprintSelect = document.getElementById('fingerprint');
 
             // 支持ECH的指纹类型
-            const supportECH = ['chrome', 'firefox', 'random'];
+            const supportECH = ['chrome', 'firefox'];
 
             // 如果用户开启ECH，但当前指纹不支持ECH，自动切换到chrome
             if (enableECHCheckbox && enableECHCheckbox.checked) {
@@ -7016,7 +7116,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const enableECHCheckbox = document.getElementById('enableECH');
 
             // 支持ECH的指纹类型
-            const supportECH = ['chrome', 'firefox', 'random'];
+            const supportECH = ['chrome', 'firefox'];
 
             if (enableECHCheckbox) {
                 // 当指纹不支持ECH时，自动取消勾选
@@ -11860,13 +11960,6 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 return status && status.status !== 'pending';
             });
 
-            let html;
-            if (allVerified) {
-                html = '<option value="">可用性验证完成，请选择...</option>';
-            } else {
-                html = '<option value="">正在验证可用性，请稍候...</option>';
-            }
-
             // 获取当前地区的所有代理，并按状态和延迟排序
             const sortedProxies = [...proxies].sort((a, b) => {
                 const statusA = verificationStatus[a.proxy];
@@ -11882,7 +11975,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 return 0;
             });
 
-            sortedProxies.forEach(proxy => {
+            // 检查是否有成功的代理
+            const successfulProxies = sortedProxies.filter(proxy => verificationStatus[proxy.proxy]?.status === 'success');
+
+            // 辅助函数：生成代理选项HTML
+            function generateProxyOption(proxy, isSelectable = false) {
                 const status = verificationStatus[proxy.proxy];
                 let emoji = '⏳';
                 let statusText = '验证中';
@@ -11898,24 +11995,44 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     statusText = '不可用';
                 }
 
-                const label = `${emoji}(${statusText}) ${proxy.city} AS${proxy.asn} ${proxy.asOrganization}`;
-                const disabled = status.status !== 'success';
-                html += `<option value="${proxy.proxy}" ${disabled ? 'disabled' : ''}>${label}</option>`;
-            });
+                const label = `${emoji}[${statusText}]${proxy.city},AS${proxy.asn},${proxy.asOrganization}`;
+                const disabled = !isSelectable || status.status !== 'success';
+                const selected = isSelectable && status.status === 'success' && successfulProxies.indexOf(proxy) === 0 ? 'selected' : '';
+                return `<option value="${proxy.proxy}" ${disabled ? 'disabled' : ''} ${selected}>${label}</option>`;
+            }
+
+            let html;
+            if (successfulProxies.length > 0) {
+                // 有成功的代理，显示所有代理，默认选中第一个成功的
+                html = '';
+                sortedProxies.forEach(proxy => {
+                    html += generateProxyOption(proxy, true);
+                });
+            } else if (allVerified) {
+                // 验证完成但没有成功的代理
+                html = '<option value="">很抱歉，当前地区无可用代理，请切换其他地区。</option>';
+            } else {
+                // 验证中，显示代理列表
+                html = '<option value="">正在验证代理可用性，请稍候...</option>';
+                sortedProxies.forEach(proxy => {
+                    html += generateProxyOption(proxy, false);
+                });
+            }
 
             select.innerHTML = html;
 
-            // 恢复用户的选择（如果该选项仍然存在且有效）
-            if (currentValue && currentValue !== '') {
-                const optionExists = Array.from(select.options).some(option => option.value === currentValue);
-                if (optionExists) {
+            // 恢复用户的选择
+            if (successfulProxies.length > 0) {
+                if (currentValue && successfulProxies.some(p => p.proxy === currentValue)) {
                     select.value = currentValue;
+                } else {
+                    select.value = successfulProxies[0].proxy;
                 }
             }
         }
 
         // 通用代理验证函数
-        function verifyProxies(proxies, verifySingleFunction) {
+        function verifyProxies(proxies, verifySingleFunction, onProgress) {
             // 并发控制：最多8个并发请求
             const maxConcurrent = 8;
             let currentIndex = 0;
@@ -11931,6 +12048,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                 verifySingleFunction(proxy).finally(() => {
                     activeRequests--;
+                    if (onProgress) onProgress();
                     startNextProxy();
                 });
             }
@@ -11960,6 +12078,83 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             // 加载列表
             loadProxyList(type);
+
+            // 初始化或更新地图容器
+            setTimeout(() => {
+                initProxyMap(type);
+            }, 300);
+        }
+
+        const proxyMaps = {
+            socks5: { map: null, marker: null },
+            http: { map: null, marker: null }
+        };
+
+        function initProxyMap(type) {
+            const containerId = type === 'socks5' ? 'proxy-map-socks5' : 'proxy-map-http';
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            // 如果地图已存在，先刷新布局
+            if (proxyMaps[type].map) {
+                proxyMaps[type].map.invalidateSize();
+                return;
+            }
+
+            // 创建地图
+            const map = L.map(containerId, {
+                zoomControl: false, // 隐藏缩放控制，让界面更清爽
+                attributionControl: false
+            }).setView([22.2783, 114.1747], 4);
+
+            L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
+                subdomains: '1234',
+                minZoom: 1,
+                maxZoom: 18
+            }).addTo(map);
+
+            proxyMaps[type].map = map;
+        }
+
+        function updateProxyMap(type) {
+            const config = proxyConfigs[type];
+            const select = document.getElementById(config.proxySelectId);
+            const selectedProxyUrl = select.value;
+            if (!selectedProxyUrl || !proxyMaps[type].map) return;
+
+            // 从数据列表中找到完整的代理信息
+            const proxyData = window[config.listData].find(p => p.proxy === selectedProxyUrl);
+            if (!proxyData || !proxyData.latitude || !proxyData.longitude) return;
+
+            const lat = parseFloat(proxyData.latitude);
+            const lng = parseFloat(proxyData.longitude);
+            const map = proxyMaps[type].map;
+
+            // 更新或创建 Marker
+            if (proxyMaps[type].marker) {
+                proxyMaps[type].marker.setLatLng([lat, lng]);
+            } else {
+                proxyMaps[type].marker = L.marker([lat, lng]).addTo(map);
+            }
+
+            // 平滑移动地图并缩中心 - 进一步降低缩放级别到 4 以查看更多范围
+            map.flyTo([lat, lng], 4, {
+                duration: 1.5
+            });
+
+            // 添加或更新 Popup
+            const isDark = document.documentElement.classList.contains('dark-mode');
+            const textColor = isDark ? '#ffffff' : '#333333';
+            const popupContent = `
+                <div style="font-family: sans-serif; min-width: 150px; color: ${textColor};">
+                    <div style="font-weight: bold; font-size: 14px; margin-bottom: 5px;">${proxyData.country_emoji} ${proxyData.city || '未知城市'}</div>
+                    <div style="font-size: 12px; margin-bottom: 3px;">国家: ${proxyData.country_cn} (${proxyData.country})</div>
+                    <div style="font-size: 11px; opacity: 0.9;">落地IP: ${proxyData.clientIp}</div>
+                    <div style="font-size: 11px; opacity: 0.8;">运营商: ${proxyData.asOrganization}</div>
+                    <div style="font-size: 11px; opacity: 0.7;">经纬度: ${lat.toFixed(4)}, ${lng.toFixed(4)}</div>
+                </div>
+            `;
+            proxyMaps[type].marker.bindPopup(popupContent, { offset: L.point(0, -32) }).openPopup();
         }
 
         function closeExploreProxyModal(type, event) {
@@ -11992,13 +12187,56 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 });
         }
 
+        // 大洲信息映射
+        const continentInfo = {
+            'AS': { emoji: '🌏', name: '亚洲' },
+            'NA': { emoji: '🌎', name: '北美' },
+            'EU': { emoji: '🌍', name: '欧洲' },
+            'AF': { emoji: '🌍', name: '非洲' },
+            'SA': { emoji: '🌎', name: '南美' },
+            'OC': { emoji: '🌏', name: '大洋洲' },
+            'AN': { emoji: '❄️', name: '南极洲' }
+        };
+
         function populateProxyRegionSelect(type) {
             const config = proxyConfigs[type];
             const select = document.getElementById(config.regionSelectId);
             let html = '<option value="">-- 请选择地区 --</option>';
 
+            // 构建按大洲分组的结构
+            const continentMap = {};
+
+            // 遍历所有国家，归类到大洲
             for (const [country, proxies] of Object.entries(window[config.countryMap])) {
-                html += `<option value="${country}">${country}(${proxies.length})</option>`;
+                const proxy = proxies[0]; // 取第一个代理获取大洲信息
+                const continent = proxy.continent || 'Unknown';
+                const continentData = continentInfo[continent] || { emoji: '🌍', name: continent };
+
+                if (!continentMap[continent]) {
+                    continentMap[continent] = {
+                        emoji: continentData.emoji,
+                        name: continentData.name,
+                        countries: {}
+                    };
+                }
+
+                continentMap[continent].countries[country] = {
+                    count: proxies.length,
+                    name: proxy.country_cn || country,
+                    emoji: proxy.country_emoji || ''
+                };
+            }
+
+            // 生成 HTML
+            for (const [continentCode, continentData] of Object.entries(continentMap)) {
+                const label = `${continentData.emoji} ${continentData.name} / ${continentCode}`;
+                html += `<optgroup label="${label}">`;
+
+                for (const [country, countryData] of Object.entries(continentData.countries)) {
+                    html += `<option value="${country}">${countryData.emoji} ${countryData.name}(${countryData.count})</option>`;
+                }
+
+                html += `</optgroup>`;
             }
 
             select.innerHTML = html;
@@ -12037,7 +12275,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             populateProxySelect(selectedCountry, config.proxySelectId, window[config.countryMap], window[config.verificationStatus]);
 
             // 开始验证所有代理
-            verifyProxies(proxies, config.verifySingleFunction);
+            verifyProxies(proxies, config.verifySingleFunction, () => {
+                updateProxyDisplay(type);
+                // 如果当前选中的是成功的，尝试更新地图
+                updateProxyMap(type);
+            });
         }
 
         function updateProxyDisplay(type) {
@@ -12069,7 +12311,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // 填入代理地址
             const input = document.getElementById(config.inputId);
             if (input) {
-                input.value = selectedProxy;
+                input.value = selectedProxy.replace(/^socks5:\/\/|^http:\/\/|^https:\/\//, '');
                 input.dispatchEvent(new Event('change', { bubbles: true }));
                 markModified('proxy');
             }

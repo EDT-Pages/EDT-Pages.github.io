@@ -2504,6 +2504,82 @@
             justify-content: space-between;
         }
 
+        /* 跳过证书验证警告弹窗 */
+        .skipverify-warning-modal {
+            min-width: 400px;
+        }
+
+        .skipverify-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .skipverify-icon {
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        .skipverify-title {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #ef4444;
+        }
+
+        .skipverify-content {
+            margin-bottom: 24px;
+        }
+
+        .skipverify-text {
+            margin: 0 0 12px 0;
+            line-height: 1.6;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .skipverify-text:last-child {
+            margin-bottom: 0;
+        }
+
+        .skipverify-link {
+            color: #1976d2;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .skipverify-link:hover {
+            color: #1565c0;
+            text-decoration: underline;
+        }
+
+        .skipverify-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+        }
+
+        .btn-confirm-skip-verify {
+            flex: 1;
+        }
+
+        /* 暗模式 - 跳过证书验证警告弹窗 */
+        html.dark-mode .skipverify-title {
+            color: #ff6b6b;
+        }
+
+        html.dark-mode .skipverify-link {
+            color: #64b5f6;
+        }
+
+        html.dark-mode .skipverify-link:hover {
+            color: #42a5f5;
+        }
+
         /* 日志容器 */
         .logs-container {
             margin-bottom: 20px;
@@ -4934,12 +5010,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 </div>
                 --->
                     <div class="checkbox-row">
-                        <div class="form-group">
+                        <div class="form-group" id="skipVerifyGroup" style="display: none;">
                             <div class="input-wrapper">
                                 <div class="checkbox-group">
-                                    <input type="checkbox" id="skipVerify" title="跳过TLS证书验证"
-                                        onchange="markModified('config')">
-                                    <label for="skipVerify" class="checkbox-label" title="跳过TLS证书验证">跳过证书验证</label>
+                                    <input type="checkbox" id="skipVerify" title="Xray v26.1.31+版本 不支持跳过TLS证书验证功能"
+                                        onchange="handleSkipVerifyChange(event)">
+                                    <label for="skipVerify" class="checkbox-label" title="Xray v26.1.31+版本 不支持跳过TLS证书验证功能">跳过证书验证</label>
                                 </div>
                             </div>
                         </div>
@@ -5178,12 +5254,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <button type="button" class="btn btn-search-proxy" id="exploreSocks5Btn"
                             onclick="showExploreSocks5Modal()" style="display: none; padding: 10px 16px;"
                             title="从SOCKS5列表中选择可用的代理">
-                            🧩 探索更多 SOCKS5
+                            🔒 获取更多 SOCKS5
                         </button>
                         <button type="button" class="btn btn-search-proxy" id="exploreHTTPBtn"
                             onclick="showExploreHTTPModal()" style="display: none; padding: 10px 16px;"
                             title="从HTTP列表中选择可用的代理">
-                            🧩 探索更多 HTTP
+                            🌐 获取更多 HTTP
                         </button>
                         <div class="btn-group">
                             <button type="button" class="btn btn-secondary" onclick="cancelEdit('proxy')" disabled
@@ -5373,6 +5449,25 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <button type="button" class="modal-close" onclick="closeQRCode()">×</button>
             <div id="qrcodeContainer" class="qrcode-container"></div>
             <button type="button" class="btn btn-primary btn-close-modal" onclick="closeQRCode()">关闭</button>
+        </div>
+    </div>
+
+    <!-- 跳过证书验证警告弹窗 -->
+    <div class="modal-overlay" id="skipVerifyWarningModal" onclick="closeSkipVerifyWarning(event)">
+        <div class="modal skipverify-warning-modal" onclick="event.stopPropagation()">
+            <button type="button" class="modal-close" onclick="closeSkipVerifyWarning()">×</button>
+            <div class="skipverify-header">
+                <div class="skipverify-icon">⚠️</div>
+                <h2 class="skipverify-title">关于 跳过证书验证</h2>
+            </div>
+            <div class="skipverify-content" style="text-align: left;">
+                <p class="skipverify-text"><strong>重要更新：</strong><strong>Xray-core v26.1.31</strong> 版本起已停止支持"<strong>跳过证书验证</strong>"功能，这是<strong>核心安全策略调整</strong>（<a href="https://github.com/XTLS/Xray-core/commit/2c92339f95fe9aa493b6ae51d3b07017a44c4014" target="_blank" rel="noopener" class="skipverify-link">详情</a>）。</p>
+                <p class="skipverify-text"><strong>影响范围：</strong>如果你的客户端（如 <strong>v2rayN、v2rayNG、Happ</strong> 等）使用的是 <strong>Xray 内核</strong>，则该功能将导致<strong class="skipverify-title">内核运行失败</strong>。</p>
+            </div>
+            <div class="skipverify-buttons">
+                <button type="button" class="btn btn-confirm-skip-verify btn-confirm-reset" onclick="confirmSkipVerify()">确认开启</button>
+                <button type="button" class="btn btn-secondary" onclick="closeSkipVerifyWarning()">关闭</button>
+            </div>
         </div>
     </div>
 
@@ -6166,7 +6261,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <div class="modal-content-side">
                 <button type="button" class="modal-close" onclick="closeExploreSocks5Modal(event)"
                     style="cursor: pointer;">×</button>
-                <h2 class="section-title" style="margin-bottom: 10px; text-align: center;">🧩 探索更多 SOCKS5</h2>
+                <h2 class="section-title" style="margin-bottom: 10px; text-align: center;">🔒 获取更多 SOCKS5</h2>
                 <p style="text-align: center; color: #666; font-size: 13px; margin-bottom: 20px;">
                     代理资源来自 Github、<a href="https://t.me/Enkelte_notif" target="_blank" rel="noopener noreferrer">Notif
                         💬</a>频道、OTC大佬 等开源社区。
@@ -6216,7 +6311,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <div class="modal-content-side">
                 <button type="button" class="modal-close" onclick="closeExploreHTTPModal(event)"
                     style="cursor: pointer;">×</button>
-                <h2 class="section-title" style="margin-bottom: 10px; text-align: center;">🧩 探索更多 HTTP</h2>
+                <h2 class="section-title" style="margin-bottom: 10px; text-align: center;">🌐 获取更多 HTTP</h2>
                 <p style="text-align: center; color: #666; font-size: 13px; margin-bottom: 20px;">
                     代理资源来自 Github、<a href="https://t.me/Enkelte_notif" target="_blank" rel="noopener noreferrer">Notif
                         💬</a>频道、OTC大佬 等开源社区。
@@ -6795,7 +6890,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('nodePATH').value = currentConfig.PATH || '';
             document.getElementById('protocol').value = currentConfig.协议类型 || 'vless';
             //document.getElementById('transport').value = currentConfig.传输协议 || 'ws';
-            document.getElementById('skipVerify').checked = currentConfig.跳过证书验证 || false;
+            
+            // 检查跳过证书验证字段是否存在
+            const skipVerifyGroup = document.getElementById('skipVerifyGroup');
+            if (currentConfig['跳过证书验证'] !== undefined) {
+                skipVerifyGroup.style.setProperty('display', 'flex', 'important');
+                document.getElementById('skipVerify').checked = currentConfig['跳过证书验证'] || false;
+            } else {
+                skipVerifyGroup.style.setProperty('display', 'none', 'important');
+            }
 
             // 检查"完整节点路径"字段是否存在，判断PATH是否可编辑
             const nodePathInput = document.getElementById('nodePATH');
@@ -7814,6 +7917,28 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             if (!event || event.target.id === 'qrcodeModal') {
                 document.getElementById('qrcodeModal').classList.remove('show');
             }
+        }
+
+        function handleSkipVerifyChange(event) {
+            if (event.target.checked) {
+                // 显示警告弹窗
+                event.target.checked = false; // 先取消勾选
+                document.getElementById('skipVerifyWarningModal').classList.add('show');
+            } else {
+                markModified('config');
+            }
+        }
+
+        function closeSkipVerifyWarning(event) {
+            if (!event || event.target.id === 'skipVerifyWarningModal') {
+                document.getElementById('skipVerifyWarningModal').classList.remove('show');
+            }
+        }
+
+        function confirmSkipVerify() {
+            document.getElementById('skipVerify').checked = true;
+            markModified('config');
+            closeSkipVerifyWarning();
         }
 
         // HOSTS 编辑模态框相关函数

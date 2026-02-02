@@ -11,7 +11,7 @@
   "UUID": "7b102311-43fd-4e8f-977e-8090623c101d",
   "协议类型": "vless",
   "传输协议": "ws",
-  "跳过证书验证": true,
+  "跳过证书验证": false,
   "启用0RTT": true,
   "TLS分片": "Shadowrocket",
   "随机路径": false,

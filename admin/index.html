@@ -221,8 +221,8 @@
             font-weight: 700;
             background: linear-gradient(135deg, #faab41 0, #f6821f 100%);
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin: 0 0 12px;
             line-height: 1.2;
             letter-spacing: -0.5px
@@ -1862,7 +1862,8 @@
                 margin-bottom: 20px
             }
 
-            .module .form-group {
+            .module .form-group,
+            #portSection {
                 grid-template-columns: 1fr;
                 gap: 10px
             }
@@ -1885,14 +1886,25 @@
 
         @media(max-width:768px) {
             .module-footer {
-                flex-direction: column;
+                flex-wrap: wrap;
                 align-items: flex-start;
+                gap: 10px;
+            }
+
+            .module-footer .btn-online-optimize:not(.hidden-section),
+            .module-footer .btn-api-optimize:not(.hidden-section) {
+                flex: 1;
+                min-width: calc(50% - 5px);
             }
 
             .module-footer .btn-group {
-                margin-left: auto;
-                width: auto;
-                align-self: flex-end;
+                width: 100%;
+                display: flex;
+                gap: 10px;
+            }
+
+            .module-footer .btn-group .btn {
+                flex: 1;
             }
 
             .module-footer .btn-ech-help,
@@ -2123,6 +2135,34 @@
             gap: 10px;
             justify-content: space-between;
             margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .api-buttons {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 10px;
+                margin-top: 20px;
+            }
+
+            .btn-verify-api {
+                grid-column: 1 / -1 !important;
+                grid-row: 1 !important;
+            }
+
+            .btn-append-api {
+                grid-column: 1 !important;
+                grid-row: 2 !important;
+            }
+
+            .btn-close-api {
+                grid-column: 2 !important;
+                grid-row: 2 !important;
+            }
+
+            .btn-append-results {
+                display: none !important;
+            }
         }
 
         .btn-verify-api {
@@ -2642,7 +2682,32 @@
         .subapi-buttons {
             display: flex;
             gap: 10px;
+            justify-content: space-between;
             margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .subapi-buttons {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 10px;
+                margin-top: 20px;
+            }
+
+            .btn-test-api {
+                grid-column: 1 / -1 !important;
+                grid-row: 1 !important;
+            }
+
+            .btn-confirm-api {
+                grid-column: 1 !important;
+                grid-row: 2 !important;
+            }
+
+            .btn-cancel-api {
+                grid-column: 2 !important;
+                grid-row: 2 !important;
+            }
         }
 
         /* 输入字段特殊样式 */
@@ -2650,6 +2715,45 @@
             cursor: pointer !important;
             background-color: #fff !important;
             color: #1f2937 !important;
+        }
+
+        #subAPISelect {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: #fff;
+            color: #1f2937;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #subAPISelect:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        #subAPISelect:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        html.dark-mode #subAPISelect {
+            background-color: #1f2937;
+            color: #f3f4f6;
+            border-color: #4b5563;
+        }
+
+        html.dark-mode #subAPISelect:hover {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+        }
+
+        html.dark-mode #subAPISelect:focus {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
         }
 
         /* 节点链接输入包装器 */
@@ -2688,7 +2792,6 @@
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 20px;
-            margin-bottom: 20px;
             align-items: flex-end;
         }
 
@@ -2699,7 +2802,11 @@
 
         @media (max-width: 768px) {
             .optimize-params-row {
-                grid-template-columns: 1fr;
+                display: block;
+            }
+
+            .optimize-params-row .form-group {
+                margin-bottom: 15px;
             }
         }
 
@@ -2882,6 +2989,90 @@
             margin-top: 8px;
         }
 
+        @media (max-width: 768px) {
+            .optimize-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .save-tip {
+                order: -1;
+                margin-right: 0;
+                margin-bottom: 10px;
+                width: 100%;
+                min-height: 0;
+            }
+
+            .btn-start-optimize {
+                order: 1;
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .btn-save-override {
+                order: 2;
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .btn-save-append {
+                order: 3;
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .optimize-buttons .btn-secondary {
+                order: 4;
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .optimize-buttons {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto auto auto;
+                gap: 10px;
+                margin-top: 15px;
+            }
+
+            .save-tip {
+                grid-column: 1 / -1;
+                order: unset;
+            }
+
+            .btn-start-optimize {
+                grid-column: 1;
+                grid-row: 2;
+                order: unset;
+            }
+
+            .btn-save-override {
+                grid-column: 2;
+                grid-row: 2;
+                order: unset;
+            }
+
+            .btn-save-append {
+                grid-column: 1;
+                grid-row: 3;
+                order: unset;
+            }
+
+            .optimize-buttons .btn-secondary {
+                grid-column: 2;
+                grid-row: 3;
+                order: unset;
+            }
+        }
+
         .btn-start-optimize {
             background: linear-gradient(135deg, #10b981 0, #059669 100%);
             color: #fff;
@@ -2907,6 +3098,7 @@
             align-items: center;
             min-height: 32px;
             margin-right: auto;
+            line-height: 1.2;
         }
 
         .btn-save-override {
@@ -3539,118 +3731,193 @@
         }
 
         /* IP 详情弹窗样式 */
+        /* Tech-savvy IP Detail Modal */
         .ip-detail-modal {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.4);
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 2000000001;
             padding: 20px;
-            overflow-y: auto;
+            animation: fadeIn 0.3s ease;
         }
 
         .ip-detail-content {
-            background: white;
-            border-radius: 12px;
-            max-width: 700px;
+            background: rgba(255, 255, 255, 0.9);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            max-width: 900px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
-            padding: 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 0;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.2);
             position: relative;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
         }
 
         html.dark-mode .ip-detail-content {
-            background: #2c2c2c;
-            color: #e0e0e0;
+            background: rgba(30, 30, 35, 0.85);
+            border-color: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+            color: #f0f0f0;
         }
 
-        .ip-detail-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 28px;
-            cursor: pointer;
-            color: #666;
-            transition: color 0.2s;
-        }
-
-        .ip-detail-close:hover {
-            color: #f44336;
-        }
-
-        html.dark-mode .ip-detail-close {
-            color: #b0b0b0;
-        }
-
-        .ip-detail-title {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: #333;
+        /* Modal Header */
+        .ip-detail-header {
+            padding: 24px 30px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            background: inherit;
+            z-index: 10;
         }
 
-        html.dark-mode .ip-detail-title {
-            color: #ffffff;
+        html.dark-mode .ip-detail-header {
+            border-bottom-color: rgba(255, 255, 255, 0.05);
         }
 
-        .ip-detail-source {
-            font-size: 12px;
-            color: #999;
-            font-weight: 400;
+        .ip-detail-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin: 0;
+            background: linear-gradient(135deg, #f6821f 0%, #faab41 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
         }
 
-        html.dark-mode .ip-detail-source {
-            color: #999;
+        .ip-detail-source-tag {
+            font-size: 10px;
+            font-weight: 500;
+            color: #6b7280;
+            -webkit-text-fill-color: #6b7280;
+            opacity: 0.6;
+            font-family: 'Inter', sans-serif;
+            text-transform: none;
+            letter-spacing: normal;
         }
 
-        .ip-detail-section {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #e0e0e0;
-            padding-bottom: 20px;
+        html.dark-mode .ip-detail-source-tag {
+            color: #9ca3af;
+            -webkit-text-fill-color: #9ca3af;
         }
 
-        html.dark-mode .ip-detail-section {
-            border-bottom-color: #444;
+        .ip-detail-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.05);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #666;
+            transition: all 0.2s;
         }
 
-        .ip-detail-section:last-child {
-            border-bottom: none;
+        html.dark-mode .ip-detail-close {
+            background: rgba(255, 255, 255, 0.05);
+            color: #aaa;
+        }
+
+        .ip-detail-close:hover {
+            background: #ef4444;
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        /* Modal Body Layout */
+        .ip-detail-body {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Map Section */
+        .ip-detail-map-container {
+            height: 350px;
+            width: 100%;
+            position: relative;
+            background: #f0f0f0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        html.dark-mode .ip-detail-map-container {
+            background: #1a1a1a;
+            border-bottom-color: rgba(255, 255, 255, 0.05);
+        }
+
+        #ip-detail-map {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Data Grid Section */
+        .ip-detail-grid-container {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .ip-detail-left-col,
+        .ip-detail-right-col {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .ip-detail-card {
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        html.dark-mode .ip-detail-card {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .ip-detail-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
         }
 
         .ip-detail-section-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #333;
-        }
-
-        html.dark-mode .ip-detail-section-title {
-            color: #e0e0e0;
+            font-size: 14px;
+            font-weight: 700;
+            color: #f6821f;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .ip-detail-item {
@@ -3658,67 +3925,212 @@
             justify-content: space-between;
             align-items: center;
             padding: 8px 0;
-            font-size: 14px;
+            font-size: 13px;
+        }
+
+        .ip-detail-item:not(:last-child) {
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.05);
+        }
+
+        html.dark-mode .ip-detail-item:not(:last-child) {
+            border-bottom-color: rgba(255, 255, 255, 0.05);
         }
 
         .ip-detail-label {
-            color: #666;
+            color: #6b7280;
             font-weight: 500;
-            min-width: 120px;
         }
 
         html.dark-mode .ip-detail-label {
-            color: #b0b0b0;
+            color: #9ca3af;
         }
 
         .ip-detail-value {
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            color: #1f2937;
             text-align: right;
-            color: #333;
-            flex: 1;
-            word-break: break-all;
         }
 
         html.dark-mode .ip-detail-value {
-            color: #e0e0e0;
+            color: #e5e7eb;
         }
 
+        /* Status & Badges - More vibrant for risk assessment */
         .ip-detail-badge {
-            display: inline-block;
             padding: 4px 12px;
-            border-radius: 16px;
-            font-size: 12px;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        .badge-success {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .badge-info {
-            background-color: #e3f2fd;
-            color: #1565c0;
-        }
-
-        .badge-warning {
-            background-color: #fff3e0;
-            color: #e65100;
-        }
-
-        .badge-danger {
-            background-color: #ffebee;
-            color: #c62828;
-        }
-
-        .badge-high {
-            background-color: #ffe0b2;
-            color: #e65100;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .badge-critical {
-            background-color: #ffcdd2;
-            color: #b71c1c;
+            background: #ef4444;
+            color: white;
+        }
+
+        .badge-high {
+            background: #f97316;
+            color: white;
+        }
+
+        .badge-elevated {
+            background: #eab308;
+            color: white;
+        }
+
+        .badge-low {
+            background: #ebfef2;
+            color: #059669;
+            border: 1px solid #10b981;
+        }
+
+        .badge-verylow {
+            background: #10b981;
+            color: white;
+        }
+
+        .badge-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .badge-info {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .badge-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .badge-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .success-text {
+            color: #10b981;
+            font-weight: 700;
+        }
+
+        .warning-text {
+            color: #f59e0b;
+            font-weight: 700;
+        }
+
+        .danger-text {
+            color: #ef4444;
+            font-weight: 700;
+        }
+
+        /* Map Popup Styling */
+        .leaflet-popup-content-wrapper {
+            background: rgba(255, 255, 255, 0.8) !important;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-radius: 12px !important;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #374151 !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        html.dark-mode .leaflet-popup-content-wrapper {
+            background: rgba(31, 41, 55, 0.8) !important;
+            border-color: rgba(255, 255, 255, 0.1);
+            color: #e5e7eb !important;
+        }
+
+        .leaflet-popup-tip {
+            background: rgba(255, 255, 255, 0.8) !important;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        html.dark-mode .leaflet-popup-tip {
+            background: rgba(31, 41, 55, 0.8) !important;
+        }
+
+        .ip-detail-popup-content {
+            font-family: 'Inter', sans-serif;
+            padding: 2px;
+            max-width: 180px;
+        }
+
+        .ip-detail-popup-city {
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #f6821f;
+        }
+
+        .ip-detail-popup-item {
+            font-size: 11px;
+            margin-bottom: 2px;
+            display: flex;
+            gap: 4px;
+            line-height: 1.2;
+        }
+
+        .ip-detail-popup-label {
+            opacity: 0.7;
+            min-width: 45px;
+        }
+
+        .ip-detail-popup-value {
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .ip-detail-security-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 24px;
+        }
+
+        /* Mobile Adaptation */
+        @media (max-width: 640px) {
+            .ip-detail-content {
+                max-height: 95vh;
+                border-radius: 20px 20px 0 0;
+                margin-top: auto;
+            }
+
+            .ip-detail-grid-container {
+                padding: 20px;
+                grid-template-columns: 1fr;
+            }
+
+            .ip-detail-security-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0 16px;
+            }
+
+            .ip-detail-map-container {
+                height: 250px;
+            }
+
+            .ip-detail-popup-content {
+                max-width: 150px;
+            }
+
+            .ip-detail-popup-city {
+                font-size: 13px;
+            }
+
+            .ip-detail-popup-item {
+                font-size: 10px;
+            }
+
+            .ip-detail-header {
+                padding: 16px 20px;
+            }
         }
 
         .badge-elevated {
@@ -5015,7 +5427,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                 <div class="checkbox-group">
                                     <input type="checkbox" id="skipVerify" title="Xray v26.1.31+版本 不支持跳过TLS证书验证功能"
                                         onchange="handleSkipVerifyChange(event)">
-                                    <label for="skipVerify" class="checkbox-label" title="Xray v26.1.31+版本 不支持跳过TLS证书验证功能">跳过证书验证</label>
+                                    <label for="skipVerify" class="checkbox-label"
+                                        title="Xray v26.1.31+版本 不支持跳过TLS证书验证功能">跳过证书验证</label>
                                 </div>
                             </div>
                         </div>
@@ -5079,7 +5492,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <!-- 模块3.5: ECH 设置(实验性质) -->
             <div class="module collapsed advanced-module" id="echModule" style="display: none;">
                 <div class="module-title" onclick="toggleModule(this)">
-                    🔐 Encrypted Client Hello（实验性质）
+                    🔐 Encrypted Client Hello
                     <svg class="collapse-icon" viewBox="0 0 24 24">
                         <path d="M7 10l5 5 5-5z" />
                     </svg>
@@ -5103,12 +5516,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <div class="input-wrapper" style="flex-direction: column; align-items: stretch;">
                             <select id="echDNSSelect" title="ECH DNS服务" style="display: none;"
                                 onchange="onEchDNSSelectChange()">
-                                <option value="udp://45.90.28.0:5353" data-region="international">
-                                    udp://45.90.28.0:5353（NextDNS）小白推荐选这个！！！</option>
                                 <option value="udp://208.67.220.220:443" data-region="international">
-                                    udp://208.67.220.220:443（OpenDNS）</option>
+                                    udp://208.67.220.220:443（OpenDNS）小白推荐选这个！！！</option>
                                 <option value="udp://149.112.112.112:9953" data-region="international">
                                     udp://149.112.112.112:9953（Quad9）</option>
+                                <option value="udp://45.90.28.0:5353" data-region="international">
+                                    udp://45.90.28.0:5353（NextDNS）</option>
                                 <option value="udp://188.166.206.224:5003" data-region="international">
                                     udp://188.166.206.224:5003（Tiarap）</option>
                                 <option value="https://doh.applied-privacy.net/query" data-region="international">
@@ -5141,8 +5554,18 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <div class="input-wrapper" style="flex-direction: column; align-items: stretch;">
                             <select id="echSNISelect" title="ECH 解析域名" style="display: none;"
                                 onchange="onEchSNISelectChange()">
-                                <option value="__AUTO__">默认使用节点HOST伪装域名</option>
-                                <option value="cloudflare-ech.com">cloudflare-ech.com 小白推荐选这个！！！</option>
+                                <option value="__AUTO__">自动获取（使用节点伪装域名）</option>
+                                <option value="cloudflare-ech.com">cloudflare-ech.com（Cloudflare ECH测试域名）小白推荐选这个！！！
+                                </option>
+                                <option value="crypto.cloudflare.com">crypto.cloudflare.com（Cloudflare密码学服务）</option>
+                                <option value="icook.hk">icook.hk（愛料理 HK）</option>
+                                <option value="cm.edu.kg">cm.edu.kg（CM科技大学）</option>
+                                <option value="godotengine.org">godotengine.org（Godot 开源游戏引擎）</option>
+                                <option value="www.britannica.com">www.britannica.com（大英百科全书）</option>
+                                <option value="www.prometheus.io">www.prometheus.io（Prometheus 监控系统）</option>
+                                <option value="www.kyocera.com">www.kyocera.com（Kyocera 集团官网）</option>
+                                <option value="celestia.org">celestia.org（Celestia 模块化区块链）</option>
+                                <option value="lido.fi">lido.fi（Lido 流动质押）</option>
                                 <option value="custom">自定义</option>
                             </select>
                             <input type="text" id="echSNICustomInput" title="自定义ECH 解析域名"
@@ -5461,11 +5884,17 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 <h2 class="skipverify-title">关于 跳过证书验证</h2>
             </div>
             <div class="skipverify-content" style="text-align: left;">
-                <p class="skipverify-text"><strong>重要更新：</strong><strong>Xray-core v26.1.31</strong> 版本起已停止支持"<strong>跳过证书验证</strong>"功能，这是<strong>核心安全策略调整</strong>（<a href="https://github.com/XTLS/Xray-core/commit/2c92339f95fe9aa493b6ae51d3b07017a44c4014" target="_blank" rel="noopener" class="skipverify-link">详情</a>）。</p>
-                <p class="skipverify-text"><strong>影响范围：</strong>如果你的客户端（如 <strong>v2rayN、v2rayNG、Happ</strong> 等）使用的是 <strong>Xray 内核</strong>，则该功能将导致<strong class="skipverify-title">内核运行失败</strong>。</p>
+                <p class="skipverify-text"><strong>重要更新：</strong><strong>Xray-core v26.1.31</strong>
+                    版本起已停止支持"<strong>跳过证书验证</strong>"功能，这是<strong>核心安全策略调整</strong>（<a
+                        href="https://github.com/XTLS/Xray-core/commit/2c92339f95fe9aa493b6ae51d3b07017a44c4014"
+                        target="_blank" rel="noopener" class="skipverify-link">详情</a>）。</p>
+                <p class="skipverify-text"><strong>影响范围：</strong>如果你的客户端（如 <strong>v2rayN、v2rayNG、Happ</strong> 等）使用的是
+                    <strong>Xray 内核</strong>，则开启该功能将导致 <strong class="skipverify-title">内核运行失败</strong>。
+                </p>
             </div>
             <div class="skipverify-buttons">
-                <button type="button" class="btn btn-confirm-skip-verify btn-confirm-reset" onclick="confirmSkipVerify()">确认开启</button>
+                <button type="button" class="btn btn-confirm-skip-verify btn-confirm-reset"
+                    onclick="confirmSkipVerify()">确认开启</button>
                 <button type="button" class="btn btn-secondary" onclick="closeSkipVerifyWarning()">关闭</button>
             </div>
         </div>
@@ -5528,7 +5957,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <button type="button" class="modal-close" onclick="closeSubAPIModal()">×</button>
             <h2 class="subapi-modal-title">⚙️ 订阅转换后端</h2>
             <div class="form-group subapi-form-group">
-                <label>订阅转换后端地址</label>
+                <label>选择后端服务</label>
+                <select id="subAPISelect" onchange="handleSubAPISelectChange()">
+                    <option value="">-- 加载中，请稍候 --</option>
+                </select>
+            </div>
+            <div class="form-group subapi-form-group" id="customSubAPIInputGroup" style="display: none;">
+                <label>自定义后端地址</label>
                 <input type="text" id="testSubAPIInput" placeholder="输入订阅转换后端地址">
             </div>
             <div id="subAPIStatus" class="subapi-status"></div>
@@ -5758,7 +6193,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
     <!-- 代理验证模态框 -->
     <div class="modal-overlay" id="proxyVerificationModal">
-        <div class="modal" id="proxyVerificationContent" style="min-width: 450px;" onclick="event.stopPropagation()">
+        <div class="modal" id="proxyVerificationContent" onclick="event.stopPropagation()">
             <button type="button" class="modal-close" onclick="closeProxyVerificationModal()">×</button>
 
             <h2 id="proxyVerificationTitle"
@@ -5775,20 +6210,22 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 style="margin-bottom: 20px; padding: 12px; border-radius: 8px; display: none; font-size: 14px;">
             </div>
 
-            <div class="api-buttons" style="display: flex; gap: 10px; justify-content: space-between;">
-                <button type="button" class="btn btn-verify-api" onclick="verifyProxyAvailability()" style="flex: 1;">
+            <div class="api-buttons" style="gap: 10px; justify-content: space-between;">
+                <button type="button" class="btn btn-verify-api" onclick="verifyProxyAvailability()">
                     可用性验证
                 </button>
                 <button type="button" class="btn btn-append-api" id="proxyConfirmBtn" onclick="confirmProxyAddress()"
-                    style="flex: 1; opacity: 0.5;" disabled>
+                    style="opacity: 0.5;" disabled>
                     确定
                 </button>
-                <button type="button" class="btn btn-close-api" onclick="closeProxyVerificationModal()"
-                    style="flex: 1;">
+                <button type="button" class="btn btn-close-api" onclick="closeProxyVerificationModal()">
                     取消
                 </button>
             </div>
+            <!-- 用于移动端布局的占位符 -->
+            <div class="btn-append-results" style="display: none;"></div>
         </div>
+    </div>
     </div>
 
     <!-- ProxyIP 帮助科普弹窗 -->
@@ -6890,7 +7327,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('nodePATH').value = currentConfig.PATH || '';
             document.getElementById('protocol').value = currentConfig.协议类型 || 'vless';
             //document.getElementById('transport').value = currentConfig.传输协议 || 'ws';
-            
+
             // 检查跳过证书验证字段是否存在
             const skipVerifyGroup = document.getElementById('skipVerifyGroup');
             if (currentConfig['跳过证书验证'] !== undefined) {
@@ -8842,11 +9279,41 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     statusEl.style.padding = '16px';
                     statusEl.style.borderRadius = '8px';
                     statusEl.innerHTML = `
-                        <div style="line-height: 1.8;">
-                            <div style="margin-bottom: 8px;">✅ <strong>代理有效</strong></div>
-                            <div style="margin-bottom: 8px;">📍 落地IP: <span style="cursor: pointer; text-decoration: underline; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;" onclick="showIpDetailForProxy('${ip}')" title="点击查看IP详情">${ip} <span style="font-size: 16px;">🔍</span></span></div>
-                            <div style="margin-bottom: 8px;">🌍 落地国家: <strong>${loc}</strong></div>
-                            <div>⏱️ 响应时间: <strong>${responseTimeDisplay}</strong></div>
+                        <div style="display: flex; flex-direction: column; gap: 10px; font-family: 'Inter', system-ui, sans-serif;">
+                            <!-- 顶部标题栏 -->
+                            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 8px; margin-bottom: 2px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div style="width: 8px; height: 8px; background: #fff; border-radius: 50%; box-shadow: 0 0 8px #fff; animation: pulse 2s infinite;"></div>
+                                    <span style="font-weight: 700; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; color: #fff;">Connection Secured</span>
+                                </div>
+                                <span style="font-size: 10px; opacity: 0.7; font-family: 'Fira Code', monospace; color: #fff;">STATUS: 200 OK</span>
+                            </div>
+                            
+                            <!-- 信息网格 -->
+                            <div style="display: grid; grid-template-columns: 0.4fr 1.2fr; gap: 8px;">
+                                <div style="background: rgba(0,0,0,0.15); padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); min-width: 0; max-width: 100px;">
+                                    <div style="font-size: 10px; opacity: 0.7; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; color: #fff;">区域 (Region)</div>
+                                    <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff;" title="${loc}">${loc}</div>
+                                </div>
+                                <div style="background: rgba(0,0,0,0.15); padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); min-width: 0;">
+                                    <div style="font-size: 10px; opacity: 0.7; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; color: #fff; text-align: center;">落地地址 (IP)</div>
+                                    <div style="font-family: 'Fira Code', monospace; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; color: #fff; text-decoration: underline; min-width: 0;" onclick="showIpDetailForProxy('${ip}', this)">
+                                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${ip}">${ip}</span>
+                                        <span style="font-size: 12px; opacity: 0.8; flex-shrink: 0;">🔍</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 底部延迟栏 -->
+                            <div style="background: rgba(255,255,255,0.1); padding: 8px 12px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid #fff;">
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <span style="font-size: 14px;">⏱️</span>
+                                    <span style="font-size: 11px; font-weight: 500; opacity: 0.9; color: #fff;">响应延迟</span>
+                                </div>
+                                <div style="font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 800; color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.3);">
+                                    ${responseTimeDisplay}
+                                </div>
+                            </div>
                         </div>
                     `;
 
@@ -8923,15 +9390,56 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             statusEl.style.color = '#fff';
         }
 
-        function showIpDetailForProxy(ip) {
-            // 异步获取 IP 详情
-            fetch(`https://api.ipapi.is/?ip=${ip}`)
-                .then(response => response.json())
-                .then(data => showIpDetailModal(data))
-                .catch(error => {
-                    showToast('❌ 查询IP详细信息失败');
-                    console.error('IP查询错误:', error);
-                });
+        async function fetchAndShowIpDetail(ip, targetElement = null) {
+            // 将 * 替换为 0 (兼容掩码IP)
+            const cleanIp = ip.toString().replace(/\*/g, '0');
+
+            if (targetElement) {
+                // 移除可能存在的加载动画
+                const existingSpinner = targetElement.querySelector('.loading-spinner');
+                if (existingSpinner) {
+                    return; // 正在加载中,不重复请求
+                }
+
+                // 添加加载动画
+                const spinner = document.createElement('span');
+                spinner.className = 'loading-spinner';
+                targetElement.appendChild(spinner);
+            }
+
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
+
+                let response;
+                try {
+                    response = await fetch(`https://api.ipapi.is/?ip=${cleanIp}`, { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    if (!response.ok) throw new Error('Primary API failed');
+                } catch (e) {
+                    console.warn('Primary IP API failed, trying fallback...', e);
+                    // 备用 API
+                    response = await fetch(`https://api.ipapi.cmliussss.net/?ip=${cleanIp}`);
+                    if (!response.ok) throw new Error('Fallback API failed');
+                }
+
+                const data = await response.json();
+
+                // 显示详情弹窗
+                showIpDetailModal(data);
+            } catch (error) {
+                showToast('❌ 查询IP详细信息失败');
+                console.error('IP查询错误:', error);
+            } finally {
+                if (targetElement) {
+                    const spinner = targetElement.querySelector('.loading-spinner');
+                    if (spinner) spinner.remove();
+                }
+            }
+        }
+
+        function showIpDetailForProxy(ip, element = null) {
+            fetchAndShowIpDetail(ip, element);
         }
 
         function confirmProxyAddress() {
@@ -8945,12 +9453,14 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
         function openSubAPIModal() {
             const currentValue = document.getElementById('subAPI').value;
-            document.getElementById('testSubAPIInput').value = currentValue;
             document.getElementById('subAPIStatus').style.display = 'none';
             document.getElementById('subAPIStatus').textContent = '';
             document.getElementById('subAPIConfirmBtn').disabled = true;
             document.getElementById('subAPIConfirmBtn').style.opacity = '0.5';
             document.getElementById('subAPIModal').classList.add('show');
+
+            // 加载 SUBAPI 列表
+            loadSubAPIList(currentValue);
         }
 
         function closeSubAPIModal(event) {
@@ -8958,6 +9468,85 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('subAPIModal').classList.remove('show');
             document.getElementById('testSubAPIInput').value = '';
             document.getElementById('subAPIStatus').style.display = 'none';
+        }
+
+        async function loadSubAPIList(currentValue) {
+            const selectEl = document.getElementById('subAPISelect');
+            selectEl.innerHTML = '<option value="">-- 加载中，请稍候 --</option>';
+
+            try {
+                const jsonText = await fetchWithAutoMirror(
+                    'https://raw.githubusercontent.com/cmliu/cmliu/main/SUBAPI.json',
+                    'SUBAPI 列表'
+                );
+
+                const apiList = JSON.parse(jsonText);
+
+                // 清空选项
+                selectEl.innerHTML = '';
+
+                // 添加 API 列表的选项
+                apiList.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.value;
+                    option.textContent = item.label;
+                    selectEl.appendChild(option);
+                });
+
+                // 添加自定义选项
+                const customOption = document.createElement('option');
+                customOption.value = 'custom';
+                customOption.textContent = '🔧 自定义';
+                selectEl.appendChild(customOption);
+
+                // 尝试匹配当前值（大小写不敏感比较）
+                if (currentValue && currentValue.trim()) {
+                    const currentValueLower = currentValue.trim().toLowerCase();
+                    const matchedOption = Array.from(selectEl.options).find(
+                        opt => opt.value.toLowerCase() === currentValueLower
+                    );
+                    if (matchedOption) {
+                        // 找到了匹配的选项
+                        selectEl.value = matchedOption.value;
+                        document.getElementById('customSubAPIInputGroup').style.display = 'none';
+                        document.getElementById('testSubAPIInput').value = '';
+                    } else {
+                        // 没有找到匹配的选项，说明是自定义的
+                        selectEl.value = 'custom';
+                        document.getElementById('testSubAPIInput').value = currentValue.trim();
+                        document.getElementById('customSubAPIInputGroup').style.display = 'block';
+                    }
+                } else {
+                    // 没有当前值，显示第一个选项
+                    selectEl.value = '';
+                    document.getElementById('customSubAPIInputGroup').style.display = 'none';
+                    document.getElementById('testSubAPIInput').value = '';
+                }
+            } catch (error) {
+                console.error('加载 SUBAPI 列表失败:', error);
+                selectEl.innerHTML = '<option value="custom">🔧 自定义</option>';
+                selectEl.value = 'custom';
+                document.getElementById('customSubAPIInputGroup').style.display = 'block';
+                if (currentValue && currentValue.trim()) {
+                    document.getElementById('testSubAPIInput').value = currentValue.trim();
+                } else {
+                    document.getElementById('testSubAPIInput').value = '';
+                }
+            }
+        }
+
+        function handleSubAPISelectChange() {
+            const selectEl = document.getElementById('subAPISelect');
+            const customInputGroup = document.getElementById('customSubAPIInputGroup');
+            const testInput = document.getElementById('testSubAPIInput');
+
+            if (selectEl.value === 'custom') {
+                customInputGroup.style.display = 'block';
+                testInput.focus();
+            } else {
+                customInputGroup.style.display = 'none';
+                testInput.value = selectEl.value;
+            }
         }
 
         // ProxyIP 帮助模态框函数
@@ -9174,7 +9763,18 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         }
 
         async function testSubAPI() {
-            const input = document.getElementById('testSubAPIInput').value.trim();
+            let input;
+            const selectEl = document.getElementById('subAPISelect');
+
+            if (selectEl.value === 'custom' || !selectEl.value) {
+                // 如果是自定义或未选择，从输入框获取
+                input = document.getElementById('testSubAPIInput').value.trim();
+            } else {
+                // 否则从下拉框获取
+                input = selectEl.value.trim();
+                document.getElementById('testSubAPIInput').value = input;
+            }
+
             if (!input) {
                 showStatus('请输入地址', 'error');
                 return;
@@ -11348,51 +11948,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 // 添加可点击样式
                 element.classList.add('clickable');
 
-                element.addEventListener('click', async function () {
+                element.addEventListener('click', function () {
                     let ipText = this.textContent.trim();
-
-                    // 移除可能存在的加载动画
-                    const existingSpinner = this.querySelector('.loading-spinner');
-                    if (existingSpinner) {
-                        return; // 正在加载中,不重复请求
-                    }
 
                     // 跳过显示"加载中..."或"未知"的元素
                     if (ipText === '加载中...' || ipText === '未知') {
                         return;
                     }
 
-                    // 将 * 替换为 0
-                    const cleanIp = ipText.replace(/\*/g, '0');
-
-                    // 添加加载动画
-                    const spinner = document.createElement('span');
-                    spinner.className = 'loading-spinner';
-                    this.appendChild(spinner);
-
-                    try {
-                        const response = await fetch(`https://api.ipapi.is/?ip=${cleanIp}`);
-
-                        if (!response.ok) {
-                            throw new Error('查询失败');
-                        }
-
-                        const data = await response.json();
-
-                        // 移除加载动画
-                        spinner.remove();
-
-                        // 显示详情弹窗
-                        showIpDetailModal(data);
-
-                    } catch (error) {
-                        // 移除加载动画
-                        spinner.remove();
-
-                        // 显示错误提示
-                        showToast('❌ 查询IP详细信息失败');
-                        console.error('IP查询错误:', error);
-                    }
+                    fetchAndShowIpDetail(ipText, this);
                 });
             });
         }
@@ -11549,15 +12113,17 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
         // 显示 IP 详情弹窗
         function showIpDetailModal(data) {
+            // 首先移除旧的弹窗（如果存在）
+            const existingModal = document.querySelector('.ip-detail-modal');
+            if (existingModal) existingModal.remove();
+
             // 创建弹窗
             const modal = document.createElement('div');
             modal.className = 'ip-detail-modal';
 
-            // 计算综合滥用评分（风控值）
+            // 计算评分和等级
             const companyScore = data.company?.abuser_score;
             const asnScore = data.asn?.abuser_score;
-
-            // 收集安全风险标志
             const securityFlags = {
                 is_crawler: data.is_crawler,
                 is_proxy: data.is_proxy,
@@ -11568,321 +12134,196 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             };
 
             const combinedScore = calculateAbuseScore(companyScore, asnScore, securityFlags);
+            let riskControlHTML = '未知';
+            let riskLevel = '未知';
+            let badgeClass = 'badge-info';
 
-            let riskControlHTML = '';
             if (combinedScore !== null) {
                 const scorePercentage = combinedScore * 100;
-                const badgeClass = getAbuseScoreBadgeClass(scorePercentage);
+                badgeClass = getAbuseScoreBadgeClass(scorePercentage);
                 const formattedScore = formatAbuseScorePercentage(combinedScore);
 
-                // 根据百分比确定风险等级文本
-                let riskLevel = '';
                 if (scorePercentage >= 100) riskLevel = '极度危险';
                 else if (scorePercentage >= 20) riskLevel = '高风险';
                 else if (scorePercentage >= 5) riskLevel = '轻微风险';
                 else if (scorePercentage >= 0.25) riskLevel = '纯净';
                 else riskLevel = '极度纯净';
 
-                riskControlHTML = `
-                    <span class="ip-detail-badge ${badgeClass}">${formattedScore} ${riskLevel}</span>
-                `;
-            } else {
-                riskControlHTML = '未知';
+                riskControlHTML = `<span class="ip-detail-badge ${badgeClass}">${formattedScore} ${riskLevel}</span>`;
             }
 
-            // 构建详情内容
-            let detailHTML = `
+            // 构建 HTML 结构
+            modal.innerHTML = `
                 <div class="ip-detail-content">
-                    <button class="ip-detail-close" onclick="this.closest('.ip-detail-modal').remove()">×</button>
-                    <div class="ip-detail-title">
-                        🔍 IP 详细信息
-                        <span class="ip-detail-source">数据来源: ipapi.is</span>
+                    <div class="ip-detail-header">
+                        <h2 class="ip-detail-title">
+                            🔍 IP 详细信息
+                            <span class="ip-detail-source-tag">数据来源: ipapi.is</span>
+                        </h2>
+                        <button class="ip-detail-close" title="关闭">&times;</button>
                     </div>
-            `;
+                    <div class="ip-detail-body">
+                        <!-- 地图展示区 -->
+                        <div class="ip-detail-map-container">
+                            <div id="ip-detail-map"></div>
+                        </div>
 
-            // 基本信息
-            detailHTML += `
-                <div class="ip-detail-section">
-                    <div class="ip-detail-section-title">📍 基本信息</div>
-                    <div class="ip-detail-item">
-                        <span class="ip-detail-label">IP 地址</span>
-                        <span class="ip-detail-value">${data.ip || '未知'}</span>
-                    </div>
-                    <div class="ip-detail-item">
-                        <span class="ip-detail-label">区域互联网注册机构</span>
-                        <span class="ip-detail-value">${data.rir || '未知'}</span>
-                    </div>
-                    <div class="ip-detail-item">
-                        <span class="ip-detail-label">运营商 / ASN 类型</span>
-                        <span class="ip-detail-value">${formatIpType(data.company?.type)} / ${formatIpType(data.asn?.type)}</span>
-                    </div>
-                    <div class="ip-detail-item">
-                        <span class="ip-detail-label">
-                            综合滥用评分
-                            <span class="score-help-icon" onclick="event.stopPropagation(); toggleScoreTooltip(this);" title="点击查看算法说明">?</span>
-                            <span class="score-tooltip">
-                                <div class="tooltip-header">
-                                    <span class="tooltip-title">📊 综合滥用评分算法</span>
-                                </div>
-                                <div class="tooltip-section">
-                                    <p class="tooltip-section-title">评分公式</p>
-                                    <div class="formula-item">
-                                        <span class="formula-name">基础分</span>
-                                        <span class="formula-equation"><code>(运营商分 + ASN分) / 2 * 5</code></span>
+                        <!-- 数据网格区 -->
+                        <div class="ip-detail-grid-container">
+                            <!-- 左栏: 基本信息 (整合地理、运营商信息) -->
+                            <div class="ip-detail-left-col">
+                                <div class="ip-detail-card" style="height: 100%;">
+                                    <div class="ip-detail-section-title">📍 基本信息</div>
+                                    <div class="ip-detail-item">
+                                        <span class="ip-detail-label">IP 地址</span>
+                                        <span class="ip-detail-value">${data.ip || '未知'}</span>
                                     </div>
-                                    <div class="formula-item">
-                                        <span class="formula-name">风险附加</span>
-                                        <span class="formula-equation"><code>风险项数量 * 15%</code></span>
+                                    <div class="ip-detail-item">
+                                        <span class="ip-detail-label">地理位置</span>
+                                        <span class="ip-detail-value">${data.location?.country || ''}${data.location?.country_code ? `[${data.location.country_code}]` : ''} ${[data.location?.state, data.location?.city].filter(Boolean).join('/') || '未知'}</span>
+                                    </div>
+                                    <div class="ip-detail-item">
+                                        <span class="ip-detail-label">时区</span>
+                                        <span class="ip-detail-value">${data.location?.timezone || '未知'}</span>
+                                    </div>
+                                    <div class="ip-detail-item">
+                                        <span class="ip-detail-label">运营商 / ASN 类型</span>
+                                        <span class="ip-detail-value">${formatIpType(data.company?.type)} / ${formatIpType(data.asn?.type)}</span>
+                                    </div>
+                                    <div class="ip-detail-item">
+                                        <span class="ip-detail-label">风控评级</span>
+                                        <span class="ip-detail-value">${riskControlHTML}</span>
                                     </div>
                                 </div>
-                                <div class="tooltip-section">
-                                    <p class="tooltip-section-title">安全风险项</p>
-                                    <ul class="risk-list">
-                                        <li>爬虫 (Crawler) - 15%</li>
-                                        <li>代理 (Proxy) - 15%</li>
-                                        <li>VPN - 15%</li>
-                                        <li>Tor 网络 - 15%</li>
-                                        <li>滥用IP (Abuser) - 15%</li>
-                                        <li>虚假IP (Bogon) - <span style="color: #ef4444; font-weight: bold;">100% (蜜罐)</span></li>
-                                    </ul>
+                            </div>
+
+                            <!-- 右栏: 安全检测 -->
+                            <div class="ip-detail-right-col">
+                                <!-- 安全检测内容保持不变 -->
+                                <div class="ip-detail-card" style="height: 100%;">
+                                    <div class="ip-detail-section-title">🛡️ 安全检测</div>
+                                    <div class="ip-detail-security-grid">
+                                        <div class="ip-detail-item">
+                                            <span class="ip-detail-label">数据中心</span>
+                                            <span class="ip-detail-value">${data.is_datacenter ? '<span class="warning-text">🏢 是</span>' : '✅ 否'}</span>
+                                        </div>
+                                        <div class="ip-detail-item">
+                                            <span class="ip-detail-label">代理服务器</span>
+                                            <span class="ip-detail-value">${data.is_proxy ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
+                                        </div>
+                                        <div class="ip-detail-item">
+                                            <span class="ip-detail-label">VPN 连线</span>
+                                            <span class="ip-detail-value">${data.is_vpn ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
+                                        </div>
+                                        <div class="ip-detail-item">
+                                            <span class="ip-detail-label">Tor 网络</span>
+                                            <span class="ip-detail-value">${data.is_tor ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
+                                        </div>
+                                        <div class="ip-detail-item">
+                                            <span class="ip-detail-label">网络爬虫</span>
+                                            <span class="ip-detail-value">${data.is_crawler ? '<span class="danger-text">🤖 是</span>' : '✅ 否'}</span>
+                                        </div>
+                                        <div class="ip-detail-item">
+                                            <span class="ip-detail-label">移动网络</span>
+                                            <span class="ip-detail-value">${data.is_mobile ? '<span class="success-text">📱 是</span>' : '否'}</span>
+                                        </div>
+                                        <div class="ip-detail-item">
+                                            <span class="ip-detail-label">卫星网络</span>
+                                            <span class="ip-detail-value">${data.is_satellite ? '<span class="success-text">🛰️ 是</span>' : '否'}</span>
+                                        </div>
+                                        <div class="ip-detail-item">
+                                            <span class="ip-detail-label">已知滥用</span>
+                                            <span class="ip-detail-value">${data.is_abuser ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
+                                        </div>
+                                        <div class="ip-detail-item">
+                                            <span class="ip-detail-label">虚假 IP</span>
+                                            <span class="ip-detail-value">${data.is_bogon ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </span>
-                        </span>
-                        <span class="ip-detail-value">${riskControlHTML}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
-
-            // 安全检测
-            detailHTML += `
-                <div class="ip-detail-section">
-                    <div class="ip-detail-section-title">🛡️ 安全检测</div>
-                    <div class="ip-detail-item">
-                        <span class="ip-detail-label">移动网络</span>
-                        <span class="ip-detail-value">${data.is_mobile ? '<span class="success-text">📱 是</span>' : '否'}</span>
-                    </div>
-                    <div class="ip-detail-item">
-                        <span class="ip-detail-label">数据中心</span>
-                        <span class="ip-detail-value">${data.is_datacenter ? '<span class="warning-text">🏢 是</span>' : '否'}</span>
-                    </div>
-                    <div class="ip-detail-item">
-                        <span class="ip-detail-label">卫星网络</span>
-                        <span class="ip-detail-value">${data.is_satellite ? '<span class="success-text">🛰️ 是</span>' : '否'}</span>
-                    </div>
-                    <div class="ip-detail-item">
-                        <span class="ip-detail-label">爬虫</span>
-                        <span class="ip-detail-value">${data.is_crawler ? '<span class="danger-text">🤖 是</span>' : '✅ 否'}</span>
-                    </div>
-                    <div class="ip-detail-item">
-                        <span class="ip-detail-label">代理服务器</span>
-                        <span class="ip-detail-value">${data.is_proxy ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
-                    </div>
-                    <div class="ip-detail-item">
-                        <span class="ip-detail-label">VPN</span>
-                        <span class="ip-detail-value">${data.is_vpn ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
-                    </div>
-                    <div class="ip-detail-item">
-                        <span class="ip-detail-label">Tor 网络</span>
-                        <span class="ip-detail-value">${data.is_tor ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
-                    </div>
-                    <div class="ip-detail-item">
-                        <span class="ip-detail-label">滥用 IP</span>
-                        <span class="ip-detail-value">${data.is_abuser ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
-                    </div>
-                    <div class="ip-detail-item">
-                        <span class="ip-detail-label">虚假 IP</span>
-                        <span class="ip-detail-value">${data.is_bogon ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
-                    </div>
-                </div>
-            `;
-
-            // 位置信息
-            if (data.location) {
-                detailHTML += `
-                    <div class="ip-detail-section">
-                        <div class="ip-detail-section-title">🌍 位置信息</div>
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">国家</span>
-                            <span class="ip-detail-value">${data.location.country || '未知'} (${data.location.country_code || '-'})</span>
-                        </div>
-                        ${data.location.state ? `
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">省份/州</span>
-                            <span class="ip-detail-value">${data.location.state}</span>
-                        </div>
-                        ` : ''}
-                        ${data.location.city ? `
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">城市</span>
-                            <span class="ip-detail-value">${data.location.city}</span>
-                        </div>
-                        ` : ''}
-                        ${data.location.zip ? `
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">邮编</span>
-                            <span class="ip-detail-value">${data.location.zip}</span>
-                        </div>
-                        ` : ''}
-                        ${data.location.latitude && data.location.longitude ? `
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">坐标</span>
-                            <span class="ip-detail-value">${data.location.latitude}, ${data.location.longitude}</span>
-                        </div>
-                        ` : ''}
-                        ${data.location.timezone ? `
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">时区</span>
-                            <span class="ip-detail-value">${data.location.timezone}</span>
-                        </div>
-                        ` : ''}
-                        ${data.location.local_time ? `
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">当地时间</span>
-                            <span class="ip-detail-value">${data.location.local_time}</span>
-                        </div>
-                        ` : ''}
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">欧盟成员</span>
-                            <span class="ip-detail-value">${boolToEmoji(data.location.is_eu_member, '🇪🇺 是', '否')}</span>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // 运营商信息
-            if (data.company) {
-                const abuserScore = data.company.abuser_score || '未知';
-                const badgeClass = getThreatBadgeClass(abuserScore);
-
-                detailHTML += `
-                    <div class="ip-detail-section">
-                        <div class="ip-detail-section-title">🏢 运营商信息</div>
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">运营商名称</span>
-                            <span class="ip-detail-value">${data.company.name || '未知'}</span>
-                        </div>
-                        ${data.company.domain ? `
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">域名</span>
-                            <span class="ip-detail-value">${data.company.domain}</span>
-                        </div>
-                        ` : ''}
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">类型</span>
-                            <span class="ip-detail-value">${data.company.type || '未知'}</span>
-                        </div>
-                        ${data.company.network ? `
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">网络范围</span>
-                            <span class="ip-detail-value">${data.company.network}</span>
-                        </div>
-                        ` : ''}
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">滥用评分</span>
-                            <span class="ip-detail-value"><span class="ip-detail-badge ${badgeClass}">${abuserScore}</span></span>
-                        </div>
-                    </div>
-                `;
-            }
-
-            // ASN 信息
-            if (data.asn) {
-                const asnAbuserScore = data.asn.abuser_score || '未知';
-                const asnBadgeClass = getThreatBadgeClass(asnAbuserScore);
-
-                detailHTML += `
-                    <div class="ip-detail-section">
-                        <div class="ip-detail-section-title">🔢 ASN 信息</div>
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">ASN 编号</span>
-                            <span class="ip-detail-value">AS${data.asn.asn || '未知'}</span>
-                        </div>
-                        ${data.asn.org ? `
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">组织</span>
-                            <span class="ip-detail-value">${data.asn.org}</span>
-                        </div>
-                        ` : ''}
-                        ${data.asn.route ? `
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">路由</span>
-                            <span class="ip-detail-value">${data.asn.route}</span>
-                        </div>
-                        ` : ''}
-                        ${data.asn.type ? `
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">类型</span>
-                            <span class="ip-detail-value">${data.asn.type}</span>
-                        </div>
-                        ` : ''}
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">滥用评分</span>
-                            <span class="ip-detail-value"><span class="ip-detail-badge ${asnBadgeClass}">${asnAbuserScore}</span></span>
-                        </div>
-                        ${data.asn.country ? `
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">国家代码</span>
-                            <span class="ip-detail-value">${data.asn.country.toUpperCase()}</span>
-                        </div>
-                        ` : ''}
-                    </div>
-                `;
-            }
-
-            // 滥用联系信息
-            if (data.abuse) {
-                detailHTML += `
-                    <div class="ip-detail-section">
-                        <div class="ip-detail-section-title">📧 滥用举报联系方式</div>
-                        ${data.abuse.name ? `
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">联系人</span>
-                            <span class="ip-detail-value">${data.abuse.name}</span>
-                        </div>
-                        ` : ''}
-                        ${data.abuse.email ? `
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">邮箱</span>
-                            <span class="ip-detail-value">${data.abuse.email}</span>
-                        </div>
-                        ` : ''}
-                        ${data.abuse.phone ? `
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">电话</span>
-                            <span class="ip-detail-value">${data.abuse.phone}</span>
-                        </div>
-                        ` : ''}
-                        ${data.abuse.address ? `
-                        <div class="ip-detail-item">
-                            <span class="ip-detail-label">地址</span>
-                            <span class="ip-detail-value">${data.abuse.address}</span>
-                        </div>
-                        ` : ''}
-                    </div>
-                `;
-            }
-
-            detailHTML += `</div>`;
-
-            modal.innerHTML = detailHTML;
-
-            // 点击背景关闭弹窗
-            modal.addEventListener('click', function (e) {
-                if (e.target === modal) {
-                    modal.remove();
-                }
-            });
-
-            // ESC 键关闭弹窗和气泡
-            const closeHandler = function (e) {
-                if (e.key === 'Escape') {
-                    modal.remove();
-                    document.removeEventListener('keydown', closeHandler);
-                }
-            };
-            document.addEventListener('keydown', closeHandler);
 
             document.body.appendChild(modal);
+
+            // 初始化弹窗内的地图
+            if (data.location?.latitude && data.location?.longitude) {
+                const lat = parseFloat(data.location.latitude);
+                const lng = parseFloat(data.location.longitude);
+
+                // 给 DOM 渲染留出一点点时间
+                setTimeout(() => {
+                    const detailMap = L.map('ip-detail-map', {
+                        zoomControl: false,
+                        attributionControl: false
+                    }).setView([lat + 5, lng], 4); // 向上偏移中心点，使标记在视野内偏下
+
+                    L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
+                        subdomains: '1234',
+                        minZoom: 1,
+                        maxZoom: 18
+                    }).addTo(detailMap);
+
+                    const popupHTML = `
+                        <div class="ip-detail-popup-content">
+                            <div class="ip-detail-popup-city">
+                                ${data.location?.city || data.location?.country || '位置'}
+                            </div>
+                            <div class="ip-detail-popup-item">
+                                <span class="ip-detail-popup-label">国家:</span>
+                                <span class="ip-detail-popup-value">${data.location?.country || '未知'} (${data.location?.country_code || '-'})</span>
+                            </div>
+                            <div class="ip-detail-popup-item">
+                                <span class="ip-detail-popup-label">落地IP:</span>
+                                <span class="ip-detail-popup-value">${data.ip}</span>
+                            </div>
+                            <div class="ip-detail-popup-item">
+                                <span class="ip-detail-popup-label">ASN:</span>
+                                <span class="ip-detail-popup-value">${data.asn?.asn || ''}</span>
+                            </div>
+                            <div class="ip-detail-popup-item">
+                                <span class="ip-detail-popup-label">运营商:</span>
+                                <span class="ip-detail-popup-value">${data.company?.name || '未知'}</span>
+                            </div>
+                        </div>
+                    `;
+
+                    L.marker([lat, lng])
+                        .addTo(detailMap)
+                        .bindPopup(popupHTML, { closeButton: false, offset: [0, -32] })
+                        .openPopup();
+
+                    // 偶尔地图布局会出问题，强制刷新
+                    detailMap.invalidateSize();
+                }, 400);
+            } else {
+                // 如果没有经纬度，隐藏地图容器
+                const mapContainer = modal.querySelector('.ip-detail-map-container');
+                if (mapContainer) mapContainer.style.display = 'none';
+            }
+
+            // 关闭逻辑
+            const closeBtn = modal.querySelector('.ip-detail-close');
+            const closeFunc = () => {
+                modal.style.opacity = '0';
+                modal.querySelector('.ip-detail-content').style.transform = 'translateY(20px)';
+                setTimeout(() => modal.remove(), 300);
+            };
+
+            closeBtn.onclick = closeFunc;
+            modal.onclick = (e) => { if (e.target === modal) closeFunc(); };
+
+            // ESC 键关闭
+            const escHandler = (e) => {
+                if (e.key === 'Escape') {
+                    closeFunc();
+                    document.removeEventListener('keydown', escHandler);
+                }
+            };
+            document.addEventListener('keydown', escHandler);
         }
 
         // ==================== 获取更多 PROXYIP 相关函数 ====================
@@ -12750,7 +13191,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             closeHostsMismatchModal({ target: { id: 'hostsMismatchModal' } });
 
             // 显示确认提示
-            showToast('24小时内不会再提示', 'info');
+            showToast('🎉 24小时内不会再提示', 'info');
         }
 
     </script>

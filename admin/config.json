@@ -34,7 +34,7 @@
     "TOKEN": "f7e5edd21765267b329ee3f8eca1a557"
   },
   "订阅转换配置": {
-    "SUBAPI": "https://SUBAPI.cmliussss.net",
+    "SUBAPI": "https://subapi.cmliussss.net",
     "SUBCONFIG": "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/refs/heads/master/Clash/config/ACL4SSR_Online_Mini_MultiMode.ini",
     "SUBEMOJI": false
   },

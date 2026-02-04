@@ -5957,7 +5957,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <button type="button" class="modal-close" onclick="closeSubAPIModal()">×</button>
             <h2 class="subapi-modal-title">⚙️ 订阅转换后端</h2>
             <div class="form-group subapi-form-group">
-                <label>选择后端服务</label>
+                <label>订阅转换后端</label>
                 <select id="subAPISelect" onchange="handleSubAPISelectChange()">
                     <option value="">-- 加载中，请稍候 --</option>
                 </select>
@@ -9489,7 +9489,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 apiList.forEach(item => {
                     const option = document.createElement('option');
                     option.value = item.value;
-                    option.textContent = item.label;
+                    option.textContent = `${item.label}[${item.value}]`;
                     selectEl.appendChild(option);
                 });
 
@@ -12180,7 +12180,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                     </div>
                                     <div class="ip-detail-item">
                                         <span class="ip-detail-label">地理位置</span>
-                                        <span class="ip-detail-value">${data.location?.country || ''}${data.location?.country_code ? `[${data.location.country_code}]` : ''} ${[data.location?.state, data.location?.city].filter(Boolean).join('/') || '未知'}</span>
+                                        <span class="ip-detail-value">${data.location?.country_code ? `[${data.location.country_code}]` : ''}${data.location?.country || ''} ${[data.location?.state, data.location?.city].filter(Boolean).join('/') || '未知'}</span>
                                     </div>
                                     <div class="ip-detail-item">
                                         <span class="ip-detail-label">时区</span>
@@ -12274,7 +12274,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             </div>
                             <div class="ip-detail-popup-item">
                                 <span class="ip-detail-popup-label">国家:</span>
-                                <span class="ip-detail-popup-value">${data.location?.country || '未知'} (${data.location?.country_code || '-'})</span>
+                                <span class="ip-detail-popup-value">[${data.location?.country_code || '-'}]${data.location?.country || '未知'}</span>
                             </div>
                             <div class="ip-detail-popup-item">
                                 <span class="ip-detail-popup-label">落地IP:</span>
@@ -12783,12 +12783,24 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const isDark = document.documentElement.classList.contains('dark-mode');
             const textColor = isDark ? '#ffffff' : '#333333';
             const popupContent = `
-                <div style="font-family: sans-serif; min-width: 150px; color: ${textColor};">
-                    <div style="font-weight: bold; font-size: 14px; margin-bottom: 5px;">${proxyData.country_emoji} ${proxyData.city || '未知城市'}</div>
-                    <div style="font-size: 12px; margin-bottom: 3px;">国家: ${proxyData.country_cn} (${proxyData.country})</div>
-                    <div style="font-size: 11px; opacity: 0.9;">落地IP: ${proxyData.clientIp}</div>
-                    <div style="font-size: 11px; opacity: 0.8;">运营商: ${proxyData.asOrganization}</div>
-                    <div style="font-size: 11px; opacity: 0.7;">经纬度: ${lat.toFixed(4)}, ${lng.toFixed(4)}</div>
+                <div class="ip-detail-popup-city">
+                    ${proxyData.city || proxyData.country || '位置'}
+                </div>
+                <div class="ip-detail-popup-item">
+                    <span class="ip-detail-popup-label">国家:</span>
+                    <span class="ip-detail-popup-value">[${proxyData.country || '-'}]${proxyData.country_en || ''}</span>
+                </div>
+                <div class="ip-detail-popup-item">
+                    <span class="ip-detail-popup-label">落地IP:</span>
+                    <span class="ip-detail-popup-value">${proxyData.clientIp}</span>
+                </div>
+                <div class="ip-detail-popup-item">
+                    <span class="ip-detail-popup-label">ASN:</span>
+                    <span class="ip-detail-popup-value">${proxyData.asn || ''}</span>
+                </div>
+                <div class="ip-detail-popup-item">
+                    <span class="ip-detail-popup-label">运营商:</span>
+                    <span class="ip-detail-popup-value">${proxyData.asOrganization || '未知'}</span>
                 </div>
             `;
             proxyMaps[type].marker.bindPopup(popupContent, { offset: L.point(0, -32) }).openPopup();

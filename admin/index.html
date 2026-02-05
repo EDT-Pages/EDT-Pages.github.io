@@ -8220,6 +8220,23 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('socks5Section').style.display = mode === 'socks5' ? 'block' : 'none';
             document.getElementById('httpSection').style.display = mode === 'http' ? 'block' : 'none';
 
+            // 根据选择的模式填充对应的数据
+            if (mode === 'auto') {
+                document.getElementById('proxyIP').value = currentConfig.反代?.PROXYIP || '';
+                document.getElementById('autoProxy').checked = (currentConfig.反代?.PROXYIP === 'auto');
+                if (currentConfig.反代?.PROXYIP === 'auto') {
+                    document.getElementById('proxyIP').disabled = true;
+                } else {
+                    document.getElementById('proxyIP').disabled = false;
+                }
+            } else if (mode === 'socks5') {
+                document.getElementById('socks5Addr').value = currentConfig.反代?.SOCKS5?.账号 || '';
+                document.getElementById('globalSocks5').checked = currentConfig.反代?.SOCKS5?.全局 || false;
+            } else if (mode === 'http') {
+                document.getElementById('httpAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
+                document.getElementById('globalHTTP').checked = currentConfig.反代?.SOCKS5?.全局 || false;
+            }
+
             // 更新 "获取更多PROXYIP" 按钮的显示状态
             const getMoreBtn = document.getElementById('getMoreProxyIPBtn');
             if (getMoreBtn) {

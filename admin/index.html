@@ -541,7 +541,7 @@
             color: #fff;
             font-size: 14px;
             font-weight: 500;
-            z-index: 10000000;
+            z-index: 9000000000;
             transform: translateX(100%);
             transition: transform 0.3s ease, opacity 0.3s ease;
             opacity: 0;
@@ -2238,6 +2238,25 @@
             box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
         }
 
+        .btn-path-template-config {
+            background: linear-gradient(135deg, #8b5cf6 0, #6d28d9 100%);
+            color: #fff !important;
+            padding: 10px 16px;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-path-template-config:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-path-template-config:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(139, 92, 246, 0.4);
+        }
+
         .btn-fofa {
             background: linear-gradient(135deg, #439aff 0, #05f2f2 100%);
             color: #fff !important;
@@ -2303,6 +2322,63 @@
             width: 90vw;
             max-height: 100vh;
             overflow-y: auto;
+        }
+
+        .path-template-modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .path-template-hint {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 16px;
+            padding: 8px 12px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        .path-template-hint code {
+            background-color: #d1d5db;
+            padding: 2px 4px;
+            border-radius: 2px;
+            font-family: 'Fira Code', monospace;
+            color: #1f2937;
+            font-weight: 500;
+        }
+
+        .path-template-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .path-template-input-wrapper {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .path-template-input-wrapper input {
+            flex: 1;
+        }
+
+        html.dark-mode .path-template-hint {
+            background-color: #1e293b;
+            color: #e2e8f0;
+        }
+
+        html.dark-mode .path-template-hint code {
+            background-color: #475569;
+            color: #f1f5f9;
+            font-weight: 500;
+        }
+
+        html.dark-mode .path-template-modal-title {
+            color: var(--text-primary);
         }
 
         .api-docs {
@@ -2408,6 +2484,16 @@
         html.dark-mode .btn-proxyip-help:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 25px rgba(16, 185, 129, 0.5);
+        }
+
+        html.dark-mode .btn-path-template-config {
+            background: linear-gradient(135deg, #8b5cf6 0, #6d28d9 100%);
+            color: #fff !important;
+        }
+
+        html.dark-mode .btn-path-template-config:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
         }
 
         html.dark-mode .btn-ech-help {
@@ -5669,6 +5755,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             title="了解 ProxyIP 的相关信息">
                             💡 为什么需要反代？PROXYIP又是什么？
                         </button>
+                        <button type="button" class="btn btn-ech-help btn-path-template-config" id="pathTemplateConfigBtn"
+                            onclick="showPathTemplateConfigModal()" style="display: none; padding: 10px 16px;"
+                            title="配置路径模板">
+                            ⚙️ 路径模板配置
+                        </button>
                         <button type="button" class="btn btn-search-proxy" id="getMoreProxyIPBtn"
                             onclick="showGetMoreProxyIPModal()" style="display: none; padding: 10px 16px;"
                             title="使用网络测绘引擎寻找可用的PROXYIP">
@@ -6619,6 +6710,84 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         </div>
     </div>
 
+    <!-- 路径模板配置弹窗 -->
+    <div class="modal-overlay" id="pathTemplateConfigModal" onclick="closePathTemplateConfigModal(event)">
+        <div class="modal" onclick="event.stopPropagation()" style="max-width: 500px;">
+            <button type="button" class="modal-close" onclick="closePathTemplateConfigModal()">×</button>
+            <h2 class="path-template-modal-title">⚙️ 路径模板配置</h2>
+            
+            <div class="path-template-hint" style="font-size: 12px; color: #374151; margin-bottom: 16px; padding: 8px 12px; background-color: #f3f4f6; border-radius: 4px;">
+                💡 路径模板中必须存在路径占位符 <code style="background-color: #d1d5db; padding: 2px 4px; border-radius: 2px; color: #1f2937; font-weight: 500;">{{IP:PORT}}</code> 才能适配路径反代
+            </div>
+
+            <div class="form-group">
+                <label for="presetTemplateSelect">预设模板</label>
+                <select id="presetTemplateSelect" onchange="onPresetTemplateChange()">
+                    <option value="custom">自定义</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="proxyIPTemplateInput">PROXYIP路径</label>
+                <div class="path-template-input-wrapper">
+                    <input type="text" id="proxyIPTemplateInput" placeholder="proxyip={{IP:PORT}}" 
+                        oninput="onPathTemplateInput(); preventInvalidChars(this); ensurePathPrefix(this)"
+                        onkeypress="preventInvalidCharsOnKeypress(event); preventPathPrefixDeletion(event, this)"
+                        onkeydown="preventPathPrefixDeletion(event, this)">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="socks5StandardTemplateInput">SOCKS5标准路径</label>
+                <div class="path-template-input-wrapper">
+                    <input type="text" id="socks5StandardTemplateInput" placeholder="socks5={{IP:PORT}}"
+                        oninput="onPathTemplateInput(); preventInvalidChars(this); ensurePathPrefix(this)"
+                        onkeypress="preventInvalidCharsOnKeypress(event); preventPathPrefixDeletion(event, this)"
+                        onkeydown="preventPathPrefixDeletion(event, this)">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="socks5GlobalTemplateInput">SOCKS5全局路径</label>
+                <div class="path-template-input-wrapper">
+                    <input type="text" id="socks5GlobalTemplateInput" placeholder="socks5://{{IP:PORT}}"
+                        oninput="onPathTemplateInput(); preventInvalidChars(this); ensurePathPrefix(this)"
+                        onkeypress="preventInvalidCharsOnKeypress(event); preventPathPrefixDeletion(event, this)"
+                        onkeydown="preventPathPrefixDeletion(event, this)">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="httpStandardTemplateInput">HTTP标准路径</label>
+                <div class="path-template-input-wrapper">
+                    <input type="text" id="httpStandardTemplateInput" placeholder="http={{IP:PORT}}"
+                        oninput="onPathTemplateInput(); preventInvalidChars(this); ensurePathPrefix(this)"
+                        onkeypress="preventInvalidCharsOnKeypress(event); preventPathPrefixDeletion(event, this)"
+                        onkeydown="preventPathPrefixDeletion(event, this)">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="httpGlobalTemplateInput">HTTP全局路径</label>
+                <div class="path-template-input-wrapper">
+                    <input type="text" id="httpGlobalTemplateInput" placeholder="http://{{IP:PORT}}"
+                        oninput="onPathTemplateInput(); preventInvalidChars(this); ensurePathPrefix(this)"
+                        onkeypress="preventInvalidCharsOnKeypress(event); preventPathPrefixDeletion(event, this)"
+                        onkeydown="preventPathPrefixDeletion(event, this)">
+                </div>
+            </div>
+
+            <div class="path-template-buttons" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px;">
+                <button type="button" class="btn btn-primary" id="pathTemplateSaveBtn" onclick="savePathTemplateConfig()" disabled>
+                    保存并应用
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="closePathTemplateConfigModal()">
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- 获取更多 PROXYIP 弹窗 -->
     <div class="modal-overlay" id="getMoreProxyIPModal">
         <div class="modal" onclick="event.stopPropagation()" style="max-width: 420px; text-align: left;">
@@ -7434,6 +7603,14 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 document.getElementById('globalHTTP').checked = currentConfig.反代?.SOCKS5?.全局 || false;
             }
             updateProxyMode();
+
+            // 检查路径模板字段是否存在
+            const pathTemplateConfigBtn = document.getElementById('pathTemplateConfigBtn');
+            if (currentConfig.反代?.路径模板 !== undefined) {
+                pathTemplateConfigBtn.style.display = '';
+            } else {
+                pathTemplateConfigBtn.style.display = 'none';
+            }
 
             // 订阅转换配置
             document.getElementById('subAPI').value = currentConfig.订阅转换配置?.SUBAPI || '';
@@ -9560,6 +9737,158 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('proxyIPHelpModal').classList.remove('show');
         }
 
+        // 路径模板配置函数
+        let pathTemplatePresets = [];
+        let pathTemplateOriginal = {};
+
+        async function showPathTemplateConfigModal() {
+            const modal = document.getElementById('pathTemplateConfigModal');
+            modal.classList.add('show');
+
+            // 初始化原始值
+            pathTemplateOriginal = JSON.parse(JSON.stringify(currentConfig.反代?.路径模板 || {}));
+            
+            // 加载预设模板
+            await loadPathTemplatePresets();
+            
+            // 填充当前配置到文本框（添加"/"前缀用于显示）
+            document.getElementById('proxyIPTemplateInput').value = '/' + (currentConfig.反代?.路径模板?.PROXYIP || '');
+            document.getElementById('socks5StandardTemplateInput').value = '/' + (currentConfig.反代?.路径模板?.SOCKS5?.标准 || '');
+            document.getElementById('socks5GlobalTemplateInput').value = '/' + (currentConfig.反代?.路径模板?.SOCKS5?.全局 || '');
+            document.getElementById('httpStandardTemplateInput').value = '/' + (currentConfig.反代?.路径模板?.HTTP?.标准 || '');
+            document.getElementById('httpGlobalTemplateInput').value = '/' + (currentConfig.反代?.路径模板?.HTTP?.全局 || '');
+            
+            // 禁用保存按钮
+            document.getElementById('pathTemplateSaveBtn').disabled = true;
+            
+            // 重置预设模板选择
+            document.getElementById('presetTemplateSelect').value = 'custom';
+        }
+
+        function closePathTemplateConfigModal(event) {
+            if (event && event.target.id !== 'pathTemplateConfigModal') return;
+            document.getElementById('pathTemplateConfigModal').classList.remove('show');
+        }
+
+        async function loadPathTemplatePresets() {
+            try {
+                const url = 'https://raw.githubusercontent.com/cmliu/cmliu/main/json/edt-path-config.json';
+                const text = await fetchWithAutoMirror(url, '路径模板配置');
+                pathTemplatePresets = JSON.parse(text);
+                
+                const select = document.getElementById('presetTemplateSelect');
+                // 清除除"自定义"外的所有选项
+                while (select.options.length > 1) {
+                    select.remove(1);
+                }
+                
+                // 添加预设模板选项
+                pathTemplatePresets.forEach(preset => {
+                    const option = document.createElement('option');
+                    option.value = preset.项目名;
+                    option.textContent = preset.项目名;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('加载路径模板预设失败:', error);
+                showToast('加载预设模板失败: ' + error.message, 'error');
+            }
+        }
+
+        function onPresetTemplateChange() {
+            const select = document.getElementById('presetTemplateSelect');
+            const selectedValue = select.value;
+            
+            if (selectedValue === 'custom') {
+                return;
+            }
+            
+            // 找到对应的预设
+            const preset = pathTemplatePresets.find(p => p.项目名 === selectedValue);
+            if (!preset) return;
+            
+            // 显示提示消息
+            showToast(preset.提示消息, 'info');
+            
+            // 填充模板（添加"/"前缀用于显示）
+            document.getElementById('proxyIPTemplateInput').value = '/' + (preset.路径模板.PROXYIP || '');
+            document.getElementById('socks5StandardTemplateInput').value = '/' + (preset.路径模板.SOCKS5.标准 || '');
+            document.getElementById('socks5GlobalTemplateInput').value = '/' + (preset.路径模板.SOCKS5.全局 || '');
+            document.getElementById('httpStandardTemplateInput').value = '/' + (preset.路径模板.HTTP.标准 || '');
+            document.getElementById('httpGlobalTemplateInput').value = '/' + (preset.路径模板.HTTP.全局 || '');
+            
+            // 亮起保存按钮
+            document.getElementById('pathTemplateSaveBtn').disabled = false;
+        }
+
+        function onPathTemplateInput() {
+            // 获取所有模板输入框的值（去掉开头的"/"用于对比）
+            const proxyIP = document.getElementById('proxyIPTemplateInput').value.replace(/^\//, '');
+            const socks5Standard = document.getElementById('socks5StandardTemplateInput').value.replace(/^\//, '');
+            const socks5Global = document.getElementById('socks5GlobalTemplateInput').value.replace(/^\//, '');
+            const httpStandard = document.getElementById('httpStandardTemplateInput').value.replace(/^\//, '');
+            const httpGlobal = document.getElementById('httpGlobalTemplateInput').value.replace(/^\//, '');
+            
+            // 检查是否有任何内容发生变化
+            const hasChanged = 
+                proxyIP !== (pathTemplateOriginal.PROXYIP || '') ||
+                socks5Standard !== (pathTemplateOriginal.SOCKS5?.标准 || '') ||
+                socks5Global !== (pathTemplateOriginal.SOCKS5?.全局 || '') ||
+                httpStandard !== (pathTemplateOriginal.HTTP?.标准 || '') ||
+                httpGlobal !== (pathTemplateOriginal.HTTP?.全局 || '');
+            
+            // 控制保存按钮的启用/禁用
+            document.getElementById('pathTemplateSaveBtn').disabled = !hasChanged;
+        }
+
+        async function savePathTemplateConfig() {
+            // 获取输入框的值并去掉开头的"/"
+            const proxyIP = document.getElementById('proxyIPTemplateInput').value.replace(/^\//, '');
+            const socks5Standard = document.getElementById('socks5StandardTemplateInput').value.replace(/^\//, '');
+            const socks5Global = document.getElementById('socks5GlobalTemplateInput').value.replace(/^\//, '');
+            const httpStandard = document.getElementById('httpStandardTemplateInput').value.replace(/^\//, '');
+            const httpGlobal = document.getElementById('httpGlobalTemplateInput').value.replace(/^\//, '');
+            
+            try {
+                // 验证是否包含{{IP:PORT}}占位符
+                const templates = [proxyIP, socks5Standard, socks5Global, httpStandard, httpGlobal].filter(t => t);
+                if (templates.length > 0) {
+                    const hasPlaceholder = templates.every(t => t.includes('{{IP:PORT}}'));
+                    if (!hasPlaceholder) {
+                        showToast('所有非空模板必须包含 {{IP:PORT}} 占位符', 'error');
+                        return;
+                    }
+                }
+                
+                // 更新currentConfig中的路径模板数据（不包含开头的"/"）
+                if (!currentConfig.反代) {
+                    currentConfig.反代 = {};
+                }
+                if (!currentConfig.反代.路径模板) {
+                    currentConfig.反代.路径模板 = {};
+                }
+                
+                currentConfig.反代.路径模板.PROXYIP = proxyIP;
+                currentConfig.反代.路径模板.SOCKS5 = {
+                    标准: socks5Standard,
+                    全局: socks5Global
+                };
+                currentConfig.反代.路径模板.HTTP = {
+                    标准: httpStandard,
+                    全局: httpGlobal
+                };
+                
+                // 通过saveConfigToServer保存到服务器
+                await saveConfigToServer('pathTemplate');
+                
+                // 关闭模态框
+                closePathTemplateConfigModal();
+            } catch (error) {
+                console.error('保存路径模板失败:', error);
+                showToast('保存路径模板失败: ' + error.message, 'error');
+            }
+        }
+
         function toggleProxyIPHelpMode() {
             const checkbox = document.getElementById('proxyIPSimpleMode');
             const simpleDiv = document.getElementById('proxyIPHelpSimple');
@@ -9573,6 +9902,46 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 // 显示详细模式
                 simpleDiv.style.display = 'none';
                 detailDiv.style.display = 'block';
+            }
+        }
+
+        // 防止输入"?"和"#"字符
+        function preventInvalidChars(input) {
+            input.value = input.value.replace(/[?#]/g, '');
+        }
+
+        function preventInvalidCharsOnKeypress(event) {
+            if (event.key === '?' || event.key === '#') {
+                event.preventDefault();
+            }
+        }
+
+        // 确保路径以"/"开头（虽然显示中已有前缀，但防止意外删除）
+        function ensurePathPrefix(input) {
+            // 不在这里强制，而是在防删除函数中处理
+        }
+
+        // 防止删除路径前缀"/"
+        function preventPathPrefixDeletion(event, input) {
+            // 只在删除键时处理
+            if (event.key === 'Backspace' || event.key === 'Delete') {
+                // 如果选中的文本包括位置0（开头），阻止删除
+                if (input.selectionStart === 0 && event.key === 'Backspace') {
+                    event.preventDefault();
+                    return false;
+                }
+                // 如果光标在开头且按下Delete，防止删除
+                if (input.selectionStart === 0 && event.key === 'Delete') {
+                    event.preventDefault();
+                    return false;
+                }
+            }
+            // 防止在开头输入任何内容
+            if (input.selectionStart === 0 && event.key && event.key.length === 1 && event.key !== '/') {
+                // 将光标移动到位置1
+                setTimeout(() => {
+                    input.setSelectionRange(1, 1);
+                }, 0);
             }
         }
 

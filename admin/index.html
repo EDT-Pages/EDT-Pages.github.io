@@ -2360,10 +2360,21 @@
             display: flex;
             align-items: center;
             position: relative;
+            border-radius: 6px;
         }
 
         .path-template-input-wrapper input {
             flex: 1;
+        }
+
+        .path-template-input-wrapper.invalid input {
+            background-color: #fca5a5 !important;
+            color: #7f1d1d;
+        }
+
+        html.dark-mode .path-template-input-wrapper.invalid input {
+            background-color: #dc2626 !important;
+            color: #fecaca;
         }
 
         html.dark-mode .path-template-hint {
@@ -9758,6 +9769,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('httpStandardTemplateInput').value = '/' + (currentConfig.反代?.路径模板?.HTTP?.标准 || '');
             document.getElementById('httpGlobalTemplateInput').value = '/' + (currentConfig.反代?.路径模板?.HTTP?.全局 || '');
             
+            // 初始化验证状态
+            validatePathTemplate('proxyIPTemplateInput', currentConfig.反代?.路径模板?.PROXYIP || '');
+            validatePathTemplate('socks5StandardTemplateInput', currentConfig.反代?.路径模板?.SOCKS5?.标准 || '');
+            validatePathTemplate('socks5GlobalTemplateInput', currentConfig.反代?.路径模板?.SOCKS5?.全局 || '');
+            validatePathTemplate('httpStandardTemplateInput', currentConfig.反代?.路径模板?.HTTP?.标准 || '');
+            validatePathTemplate('httpGlobalTemplateInput', currentConfig.反代?.路径模板?.HTTP?.全局 || '');
+            
             // 禁用保存按钮
             document.getElementById('pathTemplateSaveBtn').disabled = true;
             
@@ -9817,6 +9835,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('httpStandardTemplateInput').value = '/' + (preset.路径模板.HTTP.标准 || '');
             document.getElementById('httpGlobalTemplateInput').value = '/' + (preset.路径模板.HTTP.全局 || '');
             
+            // 验证填充后的内容
+            validatePathTemplate('proxyIPTemplateInput', preset.路径模板.PROXYIP || '');
+            validatePathTemplate('socks5StandardTemplateInput', preset.路径模板.SOCKS5.标准 || '');
+            validatePathTemplate('socks5GlobalTemplateInput', preset.路径模板.SOCKS5.全局 || '');
+            validatePathTemplate('httpStandardTemplateInput', preset.路径模板.HTTP.标准 || '');
+            validatePathTemplate('httpGlobalTemplateInput', preset.路径模板.HTTP.全局 || '');
+            
             // 亮起保存按钮
             document.getElementById('pathTemplateSaveBtn').disabled = false;
         }
@@ -9829,6 +9854,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const httpStandard = document.getElementById('httpStandardTemplateInput').value.replace(/^\//, '');
             const httpGlobal = document.getElementById('httpGlobalTemplateInput').value.replace(/^\//, '');
             
+            // 验证每个输入框是否包含占位符，没有则标记为invalid
+            validatePathTemplate('proxyIPTemplateInput', proxyIP);
+            validatePathTemplate('socks5StandardTemplateInput', socks5Standard);
+            validatePathTemplate('socks5GlobalTemplateInput', socks5Global);
+            validatePathTemplate('httpStandardTemplateInput', httpStandard);
+            validatePathTemplate('httpGlobalTemplateInput', httpGlobal);
+            
             // 检查是否有任何内容发生变化
             const hasChanged = 
                 proxyIP !== (pathTemplateOriginal.PROXYIP || '') ||
@@ -9839,6 +9871,18 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             
             // 控制保存按钮的启用/禁用
             document.getElementById('pathTemplateSaveBtn').disabled = !hasChanged;
+        }
+
+        function validatePathTemplate(inputId, value) {
+            const inputElement = document.getElementById(inputId);
+            const wrapper = inputElement.closest('.path-template-input-wrapper');
+            
+            // 如果内容不为空且不包含占位符，添加invalid样式
+            if (value.trim() && !value.includes('{{IP:PORT}}')) {
+                wrapper.classList.add('invalid');
+            } else {
+                wrapper.classList.remove('invalid');
+            }
         }
 
         async function savePathTemplateConfig() {
@@ -9855,8 +9899,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 if (templates.length > 0) {
                     const hasPlaceholder = templates.every(t => t.includes('{{IP:PORT}}'));
                     if (!hasPlaceholder) {
-                        showToast('所有非空模板必须包含 {{IP:PORT}} 占位符', 'error');
-                        return;
+                        showToast('当前路径模板存在缺失 {{IP:PORT}} 占位符', 'error');
+                        //return;
                     }
                 }
                 

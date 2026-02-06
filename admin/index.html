@@ -9633,16 +9633,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
 
                 let response;
-                try {
-                    response = await fetch(`https://api.ipapi.is/?ip=${cleanIp}`, { signal: controller.signal });
-                    clearTimeout(timeoutId);
-                    if (!response.ok) throw new Error('Primary API failed');
-                } catch (e) {
-                    console.warn('Primary IP API failed, trying fallback...', e);
-                    // 备用 API
-                    response = await fetch(`https://api.ipapi.cmliussss.net/?ip=${cleanIp}`);
-                    if (!response.ok) throw new Error('Fallback API failed');
-                }
+                response = await fetch(`https://api.ipapi.is/?ip=${cleanIp}`, { signal: controller.signal });
+                clearTimeout(timeoutId);
+                if (!response.ok) throw new Error('API request failed');
 
                 const data = await response.json();
 

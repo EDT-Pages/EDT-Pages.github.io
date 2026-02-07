@@ -4570,6 +4570,31 @@
             flex-shrink: 0;
         }
 
+        .title-text {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .title-main {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .title-subtitle {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary, #666);
+            opacity: 0.7;
+        }
+
+        html.dark-mode .title-subtitle {
+            color: #999;
+        }
+
         .status-loading {
             background: #fbbf24;
             animation: pulse-loading 1.5s ease-in-out infinite;
@@ -5237,7 +5262,10 @@
                         <div class="network-card">
                             <div class="network-card-title">
                                 <span class="status-indicator" id="status-ipip"></span>
-                                国内测试
+                                <div class="title-text">
+                                    <div class="title-main">国内测试</div>
+                                    <div class="title-subtitle">speedtest.cn</div>
+                                </div>
                             </div>
                             <div class="network-info-content">
                                 <span id="ipip-ip" class="ip-text">-</span>
@@ -5250,13 +5278,16 @@
 
                         <div class="network-card">
                             <div class="network-card-title">
-                                <span class="status-indicator" id="status-edgeone"></span>
-                                国外测试
+                                <span class="status-indicator" id="status-overseas"></span>
+                                <div class="title-text">
+                                    <div class="title-main">国外测试</div>
+                                    <div class="title-subtitle">漏网之鱼</div>
+                                </div>
                             </div>
                             <div class="network-info-content">
-                                <span id="edgeone-ip" class="ip-text">-</span>
+                                <span id="overseas-ip" class="ip-text">-</span>
                                 <div class="location-text">
-                                    <span id="edgeone-country" class="country-text">-</span>
+                                    <span id="overseas-country" class="country-text">-</span>
                                 </div>
                                 <div class="network-tip">· 您访问没有被封的国外站点所使用的IP</div>
                             </div>
@@ -5265,7 +5296,10 @@
                         <div class="network-card">
                             <div class="network-card-title">
                                 <span class="status-indicator" id="status-cf"></span>
-                                CloudFlare(ProxyIP)
+                                <div class="title-text">
+                                    <div class="title-main">CloudFlare</div>
+                                    <div class="title-subtitle">ProxyIP</div>
+                                </div>
                             </div>
                             <div class="network-info-content">
                                 <span id="cf-ip" class="ip-text">-</span>
@@ -5279,14 +5313,17 @@
                         <div class="network-card">
                             <div class="network-card-title">
                                 <span class="status-indicator" id="status-twitter"></span>
-                                X.com(推特)
+                                <div class="title-text">
+                                    <div class="title-main">翻墙测试</div>
+                                    <div class="title-subtitle">X.com</div>
+                                </div>
                             </div>
                             <div class="network-info-content">
                                 <span id="twitter-ip" class="ip-text">-</span>
                                 <div class="location-text">
                                     <span id="twitter-country" class="country-text">-</span>
                                 </div>
-                                <div class="network-tip">· 您访问Twitter(x.com)所使用的IP</div>
+                                <div class="network-tip">· 您访问推特(x.com)所使用的IP</div>
                             </div>
                         </div>
                     </div>
@@ -9634,13 +9671,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                 let response;
                 try {
-                    response = await fetch(`https://api.ipapi.is/?ip=${cleanIp}`, { signal: controller.signal });
+                    response = await fetch(`https://api.ipapi.is/?q=${cleanIp}`, { signal: controller.signal });
                     clearTimeout(timeoutId);
                     if (!response.ok) throw new Error('Primary API failed');
                 } catch (e) {
                     console.warn('Primary IP API failed, trying fallback...', e);
-                    // 备用 API
-                    response = await fetch(`https://api.ipapi.cmliussss.net/?ip=${cleanIp}`);
+                    response = await fetch(`https://api.cmliussss.net/ipapi?ip=${cleanIp}`);
                     if (!response.ok) throw new Error('Fallback API failed');
                 }
 
@@ -12251,7 +12287,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                     // 更新标题显示当前使用的 API
                     if (titleElement) {
-                        titleElement.innerHTML = `<span class="status-indicator" id="status-ipip"></span>国内测试(${config.name})`;
+                        titleElement.innerHTML = `<span class="status-indicator" id="status-ipip"></span><div class="title-text"><div class="title-main">国内测试</div><div class="title-subtitle">${config.name}</div></div>`;
                         setStatus('status-ipip', 'success'); // 重新设置状态,因为 innerHTML 会清除
                     }
 
@@ -12272,26 +12308,48 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             console.error('所有国内测试 API 都失败');
         }
 
-        // 获取 EdgeOne 数据
-        async function fetchEdgeOneData() {
-            setStatus('status-edgeone', 'loading');
-            try {
-                const response = await fetch(`https://api.ipapi.cmliussss.net`);
-                const data = await response.json();
+        // 获取国外测试数据
+        async function fetchOverseasTestData() {
+            setStatus('status-overseas', 'loading');
 
-                const edgeIp = data.ip || '未知';
-                const edgeLoc = `${data.location?.country_code || '未知'} AS${data.asn?.asn || ''} ${data.asn?.org || ''}`.trim();
-                document.getElementById('edgeone-ip').textContent = edgeIp;
-                document.getElementById('edgeone-country').textContent = edgeLoc || '未知';
-                setStatus('status-edgeone', 'success');
+            // API 配置：URL + 字段映射
+            const apis = [
+                {
+                    url: `https://api.cmliussss.net/ipinfo?_t=${Date.now()}`,
+                    parse: d => ({ ip: d.ip, loc: `${d.country_code || '未知'} ${d.asn || ''} ${d.as_name || ''}`.trim() })
+                },
+                {
+                    url: `https://api.ipapi.is`,
+                    parse: d => ({ ip: d.ip, loc: `${d.location?.country_code || '未知'} AS${d.asn?.asn || ''} ${d.asn?.org || ''}`.trim() })
+                },
+                {
+                    url: `https://api.cmliussss.net/ipapi?_t=${Date.now()}`,
+                    parse: d => ({ ip: d.ip, loc: `${d.location?.country_code || '未知'} AS${d.asn?.asn || ''} ${d.asn?.org || ''}`.trim() })
+                }
+            ];
 
-                console.log(`[EdgeOne] 成功: IP=${edgeIp}, 位置=${edgeLoc}`);
-            } catch (error) {
-                document.getElementById('edgeone-ip').innerHTML = '<span class="error">加载失败</span>';
-                document.getElementById('edgeone-country').textContent = '';
-                setStatus('status-edgeone', 'error');
-                console.error('EdgeOne 接口错误:', error);
+            for (const api of apis) {
+                try {
+                    const response = await fetch(api.url);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const { ip, loc } = api.parse(await response.json());
+                    const edgeIp = ip || '未知';
+
+                    document.getElementById('overseas-ip').textContent = edgeIp;
+                    document.getElementById('overseas-country').textContent = loc || '未知';
+                    setStatus('status-overseas', 'success');
+                    console.log(`[国外测试] 成功: IP=${edgeIp}, 位置=${loc}`);
+                    return;
+                } catch (error) {
+                    console.log(`[国外测试] ${api.url} 失败: ${error.message}`);
+                }
             }
+
+            // 所有 API 都失败
+            document.getElementById('overseas-ip').innerHTML = '<span class="error">加载失败</span>';
+            document.getElementById('overseas-country').textContent = '';
+            setStatus('status-overseas', 'error');
+            console.error('国外测试 所有API都失败');
         }
 
         // 获取 CloudFlare 数据
@@ -12342,7 +12400,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                 console.log(`[Twitter] 成功: IP=${twIp}, 位置=${twLoc}`);
             } catch (error) {
-                document.getElementById('twitter-ip').innerHTML = '<span class="error">加载失败</span>';
+                document.getElementById('twitter-ip').innerHTML = '<span class="error">翻墙失败</span>';
                 document.getElementById('twitter-country').textContent = '';
                 setStatus('status-twitter', 'error');
                 console.error('推特入口接口错误:', error);
@@ -12364,7 +12422,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // 并行获取所有网络信息
             await Promise.all([
                 fetchIpipData(),
-                fetchEdgeOneData(),
+                fetchOverseasTestData(),
                 fetchCloudFlareData(),
                 fetchTwitterData()
             ]);

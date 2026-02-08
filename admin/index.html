@@ -9676,7 +9676,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     if (!response.ok) throw new Error('Primary API failed');
                 } catch (e) {
                     console.warn('Primary IP API failed, trying fallback...', e);
-                    response = await fetch(`https://api.cmliussss.net/ipapi?ip=${cleanIp}`);
+                    response = await fetch(`https://api.cmliussss.net/api/ipapi?ip=${cleanIp}`);
                     if (!response.ok) throw new Error('Fallback API failed');
                 }
 
@@ -12315,15 +12315,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // API 配置：URL + 字段映射
             const apis = [
                 {
-                    url: `https://api.cmliussss.net/ipinfo?_t=${Date.now()}`,
+                    url: `https://api.cmliussss.net/api/ipinfo?_t=${Date.now()}`,
                     parse: d => ({ ip: d.ip, loc: `${d.country_code || '未知'} ${d.asn || ''} ${d.as_name || ''}`.trim() })
                 },
                 {
                     url: `https://api.ipapi.is`,
-                    parse: d => ({ ip: d.ip, loc: `${d.location?.country_code || '未知'} AS${d.asn?.asn || ''} ${d.asn?.org || ''}`.trim() })
-                },
-                {
-                    url: `https://api.cmliussss.net/ipapi?_t=${Date.now()}`,
                     parse: d => ({ ip: d.ip, loc: `${d.location?.country_code || '未知'} AS${d.asn?.asn || ''} ${d.asn?.org || ''}`.trim() })
                 }
             ];

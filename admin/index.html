@@ -11416,20 +11416,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             detectionBox.innerHTML = '<div class="ip-detection-info">正在检测您的网络环境...</div>';
 
             try {
-                // 首先尝试主链接
+                // 首先尝试本地路径
                 let response, text;
                 try {
-                    console.log('[在线优选] 进度: 尝试使用主链接 speed.cloudflare.com 进行检测');
-                    response = await fetch(`https://speed.cloudflare.com/cdn-cgi/trace?_t=${Date.now()}`, {
-                        signal: AbortSignal.timeout(5000), // 5秒超时
-                        cache: 'no-store' // 禁用所有缓存
-                    });
-                    text = await response.text();
-                    console.log('[在线优选] 成功: 主链接检测通过');
-                    // 保存使用的检测域名供locations使用
-                    window.detectDomain = 'https://speed.cloudflare.com';
-                } catch (primaryError) {
-                    console.warn('[在线优选] 主链接检测失败，尝试使用当前域名本地路径...', primaryError);
+                    console.log('[在线优选] 进度: 尝试使用当前域名本地路径进行检测');
                     response = await fetch(`/cdn-cgi/trace?_t=${Date.now()}`, {
                         signal: AbortSignal.timeout(5000), // 5秒超时
                         cache: 'no-store' // 禁用所有缓存
@@ -11438,8 +11428,18 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     console.log('[在线优选] 成功: 本地路径检测通过（使用本地域名）');
                     // 保存使用的检测域名供locations使用
                     window.detectDomain = window.location.origin;
+                } catch (primaryError) {
+                    console.warn('[在线优选] 本地路径检测失败，尝试使用主链接 speed.cloudflare.com...', primaryError);
+                    response = await fetch(`https://speed.cloudflare.com/cdn-cgi/trace?_t=${Date.now()}`, {
+                        signal: AbortSignal.timeout(5000), // 5秒超时
+                        cache: 'no-store' // 禁用所有缓存
+                    });
+                    text = await response.text();
+                    console.log('[在线优选] 成功: 主链接检测通过');
+                    // 保存使用的检测域名供locations使用
+                    window.detectDomain = 'https://speed.cloudflare.com';
                 }
-                console.log('[在线优选] 调试: 检测响应:\n' + text);
+                //console.log('[在线优选] 调试: 检测响应:\n' + text);
 
                 // 解析响应
                 const lines = text.trim().split('\n');

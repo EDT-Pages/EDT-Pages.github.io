@@ -2356,6 +2356,22 @@
             margin-top: 24px;
         }
 
+        /* 路径模板弹窗移动端适配 */
+        @media (max-width: 640px) {
+            #pathTemplateConfigModal .modal {
+                padding-bottom: calc(60px + env(safe-area-inset-bottom, 20px)) !important;
+                max-height: calc(100dvh - 20px) !important;
+                overflow-y: auto !important;
+                display: flex !important;
+                flex-direction: column;
+            }
+
+            .path-template-buttons {
+                margin-top: auto;
+                padding-top: 20px;
+            }
+        }
+
         .path-template-input-wrapper {
             display: flex;
             align-items: center;
@@ -6875,8 +6891,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 </div>
             </div>
 
-            <div class="path-template-buttons"
-                style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px;">
+            <div class="path-template-buttons">
                 <button type="button" class="btn btn-primary" id="pathTemplateSaveBtn"
                     onclick="savePathTemplateConfig()" disabled>
                     保存并应用

@@ -5803,9 +5803,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             title="了解 ProxyIP 的相关信息">
                             💡 为什么需要反代？PROXYIP又是什么？
                         </button>
-                        <button type="button" class="btn btn-ech-help btn-path-template-config" id="pathTemplateConfigBtn"
-                            onclick="showPathTemplateConfigModal()" style="display: none; padding: 10px 16px;"
-                            title="配置路径模板">
+                        <button type="button" class="btn btn-ech-help btn-path-template-config"
+                            id="pathTemplateConfigBtn" onclick="showPathTemplateConfigModal()"
+                            style="display: none; padding: 10px 16px;" title="配置路径模板">
                             ⚙️ 路径模板配置
                         </button>
                         <button type="button" class="btn btn-search-proxy" id="getMoreProxyIPBtn"
@@ -6023,8 +6023,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 <h2 class="skipverify-title">关于 跳过证书验证</h2>
             </div>
             <div class="skipverify-content" style="text-align: left;">
-                <p class="skipverify-text"><strong>重要更新：</strong><a href="https://github.com/XTLS/Xray-core/releases/tag/v26.1.31"
-                        target="_blank" rel="noopener" class="skipverify-link">Xray-core v26.1.31</a>
+                <p class="skipverify-text"><strong>重要更新：</strong><a
+                        href="https://github.com/XTLS/Xray-core/releases/tag/v26.1.31" target="_blank" rel="noopener"
+                        class="skipverify-link">Xray-core v26.1.31</a>
                     及后续版本将陆续停止支持"<strong>跳过证书验证</strong>"功能，这是<strong>核心安全策略调整</strong>（<a
                         href="https://github.com/XTLS/Xray-core/commit/2c92339f95fe9aa493b6ae51d3b07017a44c4014"
                         target="_blank" rel="noopener" class="skipverify-link">详情</a>）。</p>
@@ -6763,9 +6764,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         <div class="modal" onclick="event.stopPropagation()" style="max-width: 500px;">
             <button type="button" class="modal-close" onclick="closePathTemplateConfigModal()">×</button>
             <h2 class="path-template-modal-title">⚙️ 路径模板配置</h2>
-            
-            <div class="path-template-hint" style="font-size: 12px; color: #374151; margin-bottom: 16px; padding: 8px 12px; background-color: #f3f4f6; border-radius: 4px;">
-                💡 路径模板中必须存在路径占位符 <code style="background-color: #d1d5db; padding: 2px 4px; border-radius: 2px; color: #1f2937; font-weight: 500;">{{IP:PORT}}</code> 才能适配路径反代
+
+            <div class="path-template-hint"
+                style="font-size: 12px; color: #374151; margin-bottom: 16px; padding: 8px 12px; background-color: #f3f4f6; border-radius: 4px;">
+                💡 路径模板中必须存在路径占位符 <code
+                    style="background-color: #d1d5db; padding: 2px 4px; border-radius: 2px; color: #1f2937; font-weight: 500;">{{IP:PORT}}</code>
+                才能适配路径反代
             </div>
 
             <div class="form-group">
@@ -6778,10 +6782,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <div class="form-group">
                 <div style="display: flex; align-items: center; gap: 4px;">
                     <label for="proxyIPTemplateInput">PROXYIP路径</label>
-                    <div id="proxyIPTemplateError" style="display: none; font-size: 12px; color: #ef4444;">缺少占位符 {{IP:PORT}}</div>
+                    <div id="proxyIPTemplateError" style="display: none; font-size: 12px; color: #ef4444;">缺少占位符
+                        {{IP:PORT}}</div>
                 </div>
                 <div class="path-template-input-wrapper">
-                    <input type="text" id="proxyIPTemplateInput" placeholder="proxyip={{IP:PORT}}" 
+                    <input type="text" id="proxyIPTemplateInput" placeholder="proxyip={{IP:PORT}}"
                         oninput="onPathTemplateInput(); preventInvalidChars(this); ensurePathPrefix(this)"
                         onkeypress="preventInvalidCharsOnKeypress(event); preventPathPrefixDeletion(event, this)"
                         onkeydown="preventPathPrefixDeletion(event, this)">
@@ -6791,7 +6796,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <div class="form-group">
                 <div style="display: flex; align-items: center; gap: 4px;">
                     <label for="socks5StandardTemplateInput">SOCKS5标准路径</label>
-                    <div id="socks5StandardTemplateError" style="display: none; font-size: 12px; color: #ef4444;">缺少占位符 {{IP:PORT}}</div>
+                    <div id="socks5StandardTemplateError" style="display: none; font-size: 12px; color: #ef4444;">缺少占位符
+                        {{IP:PORT}}</div>
                 </div>
                 <div class="path-template-input-wrapper">
                     <input type="text" id="socks5StandardTemplateInput" placeholder="socks5={{IP:PORT}}"
@@ -6804,7 +6810,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <div class="form-group">
                 <div style="display: flex; align-items: center; gap: 4px;">
                     <label for="socks5GlobalTemplateInput">SOCKS5全局路径</label>
-                    <div id="socks5GlobalTemplateError" style="display: none; font-size: 12px; color: #ef4444;">缺少占位符 {{IP:PORT}}</div>
+                    <div id="socks5GlobalTemplateError" style="display: none; font-size: 12px; color: #ef4444;">缺少占位符
+                        {{IP:PORT}}</div>
                 </div>
                 <div class="path-template-input-wrapper">
                     <input type="text" id="socks5GlobalTemplateInput" placeholder="socks5://{{IP:PORT}}"
@@ -6817,7 +6824,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <div class="form-group">
                 <div style="display: flex; align-items: center; gap: 4px;">
                     <label for="httpStandardTemplateInput">HTTP标准路径</label>
-                    <div id="httpStandardTemplateError" style="display: none; font-size: 12px; color: #ef4444;">缺少占位符 {{IP:PORT}}</div>
+                    <div id="httpStandardTemplateError" style="display: none; font-size: 12px; color: #ef4444;">缺少占位符
+                        {{IP:PORT}}</div>
                 </div>
                 <div class="path-template-input-wrapper">
                     <input type="text" id="httpStandardTemplateInput" placeholder="http={{IP:PORT}}"
@@ -6830,7 +6838,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <div class="form-group">
                 <div style="display: flex; align-items: center; gap: 4px;">
                     <label for="httpGlobalTemplateInput">HTTP全局路径</label>
-                    <div id="httpGlobalTemplateError" style="display: none; font-size: 12px; color: #ef4444;">缺少占位符 {{IP:PORT}}</div>
+                    <div id="httpGlobalTemplateError" style="display: none; font-size: 12px; color: #ef4444;">缺少占位符
+                        {{IP:PORT}}</div>
                 </div>
                 <div class="path-template-input-wrapper">
                     <input type="text" id="httpGlobalTemplateInput" placeholder="http://{{IP:PORT}}"
@@ -6840,8 +6849,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 </div>
             </div>
 
-            <div class="path-template-buttons" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px;">
-                <button type="button" class="btn btn-primary" id="pathTemplateSaveBtn" onclick="savePathTemplateConfig()" disabled>
+            <div class="path-template-buttons"
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px;">
+                <button type="button" class="btn btn-primary" id="pathTemplateSaveBtn"
+                    onclick="savePathTemplateConfig()" disabled>
                     保存并应用
                 </button>
                 <button type="button" class="btn btn-secondary" onclick="closePathTemplateConfigModal()">
@@ -9826,27 +9837,27 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             // 初始化原始值
             pathTemplateOriginal = JSON.parse(JSON.stringify(currentConfig.反代?.路径模板 || {}));
-            
+
             // 加载预设模板
             await loadPathTemplatePresets();
-            
+
             // 填充当前配置到文本框（添加"/"前缀用于显示）
             document.getElementById('proxyIPTemplateInput').value = '/' + (currentConfig.反代?.路径模板?.PROXYIP || '');
             document.getElementById('socks5StandardTemplateInput').value = '/' + (currentConfig.反代?.路径模板?.SOCKS5?.标准 || '');
             document.getElementById('socks5GlobalTemplateInput').value = '/' + (currentConfig.反代?.路径模板?.SOCKS5?.全局 || '');
             document.getElementById('httpStandardTemplateInput').value = '/' + (currentConfig.反代?.路径模板?.HTTP?.标准 || '');
             document.getElementById('httpGlobalTemplateInput').value = '/' + (currentConfig.反代?.路径模板?.HTTP?.全局 || '');
-            
+
             // 初始化验证状态
             validatePathTemplate('proxyIPTemplateInput', currentConfig.反代?.路径模板?.PROXYIP || '');
             validatePathTemplate('socks5StandardTemplateInput', currentConfig.反代?.路径模板?.SOCKS5?.标准 || '');
             validatePathTemplate('socks5GlobalTemplateInput', currentConfig.反代?.路径模板?.SOCKS5?.全局 || '');
             validatePathTemplate('httpStandardTemplateInput', currentConfig.反代?.路径模板?.HTTP?.标准 || '');
             validatePathTemplate('httpGlobalTemplateInput', currentConfig.反代?.路径模板?.HTTP?.全局 || '');
-            
+
             // 禁用保存按钮
             document.getElementById('pathTemplateSaveBtn').disabled = true;
-            
+
             // 重置预设模板选择
             document.getElementById('presetTemplateSelect').value = 'custom';
         }
@@ -9861,13 +9872,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 const url = 'https://raw.githubusercontent.com/cmliu/cmliu/main/json/edt-path-config.json';
                 const text = await fetchWithAutoMirror(url, '路径模板配置');
                 pathTemplatePresets = JSON.parse(text);
-                
+
                 const select = document.getElementById('presetTemplateSelect');
                 // 清除除"自定义"外的所有选项
                 while (select.options.length > 1) {
                     select.remove(1);
                 }
-                
+
                 // 添加预设模板选项
                 pathTemplatePresets.forEach(preset => {
                     const option = document.createElement('option');
@@ -9884,32 +9895,32 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         function onPresetTemplateChange() {
             const select = document.getElementById('presetTemplateSelect');
             const selectedValue = select.value;
-            
+
             if (selectedValue === 'custom') {
                 return;
             }
-            
+
             // 找到对应的预设
             const preset = pathTemplatePresets.find(p => p.项目名 === selectedValue);
             if (!preset) return;
-            
+
             // 显示提示消息
             showToast(preset.提示消息, 'info');
-            
+
             // 填充模板（添加"/"前缀用于显示）
             document.getElementById('proxyIPTemplateInput').value = '/' + (preset.路径模板.PROXYIP || '');
             document.getElementById('socks5StandardTemplateInput').value = '/' + (preset.路径模板.SOCKS5.标准 || '');
             document.getElementById('socks5GlobalTemplateInput').value = '/' + (preset.路径模板.SOCKS5.全局 || '');
             document.getElementById('httpStandardTemplateInput').value = '/' + (preset.路径模板.HTTP.标准 || '');
             document.getElementById('httpGlobalTemplateInput').value = '/' + (preset.路径模板.HTTP.全局 || '');
-            
+
             // 验证填充后的内容
             validatePathTemplate('proxyIPTemplateInput', preset.路径模板.PROXYIP || '');
             validatePathTemplate('socks5StandardTemplateInput', preset.路径模板.SOCKS5.标准 || '');
             validatePathTemplate('socks5GlobalTemplateInput', preset.路径模板.SOCKS5.全局 || '');
             validatePathTemplate('httpStandardTemplateInput', preset.路径模板.HTTP.标准 || '');
             validatePathTemplate('httpGlobalTemplateInput', preset.路径模板.HTTP.全局 || '');
-            
+
             // 亮起保存按钮
             document.getElementById('pathTemplateSaveBtn').disabled = false;
         }
@@ -9921,22 +9932,22 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const socks5Global = document.getElementById('socks5GlobalTemplateInput').value.replace(/^\//, '');
             const httpStandard = document.getElementById('httpStandardTemplateInput').value.replace(/^\//, '');
             const httpGlobal = document.getElementById('httpGlobalTemplateInput').value.replace(/^\//, '');
-            
+
             // 验证每个输入框是否包含占位符，没有则标记为invalid
             validatePathTemplate('proxyIPTemplateInput', proxyIP);
             validatePathTemplate('socks5StandardTemplateInput', socks5Standard);
             validatePathTemplate('socks5GlobalTemplateInput', socks5Global);
             validatePathTemplate('httpStandardTemplateInput', httpStandard);
             validatePathTemplate('httpGlobalTemplateInput', httpGlobal);
-            
+
             // 检查是否有任何内容发生变化
-            const hasChanged = 
+            const hasChanged =
                 proxyIP !== (pathTemplateOriginal.PROXYIP || '') ||
                 socks5Standard !== (pathTemplateOriginal.SOCKS5?.标准 || '') ||
                 socks5Global !== (pathTemplateOriginal.SOCKS5?.全局 || '') ||
                 httpStandard !== (pathTemplateOriginal.HTTP?.标准 || '') ||
                 httpGlobal !== (pathTemplateOriginal.HTTP?.全局 || '');
-            
+
             // 控制保存按钮的启用/禁用
             document.getElementById('pathTemplateSaveBtn').disabled = !hasChanged;
         }
@@ -9944,11 +9955,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         function validatePathTemplate(inputId, value) {
             const inputElement = document.getElementById(inputId);
             const wrapper = inputElement.closest('.path-template-input-wrapper');
-            
+
             // 生成对应的错误提示的ID
             const errorId = inputId.replace('Input', 'Error');
             const errorElement = document.getElementById(errorId);
-            
+
             // 如果内容不为空且不包含占位符，添加invalid样式并显示错误提示
             if (value.trim() && !value.includes('{{IP:PORT}}')) {
                 wrapper.classList.add('invalid');
@@ -9970,7 +9981,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const socks5Global = document.getElementById('socks5GlobalTemplateInput').value.replace(/^\//, '');
             const httpStandard = document.getElementById('httpStandardTemplateInput').value.replace(/^\//, '');
             const httpGlobal = document.getElementById('httpGlobalTemplateInput').value.replace(/^\//, '');
-            
+
             try {
                 // 验证是否包含{{IP:PORT}}占位符
                 const templates = [proxyIP, socks5Standard, socks5Global, httpStandard, httpGlobal].filter(t => t);
@@ -9981,7 +9992,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         //return;
                     }
                 }
-                
+
                 // 更新currentConfig中的路径模板数据（不包含开头的"/"）
                 if (!currentConfig.反代) {
                     currentConfig.反代 = {};
@@ -9989,7 +10000,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 if (!currentConfig.反代.路径模板) {
                     currentConfig.反代.路径模板 = {};
                 }
-                
+
                 currentConfig.反代.路径模板.PROXYIP = proxyIP;
                 currentConfig.反代.路径模板.SOCKS5 = {
                     标准: socks5Standard,
@@ -9999,10 +10010,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     标准: httpStandard,
                     全局: httpGlobal
                 };
-                
+
                 // 通过saveConfigToServer保存到服务器
                 await saveConfigToServer('pathTemplate');
-                
+
                 // 关闭模态框
                 closePathTemplateConfigModal();
             } catch (error) {
@@ -12684,23 +12695,23 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             <div class="ip-detail-left-col">
                                 <div class="ip-detail-card" style="height: 100%;">
                                     <div class="ip-detail-section-title">📍 基本信息</div>
-                                    <div class="ip-detail-item">
+                                    <div class="ip-detail-item" title="当前查询的公网 IP 地址,用于在互联网上唯一标识设备">
                                         <span class="ip-detail-label">IP 地址</span>
                                         <span class="ip-detail-value">${data.ip || '未知'}</span>
                                     </div>
-                                    <div class="ip-detail-item">
+                                    <div class="ip-detail-item" title="IP 地址的物理位置,通过 IP 地址段分配数据库推算得出,包括国家/地区、州省和城市信息">
                                         <span class="ip-detail-label">地理位置</span>
                                         <span class="ip-detail-value">${data.location?.country_code ? `[${data.location.country_code}]` : ''}${data.location?.country || ''} ${[data.location?.state, data.location?.city].filter(Boolean).join('/') || '未知'}</span>
                                     </div>
-                                    <div class="ip-detail-item">
+                                    <div class="ip-detail-item" title="该 IP 地址所在地区使用的标准时区,格式为洲/城市,如 Asia/Shanghai">
                                         <span class="ip-detail-label">时区</span>
                                         <span class="ip-detail-value">${data.location?.timezone || '未知'}</span>
                                     </div>
-                                    <div class="ip-detail-item">
+                                    <div class="ip-detail-item" title="IP 的网络类型:【住宅】家庭宽带、【机房】数据中心或云服务器、【商用】企业专线。左侧为运营商分类,右侧为 ASN (自治系统)分类">
                                         <span class="ip-detail-label">运营商 / ASN 类型</span>
                                         <span class="ip-detail-value">${formatIpType(data.company?.type)} / ${formatIpType(data.asn?.type)}</span>
                                     </div>
-                                    <div class="ip-detail-item">
+                                    <div class="ip-detail-item" title="综合滥用评分,基于运营商/ASN 历史记录和安全风险项计算。评分越低表示 IP 越纯净,越高表示被滥用可能性越大">
                                         <span class="ip-detail-label">风控评级</span>
                                         <span class="ip-detail-value">${riskControlHTML}</span>
                                     </div>
@@ -12713,39 +12724,39 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                 <div class="ip-detail-card" style="height: 100%;">
                                     <div class="ip-detail-section-title">🛡️ 安全检测</div>
                                     <div class="ip-detail-security-grid">
-                                        <div class="ip-detail-item">
+                                        <div class="ip-detail-item" title="该 IP 是否属于数据中心(IDC)、云服务商或主机托管服务。数据中心 IP 常被用于服务器部署,部分网站可能限制此类 IP 访问">
                                             <span class="ip-detail-label">数据中心</span>
                                             <span class="ip-detail-value">${data.is_datacenter ? '<span class="warning-text">🏢 是</span>' : '✅ 否'}</span>
                                         </div>
-                                        <div class="ip-detail-item">
+                                        <div class="ip-detail-item" title="该 IP 是否被识别为公开的代理服务器(如 HTTP/SOCKS 代理)。代理服务器可能被用于隐藏真实 IP,部分服务会限制代理访问">
                                             <span class="ip-detail-label">代理服务器</span>
                                             <span class="ip-detail-value">${data.is_proxy ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
                                         </div>
-                                        <div class="ip-detail-item">
+                                        <div class="ip-detail-item" title="该 IP 是否属于已知的 VPN (虚拟私人网络)服务提供商。VPN 用于加密网络流量和隐藏真实位置,部分网站会限制 VPN 访问">
                                             <span class="ip-detail-label">VPN 连线</span>
                                             <span class="ip-detail-value">${data.is_vpn ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
                                         </div>
-                                        <div class="ip-detail-item">
+                                        <div class="ip-detail-item" title="该 IP 是否属于 Tor (洋葱路由)匿名网络的出口节点。Tor 提供高度匿名性,但也常被用于非法活动,因此大多数网站会限制或禁止 Tor 访问">
                                             <span class="ip-detail-label">Tor 网络</span>
                                             <span class="ip-detail-value">${data.is_tor ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
                                         </div>
-                                        <div class="ip-detail-item">
+                                        <div class="ip-detail-item" title="该 IP 是否被识别为网络爬虫(搜索引擎蜘蛛、数据采集机器人等)。爬虫可能对网站造成额外负担,部分网站会限制或特殊处理爬虫流量">
                                             <span class="ip-detail-label">网络爬虫</span>
                                             <span class="ip-detail-value">${data.is_crawler ? '<span class="danger-text">🤖 是</span>' : '✅ 否'}</span>
                                         </div>
-                                        <div class="ip-detail-item">
+                                        <div class="ip-detail-item" title="该 IP 是否来自移动网络运营商(如 4G/5G 网络)。移动网络 IP 通常动态分配且更换频繁,属于住宅类 IP">
                                             <span class="ip-detail-label">移动网络</span>
                                             <span class="ip-detail-value">${data.is_mobile ? '<span class="success-text">📱 是</span>' : '否'}</span>
                                         </div>
-                                        <div class="ip-detail-item">
+                                        <div class="ip-detail-item" title="该 IP 是否来自卫星互联网服务(如 Starlink、OneWeb 等)。卫星网络通常用于偏远地区或移动场景的互联网接入,延迟较高">
                                             <span class="ip-detail-label">卫星网络</span>
                                             <span class="ip-detail-value">${data.is_satellite ? '<span class="success-text">🛰️ 是</span>' : '否'}</span>
                                         </div>
-                                        <div class="ip-detail-item">
+                                        <div class="ip-detail-item" title="该 IP 是否存在已知的滥用记录(如垃圾邮件、DDoS 攻击、恶意扫描等)。滥用 IP 通常会被安全系统拦截或限制访问">
                                             <span class="ip-detail-label">已知滥用</span>
                                             <span class="ip-detail-value">${data.is_abuser ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
                                         </div>
-                                        <div class="ip-detail-item">
+                                        <div class="ip-detail-item" title="该 IP 是否为虚假 IP (Bogon IP),即保留地址、私有地址或未分配的地址段。此类 IP 不应出现在公网上,可能表示异常流量或蜜罐">
                                             <span class="ip-detail-label">虚假 IP</span>
                                             <span class="ip-detail-value">${data.is_bogon ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
                                         </div>

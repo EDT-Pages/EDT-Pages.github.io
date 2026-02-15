@@ -2356,6 +2356,22 @@
             margin-top: 24px;
         }
 
+        /* 路径模板弹窗移动端适配 */
+        @media (max-width: 640px) {
+            #pathTemplateConfigModal .modal {
+                padding-bottom: calc(60px + env(safe-area-inset-bottom, 20px)) !important;
+                max-height: calc(100dvh - 20px) !important;
+                overflow-y: auto !important;
+                display: flex !important;
+                flex-direction: column;
+            }
+
+            .path-template-buttons {
+                margin-top: auto;
+                padding-top: 20px;
+            }
+        }
+
         .path-template-input-wrapper {
             display: flex;
             align-items: center;
@@ -4193,14 +4209,29 @@
 
         /* Mobile Adaptation */
         @media (max-width: 640px) {
+            .ip-detail-modal {
+                padding: 10px;
+                /* 确保模态框充分利用屏幕空间 */
+                align-items: flex-end;
+            }
+
             .ip-detail-content {
-                max-height: 95vh;
+                /* 使用 dvh (动态视口高度) 或回退到 vh，以适应移动浏览器地址栏的动态变化 */
+                max-height: calc(100dvh - 20px);
+                max-height: calc(100vh - 20px);
+                /* 从底部弹出的样式 */
                 border-radius: 20px 20px 0 0;
                 margin-top: auto;
+                /* 确保内容可滚动 */
+                overflow-y: auto;
+                /* 为带有刘海屏的设备添加安全区域内边距 */
+                padding-bottom: env(safe-area-inset-bottom, 0px);
             }
 
             .ip-detail-grid-container {
                 padding: 20px;
+                /* 大幅增加底部内边距 */
+                padding-bottom: calc(60px + env(safe-area-inset-bottom, 20px));
                 grid-template-columns: 1fr;
             }
 
@@ -4210,7 +4241,8 @@
             }
 
             .ip-detail-map-container {
-                height: 250px;
+                height: 200px;
+                /* 在移动设备上减小地图高度以留出更多空间给内容 */
             }
 
             .ip-detail-popup-content {
@@ -4227,6 +4259,16 @@
 
             .ip-detail-header {
                 padding: 16px 20px;
+                /* 粘性头部，防止滚动时遮挡内容 */
+                position: sticky;
+                top: 0;
+                z-index: 10;
+                background: inherit;
+            }
+
+            /* 在移动设备上为 body 添加额外的下内边距，确保底部内容可见 */
+            .ip-detail-body {
+                padding-bottom: 60px;
             }
         }
 
@@ -6849,8 +6891,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 </div>
             </div>
 
-            <div class="path-template-buttons"
-                style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px;">
+            <div class="path-template-buttons">
                 <button type="button" class="btn btn-primary" id="pathTemplateSaveBtn"
                     onclick="savePathTemplateConfig()" disabled>
                     保存并应用
@@ -12695,23 +12736,23 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             <div class="ip-detail-left-col">
                                 <div class="ip-detail-card" style="height: 100%;">
                                     <div class="ip-detail-section-title">📍 基本信息</div>
-                                    <div class="ip-detail-item" title="当前查询的公网 IP 地址,用于在互联网上唯一标识设备">
+                                    <div class="ip-detail-item" title="当前查询的公网 IP 地址，用于在互联网上唯一标识设备">
                                         <span class="ip-detail-label">IP 地址</span>
                                         <span class="ip-detail-value">${data.ip || '未知'}</span>
                                     </div>
-                                    <div class="ip-detail-item" title="IP 地址的物理位置,通过 IP 地址段分配数据库推算得出,包括国家/地区、州省和城市信息">
+                                    <div class="ip-detail-item" title="IP 地址的物理位置，通过 IP 地址段分配数据库推算得出，包括国家/地区、州省和城市信息">
                                         <span class="ip-detail-label">地理位置</span>
                                         <span class="ip-detail-value">${data.location?.country_code ? `[${data.location.country_code}]` : ''}${data.location?.country || ''} ${[data.location?.state, data.location?.city].filter(Boolean).join('/') || '未知'}</span>
                                     </div>
-                                    <div class="ip-detail-item" title="该 IP 地址所在地区使用的标准时区,格式为洲/城市,如 Asia/Shanghai">
+                                    <div class="ip-detail-item" title="该 IP 地址所在地区使用的标准时区，格式为洲/城市，如 Asia/Shanghai">
                                         <span class="ip-detail-label">时区</span>
                                         <span class="ip-detail-value">${data.location?.timezone || '未知'}</span>
                                     </div>
-                                    <div class="ip-detail-item" title="IP 的网络类型:【住宅】家庭宽带、【机房】数据中心或云服务器、【商用】企业专线。左侧为运营商分类,右侧为 ASN (自治系统)分类">
+                                    <div class="ip-detail-item" title="IP 的网络类型:【住宅】家庭宽带、【机房】数据中心或云服务器、【商用】企业专线。左侧为运营商分类，右侧为 ASN (自治系统)分类">
                                         <span class="ip-detail-label">运营商 / ASN 类型</span>
                                         <span class="ip-detail-value">${formatIpType(data.company?.type)} / ${formatIpType(data.asn?.type)}</span>
                                     </div>
-                                    <div class="ip-detail-item" title="综合滥用评分,基于运营商/ASN 历史记录和安全风险项计算。评分越低表示 IP 越纯净,越高表示被滥用可能性越大">
+                                    <div class="ip-detail-item" title="综合滥用评分，基于运营商/ASN 历史记录和安全风险项计算。评分越低表示 IP 越纯净，越高表示被滥用可能性越大">
                                         <span class="ip-detail-label">风控评级</span>
                                         <span class="ip-detail-value">${riskControlHTML}</span>
                                     </div>
@@ -12724,31 +12765,31 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                 <div class="ip-detail-card" style="height: 100%;">
                                     <div class="ip-detail-section-title">🛡️ 安全检测</div>
                                     <div class="ip-detail-security-grid">
-                                        <div class="ip-detail-item" title="该 IP 是否属于数据中心(IDC)、云服务商或主机托管服务。数据中心 IP 常被用于服务器部署,部分网站可能限制此类 IP 访问">
+                                        <div class="ip-detail-item" title="该 IP 是否属于数据中心(IDC)、云服务商或主机托管服务。数据中心 IP 常被用于服务器部署，部分网站可能限制此类 IP 访问">
                                             <span class="ip-detail-label">数据中心</span>
                                             <span class="ip-detail-value">${data.is_datacenter ? '<span class="warning-text">🏢 是</span>' : '✅ 否'}</span>
                                         </div>
-                                        <div class="ip-detail-item" title="该 IP 是否被识别为公开的代理服务器(如 HTTP/SOCKS 代理)。代理服务器可能被用于隐藏真实 IP,部分服务会限制代理访问">
+                                        <div class="ip-detail-item" title="该 IP 是否被识别为公开的代理服务器(如 HTTP/SOCKS 代理)。代理服务器可能被用于隐藏真实 IP，部分服务会限制代理访问">
                                             <span class="ip-detail-label">代理服务器</span>
                                             <span class="ip-detail-value">${data.is_proxy ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
                                         </div>
-                                        <div class="ip-detail-item" title="该 IP 是否属于已知的 VPN (虚拟私人网络)服务提供商。VPN 用于加密网络流量和隐藏真实位置,部分网站会限制 VPN 访问">
+                                        <div class="ip-detail-item" title="该 IP 是否属于已知的 VPN (虚拟私人网络)服务提供商。VPN 用于加密网络流量和隐藏真实位置，部分网站会限制 VPN 访问">
                                             <span class="ip-detail-label">VPN 连线</span>
                                             <span class="ip-detail-value">${data.is_vpn ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
                                         </div>
-                                        <div class="ip-detail-item" title="该 IP 是否属于 Tor (洋葱路由)匿名网络的出口节点。Tor 提供高度匿名性,但也常被用于非法活动,因此大多数网站会限制或禁止 Tor 访问">
+                                        <div class="ip-detail-item" title="该 IP 是否属于 Tor (洋葱路由)匿名网络的出口节点。Tor 提供高度匿名性，但也常被用于非法活动，因此大多数网站会限制或禁止 Tor 访问">
                                             <span class="ip-detail-label">Tor 网络</span>
                                             <span class="ip-detail-value">${data.is_tor ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
                                         </div>
-                                        <div class="ip-detail-item" title="该 IP 是否被识别为网络爬虫(搜索引擎蜘蛛、数据采集机器人等)。爬虫可能对网站造成额外负担,部分网站会限制或特殊处理爬虫流量">
+                                        <div class="ip-detail-item" title="该 IP 是否被识别为网络爬虫(搜索引擎蜘蛛、数据采集机器人等)。爬虫可能对网站造成额外负担，部分网站会限制或特殊处理爬虫流量">
                                             <span class="ip-detail-label">网络爬虫</span>
                                             <span class="ip-detail-value">${data.is_crawler ? '<span class="danger-text">🤖 是</span>' : '✅ 否'}</span>
                                         </div>
-                                        <div class="ip-detail-item" title="该 IP 是否来自移动网络运营商(如 4G/5G 网络)。移动网络 IP 通常动态分配且更换频繁,属于住宅类 IP">
+                                        <div class="ip-detail-item" title="该 IP 是否来自移动网络运营商(如 4G/5G 网络)。移动网络 IP 通常动态分配且更换频繁，属于住宅类 IP">
                                             <span class="ip-detail-label">移动网络</span>
                                             <span class="ip-detail-value">${data.is_mobile ? '<span class="success-text">📱 是</span>' : '否'}</span>
                                         </div>
-                                        <div class="ip-detail-item" title="该 IP 是否来自卫星互联网服务(如 Starlink、OneWeb 等)。卫星网络通常用于偏远地区或移动场景的互联网接入,延迟较高">
+                                        <div class="ip-detail-item" title="该 IP 是否来自卫星互联网服务(如 Starlink、OneWeb 等)。卫星网络通常用于偏远地区或移动场景的互联网接入，延迟较高">
                                             <span class="ip-detail-label">卫星网络</span>
                                             <span class="ip-detail-value">${data.is_satellite ? '<span class="success-text">🛰️ 是</span>' : '否'}</span>
                                         </div>
@@ -12756,7 +12797,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                             <span class="ip-detail-label">已知滥用</span>
                                             <span class="ip-detail-value">${data.is_abuser ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
                                         </div>
-                                        <div class="ip-detail-item" title="该 IP 是否为虚假 IP (Bogon IP),即保留地址、私有地址或未分配的地址段。此类 IP 不应出现在公网上,可能表示异常流量或蜜罐">
+                                        <div class="ip-detail-item" title="该 IP 是否为虚假 IP (Bogon IP)，即保留地址、私有地址或未分配的地址段。此类 IP 不应出现在公网上，可能表示异常流量或蜜罐">
                                             <span class="ip-detail-label">虚假 IP</span>
                                             <span class="ip-detail-value">${data.is_bogon ? '<span class="danger-text">⚠️ 是</span>' : '✅ 否'}</span>
                                         </div>

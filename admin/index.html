@@ -13038,7 +13038,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 url: 'https://raw.githubusercontent.com/EDT-Pages/Proxy-List/main/data/socks5.json',
                 description: 'SOCKS5列表',
                 inputId: 'socks5Addr',
-                verifySingleFunction: (proxy) => verifySingleProxy(proxy, 'socks5')
+                abortController: null,
+                verifySingleFunction: (proxy, signal) => verifySingleProxy(proxy, 'socks5', signal)
             },
             http: {
                 modalId: 'exploreHTTPModal',
@@ -13053,7 +13054,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 url: 'https://raw.githubusercontent.com/EDT-Pages/Proxy-List/main/data/http.json',
                 description: 'HTTP列表',
                 inputId: 'httpAddr',
-                verifySingleFunction: (proxy) => verifySingleProxy(proxy, 'http')
+                abortController: null,
+                verifySingleFunction: (proxy, signal) => verifySingleProxy(proxy, 'http', signal)
             }
         };
 
@@ -13111,8 +13113,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             verifyProxies(proxies, verifySingleSocks5);
         }
 
-        function verifySingleSocks5(proxy) {
-            return verifySingleProxy(proxy, 'socks5');
+        function verifySingleSocks5(proxy, signal) {
+            return verifySingleProxy(proxy, 'socks5', signal);
         }
 
         function updateSocks5Display() {
@@ -13213,13 +13215,14 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         }
 
         // 通用代理验证函数
-        function verifyProxies(proxies, verifySingleFunction, onProgress) {
+        function verifyProxies(proxies, verifySingleFunction, onProgress, signal) {
             // 并发控制：最多8个并发请求
             const maxConcurrent = 8;
             let currentIndex = 0;
             let activeRequests = 0;
 
             function startNextProxy() {
+                if (signal && signal.aborted) return;
                 if (currentIndex >= proxies.length || activeRequests >= maxConcurrent) {
                     return;
                 }
@@ -13227,7 +13230,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 activeRequests++;
                 const proxy = proxies[currentIndex++];
 
-                verifySingleFunction(proxy).finally(() => {
+                verifySingleFunction(proxy, signal).finally(() => {
                     activeRequests--;
                     if (onProgress) onProgress();
                     startNextProxy();
@@ -13375,6 +13378,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             if (modal) {
                 modal.classList.remove('show');
             }
+
+            // 停止正在进行的测试
+            if (config.abortController) {
+                config.abortController.abort();
+                config.abortController = null;
+            }
+
             // 清除所有超时计时器
             for (let timeout of Object.values(window[config.verificationTimeouts])) {
                 clearTimeout(timeout);
@@ -13484,12 +13494,18 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // 显示代理列表
             populateProxySelect(selectedCountry, config.proxySelectId, window[config.countryMap], window[config.verificationStatus]);
 
+            // 释放之前的 AbortController 并创建新的
+            if (config.abortController) {
+                config.abortController.abort();
+            }
+            config.abortController = new AbortController();
+
             // 开始验证所有代理
             verifyProxies(proxies, config.verifySingleFunction, () => {
                 updateProxyDisplay(type);
                 // 如果当前选中的是成功的，尝试更新地图
                 updateProxyMap(type);
-            });
+            }, config.abortController.signal);
         }
 
         function updateProxyDisplay(type) {
@@ -13532,6 +13548,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 modal.classList.remove('show');
             }
 
+            // 确认选择后停止剩余测试
+            if (config.abortController) {
+                config.abortController.abort();
+                config.abortController = null;
+            }
+
             // 亮起保存和取消按钮
             const saveBtn = document.getElementById('saveProxyBtn');
             const cancelBtn = document.getElementById('cancelProxyBtn');
@@ -13556,12 +13578,17 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         }
 
         // 通用单个代理验证函数
-        function verifySingleProxy(proxy, type) {
+        function verifySingleProxy(proxy, type, signal) {
             return new Promise((resolve) => {
                 const config = proxyConfigs[type];
                 const { protocol, proxy: proxyUrl } = proxy;
                 const cleanProxy = proxyUrl.replace(protocol + '://', '');
                 const checkUrl = `/admin/check?${protocol}=${encodeURIComponent(cleanProxy)}&_t=${Date.now()}`;
+
+                // 如果已经终止，直接返回
+                if (signal && signal.aborted) {
+                    return resolve();
+                }
 
                 // 设置15秒超时
                 const timeoutId = setTimeout(() => {
@@ -13575,7 +13602,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                 window[config.verificationTimeouts][proxyUrl] = timeoutId;
 
-                fetch(checkUrl)
+                fetch(checkUrl, { signal })
                     .then(response => response.json())
                     .then(data => {
                         clearTimeout(timeoutId);
@@ -13646,8 +13673,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             verifyProxies(proxies, verifySingleHTTP);
         }
 
-        function verifySingleHTTP(proxy) {
-            return verifySingleProxy(proxy, 'http');
+        function verifySingleHTTP(proxy, signal) {
+            return verifySingleProxy(proxy, 'http', signal);
         }
 
         function updateHTTPDisplay() {

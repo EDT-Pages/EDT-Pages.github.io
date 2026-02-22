@@ -1933,6 +1933,35 @@
                 min-height: 80px;
                 max-height: calc(100vh - 220px);
             }
+
+            /* 📋 获取节点链接 模块移动端优化 */
+            /* 使用新增的subscription-link-wrapper class来精确控制订阅链接的移动端布局 */
+            
+            .subscription-link-wrapper {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 12px !important;
+            }
+
+            .subscription-link-wrapper input {
+                width: 100% !important;
+                flex: none !important;
+                margin: 0 !important;
+            }
+
+            /* 创建按钮容器div */
+            .subscription-link-wrapper .btn-container {
+                display: flex !important;
+                gap: 10px !important;
+                width: 100% !important;
+            }
+
+            .subscription-link-wrapper .btn {
+                flex: 1 !important;
+                margin: 0 !important;
+                display: block !important;
+            }
         }
 
         @media(max-width:480px) {
@@ -5403,51 +5432,61 @@
                 </div>
                 <div class="form-group">
                     <label for="LinkURL">节点链接格式</label>
-                    <div class="input-wrapper">
+                    <div class="input-wrapper subscription-link-wrapper">
                         <input type="text" id="LinkURL" title="节点链接格式" readonly>
-                        <button type="button" class="btn btn-qrcode" onclick="showQRCode('LinkURL')">📱二维码</button>
-                        <button type="button" class="btn btn-primary"
-                            onclick="copySubscription('LinkURL')">复制节点</button>
+                        <div class="btn-container">
+                            <button type="button" class="btn btn-qrcode" onclick="showQRCode('LinkURL')">📱二维码</button>
+                            <button type="button" class="btn btn-primary"
+                                onclick="copySubscription('LinkURL')">复制节点</button>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="subLink">自适应订阅</label>
-                    <div class="input-wrapper">
+                    <div class="input-wrapper subscription-link-wrapper">
                         <input type="text" id="subLink" title="自适应订阅" readonly>
-                        <button type="button" class="btn btn-qrcode" onclick="showQRCode('subLink')">📱二维码</button>
-                        <button type="button" class="btn btn-primary"
-                            onclick="copySubscription('subLink')">复制订阅</button>
+                        <div class="btn-container">
+                            <button type="button" class="btn btn-qrcode" onclick="showQRCode('subLink')">📱二维码</button>
+                            <button type="button" class="btn btn-primary"
+                                onclick="copySubscription('subLink')">复制订阅</button>
+                        </div>
                     </div>
                 </div>
                 <div class="module-content">
                     <div class="form-group">
                         <label for="base64Link">Base64订阅</label>
-                        <div class="input-wrapper">
+                        <div class="input-wrapper subscription-link-wrapper">
                             <input type="text" id="base64Link" title="Base64订阅" readonly>
-                            <button type="button" class="btn btn-qrcode"
-                                onclick="showQRCode('base64Link')">📱二维码</button>
-                            <button type="button" class="btn btn-primary"
-                                onclick="copySubscription('base64Link')">复制订阅</button>
+                            <div class="btn-container">
+                                <button type="button" class="btn btn-qrcode"
+                                    onclick="showQRCode('base64Link')">📱二维码</button>
+                                <button type="button" class="btn btn-primary"
+                                    onclick="copySubscription('base64Link')">复制订阅</button>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="clashLink">Clash订阅</label>
-                        <div class="input-wrapper">
+                        <div class="input-wrapper subscription-link-wrapper">
                             <input type="text" id="clashLink" title="Clash订阅" readonly>
-                            <button type="button" class="btn btn-qrcode"
-                                onclick="showQRCode('clashLink')">📱二维码</button>
-                            <button type="button" class="btn btn-primary"
-                                onclick="copySubscription('clashLink')">复制订阅</button>
+                            <div class="btn-container">
+                                <button type="button" class="btn btn-qrcode"
+                                    onclick="showQRCode('clashLink')">📱二维码</button>
+                                <button type="button" class="btn btn-primary"
+                                    onclick="copySubscription('clashLink')">复制订阅</button>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="singboxLink">SingBox订阅</label>
-                        <div class="input-wrapper">
+                        <div class="input-wrapper subscription-link-wrapper">
                             <input type="text" id="singboxLink" title="SingBox订阅" readonly>
-                            <button type="button" class="btn btn-qrcode"
-                                onclick="showQRCode('singboxLink')">📱二维码</button>
-                            <button type="button" class="btn btn-primary"
-                                onclick="copySubscription('singboxLink')">复制订阅</button>
+                            <div class="btn-container">
+                                <button type="button" class="btn btn-qrcode"
+                                    onclick="showQRCode('singboxLink')">📱二维码</button>
+                                <button type="button" class="btn btn-primary"
+                                    onclick="copySubscription('singboxLink')">复制订阅</button>
+                            </div>
                         </div>
                     </div>
                 </div>

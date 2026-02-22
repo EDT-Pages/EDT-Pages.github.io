@@ -646,6 +646,7 @@
         }
 
         /* SOCKS5 模态框样式 */
+        #getMoreProxyIPModal .modal,
         #exploreSocks5Modal .modal,
         #exploreHTTPModal .modal {
             max-width: 900px;
@@ -658,7 +659,8 @@
 
         .modal-map-side {
             flex: 1.2;
-            height: 500px;
+            min-height: 500px;
+            height: auto;
             background: #f0f0f0;
             position: relative;
             z-index: 1;
@@ -671,7 +673,8 @@
             flex-direction: column;
             background: var(--bg-primary, #fff);
             color: var(--text-primary, #1f2937);
-            max-height: 500px;
+            min-height: 500px;
+            max-height: 90vh;
             overflow-y: auto;
             transition: all 0.3s ease;
         }
@@ -680,6 +683,7 @@
         @media (max-width: 768px) {
 
             /* SOCKS5和HTTP弹窗的主容器样式调整 */
+            #getMoreProxyIPModal .modal,
             #exploreSocks5Modal .modal,
             #exploreHTTPModal .modal {
                 /* 改为上下排列方式（竖直方向） */
@@ -782,6 +786,7 @@
 
         @media (max-width: 768px) {
 
+            #getMoreProxyIPModal .modal,
             #exploreSocks5Modal .modal,
             #exploreHTTPModal .modal {
                 flex-direction: column;
@@ -797,6 +802,7 @@
             }
         }
 
+        .proxy-list-container,
         .socks5-list-container,
         .http-list-container {
             width: 100%;
@@ -5852,8 +5858,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         </button>
                         <button type="button" class="btn btn-search-proxy" id="getMoreProxyIPBtn"
                             onclick="showGetMoreProxyIPModal()" style="display: none; padding: 10px 16px;"
-                            title="使用网络测绘引擎寻找可用的PROXYIP">
-                            🗺️ 探索更多 PROXYIP
+                            title="从 ProxyIP 列表中选择可用的代理">
+                            🗺️ 获取更多 PROXYIP
                         </button>
                         <button type="button" class="btn btn-search-proxy" id="exploreSocks5Btn"
                             onclick="showExploreSocks5Modal()" style="display: none; padding: 10px 16px;"
@@ -6274,7 +6280,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         <option value="cm-list">CM整理列表</option>
                         <option value="as13335">AS13335列表</option>
                         <option value="as209242">AS209242列表</option>
-                        <option value="reverse-proxy">反向代理列表</option>
+                        <option value="reverse-proxy">CM反代列表</option>
                     </select>
                 </div>
 
@@ -6905,71 +6911,54 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
     <!-- 获取更多 PROXYIP 弹窗 -->
     <div class="modal-overlay" id="getMoreProxyIPModal">
-        <div class="modal" onclick="event.stopPropagation()" style="max-width: 420px; text-align: left;">
-            <button type="button" class="modal-close" onclick="closeGetMoreProxyIPModal()">×</button>
-            <h2 class="section-title" style="margin-bottom: 15px; text-align: center;">🗺️ 探索更多 PROXYIP</h2>
-            <p style="text-align: center; color: #666; font-size: 14px; margin-bottom: 25px;">
-                通过网络测绘搜索引擎，查找指定地区的 反代IP 资源。<br>
-                <span style="font-size: 12px; color: #999;">(搜索结果仅供参考，请自行验证连通性)</span>
-            </p>
-
-            <div class="form-group">
-                <label for="proxyRegionSelect">🏳️‍🌈 选择目标地区</label>
-                <div class="input-wrapper">
-                    <select id="proxyRegionSelect" onchange="onProxyIPRegionChange()" style="padding-left: 16px;">
-                        <option value="custom">✍️ 自定义地区</option>
-                        <optgroup label="🌏 亚洲 / AS">
-                            <option value="HK">🇭🇰 香港</option>
-                            <option value="TW">🇨🇳 台湾</option>
-                            <option value="KR">🇰🇷 韩国</option>
-                            <option value="JP">🇯🇵 日本</option>
-                            <option value="SG">🇸🇬 新加坡</option>
-                            <option value="IN">🇮🇳 印度</option>
-                        </optgroup>
-                        <optgroup label="🌎 北美 / NA">
-                            <option value="US">🇺🇸 美国</option>
-                            <option value="CA">🇨🇦 加拿大</option>
-                        </optgroup>
-                        <optgroup label="🌍 欧洲 / EU">
-                            <option value="GB">🇬🇧 英国</option>
-                            <option value="DE">🇩🇪 德国</option>
-                            <option value="FR">🇫🇷 法国</option>
-                        </optgroup>
-                        <optgroup label="🌏 大洋洲 / OC">
-                            <option value="AU">🇦🇺 澳大利亚</option>
-                        </optgroup>
-                    </select>
-                </div>
+        <div class="modal">
+            <div class="modal-map-side">
+                <div id="proxy-map-proxyip" class="proxy-map-container"></div>
             </div>
+            <div class="modal-content-side">
+                <button type="button" class="modal-close" onclick="closeGetMoreProxyIPModal(event)"
+                    style="cursor: pointer;">×</button>
+                <h2 class="section-title" style="margin-bottom: 10px; text-align: center;">🗺️ 获取更多 PROXYIP</h2>
+                <p style="text-align: center; color: #666; font-size: 13px; margin-bottom: 20px;">
+                    反代资源来自 Github、<a href="https://t.me/zip_cm_edu_kg" target="_blank" rel="noopener noreferrer">CM科技大学</a>频道 等开源社区。
+                </p>
+                <div class="proxy-list-container">
+                    <div class="form-group">
+                        <label for="proxyIPDataRegionSelect">🏳️‍🌈 选择目标地区</label>
+                        <div class="input-wrapper">
+                            <select id="proxyIPDataRegionSelect" onchange="onProxyIPDataRegionChange()"
+                                style="padding-left: 16px;">
+                                <option value="">加载中...</option>
+                            </select>
+                        </div>
+                    </div>
 
-            <div class="form-group" id="customRegionInputGroup">
-                <label for="customRegionInput">⌨️ 输入地区代码</label>
-                <div class="input-wrapper">
-                    <input type="text" id="customRegionInput" placeholder="请输入两位字母代码，例如: US" maxlength="2"
-                        style="text-transform: uppercase;" disabled oninput="this.value = this.value.toUpperCase();">
+                    <div class="form-group" id="proxyIPProxySelectGroup">
+                        <label for="proxyIPProxySelect">🌐 选择目标代理 (最多8个)</label>
+                        <div class="input-wrapper">
+                            <select id="proxyIPProxySelect" onchange="addSelectedProxyIP(); updateProxyMap('proxyip');"
+                                style="padding-left: 16px; font-family: 'Fira Code', monospace; font-size: 12px;">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="selectedProxyIPsContainer" class="selected-proxies-tags"
+                        style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; min-height: 40px; padding: 10px; border: 1px dashed #e5e7eb; border-radius: 8px;">
+                        <!-- 已选 IP 标签将显示在这里 -->
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="proxyPortSelect">🔌 选择目标端口</label>
-                <div class="input-wrapper">
-                    <select id="proxyPortSelect" style="padding-left: 16px;">
-                        <option value="443">443</option>
-                        <option value="nonstandard">非标</option>
-                    </select>
+                <div class="btn-group"
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: auto; padding-top: 20px;">
+                    <button type="button" class="btn btn-primary" id="proxyIPConfirmBtn"
+                        onclick="confirmSelectProxyIP()" disabled>
+                        确定
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeGetMoreProxyIPModal(event)">
+                        取消
+                    </button>
                 </div>
-            </div>
-
-            <div class="btn-group"
-                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-top: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
-                <button type="button" class="btn btn-fofa" onclick="openFOFA()">FOFA 测绘</button>
-                <button type="button" class="btn btn-360quake" onclick="open360Quake()">360 测绘</button>
-                <button type="button" class="btn btn-ech-help"
-                    onclick="window.open('https://check.proxyip.cmliussss.net/', '_blank')"
-                    style="padding: 10px 20px; font-size: 16px; font-weight: 600; white-space: nowrap;">
-                    可用性验证
-                </button>
-                <button type="button" class="btn btn-secondary" onclick="closeGetMoreProxyIPModal()">关闭</button>
             </div>
         </div>
     </div>
@@ -11722,7 +11711,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 'cm-list': 'https://raw.githubusercontent.com/cmliu/cmliu/main/CF-CIDR.txt',
                 'as13335': 'https://raw.githubusercontent.com/ipverse/asn-ip/master/as/13335/ipv4-aggregated.txt',
                 'as209242': 'https://raw.githubusercontent.com/ipverse/asn-ip/master/as/209242/ipv4-aggregated.txt',
-                'reverse-proxy': 'https://raw.githubusercontent.com/cmliu/ACL4SSR/main/baipiao.txt'
+                'reverse-proxy': 'https://zip.cm.edu.kg/all.txt'
             };
 
             try {
@@ -12891,134 +12880,165 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         // ==================== 获取更多 PROXYIP 相关函数 ====================
 
         function showGetMoreProxyIPModal() {
-            document.getElementById('getMoreProxyIPModal').classList.add('show');
-            // 默认选中第一个非自定义选项 (HK) 并隐藏自定义输入
-            const select = document.getElementById('proxyRegionSelect');
-            // 查找 HK 选项并选中
-            for (let i = 0; i < select.options.length; i++) {
-                if (select.options[i].value === 'HK') {
-                    select.selectedIndex = i;
-                    break;
+            showExploreProxyModal('proxyip');
+            // 重置已选
+            selectedProxyIPs = [];
+            updateSelectedProxyIPsUI();
+        }
+
+        function closeGetMoreProxyIPModal(event) {
+            closeExploreProxyModal('proxyip', event);
+        }
+
+        function onProxyIPDataRegionChange() {
+            onProxyRegionChange('proxyip');
+        }
+
+        async function verifySingleProxyIP(proxy, signal) {
+            const config = proxyConfigs['proxyip'];
+            const proxyIp = proxy.proxy; // format: ip
+
+            if (signal && signal.aborted) return;
+
+            // 设置15秒超时
+            const timeoutId = setTimeout(() => {
+                window[config.verificationStatus][proxyIp] = {
+                    status: 'timeout',
+                    responseTime: null
+                };
+                updateProxyDisplay('proxyip');
+            }, 10000);
+
+            window[config.verificationTimeouts][proxyIp] = timeoutId;
+
+            try {
+                const response = await fetch(`https://check-proxyip-api.cmliussss.net/check?proxyip=${proxyIp}`, { signal });
+                clearTimeout(window[config.verificationTimeouts][proxyIp]);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.type === 'ProxyIP') {
+                        window[config.verificationStatus][proxyIp] = {
+                            status: 'success',
+                            responseTime: data.responseTime
+                        };
+                    } else {
+                        window[config.verificationStatus][proxyIp] = {
+                            status: 'failed',
+                            responseTime: null
+                        };
+                    }
+                } else {
+                    window[config.verificationStatus][proxyIp] = {
+                        status: 'failed',
+                        responseTime: null
+                    };
                 }
+            } catch (error) {
+                if (signal && signal.aborted) return;
+                window[config.verificationStatus][proxyIp] = {
+                    status: 'failed',
+                    responseTime: null
+                };
             }
-            // 触发一次变更处理，确保UI状态正确
-            onProxyIPRegionChange();
+            updateProxyDisplay('proxyip');
         }
 
-        function closeGetMoreProxyIPModal() {
-            document.getElementById('getMoreProxyIPModal').classList.remove('show');
-        }
+        function addSelectedProxyIP() {
+            const select = document.getElementById('proxyIPProxySelect');
+            const ip = select.value;
+            if (!ip) return;
 
-        function onProxyIPRegionChange() {
-            const select = document.getElementById('proxyRegionSelect');
-            const customInput = document.getElementById('customRegionInput');
-
-            if (select.value === 'custom') {
-                // 自定义模式：启用输入
-                customInput.value = '';
-                customInput.disabled = false;
-                customInput.focus();
-            } else {
-                // 预选地区模式：禁用输入，自动填充地区代码
-                customInput.value = select.value;
-                customInput.disabled = true;
+            if (selectedProxyIPs.length >= 8) {
+                showToast('最多只能选择 8 个 ProxyIP', 'warning');
+                return;
             }
+
+            if (selectedProxyIPs.includes(ip)) {
+                showToast('该 IP 已在选择列表中', 'warning');
+                return;
+            }
+
+            selectedProxyIPs.push(ip);
+            updateSelectedProxyIPsUI();
+            updateProxyIPConfirmButton();
         }
 
-        function openFOFA() {
-            const select = document.getElementById('proxyRegionSelect');
-            const portSelect = document.getElementById('proxyPortSelect');
-            let region = select.value;
-            let port = portSelect.value;
+        function removeSelectedProxyIP(ip) {
+            selectedProxyIPs = selectedProxyIPs.filter(item => item !== ip);
+            updateSelectedProxyIPsUI();
+            updateProxyIPConfirmButton();
+        }
 
-            if (region === 'custom') {
-                const customInput = document.getElementById('customRegionInput');
-                region = customInput.value.trim().toUpperCase();
-                if (!region || region.length !== 2) {
-                    showToast('请输入有效的两位国家代码', 'error');
-                    return;
+        function updateSelectedProxyIPsUI() {
+            const container = document.getElementById('selectedProxyIPsContainer');
+            container.innerHTML = '';
+
+            selectedProxyIPs.forEach(ip => {
+                // 查找对应的国家 emoji
+                const dataList = window.proxyIPListData || [];
+                const proxyData = dataList.find(p => p.ip === ip);
+                const emoji = proxyData?.country_emoji || '🌐';
+
+                // 构建 title 信息
+                let titleText = '';
+                if (proxyData) {
+                    const city = proxyData.city || '未知';
+                    const country = proxyData.country || '未知';
+                    const countryName = proxyData.country_cn || '未知';
+                    const clientIp = proxyData.clientIp || ip;
+                    const asn = proxyData.asn || '未知';
+                    const asOrganization = proxyData.asOrganization || '未知';
+
+                    titleText = `${city}\n国家: [${country}]${countryName}\n落地IP: ${clientIp}\nASN: ${asn}\n运营商: ${asOrganization}`;
                 }
-            }
 
-            // 构建查询语句
-            let query = '';
-            // HK 和 TW 使用 region 字段，其他使用 country 字段
-            let regionQuery = '';
-            if (region === 'HK' || region === 'TW') {
-                regionQuery = `region="${region}"`;
-            } else {
-                regionQuery = `country="${region}"`;
-            }
-
-            // 根据端口选择构建查询
-            let portQuery = '';
-            if (port === '443') {
-                portQuery = `port="443"`;
-            } else if (port === 'nonstandard') {
-                portQuery = `(port!="80" && port!="8080" && port!="8880" && port!="2052" && port!="2082" && port!="2086" && port!="2095" && port!="443" && port!="2053" && port!="2083" && port!="2087" && port!="2096" && port!="8443")`;
-            }
-
-            query = `server=="cloudflare" && header="Forbidden" && asn!="13335" && asn!="209242" && ${regionQuery} && ${portQuery}`;
-
-            // Base64 编码
-            const qbase64 = btoa(query);
-
-            // 构建 URL
-            const url = `https://fofa.info/result?qbase64=${encodeURIComponent(qbase64)}`;
-
-            // 打开新窗口
-            window.open(url, '_blank');
+                const tag = document.createElement('div');
+                tag.style.cssText = 'background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 4px 10px; border-radius: 9999px; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500;';
+                if (titleText) {
+                    tag.title = titleText;
+                }
+                tag.innerHTML = `
+                    <span>${emoji} ${ip}</span>
+                    <span onclick="removeSelectedProxyIP('${ip}')" style="cursor: pointer; font-weight: bold; font-size: 16px;">×</span>
+                `;
+                container.appendChild(tag);
+            });
         }
 
-        function open360Quake() {
-            const select = document.getElementById('proxyRegionSelect');
-            const portSelect = document.getElementById('proxyPortSelect');
-            let region = select.value;
-            let port = portSelect.value;
+        function updateProxyIPConfirmButton() {
+            const btn = document.getElementById('proxyIPConfirmBtn');
+            btn.disabled = selectedProxyIPs.length === 0;
+        }
 
-            if (region === 'custom') {
-                const customInput = document.getElementById('customRegionInput');
-                region = customInput.value.trim().toUpperCase();
-                if (!region || region.length !== 2) {
-                    showToast('请输入有效的两位国家代码', 'error');
-                    return;
-                }
+        function confirmSelectProxyIP() {
+            const input = document.getElementById('proxyIP');
+            if (input) {
+                input.value = selectedProxyIPs.join(',');
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                markModified('proxy');
             }
 
-            // 基础查询语句
-            const baseQuery = `(app:"Cloudflare" AND header:"Forbidden" AND asn!=13335 AND asn!=209242 AND service: "http/ssl")`;
-            let regionQuery = '';
+            closeGetMoreProxyIPModal();
 
-            // HK 和 TW 使用 province 字段，其他使用 country 字段
-            if (region === 'HK') {
-                regionQuery = `province: "HongKong"`;
-            } else if (region === 'TW') {
-                regionQuery = `province: "TaiWan"`;
-            } else if (region === 'MO') {
-                regionQuery = `province: "Macao"`;
-            } else {
-                regionQuery = `country: "${region}"`;
+            // 如果勾选了自动获取，取消勾选
+            const autoProxyCheck = document.getElementById('autoProxy');
+            if (autoProxyCheck && autoProxyCheck.checked) {
+                autoProxyCheck.checked = false;
+                if (typeof toggleAutoProxy === 'function') toggleAutoProxy();
             }
 
-            // 根据端口选择构建查询
-            let portQuery = '';
-            if (port === '443') {
-                portQuery = `port: 443`;
-            } else if (port === 'nonstandard') {
-                portQuery = `NOT (port: 80 OR port: 8080 OR port: 8880 OR port: 2052 OR port: 2082 OR port: 2086 OR port: 2095 OR port: 443 OR port: 2053 OR port: 2083 OR port: 2087 OR port: 2096 OR port: 8443)`;
+            const config = proxyConfigs['proxyip'];
+            if (config.abortController) {
+                config.abortController.abort();
+                config.abortController = null;
             }
 
-            let query = `${baseQuery} AND ${regionQuery} AND ${portQuery}`;
-
-            // URL 编码
-            const searchVal = encodeURIComponent(query);
-            const timestamp = Date.now();
-
-            // 构建 URL
-            const url = `https://quake.360.net/quake/#/searchResult?searchVal=${searchVal}&selectIndex=quake_service&ignore_cache=false&timeRange=&timeRange=&latest=true&t=${timestamp}`;
-
-            // 打开新窗口
-            window.open(url, '_blank');
+            // 亮起保存和取消按钮
+            const saveBtn = document.getElementById('saveProxyBtn');
+            const cancelBtn = document.getElementById('cancelProxyBtn');
+            if (saveBtn) saveBtn.disabled = false;
+            if (cancelBtn) cancelBtn.disabled = false;
         }
 
         // ==================== SOCKS5 相关函数 ====================
@@ -13056,6 +13076,22 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 inputId: 'httpAddr',
                 abortController: null,
                 verifySingleFunction: (proxy, signal) => verifySingleProxy(proxy, 'http', signal)
+            },
+            proxyip: {
+                modalId: 'getMoreProxyIPModal',
+                regionSelectId: 'proxyIPDataRegionSelect',
+                proxySelectId: 'proxyIPProxySelect',
+                proxySelectGroupId: 'proxyIPProxySelectGroup',
+                confirmBtnId: 'proxyIPConfirmBtn',
+                listData: 'proxyIPListData',
+                countryMap: 'proxyIPCountryMap',
+                verificationStatus: 'proxyIPVerificationStatus',
+                verificationTimeouts: 'proxyIPVerificationTimeouts',
+                url: 'https://zip.cm.edu.kg/all.json',
+                description: 'ProxyIP列表',
+                inputId: 'proxyIP',
+                abortController: null,
+                verifySingleFunction: (proxy, signal) => verifySingleProxyIP(proxy, signal)
             }
         };
 
@@ -13064,6 +13100,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         let socks5CountryMap = {};
         let socks5VerificationStatus = {}; // 存储验证状态
         let socks5VerificationTimeouts = {}; // 存储超时计时器
+
+        // 存储 ProxyIP 数据
+        let proxyIPListData = [];
+        let proxyIPCountryMap = {};
+        let proxyIPVerificationStatus = {};
+        let proxyIPVerificationTimeouts = {};
+        let selectedProxyIPs = []; // 存储用户选择的 ProxyIP
 
         function showExploreSocks5Modal() {
             showExploreProxyModal('socks5');
@@ -13145,8 +13188,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             // 获取当前地区的所有代理，并按状态和延迟排序
             const sortedProxies = [...proxies].sort((a, b) => {
-                const statusA = verificationStatus[a.proxy];
-                const statusB = verificationStatus[b.proxy];
+                const statusA = verificationStatus[a.proxy] || { status: 'pending' };
+                const statusB = verificationStatus[b.proxy] || { status: 'pending' };
 
                 // 可用的在前面，且按延迟从低到高
                 if (statusA.status === 'success' && statusB.status === 'success') {
@@ -13163,7 +13206,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             // 辅助函数：生成代理选项HTML
             function generateProxyOption(proxy, isSelectable = false) {
-                const status = verificationStatus[proxy.proxy];
+                const status = verificationStatus[proxy.proxy] || { status: 'pending' };
                 let emoji = '⏳';
                 let statusText = '验证中';
 
@@ -13178,16 +13221,20 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     statusText = '不可用';
                 }
 
-                const label = `${emoji}[${statusText}]${proxy.city},AS${proxy.asn},${proxy.asOrganization}`;
+                // ProxyIP 模式下 label 稍微不同，不包含协议前缀
+                const label = type === 'proxyip'
+                    ? `${emoji}[${statusText}]${proxy.ip}${proxy.city ? ` - ${proxy.city}` : ''},AS${proxy.asn}`
+                    : `${emoji}[${statusText}]${proxy.city},AS${proxy.asn},${proxy.asOrganization}`;
+
                 const disabled = !isSelectable || status.status !== 'success';
-                const selected = isSelectable && status.status === 'success' && successfulProxies.indexOf(proxy) === 0 ? 'selected' : '';
+                // ProxyIP 不需要默认选中，因为是多选触发
+                const selected = type !== 'proxyip' && isSelectable && status.status === 'success' && successfulProxies.indexOf(proxy) === 0 ? 'selected' : '';
                 return `<option value="${proxy.proxy}" ${disabled ? 'disabled' : ''} ${selected}>${label}</option>`;
             }
 
-            let html;
+            let html = type === 'proxyip' ? '<option value="">-- 请选择代理 --</option>' : '';
             if (successfulProxies.length > 0) {
-                // 有成功的代理，显示所有代理，默认选中第一个成功的
-                html = '';
+                // 有成功的代理，显示所有代理
                 sortedProxies.forEach(proxy => {
                     html += generateProxyOption(proxy, true);
                 });
@@ -13196,7 +13243,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 html = '<option value="">很抱歉，当前地区无可用代理，请切换其他地区。</option>';
             } else {
                 // 验证中，显示代理列表
-                html = '<option value="">正在验证代理可用性，请稍候...</option>';
+                html = (type === 'proxyip' ? '<option value="">正在验证可用性，请稍候...</option>' : '<option value="">正在验证可用性，请稍候...</option>');
                 sortedProxies.forEach(proxy => {
                     html += generateProxyOption(proxy, false);
                 });
@@ -13204,18 +13251,32 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             select.innerHTML = html;
 
-            // 恢复用户的选择
+            // 恢复用户的选择 (ProxyIP 模式下如果当前选中的仍然有效，也恢复)
             if (successfulProxies.length > 0) {
                 if (currentValue && successfulProxies.some(p => p.proxy === currentValue)) {
                     select.value = currentValue;
-                } else {
+                } else if (type !== 'proxyip') {
                     select.value = successfulProxies[0].proxy;
                 }
             }
         }
 
         // 通用代理验证函数
+        // Fisher-Yates 打乱算法 - 随机打乱数组顺序
+        function shuffleArray(array) {
+            const shuffled = [...array]; // 创建副本，不修改原数组
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                // 交换元素
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
         function verifyProxies(proxies, verifySingleFunction, onProgress, signal) {
+            // 打乱代理列表的顺序，避免多个用户同时测试时都从头开始
+            const shuffledProxies = shuffleArray(proxies);
+
             // 并发控制：最多8个并发请求
             const maxConcurrent = 8;
             let currentIndex = 0;
@@ -13223,12 +13284,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             function startNextProxy() {
                 if (signal && signal.aborted) return;
-                if (currentIndex >= proxies.length || activeRequests >= maxConcurrent) {
+                if (currentIndex >= shuffledProxies.length || activeRequests >= maxConcurrent) {
                     return;
                 }
 
                 activeRequests++;
-                const proxy = proxies[currentIndex++];
+                const proxy = shuffledProxies[currentIndex++];
 
                 verifySingleFunction(proxy, signal).finally(() => {
                     activeRequests--;
@@ -13237,8 +13298,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 });
             }
 
-            // 启动初始4个请求
-            for (let i = 0; i < Math.min(maxConcurrent, proxies.length); i++) {
+            // 启动初始8个请求
+            for (let i = 0; i < Math.min(maxConcurrent, shuffledProxies.length); i++) {
                 startNextProxy();
             }
         }
@@ -13272,24 +13333,28 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
         const lastMappedProxy = {
             socks5: null,
-            http: null
+            http: null,
+            proxyip: null
         };
 
         const proxyMaps = {
             socks5: { map: null, marker: null },
-            http: { map: null, marker: null }
+            http: { map: null, marker: null },
+            proxyip: { map: null, marker: null }
         };
 
         function initProxyMap(type) {
-            const containerId = type === 'socks5' ? 'proxy-map-socks5' : 'proxy-map-http';
+            const containerId = type === 'socks5' ? 'proxy-map-socks5' : (type === 'http' ? 'proxy-map-http' : 'proxy-map-proxyip');
             const container = document.getElementById(containerId);
             if (!container) return;
 
             // 如果地图已存在，先刷新布局
-            if (proxyMaps[type].map) {
+            if (proxyMaps[type] && proxyMaps[type].map) {
                 proxyMaps[type].map.invalidateSize();
                 return;
             }
+
+            if (!proxyMaps[type]) proxyMaps[type] = { map: null, marker: null };
 
             // 创建地图
             const map = L.map(containerId, {
@@ -13318,7 +13383,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             // 从数据列表中找到完整的代理信息
             const proxyData = window[config.listData].find(p => p.proxy === selectedProxyUrl);
-            if (!proxyData || !proxyData.latitude || !proxyData.longitude) return;
+            if (!proxyData || proxyData.latitude === null || proxyData.longitude === null) return;
 
             const lat = parseFloat(proxyData.latitude);
             const lng = parseFloat(proxyData.longitude);
@@ -13357,7 +13422,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 </div>
                 <div class="ip-detail-popup-item">
                     <span class="ip-detail-popup-label">落地IP:</span>
-                    <span class="ip-detail-popup-value">${proxyData.clientIp}</span>
+                    <span class="ip-detail-popup-value">${proxyData.clientIp || proxyData.ip || '-'}</span>
                 </div>
                 <div class="ip-detail-popup-item">
                     <span class="ip-detail-popup-label">ASN:</span>
@@ -13372,7 +13437,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         }
 
         function closeExploreProxyModal(type, event) {
-            event.preventDefault();
+            if (event && event.preventDefault) event.preventDefault();
             const config = proxyConfigs[type];
             const modal = document.getElementById(config.modalId);
             if (modal) {
@@ -13397,7 +13462,27 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             fetchWithAutoMirror(url, config.description)
                 .then(text => {
-                    const data = JSON.parse(text);
+                    let data = JSON.parse(text);
+                    if (type === 'proxyip') {
+                        // all.json format has a 'data' array
+                        data = data.data.filter(item =>
+                            Array.isArray(item.port) ? item.port.includes(443) : item.port === 443
+                        ).map(item => ({
+                            proxy: item.ip,
+                            ip: item.ip,
+                            country: item.meta?.country || 'Unknown',
+                            country_cn: item.meta?.country_cn || '未知',
+                            country_en: item.meta?.country_en || 'Unknown',
+                            country_emoji: item.meta?.country_emoji || '🏳️',
+                            city: item.meta?.city || '未知',
+                            clientIp: item.meta?.clientIp || item.ip,
+                            asn: item.meta?.asn || 0,
+                            asOrganization: item.meta?.asOrganization || '未知',
+                            continent: item.meta?.continent || 'Unknown',
+                            latitude: item.meta?.latitude !== undefined ? item.meta.latitude : (item.meta?.colo?.lat !== undefined ? item.meta.colo.lat : null),
+                            longitude: item.meta?.longitude !== undefined ? item.meta.longitude : (item.meta?.colo?.lon !== undefined ? item.meta.colo.lon : null)
+                        }));
+                    }
                     window[config.listData] = data;
                     window[config.countryMap] = buildCountryMap(window[config.listData], window[config.countryMap]);
                     populateProxyRegionSelect(type);

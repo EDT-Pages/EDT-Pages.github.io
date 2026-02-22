@@ -13361,6 +13361,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById(config.proxySelectGroupId).style.display = 'block';
             document.getElementById(config.confirmBtnId).disabled = true;
 
+            // 初始化下拉框 focus/blur 监听（首次生效）
+            ensureProxySelectListeners(type);
+            // 重置节流状态
+            resetProxyDisplayUpdateState(type);
+
             // 加载列表
             loadProxyList(type);
 
@@ -13493,6 +13498,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             for (let timeout of Object.values(window[config.verificationTimeouts])) {
                 clearTimeout(timeout);
             }
+
+            // 清理节流定时器
+            resetProxyDisplayUpdateState(type);
         }
 
         function loadProxyList(type) {
@@ -13632,7 +13640,108 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }, config.abortController.signal);
         }
 
+        // ===== 节流更新系统：避免移动端下拉框被频繁刷新 =====
+        const PROXY_DISPLAY_UPDATE_INTERVAL = 6000; // 节流间隔：6秒
+        const proxyDisplayUpdateState = {
+            socks5:  { lastUpdate: 0, pending: false, timer: null, selectOpen: false, listenersAdded: false },
+            http:    { lastUpdate: 0, pending: false, timer: null, selectOpen: false, listenersAdded: false },
+            proxyip: { lastUpdate: 0, pending: false, timer: null, selectOpen: false, listenersAdded: false }
+        };
+
+        // 为代理选择下拉框添加 focus/blur 监听，检测用户是否正在操作下拉框
+        function ensureProxySelectListeners(type) {
+            const state = proxyDisplayUpdateState[type];
+            if (state.listenersAdded) return;
+            const config = proxyConfigs[type];
+            const select = document.getElementById(config.proxySelectId);
+            if (!select) return;
+            select.addEventListener('focus', () => {
+                state.selectOpen = true;
+            });
+            select.addEventListener('blur', () => {
+                state.selectOpen = false;
+                // 下拉框关闭时，如果有待处理的更新立即执行
+                if (state.pending) {
+                    _doUpdateProxyDisplay(type);
+                }
+            });
+            state.listenersAdded = true;
+        }
+
+        // 检查当前地区所有代理是否全部验证完成
+        function isAllProxiesVerified(type) {
+            const config = proxyConfigs[type];
+            const selectedCountry = document.getElementById(config.regionSelectId).value;
+            if (!selectedCountry) return false;
+            const proxies = window[config.countryMap][selectedCountry] || [];
+            return proxies.length > 0 && proxies.every(p => {
+                const s = window[config.verificationStatus][p.proxy];
+                return s && s.status !== 'pending';
+            });
+        }
+
+        // 节流版 updateProxyDisplay —— 外部统一调用此函数
+        // 策略：下拉框关闭时实时更新；下拉框打开时每 6 秒节流更新一次
         function updateProxyDisplay(type) {
+            const state = proxyDisplayUpdateState[type];
+            const now = Date.now();
+
+            // 下拉框未打开：直接实时更新
+            if (!state.selectOpen) {
+                if (state.timer) { clearTimeout(state.timer); state.timer = null; }
+                _doUpdateProxyDisplay(type);
+                return;
+            }
+
+            // === 以下为下拉框打开状态的节流逻辑 ===
+
+            // 全部验证完成时强制安排一次更新（最终结果）
+            if (isAllProxiesVerified(type)) {
+                if (state.timer) { clearTimeout(state.timer); state.timer = null; }
+                // 距上次更新已超过节流间隔，直接更新
+                if (now - state.lastUpdate >= PROXY_DISPLAY_UPDATE_INTERVAL) {
+                    _doUpdateProxyDisplay(type);
+                } else {
+                    // 未到间隔，安排一个定时器确保最终结果会被刷新
+                    state.pending = true;
+                    if (!state.timer) {
+                        const delay = PROXY_DISPLAY_UPDATE_INTERVAL - (now - state.lastUpdate);
+                        state.timer = setTimeout(() => {
+                            state.timer = null;
+                            if (state.pending) {
+                                _doUpdateProxyDisplay(type);
+                            }
+                        }, delay);
+                    }
+                }
+                return;
+            }
+
+            // 节流：距上次更新不到 6 秒，延迟执行
+            if (now - state.lastUpdate < PROXY_DISPLAY_UPDATE_INTERVAL) {
+                state.pending = true;
+                if (!state.timer) {
+                    const delay = PROXY_DISPLAY_UPDATE_INTERVAL - (now - state.lastUpdate);
+                    state.timer = setTimeout(() => {
+                        state.timer = null;
+                        if (state.pending) {
+                            _doUpdateProxyDisplay(type);
+                        }
+                    }, delay);
+                }
+                return;
+            }
+
+            // 已超过节流间隔，直接更新
+            _doUpdateProxyDisplay(type);
+        }
+
+        // 实际执行更新的内部函数
+        function _doUpdateProxyDisplay(type) {
+            const state = proxyDisplayUpdateState[type];
+            state.lastUpdate = Date.now();
+            state.pending = false;
+
             const config = proxyConfigs[type];
             const selectedCountry = document.getElementById(config.regionSelectId).value;
             if (selectedCountry) {
@@ -13646,6 +13755,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     window[config.verificationStatus][selectedValue].status === 'success';
                 document.getElementById(config.confirmBtnId).disabled = !isValidSelected;
             }
+        }
+
+        // 重置节流状态（模态框关闭时调用）
+        function resetProxyDisplayUpdateState(type) {
+            const state = proxyDisplayUpdateState[type];
+            if (state.timer) { clearTimeout(state.timer); state.timer = null; }
+            state.lastUpdate = 0;
+            state.pending = false;
+            state.selectOpen = false;
         }
 
         function confirmSelectProxy(type) {

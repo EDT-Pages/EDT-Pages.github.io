@@ -1933,6 +1933,35 @@
                 min-height: 80px;
                 max-height: calc(100vh - 220px);
             }
+
+            /* 📋 获取节点链接 模块移动端优化 */
+            /* 使用新增的subscription-link-wrapper class来精确控制订阅链接的移动端布局 */
+            
+            .subscription-link-wrapper {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 12px !important;
+            }
+
+            .subscription-link-wrapper input {
+                width: 100% !important;
+                flex: none !important;
+                margin: 0 !important;
+            }
+
+            /* 创建按钮容器div */
+            .subscription-link-wrapper .btn-container {
+                display: flex !important;
+                gap: 10px !important;
+                width: 100% !important;
+            }
+
+            .subscription-link-wrapper .btn {
+                flex: 1 !important;
+                margin: 0 !important;
+                display: block !important;
+            }
         }
 
         @media(max-width:480px) {
@@ -5403,51 +5432,61 @@
                 </div>
                 <div class="form-group">
                     <label for="LinkURL">节点链接格式</label>
-                    <div class="input-wrapper">
+                    <div class="input-wrapper subscription-link-wrapper">
                         <input type="text" id="LinkURL" title="节点链接格式" readonly>
-                        <button type="button" class="btn btn-qrcode" onclick="showQRCode('LinkURL')">📱二维码</button>
-                        <button type="button" class="btn btn-primary"
-                            onclick="copySubscription('LinkURL')">复制节点</button>
+                        <div class="btn-container">
+                            <button type="button" class="btn btn-qrcode" onclick="showQRCode('LinkURL')">📱二维码</button>
+                            <button type="button" class="btn btn-primary"
+                                onclick="copySubscription('LinkURL')">复制节点</button>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="subLink">自适应订阅</label>
-                    <div class="input-wrapper">
+                    <div class="input-wrapper subscription-link-wrapper">
                         <input type="text" id="subLink" title="自适应订阅" readonly>
-                        <button type="button" class="btn btn-qrcode" onclick="showQRCode('subLink')">📱二维码</button>
-                        <button type="button" class="btn btn-primary"
-                            onclick="copySubscription('subLink')">复制订阅</button>
+                        <div class="btn-container">
+                            <button type="button" class="btn btn-qrcode" onclick="showQRCode('subLink')">📱二维码</button>
+                            <button type="button" class="btn btn-primary"
+                                onclick="copySubscription('subLink')">复制订阅</button>
+                        </div>
                     </div>
                 </div>
                 <div class="module-content">
                     <div class="form-group">
                         <label for="base64Link">Base64订阅</label>
-                        <div class="input-wrapper">
+                        <div class="input-wrapper subscription-link-wrapper">
                             <input type="text" id="base64Link" title="Base64订阅" readonly>
-                            <button type="button" class="btn btn-qrcode"
-                                onclick="showQRCode('base64Link')">📱二维码</button>
-                            <button type="button" class="btn btn-primary"
-                                onclick="copySubscription('base64Link')">复制订阅</button>
+                            <div class="btn-container">
+                                <button type="button" class="btn btn-qrcode"
+                                    onclick="showQRCode('base64Link')">📱二维码</button>
+                                <button type="button" class="btn btn-primary"
+                                    onclick="copySubscription('base64Link')">复制订阅</button>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="clashLink">Clash订阅</label>
-                        <div class="input-wrapper">
+                        <div class="input-wrapper subscription-link-wrapper">
                             <input type="text" id="clashLink" title="Clash订阅" readonly>
-                            <button type="button" class="btn btn-qrcode"
-                                onclick="showQRCode('clashLink')">📱二维码</button>
-                            <button type="button" class="btn btn-primary"
-                                onclick="copySubscription('clashLink')">复制订阅</button>
+                            <div class="btn-container">
+                                <button type="button" class="btn btn-qrcode"
+                                    onclick="showQRCode('clashLink')">📱二维码</button>
+                                <button type="button" class="btn btn-primary"
+                                    onclick="copySubscription('clashLink')">复制订阅</button>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="singboxLink">SingBox订阅</label>
-                        <div class="input-wrapper">
+                        <div class="input-wrapper subscription-link-wrapper">
                             <input type="text" id="singboxLink" title="SingBox订阅" readonly>
-                            <button type="button" class="btn btn-qrcode"
-                                onclick="showQRCode('singboxLink')">📱二维码</button>
-                            <button type="button" class="btn btn-primary"
-                                onclick="copySubscription('singboxLink')">复制订阅</button>
+                            <div class="btn-container">
+                                <button type="button" class="btn btn-qrcode"
+                                    onclick="showQRCode('singboxLink')">📱二维码</button>
+                                <button type="button" class="btn btn-primary"
+                                    onclick="copySubscription('singboxLink')">复制订阅</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -13322,6 +13361,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById(config.proxySelectGroupId).style.display = 'block';
             document.getElementById(config.confirmBtnId).disabled = true;
 
+            // 初始化下拉框 focus/blur 监听（首次生效）
+            ensureProxySelectListeners(type);
+            // 重置节流状态
+            resetProxyDisplayUpdateState(type);
+
             // 加载列表
             loadProxyList(type);
 
@@ -13418,7 +13462,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 </div>
                 <div class="ip-detail-popup-item">
                     <span class="ip-detail-popup-label">国家:</span>
-                    <span class="ip-detail-popup-value">[${proxyData.country || '-'}]${proxyData.country_en || ''}</span>
+                    <span class="ip-detail-popup-value">[${proxyData.country || '-'}]${proxyData.country_cn || ''}</span>
                 </div>
                 <div class="ip-detail-popup-item">
                     <span class="ip-detail-popup-label">落地IP:</span>
@@ -13454,6 +13498,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             for (let timeout of Object.values(window[config.verificationTimeouts])) {
                 clearTimeout(timeout);
             }
+
+            // 清理节流定时器
+            resetProxyDisplayUpdateState(type);
         }
 
         function loadProxyList(type) {
@@ -13593,7 +13640,108 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }, config.abortController.signal);
         }
 
+        // ===== 节流更新系统：避免移动端下拉框被频繁刷新 =====
+        const PROXY_DISPLAY_UPDATE_INTERVAL = 6000; // 节流间隔：6秒
+        const proxyDisplayUpdateState = {
+            socks5:  { lastUpdate: 0, pending: false, timer: null, selectOpen: false, listenersAdded: false },
+            http:    { lastUpdate: 0, pending: false, timer: null, selectOpen: false, listenersAdded: false },
+            proxyip: { lastUpdate: 0, pending: false, timer: null, selectOpen: false, listenersAdded: false }
+        };
+
+        // 为代理选择下拉框添加 focus/blur 监听，检测用户是否正在操作下拉框
+        function ensureProxySelectListeners(type) {
+            const state = proxyDisplayUpdateState[type];
+            if (state.listenersAdded) return;
+            const config = proxyConfigs[type];
+            const select = document.getElementById(config.proxySelectId);
+            if (!select) return;
+            select.addEventListener('focus', () => {
+                state.selectOpen = true;
+            });
+            select.addEventListener('blur', () => {
+                state.selectOpen = false;
+                // 下拉框关闭时，如果有待处理的更新立即执行
+                if (state.pending) {
+                    _doUpdateProxyDisplay(type);
+                }
+            });
+            state.listenersAdded = true;
+        }
+
+        // 检查当前地区所有代理是否全部验证完成
+        function isAllProxiesVerified(type) {
+            const config = proxyConfigs[type];
+            const selectedCountry = document.getElementById(config.regionSelectId).value;
+            if (!selectedCountry) return false;
+            const proxies = window[config.countryMap][selectedCountry] || [];
+            return proxies.length > 0 && proxies.every(p => {
+                const s = window[config.verificationStatus][p.proxy];
+                return s && s.status !== 'pending';
+            });
+        }
+
+        // 节流版 updateProxyDisplay —— 外部统一调用此函数
+        // 策略：下拉框关闭时实时更新；下拉框打开时每 6 秒节流更新一次
         function updateProxyDisplay(type) {
+            const state = proxyDisplayUpdateState[type];
+            const now = Date.now();
+
+            // 下拉框未打开：直接实时更新
+            if (!state.selectOpen) {
+                if (state.timer) { clearTimeout(state.timer); state.timer = null; }
+                _doUpdateProxyDisplay(type);
+                return;
+            }
+
+            // === 以下为下拉框打开状态的节流逻辑 ===
+
+            // 全部验证完成时强制安排一次更新（最终结果）
+            if (isAllProxiesVerified(type)) {
+                if (state.timer) { clearTimeout(state.timer); state.timer = null; }
+                // 距上次更新已超过节流间隔，直接更新
+                if (now - state.lastUpdate >= PROXY_DISPLAY_UPDATE_INTERVAL) {
+                    _doUpdateProxyDisplay(type);
+                } else {
+                    // 未到间隔，安排一个定时器确保最终结果会被刷新
+                    state.pending = true;
+                    if (!state.timer) {
+                        const delay = PROXY_DISPLAY_UPDATE_INTERVAL - (now - state.lastUpdate);
+                        state.timer = setTimeout(() => {
+                            state.timer = null;
+                            if (state.pending) {
+                                _doUpdateProxyDisplay(type);
+                            }
+                        }, delay);
+                    }
+                }
+                return;
+            }
+
+            // 节流：距上次更新不到 6 秒，延迟执行
+            if (now - state.lastUpdate < PROXY_DISPLAY_UPDATE_INTERVAL) {
+                state.pending = true;
+                if (!state.timer) {
+                    const delay = PROXY_DISPLAY_UPDATE_INTERVAL - (now - state.lastUpdate);
+                    state.timer = setTimeout(() => {
+                        state.timer = null;
+                        if (state.pending) {
+                            _doUpdateProxyDisplay(type);
+                        }
+                    }, delay);
+                }
+                return;
+            }
+
+            // 已超过节流间隔，直接更新
+            _doUpdateProxyDisplay(type);
+        }
+
+        // 实际执行更新的内部函数
+        function _doUpdateProxyDisplay(type) {
+            const state = proxyDisplayUpdateState[type];
+            state.lastUpdate = Date.now();
+            state.pending = false;
+
             const config = proxyConfigs[type];
             const selectedCountry = document.getElementById(config.regionSelectId).value;
             if (selectedCountry) {
@@ -13607,6 +13755,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     window[config.verificationStatus][selectedValue].status === 'success';
                 document.getElementById(config.confirmBtnId).disabled = !isValidSelected;
             }
+        }
+
+        // 重置节流状态（模态框关闭时调用）
+        function resetProxyDisplayUpdateState(type) {
+            const state = proxyDisplayUpdateState[type];
+            if (state.timer) { clearTimeout(state.timer); state.timer = null; }
+            state.lastUpdate = 0;
+            state.pending = false;
+            state.selectOpen = false;
         }
 
         function confirmSelectProxy(type) {

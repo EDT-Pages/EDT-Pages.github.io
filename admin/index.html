@@ -1936,7 +1936,7 @@
 
             /* 📋 获取节点链接 模块移动端优化 */
             /* 使用新增的subscription-link-wrapper class来精确控制订阅链接的移动端布局 */
-            
+
             .subscription-link-wrapper {
                 display: flex !important;
                 flex-direction: column !important;
@@ -6959,7 +6959,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     style="cursor: pointer;">×</button>
                 <h2 class="section-title" style="margin-bottom: 10px; text-align: center;">🗺️ 获取更多 PROXYIP</h2>
                 <p style="text-align: center; color: #666; font-size: 13px; margin-bottom: 20px;">
-                    反代资源来自 Github、<a href="https://t.me/zip_cm_edu_kg" target="_blank" rel="noopener noreferrer">CM科技大学</a>频道 等开源社区。
+                    反代资源来自 Github、<a href="https://t.me/zip_cm_edu_kg" target="_blank"
+                        rel="noopener noreferrer">CM科技大学</a>频道 等开源社区。
                 </p>
                 <div class="proxy-list-container">
                     <div class="form-group">
@@ -11352,8 +11353,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('apiOptimizePort').value = normalizedPort;
 
             // 使用清理后的URL构建完整URL
-            const separator = cleanURL.includes('?') ? '&' : '?';
-            const completeURL = `${cleanURL}${separator}port=${normalizedPort}`;
+            const urlObj = new URL(cleanURL);
+            urlObj.searchParams.set('port', normalizedPort);
+            const completeURL = urlObj.toString();
 
             // URL编码
             const encodedURL = encodeURIComponent(completeURL);
@@ -11431,8 +11433,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
 
             // 构建完整URL
-            const separator = urlInput.includes('?') ? '&' : '?';
-            const completeURL = `${urlInput}${separator}port=${portInput}`;
+            const urlObj = new URL(urlInput);
+            urlObj.searchParams.set('port', portInput);
+            const completeURL = urlObj.toString();
 
             const customIPsTextarea = document.getElementById('customIPs');
             const currentValue = customIPsTextarea.value.trim();
@@ -13643,8 +13646,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         // ===== 节流更新系统：避免移动端下拉框被频繁刷新 =====
         const PROXY_DISPLAY_UPDATE_INTERVAL = 6000; // 节流间隔：6秒
         const proxyDisplayUpdateState = {
-            socks5:  { lastUpdate: 0, pending: false, timer: null, selectOpen: false, listenersAdded: false },
-            http:    { lastUpdate: 0, pending: false, timer: null, selectOpen: false, listenersAdded: false },
+            socks5: { lastUpdate: 0, pending: false, timer: null, selectOpen: false, listenersAdded: false },
+            http: { lastUpdate: 0, pending: false, timer: null, selectOpen: false, listenersAdded: false },
             proxyip: { lastUpdate: 0, pending: false, timer: null, selectOpen: false, listenersAdded: false }
         };
 

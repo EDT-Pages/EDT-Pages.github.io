@@ -624,6 +624,97 @@
         .login-error-hidden {
             display: none;
         }
+
+        /* 模态框按钮容器 */
+        .modal-button-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        @media (max-width: 480px) {
+            .modal-button-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .modal-button-container button {
+                width: 100%;
+                margin: 5px 0 !important;
+            }
+        }
+
+        /* 科技感按钮倒计时及光效 */
+        .btn-tech-upgrade {
+            position: relative;
+            overflow: hidden;
+            animation: btnPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        .btn-countdown-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: #fff;
+            width: 100%;
+            border-radius: 0 0 14px 14px;
+            transform-origin: left;
+            animation: countdownProgress 8s linear forwards;
+            box-shadow: 0 0 8px #fff, 0 0 15px #f6821f;
+            z-index: 2;
+        }
+
+        /* 扫描影效 */
+        .btn-tech-upgrade::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(30deg);
+            animation: techScan 3s infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes countdownProgress {
+            from {
+                transform: scaleX(1);
+            }
+
+            to {
+                transform: scaleX(0);
+            }
+        }
+
+        @keyframes techScan {
+            0% {
+                left: -60%;
+            }
+
+            30%,
+            100% {
+                left: 150%;
+            }
+        }
+
+        @keyframes btnPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 8px 16px rgba(246, 130, 31, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 8px 25px rgba(246, 130, 31, 0.5);
+            }
+        }
     </style>
 </head>
 
@@ -710,7 +801,10 @@
                     const lang = navigator.language || navigator.userLanguage;
                     const modalContent = document.getElementById('ir-modal-content');
                     let contentHTML = '';
-                    let countdownTextTemplate = '';
+
+                    // 按钮通用样式
+                    const primaryBtnStyle = 'display: inline-block; background: linear-gradient(135deg, #faab41 0%, #f6821f 100%); color: white; text-decoration: none; padding: 16px 32px; border-radius: 14px; font-weight: 700; font-size: 17px; box-shadow: 0 8px 16px rgba(246, 130, 31, 0.2); transition: all 0.3s ease; border: none; cursor: pointer; margin: 10px; outline: none; position: relative; overflow: hidden;';
+                    const secondaryBtnStyle = 'display: inline-block; background: #f3f4f6; color: #9ca3af; text-decoration: none; padding: 16px 32px; border-radius: 14px; font-weight: 500; font-size: 16px; transition: all 0.3s ease; border: none; cursor: pointer; margin: 10px; outline: none;';
 
                     if (lang.toLowerCase().startsWith('zh')) {
                         // Chinese
@@ -721,19 +815,14 @@
                             </div>
                             <div style="padding: 40px; text-align: left; line-height: 1.8;">
                                 <div style="background: #fdf2f2; border-left: 4px solid #dc2626; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
-                                    <p style="font-size: 16px; color: #991b1b; margin: 0;">很遗憾，由于<strong>网络环境差异</strong>原因，此项目暂不适配伊朗用户的使用体验。为了给您提供<strong>更稳定、更优化</strong>的服务，我们强烈推荐您使用由<strong>伊朗本地社区</strong>积极维护的专业项目，这些解决方案已针对当地网络环境进行了深度优化。</p>
+                                    <p style="font-size: 16px; color: #991b1b; margin: 0;">很遗憾，由于网络环境差异，此项目暂不适配伊朗用户的使用体验。为了给您提供更稳定、更优化的服务，我们强烈建议您使用由伊朗本地群组维护的专业项目。</p>
                                 </div>
-                                <div style="text-align: center;">
-                                    <p style="font-size: 15px; color: #64748b; margin-bottom: 20px;">📌 <strong>推荐项目</strong>：</p>
-                                    <a href="https://github.com/bia-pain-bache/BPB-Worker-Panel"
-                                        style="display: inline-block; background: linear-gradient(135deg, #faab41 0%, #f6821f 100%); color: white; text-decoration: none; padding: 18px 35px; border-radius: 15px; font-weight: 700; font-size: 18px; box-shadow: 0 10px 20px rgba(246, 130, 31, 0.3); transition: all 0.3s ease;">
-                                        ⭐ BPB-Worker-Panel
-                                    </a>
-                                    <div id="ir-countdown" style="margin-top: 25px; font-size: 14px; color: #94a3b8; font-weight: 500;"></div>
+                                <div class="modal-button-container">
+                                    <button id="accept-suggestion" style="${primaryBtnStyle}">⭐ 使用 BPB-Worker-Panel</button>
+                                    <button id="stay-current" style="${secondaryBtnStyle}">继续使用当前项目</button>
                                 </div>
                             </div>
                         `;
-                        countdownTextTemplate = (c) => `⏱️ 即将为您重定向 (${c}s)...`;
                     } else if (lang.toLowerCase().startsWith('en')) {
                         // English
                         contentHTML = `
@@ -743,21 +832,16 @@
                             </div>
                             <div style="padding: 40px; text-align: left; line-height: 1.8;">
                                 <div style="background: #fdf2f2; border-left: 4px solid #dc2626; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
-                                    <p style="font-size: 16px; color: #991b1b; margin: 0;">We're unable to provide optimal service in your region. To get the best experience, we strongly recommend switching to <strong>specialized solutions</strong> built and maintained by the <strong>Iranian developer community</strong>. These projects are <strong>finely tuned</strong> for your local network environment and offer superior performance.</p>
+                                    <p style="font-size: 16px; color: #991b1b; margin: 0;">We're unable to provide optimal service in your region. To get the best experience, we strongly recommend switching to specialized solutions maintained by the Iranian developer community.</p>
                                 </div>
-                                <div style="text-align: center;">
-                                    <p style="font-size: 15px; color: #64748b; margin-bottom: 20px;">📌 <strong>Recommended Alternative</strong>:</p>
-                                    <a href="https://github.com/bia-pain-bache/BPB-Worker-Panel"
-                                        style="display: inline-block; background: linear-gradient(135deg, #faab41 0%, #f6821f 100%); color: white; text-decoration: none; padding: 18px 35px; border-radius: 15px; font-weight: 700; font-size: 18px; box-shadow: 0 10px 20px rgba(246, 130, 31, 0.3); transition: all 0.3s ease;">
-                                        ⭐ BPB-Worker-Panel
-                                    </a>
-                                    <div id="ir-countdown" style="margin-top: 25px; font-size: 14px; color: #94a3b8; font-weight: 500;"></div>
+                                <div class="modal-button-container">
+                                    <button id="accept-suggestion" style="${primaryBtnStyle}">⭐ Use BPB-Worker-Panel</button>
+                                    <button id="stay-current" style="${secondaryBtnStyle}">Continue with current project</button>
                                 </div>
                             </div>
                         `;
-                        countdownTextTemplate = (c) => `⏱️ Redirecting in ${c}s...`;
                     } else {
-                        // Default to Persian (IR) for others
+                        // Default to Persian (IR)
                         contentHTML = `
                             <div style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); padding: 40px 20px; text-align: center;">
                                 <div style="font-size: 64px; margin-bottom: 20px; animation: shake 2s infinite;">🔒</div>
@@ -765,42 +849,44 @@
                             </div>
                             <div style="padding: 40px; text-align: right; line-height: 1.8; direction: rtl;">
                                 <div style="background: #fdf2f2; border-right: 4px solid #dc2626; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
-                                    <p style="font-size: 16px; color: #991b1b; margin: 0;">برای خدمات بهتر، ما <strong>پروژه‌های متخصص</strong> توسعه‌یافته توسط <strong>جامعه توسعه‌دهندگان ایرانی</strong> را توصیه می‌کنیم. این راه‌حل‌ها برای محیط شبکه شما <strong>بهینه‌سازی شده</strong> هستند و عملکرد بهتری را ارائه می‌دهند.</p>
+                                    <p style="font-size: 16px; color: #991b1b; margin: 0;">برای خدمات بهتر، ما پروژه‌های متخصص توسعه‌یافته توسط جامعه توسعه‌دهندگان ایرانی را توصیه می‌کنیم. این راه‌حل‌ها برای محیط شبکه شما بهینه‌سازی شده‌اند.</p>
                                 </div>
-                                <div style="text-align: center;">
-                                    <p style="font-size: 15px; color: #64748b; margin-bottom: 20px;">📌 <strong>گزینه پیشنهادشده</strong>:</p>
-                                    <a href="https://github.com/bia-pain-bache/BPB-Worker-Panel"
-                                        style="display: inline-block; background: linear-gradient(135deg, #faab41 0%, #f6821f 100%); color: white; text-decoration: none; padding: 18px 35px; border-radius: 15px; font-weight: 700; font-size: 18px; box-shadow: 0 10px 20px rgba(246, 130, 31, 0.3); transition: all 0.3s ease;">
-                                        ⭐ BPB-Worker-Panel
-                                    </a>
-                                    <div id="ir-countdown" style="margin-top: 25px; font-size: 14px; color: #94a3b8; font-weight: 500;"></div>
+                                <div class="modal-button-container" style="direction: ltr;">
+                                    <button id="accept-suggestion" style="${primaryBtnStyle}">⭐ استفاده از BPB-Worker-Panel</button>
+                                    <button id="stay-current" style="${secondaryBtnStyle}">ادامه استفاده از پروژه فعلی</button>
                                 </div>
                             </div>
                         `;
-                        countdownTextTemplate = (c) => `انتقال خودکار در ${c} ثانیه...`;
                     }
 
                     modalContent.innerHTML = contentHTML;
                     irModal.classList.add('show');
 
-                    let countdown = 10;
-                    const updateCountdown = () => {
-                        const countdownEl = document.getElementById('ir-countdown');
-                        if (countdownEl) {
-                            countdownEl.textContent = countdownTextTemplate(countdown);
-                        }
+                    // 倒计时逻辑
+                    const acceptBtn = document.getElementById('accept-suggestion');
+                    const stayBtn = document.getElementById('stay-current');
+
+                    // 注入动画进度条
+                    const progressBar = document.createElement('div');
+                    progressBar.className = 'btn-countdown-line';
+                    acceptBtn.classList.add('btn-tech-upgrade');
+                    acceptBtn.appendChild(progressBar);
+
+                    // 8秒倒计时自动跳转
+                    const redirectTimer = setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 8000);
+
+                    acceptBtn.onclick = () => {
+                        clearTimeout(redirectTimer);
+                        window.location.href = redirectUrl;
                     };
 
-                    updateCountdown();
-
-                    const timer = setInterval(() => {
-                        countdown--;
-                        updateCountdown();
-                        if (countdown <= 0) {
-                            clearInterval(timer);
-                            window.location.href = redirectUrl;
-                        }
-                    }, 1000);
+                    stayBtn.onclick = () => {
+                        clearTimeout(redirectTimer);
+                        irModal.classList.remove('show');
+                        enableLogin();
+                    };
                 } else {
                     // Not IR user
                     enableLogin();

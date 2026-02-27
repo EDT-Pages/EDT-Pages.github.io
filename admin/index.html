@@ -2138,6 +2138,69 @@
             font-size: 14px;
         }
 
+        /* 并排显示的表单行 */
+        .api-form-row-dual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .api-form-row-item {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .api-form-row-item label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .api-form-row-item input[type="number"] {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        .api-form-row-item input[type="text"] {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        .api-form-row-item.checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .api-form-row-item.checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .api-form-row-item.checkbox-item .checkbox-label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .api-form-row-dual {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .api-results-container {
             margin: 20px 0;
         }
@@ -2586,6 +2649,31 @@
             background: var(--input-bg);
             color: var(--text-primary);
             border-color: var(--input-border);
+        }
+
+        html.dark-mode .api-form-row-item label {
+            color: var(--text-primary);
+        }
+
+        html.dark-mode .api-form-row-item input[type="number"] {
+            background: var(--input-bg);
+            color: var(--text-primary);
+            border-color: var(--input-border);
+        }
+
+        html.dark-mode .api-form-row-item input[type="text"] {
+            background: var(--input-bg);
+            color: var(--text-primary);
+            border-color: var(--input-border);
+        }
+
+        html.dark-mode .api-form-row-item.checkbox-item input[type="checkbox"] {
+            background: var(--input-bg);
+            border-color: var(--input-border);
+        }
+
+        html.dark-mode .api-form-row-item.checkbox-item .checkbox-label {
+            color: var(--text-primary);
         }
 
         html.dark-mode .api-results-label {
@@ -6377,19 +6465,25 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             <!-- API URL 输入 -->
             <div class="api-form-group">
-                <div class="api-form-row">
+                <div class="api-form-row-item" style="grid-template-columns: auto 1fr;">
                     <label>API URL:</label>
                     <input type="text" id="apiOptimizeURL" placeholder="请输入 优选API地址 或 需要汇聚的订阅地址"
                         title="请输入 优选API地址 或 需要汇聚的订阅地址" oninput="autoConvertGitHubURL(); autoDetectPortFromURL()">
                 </div>
             </div>
 
-            <!-- 默认端口输入 -->
+            <!-- 默认端口输入 和 将优选作为PROXYIP勾选框 -->
             <div class="api-form-group">
-                <div class="api-form-row">
-                    <label>默认端口:</label>
-                    <input type="number" id="apiOptimizePort" value="443" min="1" max="65535" placeholder="1-65535"
-                        title="默认端口(1-65535)">
+                <div class="api-form-row-dual">
+                    <div class="api-form-row-item">
+                        <label>默认端口:</label>
+                        <input type="number" id="apiOptimizePort" value="443" min="1" max="65535" placeholder="1-65535"
+                            title="默认端口(1-65535)">
+                    </div>
+                    <div class="api-form-row-item checkbox-item">
+                        <input type="checkbox" id="useProxyIPCheckbox">
+                        <label for="useProxyIPCheckbox" class="checkbox-label">将优选作为PROXYIP</label>
+                    </div>
                 </div>
             </div>
 
@@ -11203,6 +11297,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('apiOptimizeURL').value = '';
             document.getElementById('apiOptimizePort').value = '443';
             document.getElementById('apiOptimizeResults').value = '';
+            document.getElementById('useProxyIPCheckbox').checked = false;
             document.getElementById('btnAppendAPI').disabled = true;
             document.getElementById('btnAppendResults').disabled = true;
             // 初始化line-editor
@@ -11355,6 +11450,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // 使用清理后的URL构建完整URL
             const urlObj = new URL(cleanURL);
             urlObj.searchParams.set('port', normalizedPort);
+            
+            // 如果勾选了"将优选作为PROXYIP"，添加proxyip参数
+            const useProxyIP = document.getElementById('useProxyIPCheckbox').checked;
+            if (useProxyIP) {
+                urlObj.searchParams.set('proxyip', 'true');
+            }
+            
             const completeURL = urlObj.toString();
 
             // URL编码
@@ -11417,16 +11519,18 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         function appendAPIToCustom() {
             let urlInput = document.getElementById('apiOptimizeURL').value.trim();
             const portInput = document.getElementById('apiOptimizePort').value.trim();
+            const useProxyIP = document.getElementById('useProxyIPCheckbox').checked;
 
             if (!urlInput) {
                 alert('请输入API URL');
                 return;
             }
 
-            // 移除URL中可能存在的port参数
+            // 移除URL中可能存在的port参数和proxyip参数
             try {
                 const urlObj = new URL(urlInput);
                 urlObj.searchParams.delete('port');
+                urlObj.searchParams.delete('proxyip');
                 urlInput = urlObj.toString();
             } catch (error) {
                 console.log('URL处理失败:', error);
@@ -11435,6 +11539,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // 构建完整URL
             const urlObj = new URL(urlInput);
             urlObj.searchParams.set('port', portInput);
+            
+            // 如果勾选了"将优选作为PROXYIP"，添加proxyip参数
+            if (useProxyIP) {
+                urlObj.searchParams.set('proxyip', 'true');
+            }
+            
             const completeURL = urlObj.toString();
 
             const customIPsTextarea = document.getElementById('customIPs');

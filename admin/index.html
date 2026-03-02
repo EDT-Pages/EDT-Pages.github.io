@@ -6326,7 +6326,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <div class="form-group subapi-form-group">
                 <label>请求方案</label>
                 <select id="cloudflareAuthMethod" title="请求方案" onchange="updateCloudflareAuthMethod()">
-                    <option id="usageapiOption" value="usageapi">UsageAPI</option>
+                    <option id="usageapiOption" value="usageapi">UsageAPI（支持多账号统计）</option>
                     <option value="accountid">Account ID + API Token</option>
                     <option value="email">Email + Global API Key</option>
                 </select>
@@ -11450,13 +11450,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // 使用清理后的URL构建完整URL
             const urlObj = new URL(cleanURL);
             urlObj.searchParams.set('port', normalizedPort);
-            
+
             // 如果勾选了"将优选作为PROXYIP"，添加proxyip参数
             const useProxyIP = document.getElementById('useProxyIPCheckbox').checked;
             if (useProxyIP) {
                 urlObj.searchParams.set('proxyip', 'true');
             }
-            
+
             const completeURL = urlObj.toString();
 
             // URL编码
@@ -11539,12 +11539,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // 构建完整URL
             const urlObj = new URL(urlInput);
             urlObj.searchParams.set('port', portInput);
-            
+
             // 如果勾选了"将优选作为PROXYIP"，添加proxyip参数
             if (useProxyIP) {
                 urlObj.searchParams.set('proxyip', 'true');
             }
-            
+
             const completeURL = urlObj.toString();
 
             const customIPsTextarea = document.getElementById('customIPs');

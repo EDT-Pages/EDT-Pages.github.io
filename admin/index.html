@@ -5820,10 +5820,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         </div>
                     </div>
 
-                    <div class="form-group" id="echDNSGroup" style="display: none; align-items: start;">
-                        <label for="echDNSSelect" style="padding-top: 10px;">ECH DNS服务</label>
+                    <div class="form-group" id="echDNSGroup" title="用于获取 EchConfig 的DNS服务" style="display: none; align-items: start;">
+                        <label for="echDNSSelect" style="padding-top: 10px;">EchConfig DNS服务</label>
                         <div class="input-wrapper" style="flex-direction: column; align-items: stretch;">
-                            <select id="echDNSSelect" title="ECH DNS服务" style="display: none;"
+                            <select id="echDNSSelect" style="display: none;"
                                 onchange="onEchDNSSelectChange()">
                                 <option value="udp://208.67.220.220:443" data-region="international">
                                     udp://208.67.220.220:443（OpenDNS）小白推荐选这个！！！</option>
@@ -5858,12 +5858,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         </div>
                     </div>
 
-                    <div class="form-group" id="echSNIGroup" style="display: none; align-items: start;">
-                        <label for="echSNISelect" style="padding-top: 10px;">ECH 解析域名</label>
+                    <div class="form-group" id="echSNIGroup" title="用于解析 EchConfig 的域名，并非ECH伪装域名！CF ECH伪装域名均为 cloudflare-ech.com ！！！" style="display: none; align-items: start;">
+                        <label for="echSNISelect" style="padding-top: 10px;">EchConfig 解析域名</label>
                         <div class="input-wrapper" style="flex-direction: column; align-items: stretch;">
-                            <select id="echSNISelect" title="ECH 解析域名" style="display: none;"
+                            <select id="echSNISelect" style="display: none;"
                                 onchange="onEchSNISelectChange()">
-                                <option value="__AUTO__">自动获取（使用节点伪装域名）</option>
+                                <option value="__AUTO__">自动获取（使用节点的伪装域名解析 EchConfig）</option>
                                 <option value="cloudflare-ech.com">cloudflare-ech.com（Cloudflare ECH域名）小白推荐选这个！！！</option>
                                 <option value="crypto.cloudflare.com">crypto.cloudflare.com（Cloudflare密码学服务）</option>
                                 <option value="encryptedsni.com">encryptedsni.com（Cloudflare加密SNI）</option>

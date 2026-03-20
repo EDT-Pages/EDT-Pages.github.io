@@ -5704,6 +5704,23 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         </select>
                     </div>
 
+                    <div class="form-group" id="transportGroup" style="display: none;">
+                        <label>传输协议</label>
+                        <select id="transport" title="传输协议" onchange="handleTransportChange()">
+                            <option value="ws">WebSocket 稳！</option>
+                            <option value="xhttp">XHTTP 大量消耗请求数！</option>
+                            <option value="grpc">gRPC 花里胡笑！</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="grpcModeGroup" style="display: none;">
+                        <label for="grpcMode">gRPC模式</label>
+                        <select id="grpcMode" title="gRPC模式" onchange="markModified('config')">
+                            <option value="gun">gun 普通模式</option>
+                            <option value="multi">multi 并发模式</option>
+                        </select>
+                    </div>
+
                     <div class="form-group" id="fingerprintGroup">
                         <label for="fingerprint">指纹伪装</label>
                         <select id="fingerprint" title="浏览器指纹"
@@ -5721,15 +5738,6 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         </select>
                     </div>
 
-                    <!--- 节点配置 
-                <div class="form-group">
-                    <label>传输协议</label>
-                    <select id="transport" onchange="markModified('config')">
-                        <option value="ws">WebSocket</option>
-                        <option value="xhttp">XHTTP</option>
-                    </select>
-                </div>
-                --->
                     <div class="checkbox-row">
                         <div class="form-group" id="skipVerifyGroup" style="display: none;">
                             <div class="input-wrapper">
@@ -5820,11 +5828,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         </div>
                     </div>
 
-                    <div class="form-group" id="echDNSGroup" title="用于获取 EchConfig 的DNS服务" style="display: none; align-items: start;">
+                    <div class="form-group" id="echDNSGroup" title="用于获取 EchConfig 的DNS服务"
+                        style="display: none; align-items: start;">
                         <label for="echDNSSelect" style="padding-top: 10px;">EchConfig DNS服务</label>
                         <div class="input-wrapper" style="flex-direction: column; align-items: stretch;">
-                            <select id="echDNSSelect" style="display: none;"
-                                onchange="onEchDNSSelectChange()">
+                            <select id="echDNSSelect" style="display: none;" onchange="onEchDNSSelectChange()">
                                 <option value="udp://208.67.220.220:443" data-region="international">
                                     udp://208.67.220.220:443（OpenDNS）小白推荐选这个！！！</option>
                                 <option value="udp://149.112.112.112:9953" data-region="international">
@@ -5842,7 +5850,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                 <option value="https://doh.cmliussss.com/CMLiussss" data-region="international">
                                     https://doh.cmliussss.com/CMLiussss（Google DoH：CM镜像）</option>
                                 <option value="https://dns.alidns.com/dns-query" data-region="domestic">
-                                    https://dns.alidns.com/dns-query（阿里 DoH：国内DNS需搭配设置ECH解析域名，是否可用需自行验证）小白推荐选这个！！！</option>
+                                    https://dns.alidns.com/dns-query（阿里 DoH：国内DNS需搭配设置ECH解析域名，是否可用需自行验证）小白推荐选这个！！！
+                                </option>
                                 <option value="https://sm2.doh.pub/dns-query" data-region="domestic">
                                     https://sm2.doh.pub/dns-query（腾讯国密 DoH：国内DNS需搭配设置ECH解析域名，是否可用需自行验证）</option>
                                 <option value="https://doh.360.cn/dns-query" data-region="domestic">
@@ -5858,13 +5867,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         </div>
                     </div>
 
-                    <div class="form-group" id="echSNIGroup" title="用于解析 EchConfig 的域名，并非ECH伪装域名！CF ECH伪装域名均为 cloudflare-ech.com ！！！" style="display: none; align-items: start;">
+                    <div class="form-group" id="echSNIGroup"
+                        title="用于解析 EchConfig 的域名，并非ECH伪装域名！CF ECH伪装域名均为 cloudflare-ech.com ！！！"
+                        style="display: none; align-items: start;">
                         <label for="echSNISelect" style="padding-top: 10px;">EchConfig 解析域名</label>
                         <div class="input-wrapper" style="flex-direction: column; align-items: stretch;">
-                            <select id="echSNISelect" style="display: none;"
-                                onchange="onEchSNISelectChange()">
+                            <select id="echSNISelect" style="display: none;" onchange="onEchSNISelectChange()">
                                 <option value="__AUTO__">自动获取（使用节点的伪装域名解析 EchConfig）</option>
-                                <option value="cloudflare-ech.com">cloudflare-ech.com（Cloudflare ECH域名）小白推荐选这个！！！</option>
+                                <option value="cloudflare-ech.com">cloudflare-ech.com（Cloudflare ECH域名）小白推荐选这个！！！
+                                </option>
                                 <option value="crypto.cloudflare.com">crypto.cloudflare.com（Cloudflare密码学服务）</option>
                                 <option value="encryptedsni.com">encryptedsni.com（Cloudflare加密SNI）</option>
                                 <option value="icook.hk">icook.hk（愛料理 HK）</option>
@@ -7734,7 +7745,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.getElementById('nodeUUID').value = currentConfig.UUID || '';
             document.getElementById('nodePATH').value = currentConfig.PATH || '';
             document.getElementById('protocol').value = currentConfig.协议类型 || 'vless';
-            //document.getElementById('transport').value = currentConfig.传输协议 || 'ws';
+            syncTransportSettingsFromConfig();
 
             // 检查跳过证书验证字段是否存在
             const skipVerifyGroup = document.getElementById('skipVerifyGroup');
@@ -8078,6 +8089,49 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 }
                 return temp;
             }
+        }
+
+        function updateGrpcModeVisibility() {
+            const transportSelect = document.getElementById('transport');
+            const grpcModeGroup = document.getElementById('grpcModeGroup');
+            if (!transportSelect || !grpcModeGroup) return;
+
+            const hasGrpcModeField = currentConfig && currentConfig['gRPC模式'] !== undefined;
+            grpcModeGroup.style.display = hasGrpcModeField && transportSelect.value === 'grpc' ? '' : 'none';
+        }
+
+        function handleTransportChange() {
+            updateGrpcModeVisibility();
+            markModified('config');
+        }
+
+        function syncTransportSettingsFromConfig() {
+            const transportGroup = document.getElementById('transportGroup');
+            const transportSelect = document.getElementById('transport');
+            const grpcModeGroup = document.getElementById('grpcModeGroup');
+            const grpcModeSelect = document.getElementById('grpcMode');
+            if (!transportGroup || !transportSelect || !grpcModeGroup || !grpcModeSelect) return;
+
+            const hasGrpcModeField = currentConfig && currentConfig['gRPC模式'] !== undefined;
+            if (!hasGrpcModeField) {
+                transportGroup.style.display = 'none';
+                grpcModeGroup.style.display = 'none';
+                return;
+            }
+
+            transportGroup.style.display = '';
+
+            transportSelect.value = currentConfig['传输协议'] || 'ws';
+            if (!transportSelect.value) {
+                transportSelect.value = 'ws';
+            }
+
+            grpcModeSelect.value = currentConfig['gRPC模式'] || 'gun';
+            if (!grpcModeSelect.value) {
+                grpcModeSelect.value = 'gun';
+            }
+
+            updateGrpcModeVisibility();
         }
 
         function updateProtocol() {
@@ -8942,7 +8996,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         async function saveConfig() {
             currentConfig.优选订阅生成.SUBNAME = document.getElementById('subName').value;
             currentConfig.协议类型 = document.getElementById('protocol').value;
-            //currentConfig.传输协议 = currentConfig.协议类型 === 'trojan' ? 'ws' : document.getElementById('transport').value;
+            if (currentConfig['gRPC模式'] !== undefined) {
+                currentConfig['传输协议'] = document.getElementById('transport').value;
+                currentConfig['gRPC模式'] = document.getElementById('grpcMode').value || 'gun';
+            }
             currentConfig.跳过证书验证 = document.getElementById('skipVerify').checked;
 
             // 保存PATH（如果"完整节点路径"字段存在，表示后端支持编辑PATH）
@@ -9212,6 +9269,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 document.getElementById('nodeUUID').value = currentConfig.UUID || '';
                 document.getElementById('nodePATH').value = currentConfig.PATH || '';
                 document.getElementById('protocol').value = currentConfig.协议类型 || 'vless';
+                syncTransportSettingsFromConfig();
                 document.getElementById('skipVerify').checked = currentConfig.跳过证书验证 || false;
 
                 // 处理PATH字段的只读状态
@@ -11154,6 +11212,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     document.getElementById('nodeUUID').value = currentConfig.UUID || '';
                     document.getElementById('nodePATH').value = currentConfig.PATH || '';
                     document.getElementById('protocol').value = currentConfig.协议类型 || 'vless';
+                    syncTransportSettingsFromConfig();
                     document.getElementById('skipVerify').checked = currentConfig.跳过证书验证 || false;
                     updateProtocol();
                 } else if (section === 'proxy') {

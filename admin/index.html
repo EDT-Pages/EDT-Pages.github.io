@@ -4558,6 +4558,67 @@
             display: block;
         }
 
+        #transportGrpcModal {
+            z-index: 2100000000;
+        }
+
+        #transportGrpcModal .modal {
+            max-width: 500px;
+            z-index: 2100000001;
+        }
+
+        .grpc-modal-path {
+            margin: 0 0 16px 0;
+            padding: 12px;
+            border-radius: 8px;
+            background: #fff5f5;
+            border: 1px solid #ffcdd2;
+            text-align: left;
+            font-size: 13px;
+            font-family: Consolas, Monaco, 'Courier New', monospace;
+            line-height: 1.7;
+            color: #b71c1c;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        html.dark-mode .grpc-modal-path {
+            background: #4a2424;
+            border-color: #7f1d1d;
+            color: #ffb4ae;
+        }
+
+        .grpc-modal-path-icon {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            fill: currentColor;
+        }
+
+        .grpc-modal-confirm-btn {
+            flex: 1;
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
+        }
+
+        .grpc-modal-confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(22, 163, 74, 0.45);
+            background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+        }
+
+        .grpc-modal-confirm-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
+        }
+
+        html.dark-mode .grpc-modal-confirm-btn {
+            background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+        }
+
         .tooltip-header {
             font-weight: bold;
             margin-bottom: 10px;
@@ -7207,6 +7268,40 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         </div>
     </div>
 
+    <!-- gRPC 功能提示弹窗 -->
+    <div class="modal-overlay" id="transportGrpcModal" onclick="closeTransportGrpcModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <button type="button" class="modal-close" onclick="hideTransportGrpcTooltip()">×</button>
+            <div style="text-align: center; padding: 20px 0;">
+                <h2 style="color: #f44336; margin: 0 0 16px 0; font-size: 22px; font-weight: 700;">⚠️ gRPC 功能提示</h2>
+                <p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.6; text-align: left;">
+                    当前你选择了 <strong>XHTTP</strong> 或 <strong>gRPC</strong> 传输协议。
+                </p>
+                <p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.6; text-align: left; color: #f44336;">
+                    请前往 <a href="https://dash.cloudflare.com/" target="_blank" rel="noopener noreferrer">Cloudflare
+                        面板</a> 为当前域名开启
+                    <strong>gRPC</strong>，否则节点可能无法连接。
+                </p>
+                <div class="grpc-modal-path">
+                    <svg class="grpc-modal-path-icon" role="presentation" xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                        <path
+                            d="M8 1.363A5.083 5.083 0 002.922 6.44c0 3.5 4.448 9.25 4.638 9.48h.785c.195-.25 4.732-6 4.732-9.485A5.083 5.083 0 008 1.363zm-.043 13.42c-1.08-1.478-4.035-5.75-4.035-8.343a4.078 4.078 0 118.155 0c0 2.588-3.017 6.867-4.12 8.343z">
+                        </path>
+                        <path
+                            d="M7.98 4.25a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5zm0 3.5A1.25 1.25 0 119.23 6.5a1.25 1.25 0 01-1.25 1.268V7.75z">
+                        </path>
+                    </svg>
+                    <span>网络 (Network) &gt; gRPC &gt; 开启 ✅</span>
+                </div>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button type="button" class="btn grpc-modal-confirm-btn" onclick="hideTransportGrpcTooltip()">我已开启
+                    gRPC</button>
+            </div>
+        </div>
+    </div>
+
     <!-- HOSTS 检查提示弹窗 -->
     <div class="modal-overlay" id="hostsMismatchModal" onclick="closeHostsMismatchModal(event)">
         <div class="modal" onclick="event.stopPropagation()" style="max-width: 500px;">
@@ -8100,8 +8195,41 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             grpcModeGroup.style.display = hasGrpcModeField && transportSelect.value === 'grpc' ? '' : 'none';
         }
 
+        function showTransportGrpcTooltip() {
+            const modal = document.getElementById('transportGrpcModal');
+            if (!modal) return;
+            modal.classList.add('show');
+        }
+
+        function hideTransportGrpcTooltip() {
+            const modal = document.getElementById('transportGrpcModal');
+            if (!modal) return;
+            modal.classList.remove('show');
+        }
+
+        function closeTransportGrpcModal(event) {
+            if (event && event.target && event.target.id !== 'transportGrpcModal') {
+                return;
+            }
+            hideTransportGrpcTooltip();
+        }
+
+        function updateTransportGrpcTooltipVisibility(showWhenSupportedTransport = false) {
+            const transportSelect = document.getElementById('transport');
+            if (!transportSelect) return;
+
+            const needsGrpcNotice = transportSelect.value === 'xhttp' || transportSelect.value === 'grpc';
+            if (needsGrpcNotice && showWhenSupportedTransport) {
+                showTransportGrpcTooltip();
+                return;
+            }
+
+            hideTransportGrpcTooltip();
+        }
+
         function handleTransportChange() {
             updateGrpcModeVisibility();
+            updateTransportGrpcTooltipVisibility(true);
             markModified('config');
         }
 
@@ -8116,6 +8244,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             if (!hasGrpcModeField) {
                 transportGroup.style.display = 'none';
                 grpcModeGroup.style.display = 'none';
+                hideTransportGrpcTooltip();
                 return;
             }
 
@@ -8132,6 +8261,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
 
             updateGrpcModeVisibility();
+            updateTransportGrpcTooltipVisibility(false);
         }
 
         function updateProtocol() {

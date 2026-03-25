@@ -10828,6 +10828,59 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const statusEl = document.getElementById('telegramStatus');
             const confirmBtn = document.getElementById('telegramConfirmBtn');
             const testBtn = event.target;
+            const telegramApiBases = [
+                'https://api.telegram.org',
+                'https://api.tg.090227.xyz'
+            ];
+
+            async function requestTelegram(endpoint, params = null, preferredBase = null) {
+                const requestOrder = preferredBase
+                    ? [preferredBase, ...telegramApiBases.filter(base => base !== preferredBase)]
+                    : telegramApiBases;
+                const errors = [];
+
+                for (let i = 0; i < requestOrder.length; i++) {
+                    const base = requestOrder[i];
+                    const queryString = params ? `?${params.toString()}` : '';
+                    const requestUrl = `${base}/bot${token}/${endpoint}${queryString}`;
+
+                    try {
+                        const response = await fetch(requestUrl);
+                        let data = null;
+
+                        try {
+                            data = await response.json();
+                        } catch (jsonError) {
+                            if (response.ok) {
+                                throw new Error('接口返回了无效的JSON数据');
+                            }
+                        }
+
+                        if (!response.ok) {
+                            // 401/400 等业务错误通常会携带 JSON，属于“接口可达”，不走备用接口。
+                            if (data && typeof data === 'object' && data.ok === false) {
+                                return { data, base };
+                            }
+                            throw new Error(`HTTP ${response.status}`);
+                        }
+
+                        if (!data || typeof data !== 'object') {
+                            throw new Error('接口返回数据格式异常');
+                        }
+
+                        return { data, base };
+                    } catch (error) {
+                        const host = new URL(base).hostname;
+                        errors.push(`${host}: ${error.message}`);
+
+                        if (i < requestOrder.length - 1) {
+                            console.warn(`[TelegramBot] ${host} 请求失败，切换备用接口`, error);
+                        }
+                    }
+                }
+
+                throw new Error(`官方API与备用API均请求失败（${errors.join('；')}）`);
+            }
 
             if (!token || !chatID) {
                 statusEl.textContent = '❌ 请填写Bot Token和Chat ID';
@@ -10847,17 +10900,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 statusEl.style.color = '#fff';
 
                 // 第一步：验证 Bot Token 的有效性
-                const getUrlParams = new URLSearchParams({
-                    access_token: token
-                });
-                const getMeUrl = `https://api.telegram.org/bot${token}/getMe`;
-
-                const getMeResponse = await fetch(getMeUrl);
-                if (!getMeResponse.ok) {
-                    throw new Error('Bot Token 无效，无法获取机器人信息');
-                }
-
-                const getMeData = await getMeResponse.json();
+                const getMeResult = await requestTelegram('getMe');
+                const getMeData = getMeResult.data;
                 if (!getMeData.ok) {
                     throw new Error('Bot Token 无效: ' + (getMeData.description || '未知错误'));
                 }
@@ -10867,17 +10911,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     chat_id: chatID,
                     text: '✅ Telegram 通知配置已验证成功！'
                 });
-                const sendUrl = `https://api.telegram.org/bot${token}/sendMessage?${sendUrlParams}`;
-
-                const sendResponse = await fetch(sendUrl);
-                if (!sendResponse.ok) {
-                    throw new Error('发送消息失败，请检查Chat ID是否正确');
-                }
-
-                const sendData = await sendResponse.json();
+                const sendResult = await requestTelegram('sendMessage', sendUrlParams, getMeResult.base);
+                const sendData = sendResult.data;
                 if (!sendData.ok) {
                     throw new Error('Chat ID 无效: ' + (sendData.description || '未知错误'));
                 }
+
+                console.log(`[TelegramBot] 验证成功，当前接口: ${sendResult.base}`);
 
                 // 验证成功
                 statusEl.style.background = 'linear-gradient(135deg, #10b981 0, #059669 100%)';

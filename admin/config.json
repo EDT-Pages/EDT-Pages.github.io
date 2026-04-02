@@ -12,6 +12,7 @@
   "协议类型": "vless",
   "传输协议": "ws",
   "gRPC模式": "gun",
+  "gRPCUserAgent": "Mozilla/5.0",
   "跳过证书验证": false,
   "启用0RTT": true,
   "TLS分片": "Shadowrocket",
@@ -20,6 +21,10 @@
   "ECHConfig": {
     "DNS": "https://doh.cmliussss.net/CMLiussss",
     "SNI": null
+  },
+  "SS": {
+    "加密方式": "aes-128-gcm",
+    "TLS": true
   },
   "Fingerprint": "chrome",
   "优选订阅生成": {

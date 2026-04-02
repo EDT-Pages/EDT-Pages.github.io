@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
@@ -2001,6 +2001,9 @@
             --input-border: #e5e7eb;
             --overlay-bg: rgba(255, 255, 255, 0.7);
             --blur-overlay: rgba(0, 0, 0, 0.3);
+            --lowperf-bg-start: #f5f7fb;
+            --lowperf-bg-end: #eef2f7;
+            --lowperf-overlay: rgba(255, 255, 255, 0.14);
             --latency-49: #4CAF50;
             --latency-149: #83DA00;
             --latency-299: #f58722;
@@ -2018,7 +2021,10 @@
             --input-bg: #2a2a2a;
             --input-border: #444444;
             --overlay-bg: rgba(32, 32, 32, 0.7);
-            --blur-overlay: rgba(0, 0, 0, 0.8)
+            --blur-overlay: rgba(0, 0, 0, 0.8);
+            --lowperf-bg-start: #0f172a;
+            --lowperf-bg-end: #1f2937;
+            --lowperf-overlay: rgba(15, 23, 42, 0.45);
         }
 
         html.dark-mode body {
@@ -2540,6 +2546,39 @@
 
         .module .input-wrapper input {
             flex: 1
+        }
+
+        .grpc-ua-wrapper {
+            position: relative;
+            display: block;
+            width: 100%;
+        }
+
+        .grpc-ua-wrapper input {
+            width: 100%;
+            padding-right: 86px !important;
+        }
+
+        .grpc-ua-action {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: none;
+            padding: 0;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-decoration: underline;
+            text-align: right;
+            white-space: nowrap;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .grpc-ua-action:hover,
+        .grpc-ua-action:focus-visible {
+            color: #3b82f6;
         }
 
         .readonly-wrapper {
@@ -5370,6 +5409,15 @@
             z-index: 2100000001;
         }
 
+        #ssTLSDisableModal {
+            z-index: 2100000000;
+        }
+
+        #ssTLSDisableModal .modal {
+            max-width: 540px;
+            z-index: 2100000001;
+        }
+
         .grpc-modal-path {
             margin: 0 0 16px 0;
             padding: 12px;
@@ -5420,6 +5468,76 @@
         html.dark-mode .grpc-modal-confirm-btn {
             background: linear-gradient(135deg, #34d399 0%, #059669 100%);
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+        }
+
+        .sstls-modal-alert {
+            margin: 0 0 12px 0;
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: left;
+            color: #f44336;
+        }
+
+        .sstls-modal-requirements {
+            margin: 0 0 16px 0;
+            padding: 12px;
+            border-radius: 8px;
+            background: #fff5f5;
+            border: 1px solid #ffcdd2;
+            text-align: left;
+            font-size: 13px;
+            line-height: 1.7;
+            color: #b71c1c;
+        }
+
+        .sstls-modal-requirements ol {
+            margin: 8px 0 0 20px;
+            padding: 0;
+        }
+
+        .sstls-modal-requirements li {
+            margin-bottom: 8px;
+        }
+
+        .sstls-modal-requirements li:last-child {
+            margin-bottom: 0;
+        }
+
+        .sstls-modal-path {
+            margin: 8px 0 0 0;
+        }
+
+        .sstls-modal-confirm-btn {
+            flex: 1;
+            background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(234, 88, 12, 0.35);
+        }
+
+        .sstls-modal-confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(234, 88, 12, 0.45);
+            background: linear-gradient(135deg, #f59e0b 0%, #c2410c 100%);
+        }
+
+        .sstls-modal-confirm-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3);
+        }
+
+        html.dark-mode .sstls-modal-alert {
+            color: #ff8a80;
+        }
+
+        html.dark-mode .sstls-modal-requirements {
+            background: #4a2424;
+            border-color: #7f1d1d;
+            color: #ffb4ae;
+        }
+
+        html.dark-mode .sstls-modal-confirm-btn {
+            background: linear-gradient(135deg, #fbbf24 0%, #ea580c 100%);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
         }
 
         .tooltip-header {
@@ -5529,6 +5647,10 @@
             margin-top: 16px;
         }
 
+        .network-cards-container .network-card {
+            cursor: pointer;
+        }
+
         @media (max-width: 1200px) {
             .network-cards-container {
                 grid-template-columns: repeat(2, 1fr);
@@ -5556,6 +5678,39 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+        }
+
+        .network-card {
+            --flag-badge-url: none;
+        }
+
+        .network-card.has-flag-badge::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            right: -3px;
+            width: 90px;
+            height: 60px;
+            background-image: var(--flag-badge-url);
+            background-repeat: no-repeat;
+            background-position: left center;
+            background-size: cover;
+            filter: blur(3.18px) saturate(1.08);
+            opacity: 0.2;
+            transform: rotate(10deg);
+            border-radius: 12px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .network-card .network-card-title,
+        .network-card .network-info-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        html.dark-mode .network-card.has-flag-badge::after {
+            opacity: 0.30;
         }
 
         html.dark-mode .network-card,
@@ -5660,6 +5815,58 @@
             font-family: 'Fira Code', monospace;
             font-size: 15px;
             word-break: break-all;
+            align-self: flex-start;
+            width: fit-content;
+            max-width: 100%;
+        }
+
+        .ip-text.clickable {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ip-text.clickable::after {
+            content: '';
+            width: 13px;
+            height: 13px;
+            flex-shrink: 0;
+            background-repeat: no-repeat;
+            background-size: 13px 13px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232196F3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+            opacity: 0.9;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            transform: translateY(0.5px);
+        }
+
+        .ip-text.clickable:hover::after {
+            opacity: 1;
+            transform: translateY(0.5px) scale(1.08);
+        }
+
+        .ip-text.clickable.is-loading::after {
+            background-image: none;
+            border: 2px solid rgba(33, 150, 243, 0.25);
+            border-top-color: #2196F3;
+            border-radius: 50%;
+            opacity: 1;
+            transform: translateY(0.5px);
+            animation: ipIconSpin 0.9s linear infinite;
+        }
+
+        html.dark-mode .ip-text.clickable.is-loading::after {
+            border-color: rgba(144, 202, 249, 0.25);
+            border-top-color: #90CAF9;
+        }
+
+        @keyframes ipIconSpin {
+            from {
+                transform: translateY(0.5px) rotate(0deg);
+            }
+
+            to {
+                transform: translateY(0.5px) rotate(360deg);
+            }
         }
 
         .location-text {
@@ -6195,13 +6402,58 @@
             background: rgba(255, 255, 255, 0.03);
             border-right-color: var(--border-color);
         }
+
+        /* 低性能模式（自动触发）：禁用高开销视觉效果，优化无硬件加速场景 */
+        html.low-performance-mode #background-iframe {
+            display: none !important;
+        }
+
+        html.low-performance-mode #blur-overlay {
+            display: block !important;
+            opacity: 1 !important;
+            animation: none !important;
+            background: var(--blur-overlay) !important;
+            -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+        }
+
+        html.low-performance-mode body {
+            background: linear-gradient(135deg, var(--lowperf-bg-start) 0%, var(--lowperf-bg-end) 100%) !important;
+        }
+
+        html.low-performance-mode .card-container,
+        html.low-performance-mode .header,
+        html.low-performance-mode .module,
+        html.low-performance-mode .modal,
+        html.low-performance-mode .latency-card,
+        html.low-performance-mode .proxy-map-container,
+        html.low-performance-mode #uuidSnippetModal .modal,
+        html.low-performance-mode .uuid-snippet-stage,
+        html.low-performance-mode #uuidSnippetDisplay {
+            -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+            filter: none !important;
+        }
+
+        html.low-performance-mode * {
+            animation: none !important;
+        }
+
+        html.low-performance-mode .header,
+        html.low-performance-mode .module,
+        html.low-performance-mode .modal,
+        html.low-performance-mode .latency-card,
+        html.low-performance-mode .social-link,
+        html.low-performance-mode .btn {
+            box-shadow: none !important;
+        }
     </style>
 
 </head>
 
 <body>
     <!-- 背景内容 -->
-    <iframe id="background-iframe" src="/" title="背景内容"></iframe>
+    <iframe id="background-iframe" src="about:blank" data-src="/" loading="lazy" title="背景内容"></iframe>
 
     <!-- 毛玻璃效果遮盖层 -->
     <div id="blur-overlay"></div>
@@ -6293,7 +6545,7 @@
                                 <span class="status-indicator" id="status-ipip"></span>
                                 <div class="title-text">
                                     <div class="title-main">国内测试</div>
-                                    <div class="title-subtitle">speedtest.cn</div>
+                                    <div class="title-subtitle">CN-Test</div>
                                 </div>
                             </div>
                             <div class="network-info-content">
@@ -6571,6 +6823,22 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         </select>
                     </div>
 
+                    <div class="form-group" id="ssMethodGroup" style="display: none;" title="Shadowsocks 的加密方式，推荐使用 aes-128-gcm 以获得更好的性能和兼容性。">
+                        <label for="ssMethod">加密方式</label>
+                        <select id="ssMethod" onchange="markModified('config')">
+                            <option value="aes-128-gcm">aes-128-gcm（CPU消耗少速度快）</option>
+                            <option value="aes-256-gcm">aes-256-gcm（在性能不佳的老设备上，加解密速度会变慢）</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="ssTLSGroup" style="display: none;" title="关闭TLS后，节点数据将以 HTTP明文 形式传输 aes-128/256-gcm 加密数据。所以即使关闭TLS，数据仍然是加密的。">
+                        <label for="ssTLS">TLS</label>
+                        <select id="ssTLS" onchange="handleSSTLSChange(event)">
+                            <option value="true">启用</option>
+                            <option value="false">关闭</option>
+                        </select>
+                    </div>
+
                     <div class="form-group" id="transportGroup" style="display: none;">
                         <label>传输协议</label>
                         <select id="transport" title="传输协议" onchange="handleTransportChange()">
@@ -6586,6 +6854,18 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             <option value="gun">gun 普通模式</option>
                             <option value="multi">multi 并发模式</option>
                         </select>
+                    </div>
+
+                    <div class="form-group" id="grpcUserAgentGroup" style="display: none;">
+                        <label for="grpcUserAgent"
+                            title="用于客户端发起 gRPC 请求时的 User-Agent。&#10;Clash/Mihomo 内核使用默认 UA 时，可能被 Cloudflare 误判为 DDoS 异常流量并拦截。&#10;若客户端为 Clash/Mihomo，请务必设置此项。">gRPC
+                            UA</label>
+                        <div class="input-wrapper grpc-ua-wrapper">
+                            <input type="text" id="grpcUserAgent"
+                                title="用于客户端发起 gRPC 请求时的 User-Agent。&#10;Clash/Mihomo 内核使用默认 UA 时，可能被 Cloudflare 误判为 DDoS 异常流量并拦截。&#10;若客户端为 Clash/Mihomo，请务必设置此项。"
+                                onchange="markModified('config')">
+                            <button type="button" class="grpc-ua-action" onclick="fillCurrentGrpcUA()">获取当前UA</button>
+                        </div>
                     </div>
 
                     <div class="form-group" id="fingerprintGroup">
@@ -8143,6 +8423,36 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         </div>
     </div>
 
+    <!-- ssTLS 关闭确认弹窗 -->
+    <div class="modal-overlay" id="ssTLSDisableModal" onclick="closeSSTLSDisableModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <button type="button" class="modal-close" onclick="cancelDisableSSTLS()">×</button>
+            <div style="text-align: center; padding: 20px 0;">
+                <h2 style="color: #f44336; margin: 0 0 16px 0; font-size: 22px; font-weight: 700;">⚠️ 关闭TLS传输层</h2>
+                <p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.6; text-align: left;">
+                    你正在准备关闭 <strong>Shadowsocks</strong> 的 TLS 传输层。为了避免节点失联，请先确认部署环境满足要求。
+                </p>
+                <div class="sstls-modal-requirements">
+                    <strong>关闭 TLS 前，请确认以下两点：</strong>
+                    <ol>
+                        <li>项目必须部署在 <strong>Workers</strong>（不是 Pages）。</li>
+                        <li>
+                            在 Cloudflare 中关闭 “<strong>始终使用 HTTPS</strong>”
+                            <div class="grpc-modal-path sstls-modal-path">
+                                <span>SSL/TLS &gt; 边缘证书 &gt; 始终使用 HTTPS &gt; <strong>关闭</strong></span>
+                            </div>
+                            或 <strong>HOST</strong> 直接使用 <strong>*.workers.dev</strong> 项目分配的域名。
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button type="button" class="btn sstls-modal-confirm-btn" onclick="confirmDisableSSTLS()">我准备好了</button>
+                <button type="button" class="btn btn-secondary" onclick="cancelDisableSSTLS()">取消</button>
+            </div>
+        </div>
+    </div>
+
     <!-- HOSTS 检查提示弹窗 -->
     <div class="modal-overlay" id="hostsMismatchModal" onclick="closeHostsMismatchModal(event)">
         <div class="modal" onclick="event.stopPropagation()" style="max-width: 500px;">
@@ -8180,6 +8490,200 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         let modifiedSections = new Set();
         let subConfigData = null;
         let hasMultipleHosts = false; // 标记是否存在多个 HOSTS
+        let isLowPerformanceMode = false;
+        let pendingSSTLSPreviousValue = null;
+        const LOW_PERF_STORAGE_KEY = 'adminLowPerformanceMode';
+        let performanceRecheckScheduled = false;
+
+        function parseForcedLowPerformanceMode() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const lite = params.get('lite');
+                if (lite === '1' || lite === 'true') {
+                    localStorage.setItem(LOW_PERF_STORAGE_KEY, '1');
+                    return true;
+                }
+                if (lite === '0' || lite === 'false') {
+                    localStorage.setItem(LOW_PERF_STORAGE_KEY, '0');
+                    return false;
+                }
+            } catch (_) {
+                // ignore URL parse errors
+            }
+
+            const saved = localStorage.getItem(LOW_PERF_STORAGE_KEY);
+            if (saved === '1') return true;
+            if (saved === '0') return false;
+            return null;
+        }
+
+        function enableLowPerformanceMode(reason) {
+            if (isLowPerformanceMode) return;
+            isLowPerformanceMode = true;
+            document.documentElement.classList.add('low-performance-mode');
+            console.info(`[perf] Low performance mode enabled: ${reason}`);
+        }
+
+        function initBackgroundIframe() {
+            const iframe = document.getElementById('background-iframe');
+            if (!iframe) return;
+
+            if (isLowPerformanceMode) {
+                iframe.setAttribute('src', 'about:blank');
+                return;
+            }
+
+            const targetSrc = iframe.getAttribute('data-src') || '/';
+            if (iframe.getAttribute('src') !== targetSrc) {
+                iframe.setAttribute('src', targetSrc);
+            }
+        }
+
+        function measureAverageFrameTime(sampleCount = 18, timeoutMs = 1500) {
+            return new Promise((resolve) => {
+                if (!window.requestAnimationFrame) {
+                    resolve(16.7);
+                    return;
+                }
+
+                let lastTime = 0;
+                let frameCount = 0;
+                let totalDelta = 0;
+                let rafId = 0;
+                let finished = false;
+
+                const finish = (value) => {
+                    if (finished) return;
+                    finished = true;
+                    if (rafId) cancelAnimationFrame(rafId);
+                    clearTimeout(timeoutId);
+                    resolve(value);
+                };
+
+                const step = (now) => {
+                    if (lastTime > 0) {
+                        totalDelta += now - lastTime;
+                    }
+                    lastTime = now;
+                    frameCount += 1;
+
+                    if (frameCount >= sampleCount) {
+                        const denominator = Math.max(1, frameCount - 1);
+                        finish(totalDelta / denominator);
+                        return;
+                    }
+
+                    rafId = requestAnimationFrame(step);
+                };
+
+                const timeoutId = setTimeout(() => finish(16.7), timeoutMs);
+                rafId = requestAnimationFrame(step);
+            });
+        }
+
+        function detectSoftwareRenderer() {
+            try {
+                const canvas = document.createElement('canvas');
+                const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                if (!gl) {
+                    return { isSoftware: true, reason: 'webgl-unavailable' };
+                }
+
+                let renderer = '';
+                let vendor = '';
+                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+
+                if (debugInfo) {
+                    renderer = String(gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || '');
+                    vendor = String(gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) || '');
+                } else {
+                    renderer = String(gl.getParameter(gl.RENDERER) || '');
+                    vendor = String(gl.getParameter(gl.VENDOR) || '');
+                }
+
+                const renderInfo = `${renderer} ${vendor}`.toLowerCase();
+                const softwareTokens = [
+                    'swiftshader',
+                    'software',
+                    'llvmpipe',
+                    'softpipe',
+                    'microsoft basic render',
+                    'mesa offscreen',
+                    'gdi generic',
+                    'rasterizer'
+                ];
+
+                const isSoftware = softwareTokens.some(token => renderInfo.includes(token));
+                return {
+                    isSoftware,
+                    reason: isSoftware ? `software-renderer:${renderer || vendor || 'unknown'}` : 'hardware-renderer'
+                };
+            } catch (_) {
+                return { isSoftware: false, reason: 'renderer-detect-error' };
+            }
+        }
+
+        function schedulePerformanceRecheck() {
+            if (performanceRecheckScheduled || isLowPerformanceMode) return;
+            performanceRecheckScheduled = true;
+
+            const runRecheck = async () => {
+                if (isLowPerformanceMode) return;
+                const avgFrameTime = await measureAverageFrameTime(30, 2600);
+                if (avgFrameTime > 20) {
+                    enableLowPerformanceMode(`post-load-frame-time=${avgFrameTime.toFixed(1)}ms`);
+                }
+                initBackgroundIframe();
+            };
+
+            const launch = () => {
+                setTimeout(() => {
+                    runRecheck().catch(err => console.warn('Performance recheck failed:', err));
+                }, 900);
+            };
+
+            if (document.readyState === 'complete') {
+                launch();
+            } else {
+                window.addEventListener('load', launch, { once: true });
+            }
+        }
+
+        async function initializePerformanceMode() {
+            const forcedMode = parseForcedLowPerformanceMode();
+            if (forcedMode !== null) {
+                if (forcedMode) {
+                    enableLowPerformanceMode('manual');
+                }
+                initBackgroundIframe();
+                return;
+            }
+
+            const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const cpuCores = Number(navigator.hardwareConcurrency || 0);
+            const memoryGB = Number(navigator.deviceMemory || 0);
+            const rendererProbe = detectSoftwareRenderer();
+
+            if (prefersReducedMotion || (cpuCores > 0 && cpuCores <= 4) || (memoryGB > 0 && memoryGB <= 4)) {
+                enableLowPerformanceMode('device-hints');
+                initBackgroundIframe();
+                return;
+            }
+
+            if (rendererProbe.isSoftware) {
+                enableLowPerformanceMode(rendererProbe.reason);
+                initBackgroundIframe();
+                return;
+            }
+
+            const avgFrameTime = await measureAverageFrameTime(22, 1800);
+            if (avgFrameTime > 22) {
+                enableLowPerformanceMode(`startup-frame-time=${avgFrameTime.toFixed(1)}ms`);
+            }
+
+            initBackgroundIframe();
+            schedulePerformanceRecheck();
+        }
 
         // 延迟测试配置
         const latencyTestConfig = {
@@ -8427,7 +8931,14 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 valueElement.style.color = avgColor;
 
                 // 如果数值变化较小，直接显示
-                if (Math.abs(siteState.current - targetValue) < 2) {
+                if (isLowPerformanceMode) {
+                    if (siteState.timer) {
+                        clearInterval(siteState.timer);
+                        siteState.timer = null;
+                    }
+                    siteState.current = targetValue;
+                    valueElement.innerHTML = `${targetValue}<span class="unit">ms</span>`;
+                } else if (Math.abs(siteState.current - targetValue) < 2) {
                     siteState.current = targetValue;
                     valueElement.innerHTML = `${targetValue}<span class="unit">ms</span>`;
                 } else {
@@ -8580,10 +9091,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         // 返回顶部
         function scrollToTop() {
             const pageWrapper = document.querySelector('.page-wrapper');
+            const behavior = isLowPerformanceMode ? 'auto' : 'smooth';
             if (pageWrapper) {
-                pageWrapper.scrollTo({ top: 0, behavior: 'smooth' });
+                pageWrapper.scrollTo({ top: 0, behavior });
             } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                window.scrollTo({ top: 0, behavior });
             }
         }
 
@@ -8749,8 +9261,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             document.getElementById('nodeUUID').value = currentConfig.UUID || '';
             document.getElementById('nodePATH').value = currentConfig.PATH || '';
+            syncSSProtocolSettingsFromConfig();
             document.getElementById('protocol').value = currentConfig.协议类型 || 'vless';
             syncTransportSettingsFromConfig();
+            updateProtocol();
 
             // 检查跳过证书验证字段是否存在
             const skipVerifyGroup = document.getElementById('skipVerifyGroup');
@@ -9099,10 +9613,17 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         function updateGrpcModeVisibility() {
             const transportSelect = document.getElementById('transport');
             const grpcModeGroup = document.getElementById('grpcModeGroup');
+            const grpcUserAgentGroup = document.getElementById('grpcUserAgentGroup');
             if (!transportSelect || !grpcModeGroup) return;
 
+            const isGrpcTransport = transportSelect.value === 'grpc';
             const hasGrpcModeField = currentConfig && currentConfig['gRPC模式'] !== undefined;
-            grpcModeGroup.style.display = hasGrpcModeField && transportSelect.value === 'grpc' ? '' : 'none';
+            const hasGrpcUserAgentField = currentConfig && currentConfig['gRPCUserAgent'] !== undefined;
+
+            grpcModeGroup.style.display = hasGrpcModeField && isGrpcTransport ? '' : 'none';
+            if (grpcUserAgentGroup) {
+                grpcUserAgentGroup.style.display = hasGrpcUserAgentField && isGrpcTransport ? '' : 'none';
+            }
         }
 
         function showTransportGrpcTooltip() {
@@ -9124,6 +9645,68 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             hideTransportGrpcTooltip();
         }
 
+        function showSSTLSDisableModal(previousValue) {
+            const modal = document.getElementById('ssTLSDisableModal');
+            if (!modal) return;
+            pendingSSTLSPreviousValue = previousValue;
+            modal.classList.add('show');
+        }
+
+        function hideSSTLSDisableModal() {
+            const modal = document.getElementById('ssTLSDisableModal');
+            if (!modal) return;
+            modal.classList.remove('show');
+        }
+
+        function closeSSTLSDisableModal(event) {
+            if (event && event.target && event.target.id !== 'ssTLSDisableModal') {
+                return;
+            }
+            cancelDisableSSTLS();
+        }
+
+        function confirmDisableSSTLS() {
+            const ssTLSSelect = document.getElementById('ssTLS');
+            if (!ssTLSSelect) return;
+
+            ssTLSSelect.value = 'false';
+            ssTLSSelect.dataset.confirmedValue = 'false';
+            pendingSSTLSPreviousValue = null;
+            hideSSTLSDisableModal();
+            updateProtocol();
+            markModified('config');
+        }
+
+        function cancelDisableSSTLS() {
+            const ssTLSSelect = document.getElementById('ssTLS');
+            if (ssTLSSelect) {
+                const restoredValue = pendingSSTLSPreviousValue || ssTLSSelect.dataset.confirmedValue || 'true';
+                ssTLSSelect.value = restoredValue;
+                ssTLSSelect.dataset.confirmedValue = restoredValue;
+            }
+            pendingSSTLSPreviousValue = null;
+            hideSSTLSDisableModal();
+            updateProtocol();
+        }
+
+        function handleSSTLSChange(event) {
+            const ssTLSSelect = document.getElementById('ssTLS');
+            if (!ssTLSSelect) return;
+
+            const nextValue = ssTLSSelect.value;
+            const previousValue = ssTLSSelect.dataset.confirmedValue || 'true';
+            const shouldConfirmDisable = nextValue === 'false' && previousValue !== 'false' && (!event || event.isTrusted);
+
+            if (shouldConfirmDisable) {
+                showSSTLSDisableModal(previousValue);
+                return;
+            }
+
+            ssTLSSelect.dataset.confirmedValue = nextValue;
+            updateProtocol();
+            markModified('config');
+        }
+
         function updateTransportGrpcTooltipVisibility(showWhenSupportedTransport = false) {
             const transportSelect = document.getElementById('transport');
             if (!transportSelect) return;
@@ -9143,17 +9726,31 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             markModified('config');
         }
 
+        function fillCurrentGrpcUA() {
+            const grpcUserAgentInput = document.getElementById('grpcUserAgent');
+            if (!grpcUserAgentInput) return;
+
+            grpcUserAgentInput.value = navigator.userAgent || '';
+            markModified('config');
+        }
+
         function syncTransportSettingsFromConfig() {
             const transportGroup = document.getElementById('transportGroup');
             const transportSelect = document.getElementById('transport');
             const grpcModeGroup = document.getElementById('grpcModeGroup');
             const grpcModeSelect = document.getElementById('grpcMode');
+            const grpcUserAgentGroup = document.getElementById('grpcUserAgentGroup');
+            const grpcUserAgentInput = document.getElementById('grpcUserAgent');
             if (!transportGroup || !transportSelect || !grpcModeGroup || !grpcModeSelect) return;
 
             const hasGrpcModeField = currentConfig && currentConfig['gRPC模式'] !== undefined;
+            const hasGrpcUserAgentField = currentConfig && currentConfig['gRPCUserAgent'] !== undefined;
             if (!hasGrpcModeField) {
                 transportGroup.style.display = 'none';
                 grpcModeGroup.style.display = 'none';
+                if (grpcUserAgentGroup) {
+                    grpcUserAgentGroup.style.display = 'none';
+                }
                 hideTransportGrpcTooltip();
                 return;
             }
@@ -9170,21 +9767,113 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 grpcModeSelect.value = 'gun';
             }
 
+            if (grpcUserAgentInput) {
+                grpcUserAgentInput.value = hasGrpcUserAgentField ? (currentConfig['gRPCUserAgent'] || '') : '';
+            }
+
             updateGrpcModeVisibility();
             updateTransportGrpcTooltipVisibility(false);
         }
 
-        function updateProtocol() {
-            const protocol = document.getElementById('protocol').value;
-            /*
-            const transport = document.getElementById('transport');
-            if (protocol === 'trojan') {
-                transport.value = 'ws';
-                transport.disabled = true;
-            } else {
-                transport.disabled = false;
+        function syncSSProtocolSettingsFromConfig() {
+            const protocolSelect = document.getElementById('protocol');
+            const ssMethodSelect = document.getElementById('ssMethod');
+            const ssTLSSelect = document.getElementById('ssTLS');
+            if (!protocolSelect || !ssMethodSelect || !ssTLSSelect) return;
+
+            const hasSSConfig = !!(currentConfig && currentConfig.SS && typeof currentConfig.SS === 'object');
+            const ssOption = protocolSelect.querySelector('option[value="ss"]');
+            const ssMethodKey = '\u52a0\u5bc6\u65b9\u5f0f';
+
+            if (hasSSConfig) {
+                if (!ssOption) {
+                    const option = document.createElement('option');
+                    option.value = 'ss';
+                    option.textContent = 'Shadowsocks';
+                    protocolSelect.appendChild(option);
+                }
+
+                const savedMethod = currentConfig.SS[ssMethodKey];
+                ssMethodSelect.value = savedMethod || 'aes-128-gcm';
+                if (!ssMethodSelect.value) {
+                    ssMethodSelect.value = 'aes-128-gcm';
+                }
+
+                ssTLSSelect.value = currentConfig.SS.TLS ? 'true' : 'false';
+                ssTLSSelect.dataset.confirmedValue = ssTLSSelect.value;
+                return;
             }
-            */
+
+            if (ssOption) {
+                ssOption.remove();
+            }
+            if (protocolSelect.value === 'ss') {
+                protocolSelect.value = 'vless';
+            }
+
+            ssMethodSelect.value = 'aes-128-gcm';
+            ssTLSSelect.value = 'false';
+            ssTLSSelect.dataset.confirmedValue = ssTLSSelect.value;
+        }
+
+        function updateSpecifiedPortLabelsByProtocol(protocol) {
+            const specifiedPortSelect = document.getElementById('specifiedPort');
+            if (!specifiedPortSelect) return;
+            const ssTLSSelect = document.getElementById('ssTLS');
+
+            const defaultLabels = {
+                '-1': '随机端口',
+                '443': '443',
+                '2053': '2053',
+                '2083': '2083',
+                '2087': '2087',
+                '2096': '2096',
+                '8443': '8443'
+            };
+
+            const shadowsocksLabels = {
+                '-1': '随机端口',
+                '443': '80',
+                '2053': '2052',
+                '2083': '2082',
+                '2087': '2086',
+                '2096': '2095',
+                '8443': '8080'
+            };
+
+            const useShadowsocksNoTLSLabels = protocol === 'ss' && ssTLSSelect && ssTLSSelect.value === 'false';
+            const labelMap = useShadowsocksNoTLSLabels ? shadowsocksLabels : defaultLabels;
+            Array.from(specifiedPortSelect.options).forEach((option) => {
+                const nextLabel = labelMap[option.value];
+                if (nextLabel !== undefined) {
+                    option.textContent = nextLabel;
+                }
+            });
+        }
+
+        function updateProtocol() {
+            const protocolSelect = document.getElementById('protocol');
+            const ssMethodGroup = document.getElementById('ssMethodGroup');
+            const ssTLSGroup = document.getElementById('ssTLSGroup');
+            if (!protocolSelect || !ssMethodGroup || !ssTLSGroup) return;
+
+            const hasSSConfig = !!(currentConfig && currentConfig.SS && typeof currentConfig.SS === 'object');
+            const showSSFields = hasSSConfig && protocolSelect.value === 'ss';
+            ssMethodGroup.style.display = showSSFields ? '' : 'none';
+            ssTLSGroup.style.display = showSSFields ? '' : 'none';
+
+            const protocol = protocolSelect.value;
+            updateSpecifiedPortLabelsByProtocol(protocol);
+            const transport = document.getElementById('transport');
+            if (transport) {
+                const shouldLockTransport = protocol === 'ss';
+                if (shouldLockTransport) {
+                    transport.value = 'ws';
+                }
+                transport.disabled = shouldLockTransport;
+                updateGrpcModeVisibility();
+                updateTransportGrpcTooltipVisibility(false);
+            }
         }
 
         // 处理浏览器指纹变化，联动ECH选项
@@ -10038,9 +10727,26 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         async function saveConfig() {
             currentConfig.优选订阅生成.SUBNAME = document.getElementById('subName').value;
             currentConfig.协议类型 = document.getElementById('protocol').value;
+            const ssMethodSelect = document.getElementById('ssMethod');
+            const ssTLSSelect = document.getElementById('ssTLS');
+            if (currentConfig.SS && typeof currentConfig.SS === 'object' && ssMethodSelect && ssTLSSelect) {
+                const ssMethodKey = '\u52a0\u5bc6\u65b9\u5f0f';
+                currentConfig.SS[ssMethodKey] = ssMethodSelect.value || 'aes-128-gcm';
+                currentConfig.SS.TLS = ssTLSSelect.value === 'true';
+            }
             if (currentConfig['gRPC模式'] !== undefined) {
                 currentConfig['传输协议'] = document.getElementById('transport').value;
                 currentConfig['gRPC模式'] = document.getElementById('grpcMode').value || 'gun';
+            }
+            if (currentConfig['gRPCUserAgent'] !== undefined) {
+                const grpcUserAgentInput = document.getElementById('grpcUserAgent');
+                if (grpcUserAgentInput) {
+                    // 保存前兜底：如果去除空格后为空，自动填入当前UA
+                    if (!grpcUserAgentInput.value.replace(/\s+/g, '')) {
+                        grpcUserAgentInput.value = navigator.userAgent || '';
+                    }
+                    currentConfig['gRPCUserAgent'] = grpcUserAgentInput.value || '';
+                }
             }
             currentConfig.跳过证书验证 = document.getElementById('skipVerify').checked;
 
@@ -10310,6 +11016,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 document.getElementById('nodeHost').value = currentConfig.HOST || '';
                 document.getElementById('nodeUUID').value = currentConfig.UUID || '';
                 document.getElementById('nodePATH').value = currentConfig.PATH || '';
+                syncSSProtocolSettingsFromConfig();
                 document.getElementById('protocol').value = currentConfig.协议类型 || 'vless';
                 syncTransportSettingsFromConfig();
                 document.getElementById('skipVerify').checked = currentConfig.跳过证书验证 || false;
@@ -10953,6 +11660,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
 
             const currentToken = uuidSnippetDisplayToken;
+            if (isLowPerformanceMode) {
+                setUUIDSnippetProgress(45);
+                if (preview) {
+                    preview.textContent = 'Low performance mode: generating dedicated Snippet.js...';
+                }
+                return currentToken;
+            }
             let frameIndex = 1;
             uuidSnippetDisplayPreviewTimer = setInterval(() => {
                 if (currentToken !== uuidSnippetDisplayToken) {
@@ -11004,6 +11718,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             setUUIDSnippetDisplayStatus('源码晶格重组完成', '正在解除视觉掩码并写入真实 Snippet.js', 'reveal');
 
             const previewSource = extractUUIDSnippetPreviewSource(displayScript);
+            if (isLowPerformanceMode) {
+                if (preview) {
+                    preview.textContent = previewSource;
+                }
+                setUUIDSnippetProgress(100);
+                setUUIDSnippetStageState('ready');
+                setUUIDSnippetCopyButtonEnabled(true);
+                return;
+            }
             const revealStart = performance.now();
             const revealDuration = 1650;
 
@@ -11479,12 +12202,14 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     copyNodeUUIDValue(nodeUUIDInput);
                 }
 
-                if (uuidEasterClickCount >= UUID_EASTER_HINT_START && uuidEasterClickCount < targetCount) {
+                if (!isLowPerformanceMode && uuidEasterClickCount >= UUID_EASTER_HINT_START && uuidEasterClickCount < targetCount) {
                     showNodeUUIDGiftFountain(clientX, clientY, nodeUUIDInput);
                 }
 
                 if (uuidEasterClickCount >= targetCount) {
-                    showNodeUUIDRocketFirework(clientX, clientY, nodeUUIDInput);
+                    if (!isLowPerformanceMode) {
+                        showNodeUUIDRocketFirework(clientX, clientY, nodeUUIDInput);
+                    }
                     openUUIDSnippetModal();
                     resetNodeUUIDEasterCount();
                     stopNodeUUIDLongPress();
@@ -11941,20 +12666,20 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         }
 
         async function fetchAndShowIpDetail(ip, targetElement = null) {
-            // 将 * 替换为 0 (兼容掩码IP)
-            const cleanIp = ip.toString().replace(/\*/g, '0');
+            let cleanIp = String(ip || '').trim();
+            if (cleanIp.includes('*') && targetElement && targetElement.dataset && targetElement.dataset.rawValue) {
+                cleanIp = String(targetElement.dataset.rawValue || '').trim();
+            }
+            if (!cleanIp || cleanIp === '未知') {
+                return;
+            }
 
             if (targetElement) {
-                // 移除可能存在的加载动画
-                const existingSpinner = targetElement.querySelector('.loading-spinner');
-                if (existingSpinner) {
+                if (targetElement.classList.contains('is-loading')) {
                     return; // 正在加载中,不重复请求
                 }
-
-                // 添加加载动画
-                const spinner = document.createElement('span');
-                spinner.className = 'loading-spinner';
-                targetElement.appendChild(spinner);
+                targetElement.classList.add('is-loading');
+                targetElement.setAttribute('aria-busy', 'true');
             }
 
             try {
@@ -11981,8 +12706,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 console.error('IP查询错误:', error);
             } finally {
                 if (targetElement) {
-                    const spinner = targetElement.querySelector('.loading-spinner');
-                    if (spinner) spinner.remove();
+                    targetElement.classList.remove('is-loading');
+                    targetElement.removeAttribute('aria-busy');
                 }
             }
         }
@@ -13310,6 +14035,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     document.getElementById('nodeHost').value = currentConfig.HOST || '';
                     document.getElementById('nodeUUID').value = currentConfig.UUID || '';
                     document.getElementById('nodePATH').value = currentConfig.PATH || '';
+                    syncSSProtocolSettingsFromConfig();
                     document.getElementById('protocol').value = currentConfig.协议类型 || 'vless';
                     syncTransportSettingsFromConfig();
                     document.getElementById('skipVerify').checked = currentConfig.跳过证书验证 || false;
@@ -14565,6 +15291,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         // 初始化
         initializeTheme();
         window.addEventListener('DOMContentLoaded', () => {
+            initializePerformanceMode().catch(err => console.warn('Performance mode initialization failed:', err));
             loadConfig();
             initUserMode();
             initLineEditor('customIPs');
@@ -14587,100 +15314,442 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
         }
 
-        // 获取国内测试数据 (遍历多个 API: speedtest.cn > ipipv.com > ipip.net)
-        async function fetchIpipData() {
-            setStatus('status-ipip', 'loading');
+        // 网络信息默认脱敏显示（点击卡片可显示真实值）
+        let networkPrivacyVisible = false;
+        const NETWORK_FIELD_CONFIGS = [
+            { id: 'ipip-ip', type: 'ip' },
+            { id: 'overseas-ip', type: 'ip' },
+            { id: 'cf-ip', type: 'ip' },
+            { id: 'twitter-ip', type: 'ip' },
+            { id: 'ipip-country', type: 'location' },
+            { id: 'overseas-country', type: 'location' },
+            { id: 'cf-country', type: 'location' },
+            { id: 'twitter-country', type: 'location' }
+        ];
 
-            // 获取标题元素,用于动态更新 API 来源
-            const titleElement = document.querySelector('#status-ipip').parentElement;
+        function maskNetworkIpValue(ip) {
+            const value = String(ip || '').trim();
+            if (!value || value === '未知') return value;
 
-            // 定义 API 配置列表,按优先级排序
-            const apiConfigs = [
-                {
-                    name: 'speedtest.cn',
-                    url: 'https://api-v3.speedtest.cn/ip',
-                    parser: (data) => {
-                        if (data.code === 0 && data.data) {
-                            return {
-                                ip: data.data.ip || '未知',
-                                country: data.data.country || '未知',
-                                city: data.data.city || '未知'
-                            };
-                        }
-                        throw new Error('数据格式错误');
-                    }
-                },
-                {
-                    name: 'ipipv.com',
-                    url: 'https://myip.ipipv.com/',
-                    parser: (data) => {
-                        return {
-                            ip: data.Ip || '未知',
-                            country: data.Country || '未知',
-                            city: data.City || '未知'
-                        };
-                    }
-                },
-                {
-                    name: 'ipip.net',
-                    url: 'https://myip.ipip.net/json',
-                    parser: (data) => {
-                        if (data.ret === 'ok' && data.data) {
-                            return {
-                                ip: data.data.ip || '未知',
-                                country: data.data.location[0] || '未知',
-                                city: data.data.location[2] || '未知'
-                            };
-                        }
-                        throw new Error('数据格式错误');
-                    }
-                }
-            ];
-
-            // 遍历 API 配置列表
-            for (const config of apiConfigs) {
-                try {
-                    // 添加时间戳参数避免缓存
-                    const timestamp = Date.now();
-                    const url = config.url + (config.url.includes('?') ? '&' : '?') + `_t=${timestamp}`;
-                    const response = await fetch(url);
-                    const data = await response.json();
-
-                    // 使用对应的解析器解析数据
-                    const result = config.parser(data);
-
-                    // 更新页面显示
-                    document.getElementById('ipip-ip').textContent = result.ip;
-                    document.getElementById('ipip-country').textContent = result.country + ' ' + result.city;
-                    setStatus('status-ipip', 'success');
-
-                    // 更新标题显示当前使用的 API
-                    if (titleElement) {
-                        titleElement.innerHTML = `<span class="status-indicator" id="status-ipip"></span><div class="title-text"><div class="title-main">国内测试</div><div class="title-subtitle">${config.name}</div></div>`;
-                        setStatus('status-ipip', 'success'); // 重新设置状态,因为 innerHTML 会清除
-                    }
-
-                    console.log(`[国内API:${config.name}] 成功: IP=${result.ip}, 位置=${result.country} ${result.city}`);
-                    return; // 成功则返回,不再尝试其他 API
-
-                } catch (error) {
-                    console.warn(`${config.name} 接口失败:`, error);
-                    // 继续尝试下一个 API
+            if (value.includes('.') && !value.includes(':')) {
+                const parts = value.split('.');
+                if (parts.length === 4) {
+                    return `${parts[0]}.${'*'.repeat(parts[1].length)}.${'*'.repeat(parts[2].length)}.${'*'.repeat(parts[3].length)}`;
                 }
             }
 
-            // 所有 API 都失败
-            document.getElementById('ipip-ip').innerHTML = '<span class="error">加载失败</span>';
-            document.getElementById('ipip-country').textContent = '';
-            document.getElementById('ipip-city').textContent = '';
-            setStatus('status-ipip', 'error');
-            console.error('所有国内测试 API 都失败');
+            if (value.includes(':')) {
+                const firstSegment = value.split(':')[0] || '****';
+                return `${firstSegment}:****:****:****:****:****:****:****`;
+            }
+
+            return value.length <= 2 ? '*'.repeat(Math.max(2, value.length)) : `${value.slice(0, 2)}${'*'.repeat(value.length - 2)}`;
+        }
+
+        function maskNetworkLocationValue(location) {
+            const value = String(location || '').trim();
+            if (!value || value === '未知') return value;
+
+            const tokens = value.split(/\s+/).filter(Boolean);
+            if (!tokens.length) return value;
+
+            return tokens.map((token, index) => {
+                if (index === 0 && /^[a-zA-Z]{2}$/.test(token)) {
+                    return token.toUpperCase();
+                }
+                return '*'.repeat(Math.max(2, token.length));
+            }).join(' ');
+        }
+
+        function stopNetworkFieldAnimation(fieldElement) {
+            if (!fieldElement) return;
+            if (fieldElement._privacyAnimFrame) {
+                cancelAnimationFrame(fieldElement._privacyAnimFrame);
+                fieldElement._privacyAnimFrame = null;
+            }
+        }
+
+        function animateNetworkFieldDisplay(fieldElement, targetText, durationMs = 160) {//逐字符替换速度
+            if (!fieldElement) return;
+            stopNetworkFieldAnimation(fieldElement);
+
+            const fromText = String(fieldElement.textContent || '');
+            const toText = String(targetText || '');
+            if (fromText === toText) {
+                fieldElement.textContent = toText;
+                return;
+            }
+
+            const maxLen = Math.max(fromText.length, toText.length);
+            const fromChars = fromText.padEnd(maxLen, ' ').split('');
+            const toChars = toText.padEnd(maxLen, ' ').split('');
+            const diffIndexes = [];
+            for (let i = 0; i < maxLen; i++) {
+                if (fromChars[i] !== toChars[i]) diffIndexes.push(i);
+            }
+
+            if (!diffIndexes.length) {
+                fieldElement.textContent = toText;
+                return;
+            }
+
+            const startTime = performance.now();
+            const frame = now => {
+                const progress = Math.min((now - startTime) / durationMs, 1);
+                const changedCount = Math.floor(progress * diffIndexes.length);
+
+                const currentChars = fromChars.slice();
+                for (let i = 0; i < changedCount; i++) {
+                    const idx = diffIndexes[i];
+                    currentChars[idx] = toChars[idx];
+                }
+
+                fieldElement.textContent = currentChars.join('').trimEnd();
+
+                if (progress < 1) {
+                    fieldElement._privacyAnimFrame = requestAnimationFrame(frame);
+                } else {
+                    fieldElement._privacyAnimFrame = null;
+                    fieldElement.textContent = toText;
+                }
+            };
+
+            fieldElement._privacyAnimFrame = requestAnimationFrame(frame);
+        }
+
+        function renderNetworkFieldDisplay(fieldElement, options = {}) {
+            if (!fieldElement) return;
+            if (fieldElement.dataset.displayState !== 'ready') return;
+            const { animate = false } = options;
+
+            const rawValue = String(fieldElement.dataset.rawValue || '').trim();
+            const maskType = fieldElement.dataset.maskType || 'location';
+
+            if (!rawValue) {
+                stopNetworkFieldAnimation(fieldElement);
+                fieldElement.textContent = '';
+                return;
+            }
+
+            let displayValue = rawValue;
+            if (!networkPrivacyVisible) {
+                displayValue = maskType === 'ip'
+                    ? maskNetworkIpValue(rawValue)
+                    : maskNetworkLocationValue(rawValue);
+            }
+
+            if (animate) {
+                animateNetworkFieldDisplay(fieldElement, displayValue);
+            } else {
+                stopNetworkFieldAnimation(fieldElement);
+                fieldElement.textContent = displayValue;
+            }
+        }
+
+        function setNetworkFieldValue(fieldId, rawValue, maskType) {
+            const fieldElement = document.getElementById(fieldId);
+            if (!fieldElement) return;
+
+            fieldElement.dataset.rawValue = String(rawValue || '').trim();
+            fieldElement.dataset.maskType = maskType;
+            fieldElement.dataset.displayState = 'ready';
+            renderNetworkFieldDisplay(fieldElement);
+
+            // IP 字段加载完成后立即就绪点击查询，不等待其它卡片
+            if (maskType === 'ip') {
+                makeIpClickable();
+            }
+        }
+
+        function setNetworkFieldError(fieldId, errorText) {
+            const fieldElement = document.getElementById(fieldId);
+            if (!fieldElement) return;
+
+            stopNetworkFieldAnimation(fieldElement);
+            fieldElement.dataset.rawValue = '';
+            fieldElement.dataset.displayState = 'error';
+            fieldElement.classList.remove('clickable', 'is-loading');
+            fieldElement.removeAttribute('title');
+            fieldElement.removeAttribute('aria-busy');
+            fieldElement.innerHTML = `<span class="error">${errorText}</span>`;
+        }
+
+        function clearNetworkFieldValue(fieldId) {
+            const fieldElement = document.getElementById(fieldId);
+            if (!fieldElement) return;
+
+            stopNetworkFieldAnimation(fieldElement);
+            fieldElement.dataset.rawValue = '';
+            fieldElement.dataset.displayState = 'empty';
+            fieldElement.classList.remove('clickable', 'is-loading');
+            fieldElement.removeAttribute('title');
+            fieldElement.removeAttribute('aria-busy');
+            fieldElement.textContent = '';
+        }
+
+        function refreshAllNetworkFieldDisplays(animate = false) {
+            NETWORK_FIELD_CONFIGS.forEach(({ id }) => {
+                const fieldElement = document.getElementById(id);
+                renderNetworkFieldDisplay(fieldElement, { animate });
+            });
+
+            applyNetworkCardFlag('ipip-country');
+            applyNetworkCardFlag('overseas-country');
+            applyNetworkCardFlag('cf-country');
+            applyNetworkCardFlag('twitter-country');
+        }
+
+        function toggleNetworkPrivacy(event) {
+            if (event) event.stopPropagation();
+            networkPrivacyVisible = !networkPrivacyVisible;
+            refreshAllNetworkFieldDisplays(true);
+        }
+
+        function bindNetworkCardPrivacyToggle() {
+            const cards = document.querySelectorAll('.network-cards-container .network-card');
+            cards.forEach(card => {
+                if (card.dataset.privacyToggleBound === '1') return;
+                card.dataset.privacyToggleBound = '1';
+                card.title = '点击卡片可显示/隐藏真实IP和地址';
+                card.addEventListener('click', toggleNetworkPrivacy);
+            });
+        }
+
+        // 根据卡片内国家缩写设置国旗角标
+        function applyNetworkCardFlag(countryElementId) {
+            const countryElement = document.getElementById(countryElementId);
+            if (!countryElement) return;
+
+            const networkCard = countryElement.closest('.network-card');
+            if (!networkCard) return;
+
+            const countryText = String(countryElement.dataset.rawValue || countryElement.textContent || '').trim();
+            const codeMatch = countryText.match(/\b([a-zA-Z]{2})\b/);
+            const countryCode = codeMatch ? codeMatch[1].toLowerCase() : '';
+
+            if (!countryCode) {
+                networkCard.classList.remove('has-flag-badge');
+                networkCard.style.removeProperty('--flag-badge-url');
+                return;
+            }
+
+            networkCard.style.setProperty('--flag-badge-url', `url("https://ipdata.co/flags/${countryCode}.png")`);
+            networkCard.classList.add('has-flag-badge');
+        }
+
+        // JSONP 请求工具（用于无 CORS 的接口）
+        function createJsonpRequest(url, callbackParam, timeoutMs = 8000) {
+            let settled = false;
+            let timeoutId = null;
+            let script = null;
+            let callbackScope = null;
+            let callbackKey = null;
+            let rejectPromise = null;
+
+            const cleanup = () => {
+                if (timeoutId) {
+                    clearTimeout(timeoutId);
+                    timeoutId = null;
+                }
+                if (script && script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+                if (callbackScope && callbackKey) {
+                    try {
+                        delete callbackScope[callbackKey];
+                    } catch {
+                        callbackScope[callbackKey] = undefined;
+                    }
+                }
+            };
+
+            const promise = new Promise((resolve, reject) => {
+                rejectPromise = reject;
+
+                const finalize = (handler, value) => {
+                    if (settled) return;
+                    settled = true;
+                    cleanup();
+                    handler(value);
+                };
+
+                const callbackPath = `window.__EDT2_IP_TEST_.__${Date.now()}_${Math.floor(Math.random() * 1e16)}__`;
+                const callbackChain = callbackPath.replace(/^window\./, '').split('.');
+
+                callbackScope = window;
+                for (let i = 0; i < callbackChain.length - 1; i++) {
+                    const key = callbackChain[i];
+                    if (!callbackScope[key] || typeof callbackScope[key] !== 'object') {
+                        callbackScope[key] = {};
+                    }
+                    callbackScope = callbackScope[key];
+                }
+                callbackKey = callbackChain[callbackChain.length - 1];
+                callbackScope[callbackKey] = payload => finalize(resolve, payload);
+
+                const requestUrl = new URL(url);
+                requestUrl.searchParams.set(callbackParam, callbackPath);
+                requestUrl.searchParams.set('_t', Date.now().toString());
+
+                script = document.createElement('script');
+                script.src = requestUrl.toString();
+                script.async = true;
+                script.referrerPolicy = 'no-referrer';
+                script.onerror = () => finalize(reject, new Error(`JSONP load failed: ${url}`));
+
+                timeoutId = setTimeout(() => {
+                    finalize(reject, new Error(`JSONP timeout: ${url}`));
+                }, timeoutMs);
+
+                document.head.appendChild(script);
+            });
+
+            return {
+                promise,
+                cancel: () => {
+                    if (!settled && rejectPromise) {
+                        settled = true;
+                        cleanup();
+                        rejectPromise(new Error(`JSONP cancelled: ${url}`));
+                    } else {
+                        cleanup();
+                    }
+                }
+            };
+        }
+
+        // 获取国内测试数据 (多源并发：HEAD + JSONP，提取IP后查询ipinfo)
+        async function fetchIpipData() {
+            setStatus('status-ipip', 'loading');
+
+            const statusElement = document.querySelector('#status-ipip');
+            const titleElement = statusElement ? statusElement.parentElement : null;
+            const testSources = [
+                {
+                    type: 'head',
+                    name: '字节跳动',
+                    url: 'https://perfops2.byte-test.com/500b-bench.jpg',
+                    ipHeader: 'X-Request-Ip'
+                },
+                {
+                    type: 'head',
+                    name: '字节跳动',
+                    url: 'https://perfops.byte-test.com',
+                    ipHeader: 'X-Request-Ip'
+                },
+                {
+                    type: 'head',
+                    name: '网易科技',
+                    url: 'https://necaptcha.nosdn.127.net/ab7f4275c1744aa28e0a8f3a1c58c532.png',
+                    ipHeader: 'cdn-user-ip'
+                },
+                {
+                    type: 'jsonp',
+                    name: '腾讯新闻',
+                    url: 'https://r.inews.qq.com/api/ip2city?otype=jsonp',
+                    callbackParam: 'callback',
+                    extractIp: payload => payload?.ip
+                },
+                {
+                    type: 'jsonp',
+                    name: '阿里巴巴',
+                    url: `https://${Date.now()}.dns-detect.alicdn.com/api/detect/DescribeDNSLookup`,
+                    callbackParam: 'cb',
+                    extractIp: payload => payload?.content?.localIp
+                }
+            ];
+            const requestTasks = testSources.map(sourceConfig => {
+                if (sourceConfig.type === 'jsonp') {
+                    const jsonpTask = createJsonpRequest(sourceConfig.url, sourceConfig.callbackParam);
+                    return {
+                        cancel: jsonpTask.cancel,
+                        promise: jsonpTask.promise.then(payload => {
+                            const requestIp = String(sourceConfig.extractIp(payload) || '').trim();
+                            if (!requestIp) {
+                                throw new Error(`${sourceConfig.url} missing jsonp ip`);
+                            }
+                            return {
+                                source: sourceConfig.url,
+                                requestIp,
+                                providerName: sourceConfig.name
+                            };
+                        })
+                    };
+                }
+
+                const controller = new AbortController();
+                return {
+                    cancel: () => controller.abort(),
+                    promise: (async () => {
+                        const url = `${sourceConfig.url}${sourceConfig.url.includes('?') ? '&' : '?'}_t=${Date.now()}`;
+                        const response = await fetch(url, {
+                            method: 'HEAD',
+                            cache: 'no-store',
+                            signal: controller.signal
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`${sourceConfig.url} HTTP ${response.status}`);
+                        }
+
+                        const requestIp = String(response.headers.get(sourceConfig.ipHeader) || '').trim();
+                        if (!requestIp) {
+                            throw new Error(`${sourceConfig.url} missing ${sourceConfig.ipHeader}`);
+                        }
+
+                        return {
+                            source: sourceConfig.url,
+                            requestIp,
+                            providerName: sourceConfig.name
+                        };
+                    })()
+                };
+            });
+
+            try {
+                const fastestSuccess = await Promise.any(requestTasks.map(task => task.promise));
+                requestTasks.forEach(task => task.cancel && task.cancel());
+
+                const infoResponse = await fetch(
+                    `https://api.cmliussss.net/api/ipinfo?ip=${encodeURIComponent(fastestSuccess.requestIp)}&_t=${Date.now()}`
+                );
+                if (!infoResponse.ok) {
+                    throw new Error(`ipinfo HTTP ${infoResponse.status}`);
+                }
+
+                const info = await infoResponse.json();
+                const ip = (info.ip || fastestSuccess.requestIp || '未知').trim();
+                const location = `${info.country_code || '未知'} ${info.asn || ''} ${info.as_name || ''}`.trim();
+
+                setNetworkFieldValue('ipip-ip', ip, 'ip');
+                setNetworkFieldValue('ipip-country', location || '未知', 'location');
+                applyNetworkCardFlag('ipip-country');
+                setStatus('status-ipip', 'success');
+
+                if (titleElement) {
+                    titleElement.innerHTML = `<span class="status-indicator" id="status-ipip"></span><div class="title-text"><div class="title-main">国内测试</div><div class="title-subtitle">${fastestSuccess.providerName}</div></div>`;
+                    setStatus('status-ipip', 'success');
+                }
+
+                console.log(`[国内测试] 成功: IP=${ip}, 位置=${location}, 来源=${fastestSuccess.source}`);
+            } catch (error) {
+                requestTasks.forEach(task => task.cancel && task.cancel());
+
+                setNetworkFieldError('ipip-ip', '加载失败');
+                clearNetworkFieldValue('ipip-country');
+                applyNetworkCardFlag('ipip-country');
+                const ipipCityElement = document.getElementById('ipip-city');
+                if (ipipCityElement) {
+                    ipipCityElement.textContent = '';
+                }
+                setStatus('status-ipip', 'error');
+                console.error('国内测试 所有测试源都失败:', error);
+            }
         }
 
         // 获取国外测试数据
         async function fetchOverseasTestData() {
             setStatus('status-overseas', 'loading');
-
             // API 配置：URL + 字段映射
             const apis = [
                 {
@@ -14700,8 +15769,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     const { ip, loc } = api.parse(await response.json());
                     const edgeIp = ip || '未知';
 
-                    document.getElementById('overseas-ip').textContent = edgeIp;
-                    document.getElementById('overseas-country').textContent = loc || '未知';
+                    setNetworkFieldValue('overseas-ip', edgeIp, 'ip');
+                    setNetworkFieldValue('overseas-country', loc || '未知', 'location');
+                    applyNetworkCardFlag('overseas-country');
                     setStatus('status-overseas', 'success');
                     console.log(`[国外测试] 成功: IP=${edgeIp}, 位置=${loc}`);
                     return;
@@ -14711,8 +15781,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
 
             // 所有 API 都失败
-            document.getElementById('overseas-ip').innerHTML = '<span class="error">加载失败</span>';
-            document.getElementById('overseas-country').textContent = '';
+            setNetworkFieldError('overseas-ip', '加载失败');
+            clearNetworkFieldValue('overseas-country');
+            applyNetworkCardFlag('overseas-country');
             setStatus('status-overseas', 'error');
             console.error('国外测试 所有API都失败');
         }
@@ -14727,14 +15798,16 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                 const cfIp = data.ip || '未知';
                 const cfLoc = ((data.country || '') + ' ' + (data.org || '')).trim() || '未知';
-                document.getElementById('cf-ip').textContent = cfIp;
-                document.getElementById('cf-country').textContent = cfLoc;
+                setNetworkFieldValue('cf-ip', cfIp, 'ip');
+                setNetworkFieldValue('cf-country', cfLoc, 'location');
+                applyNetworkCardFlag('cf-country');
                 setStatus('status-cf', 'success');
 
                 console.log(`[CloudFlare] 成功: IP=${cfIp}, 位置=${cfLoc}`);
             } catch (error) {
-                document.getElementById('cf-ip').innerHTML = '<span class="error">加载失败</span>';
-                document.getElementById('cf-country').textContent = '';
+                setNetworkFieldError('cf-ip', '加载失败');
+                clearNetworkFieldValue('cf-country');
+                applyNetworkCardFlag('cf-country');
                 setStatus('status-cf', 'error');
                 console.error('CloudFlare 接口错误:', error);
             }
@@ -14759,14 +15832,16 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                 const twIp = data.ip || '未知';
                 const twLoc = ((data.loc || '') + ' ' + (data.colo || '')).trim() || '未知';
-                document.getElementById('twitter-ip').textContent = twIp;
-                document.getElementById('twitter-country').textContent = twLoc;
+                setNetworkFieldValue('twitter-ip', twIp, 'ip');
+                setNetworkFieldValue('twitter-country', twLoc, 'location');
+                applyNetworkCardFlag('twitter-country');
                 setStatus('status-twitter', 'success');
 
                 console.log(`[Twitter] 成功: IP=${twIp}, 位置=${twLoc}`);
             } catch (error) {
-                document.getElementById('twitter-ip').innerHTML = '<span class="error">翻墙失败</span>';
-                document.getElementById('twitter-country').textContent = '';
+                setNetworkFieldError('twitter-ip', '翻墙失败');
+                clearNetworkFieldValue('twitter-country');
+                applyNetworkCardFlag('twitter-country');
                 setStatus('status-twitter', 'error');
                 console.error('推特入口接口错误:', error);
             }
@@ -14780,6 +15855,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // 检查容器是否存在
             const container = document.querySelector('.network-cards-container');
             if (!container) return;
+            bindNetworkCardPrivacyToggle();
 
             // 设置加载标志
             networkInfoLoaded = true;
@@ -14814,28 +15890,37 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const ipElements = document.querySelectorAll('.ip-text');
 
             ipElements.forEach(element => {
-                const ipText = element.textContent.trim();
+                const rawIpText = String(element.dataset.rawValue || element.textContent || '').trim();
 
                 // 跳过已经标记为错误、加载中、未知的元素
                 if (element.querySelector('.error') ||
-                    ipText === '加载中...' ||
-                    ipText === '未知' ||
+                    element.dataset.displayState === 'error' ||
+                    rawIpText === '加载中...' ||
+                    rawIpText === '未知' ||
+                    !rawIpText ||
                     element.classList.contains('clickable')) {
                     return;
                 }
 
                 // 添加可点击样式
                 element.classList.add('clickable');
+                element.title = '点击查询IP详细信息';
 
-                element.addEventListener('click', function () {
-                    let ipText = this.textContent.trim();
+                element.addEventListener('click', function (event) {
+                    event.stopPropagation();
 
-                    // 跳过显示"加载中..."或"未知"的元素
-                    if (ipText === '加载中...' || ipText === '未知') {
+                    if (this.dataset.displayState !== 'ready') {
                         return;
                     }
 
-                    fetchAndShowIpDetail(ipText, this);
+                    const rawIp = String(this.dataset.rawValue || this.textContent || '').trim();
+
+                    // 跳过显示"加载中..."或"未知"的元素
+                    if (!rawIp || rawIp === '加载中...' || rawIp === '未知') {
+                        return;
+                    }
+
+                    fetchAndShowIpDetail(rawIp, this);
                 });
             });
         }
@@ -15738,9 +16823,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const point = map.project([lat, lng], 4).subtract([0, offsetY]);
             const offsetCenter = map.unproject(point, 4);
 
-            map.flyTo(offsetCenter, 4, {
-                duration: 1.5
-            });
+            if (isLowPerformanceMode) {
+                map.setView(offsetCenter, 4, { animate: false });
+            } else {
+                map.flyTo(offsetCenter, 4, {
+                    duration: 1.5
+                });
+            }
 
             // 添加或更新 Popup
             const isDark = document.documentElement.classList.contains('dark-mode');
@@ -16330,3 +17419,4 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 </body>
 
 </html>
+

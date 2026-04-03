@@ -618,12 +618,8 @@
             100% {
                 opacity: 0;
                 transform:
-                    translate(
-                        calc(-50% + var(--gift-x-drift, 0px)),
-                        calc(-50% - var(--gift-y-lift, 150px))
-                    )
-                    scale(1.02)
-                    rotate(var(--gift-rotate, 0deg));
+                    translate(calc(-50% + var(--gift-x-drift, 0px)),
+                        calc(-50% - var(--gift-y-lift, 150px))) scale(1.02) rotate(var(--gift-rotate, 0deg));
             }
         }
 
@@ -666,12 +662,8 @@
             100% {
                 opacity: 1;
                 transform:
-                    translate(
-                        calc(-50% + var(--rocket-x-drift, 0px)),
-                        calc(-50% - 220px)
-                    )
-                    scale(1.06)
-                    rotate(9deg);
+                    translate(calc(-50% + var(--rocket-x-drift, 0px)),
+                        calc(-50% - 220px)) scale(1.06) rotate(9deg);
             }
         }
 
@@ -1734,6 +1726,185 @@
             opacity: 1
         }
 
+        .social-link.social-version {
+            width: auto;
+            min-width: 124px;
+            padding: 0 14px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            color: #4b5563;
+            cursor: pointer;
+        }
+
+        .social-link.social-version:hover,
+        .social-link.social-version:active {
+            transform: none;
+            color: #4b5563;
+            border-color: rgba(229, 231, 235, 0.8);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+
+        .social-link.social-version:hover::before {
+            opacity: 0;
+        }
+
+        .social-link.social-version:focus-visible {
+            outline: 2px solid rgba(250, 171, 65, 0.65);
+            outline-offset: 2px;
+        }
+
+        .social-link.social-version.is-latest,
+        .social-link.social-version.is-latest:hover,
+        .social-link.social-version.is-latest:active {
+            border-color: rgba(16, 185, 129, 0.65);
+            box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.2), 0 2px 8px rgba(16, 185, 129, 0.16);
+        }
+
+        .social-link.social-version.is-outdated,
+        .social-link.social-version.is-outdated:hover,
+        .social-link.social-version.is-outdated:active {
+            border-color: rgba(245, 158, 11, 0.68);
+            box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.2), 0 2px 8px rgba(245, 158, 11, 0.16);
+        }
+
+        .social-link.social-version.is-preview,
+        .social-link.social-version.is-preview:hover,
+        .social-link.social-version.is-preview:active {
+            border-color: rgba(147, 51, 234, 0.7);
+            box-shadow: 0 0 0 1px rgba(147, 51, 234, 0.2), 0 2px 8px rgba(147, 51, 234, 0.18);
+        }
+
+        .version-info-modal {
+            max-width: 520px;
+            text-align: left;
+        }
+
+        .version-info-title {
+            margin: 0 0 14px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .version-info-summary {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(148, 163, 184, 0.08) 0%, rgba(100, 116, 139, 0.06) 100%);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            color: #374151;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .version-info-summary.state-latest {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.08) 100%);
+            border-color: rgba(16, 185, 129, 0.34);
+        }
+
+        .version-info-summary.state-outdated {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(217, 119, 6, 0.08) 100%);
+            border-color: rgba(245, 158, 11, 0.34);
+        }
+
+        .version-info-summary.state-preview {
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.12) 0%, rgba(126, 34, 206, 0.08) 100%);
+            border-color: rgba(147, 51, 234, 0.34);
+        }
+
+        .version-info-summary strong {
+            color: #111827;
+            font-weight: 700;
+        }
+
+        .version-info-summary p {
+            margin: 0;
+        }
+
+        .version-info-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .version-state-tip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.35;
+            border: 1px solid transparent;
+        }
+
+        .version-state-tip.is-latest {
+            color: #065f46;
+            background: rgba(16, 185, 129, 0.16);
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+
+        .version-state-tip.is-outdated {
+            color: #92400e;
+            background: rgba(245, 158, 11, 0.16);
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+
+        .version-state-tip.is-preview {
+            color: #6b21a8;
+            background: rgba(147, 51, 234, 0.16);
+            border-color: rgba(147, 51, 234, 0.4);
+        }
+
+        .version-info-actions {
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .version-info-actions .btn {
+            width: 100%;
+        }
+
+        .btn-version-copy {
+            background: linear-gradient(135deg, #10b981 0, #059669 100%);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-version-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(16, 185, 129, 0.42);
+        }
+
+        .btn-version-copy:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-version-download {
+            background: linear-gradient(135deg, #3b82f6 0, #2563eb 100%);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.35);
+        }
+
+        .btn-version-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(59, 130, 246, 0.42);
+        }
+
+        .btn-version-download:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+        }
+
         /* 复选框样式 */
         .checkbox-group {
             display: flex;
@@ -1818,6 +1989,16 @@
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 12px;
+            }
+
+            .social-links {
+                gap: 12px;
+            }
+
+            .social-link.social-version {
+                min-width: 112px;
+                padding: 0 10px;
+                font-size: 12px;
             }
 
             .page-wrapper {
@@ -1909,6 +2090,29 @@
 
         /* 响应式设计 - 手机 */
         @media(max-width:480px) {
+            .social-links {
+                gap: 8px;
+            }
+
+            .social-link.social-version {
+                min-width: 104px;
+                padding: 0 8px;
+                font-size: 11px;
+            }
+
+            .version-info-modal {
+                padding: 22px 16px;
+            }
+
+            .version-info-title {
+                font-size: 20px;
+            }
+
+            .version-info-summary {
+                font-size: 14px;
+                padding: 12px;
+            }
+
             .page-wrapper {
                 padding: 12px;
                 justify-content: flex-start;
@@ -2212,6 +2416,89 @@
             color: #34d399;
             border-color: rgba(52, 211, 153, 0.5);
             box-shadow: 0 8px 24px rgba(52, 211, 153, 0.3), 0 4px 12px rgba(16, 185, 129, 0.2)
+        }
+
+        html.dark-mode .social-link.social-version {
+            color: #d1d5db;
+        }
+
+        html.dark-mode .social-link.social-version:hover,
+        html.dark-mode .social-link.social-version:active {
+            color: #d1d5db;
+            border-color: rgba(75, 75, 75, 0.6);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
+        }
+
+        html.dark-mode .social-link.social-version.is-latest,
+        html.dark-mode .social-link.social-version.is-latest:hover,
+        html.dark-mode .social-link.social-version.is-latest:active {
+            border-color: rgba(52, 211, 153, 0.72);
+            box-shadow: 0 0 0 1px rgba(52, 211, 153, 0.26), 0 2px 8px rgba(16, 185, 129, 0.24);
+        }
+
+        html.dark-mode .social-link.social-version.is-outdated,
+        html.dark-mode .social-link.social-version.is-outdated:hover,
+        html.dark-mode .social-link.social-version.is-outdated:active {
+            border-color: rgba(251, 191, 36, 0.78);
+            box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.24), 0 2px 8px rgba(245, 158, 11, 0.24);
+        }
+
+        html.dark-mode .social-link.social-version.is-preview,
+        html.dark-mode .social-link.social-version.is-preview:hover,
+        html.dark-mode .social-link.social-version.is-preview:active {
+            border-color: rgba(196, 181, 253, 0.85);
+            box-shadow: 0 0 0 1px rgba(196, 181, 253, 0.26), 0 2px 8px rgba(147, 51, 234, 0.26);
+        }
+
+        html.dark-mode .social-link.social-version:focus-visible {
+            outline-color: rgba(251, 191, 36, 0.7);
+        }
+
+        html.dark-mode .version-info-title {
+            color: #f3f4f6;
+        }
+
+        html.dark-mode .version-info-summary {
+            color: #d1d5db;
+            border-color: rgba(100, 116, 139, 0.34);
+            background: linear-gradient(135deg, rgba(100, 116, 139, 0.2) 0%, rgba(71, 85, 105, 0.15) 100%);
+        }
+
+        html.dark-mode .version-info-summary.state-latest {
+            border-color: rgba(52, 211, 153, 0.5);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.24) 0%, rgba(5, 150, 105, 0.18) 100%);
+        }
+
+        html.dark-mode .version-info-summary.state-outdated {
+            border-color: rgba(251, 191, 36, 0.5);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.24) 0%, rgba(217, 119, 6, 0.18) 100%);
+        }
+
+        html.dark-mode .version-info-summary.state-preview {
+            border-color: rgba(196, 181, 253, 0.56);
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.24) 0%, rgba(126, 34, 206, 0.18) 100%);
+        }
+
+        html.dark-mode .version-info-summary strong {
+            color: #f9fafb;
+        }
+
+        html.dark-mode .version-state-tip.is-latest {
+            color: #bbf7d0;
+            background: rgba(16, 185, 129, 0.24);
+            border-color: rgba(52, 211, 153, 0.52);
+        }
+
+        html.dark-mode .version-state-tip.is-outdated {
+            color: #fde68a;
+            background: rgba(245, 158, 11, 0.24);
+            border-color: rgba(251, 191, 36, 0.52);
+        }
+
+        html.dark-mode .version-state-tip.is-preview {
+            color: #e9d5ff;
+            background: rgba(147, 51, 234, 0.24);
+            border-color: rgba(196, 181, 253, 0.52);
         }
 
         html.dark-mode .btn-secondary {
@@ -6595,8 +6882,8 @@
                             <div class="network-card-title">
                                 <span class="status-indicator" id="status-twitter"></span>
                                 <div class="title-text">
-                                    <div class="title-main">翻墙测试</div>
-                                    <div class="title-subtitle">X.com</div>
+                                    <div class="title-main">墙外测试</div>
+                                    <div class="title-subtitle">!CN-Test</div>
                                 </div>
                             </div>
                             <div class="network-info-content">
@@ -6604,12 +6891,12 @@
                                 <div class="location-text">
                                     <span id="twitter-country" class="country-text">-</span>
                                 </div>
-                                <div class="network-tip">· 您访问推特(x.com)所使用的IP</div>
+                                <div id="twitter-tip" class="network-tip">· 您访问墙外站点所使用的IP</div>
                             </div>
                         </div>
                     </div>
                     <small style="font-size: 12px; color: #9ca3af; margin-top: 6px; display: block;">💡 <b>国内测试</b>
-                        是由您梯子的 <b>分流规则</b> 决定的，<b>国外测试</b> 是由您的 <b>优选IP</b> 决定的，而 <b>CF、Twitter、ChatGPT</b> 是由您的
+                        是由您梯子的 <b>分流规则</b> 决定的，<b>国外测试</b> 是由您的 <b>优选IP</b> 决定的，而 <b>CF、墙外入口、ChatGPT</b> 是由您的
                         <b>PROXYIP</b> 决定的。</small>
                     <div class="module-content" style="display: none;" id="network-module-content">
                         <!-- 延迟测试卡片 -->
@@ -6823,7 +7110,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         </select>
                     </div>
 
-                    <div class="form-group" id="ssMethodGroup" style="display: none;" title="Shadowsocks 的加密方式，推荐使用 aes-128-gcm 以获得更好的性能和兼容性。">
+                    <div class="form-group" id="ssMethodGroup" style="display: none;"
+                        title="Shadowsocks 的加密方式，推荐使用 aes-128-gcm 以获得更好的性能和兼容性。">
                         <label for="ssMethod">加密方式</label>
                         <select id="ssMethod" onchange="markModified('config')">
                             <option value="aes-128-gcm">aes-128-gcm（CPU消耗少速度快）</option>
@@ -6831,7 +7119,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         </select>
                     </div>
 
-                    <div class="form-group" id="ssTLSGroup" style="display: none;" title="关闭TLS后，节点数据将以 HTTP明文 形式传输 aes-128/256-gcm 加密数据。所以即使关闭TLS，数据仍然是加密的。">
+                    <div class="form-group" id="ssTLSGroup" style="display: none;"
+                        title="关闭TLS后，节点数据将以 HTTP明文 形式传输 aes-128/256-gcm 加密数据。所以即使关闭TLS，数据仍然是加密的。">
                         <label for="ssTLS">TLS</label>
                         <select id="ssTLS" onchange="handleSSTLSChange(event)">
                             <option value="true">启用</option>
@@ -7327,6 +7616,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12a12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472c-.18 1.898-.962 6.502-1.36 8.627c-.168.9-.499 1.201-.82 1.23c-.696.065-1.225-.46-1.9-.902c-1.056-.693-1.653-1.124-2.678-1.8c-1.185-.78-.417-1.21.258-1.91c.177-.184 3.247-2.977 3.307-3.23c.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345c-.48.33-.913.49-1.302.48c-.428-.008-1.252-.241-1.865-.44c-.752-.245-1.349-.374-1.297-.789c.027-.216.325-.437.893-.663c3.498-1.524 5.83-2.529 6.998-3.014c3.332-1.386 4.025-1.627 4.476-1.635z" />
                     </svg>
                 </a>
+                <div class="social-link social-version" id="versionBadge" title="当前版本" role="button" tabindex="0"
+                    onclick="openVersionInfoModal()" onkeydown="onVersionBadgeKeydown(event)" hidden
+                    style="display: none;">
+                    <span id="versionValue"></span>
+                </div>
                 <!-- 返回顶部按钮 -->
                 <button type="button" class="social-link" title="返回顶部" onclick="scrollToTop()">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -7344,6 +7638,28 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <button type="button" class="modal-close" onclick="closeQRCode()">×</button>
             <div id="qrcodeContainer" class="qrcode-container"></div>
             <button type="button" class="btn btn-primary btn-close-modal" onclick="closeQRCode()">关闭</button>
+        </div>
+    </div>
+
+    <!-- 版本信息气泡 -->
+    <div class="modal-overlay" id="versionInfoModal" onclick="closeVersionInfoModal(event)">
+        <div class="modal version-info-modal" onclick="event.stopPropagation()">
+            <button type="button" class="modal-close" onclick="closeVersionInfoModal()">×</button>
+            <h2 class="version-info-title">🚀 关于 edgetunnel</h2>
+            <div class="version-info-summary state-outdated" id="versionInfoSummary">
+                <p id="latestVersionInfoText" class="version-info-line"><strong>最新版本:</strong> <span
+                        id="latestVersionInfoValue">v0</span></p>
+                <p id="currentVersionInfoText" class="version-info-line"><strong>当前版本:</strong> <span
+                        id="currentVersionInfoValue">v0</span> <span id="currentVersionStateText"
+                        class="version-state-tip is-outdated">需要更新</span></p>
+            </div>
+            <div class="version-info-actions">
+                <button type="button" class="btn btn-version-copy" onclick="copyLatestWorkerSourceToClipboard()">📋
+                    复制最新Worker.js源码 到剪贴板</button>
+                <button type="button" class="btn btn-version-download" onclick="openLatestPagesZipDownload()">📦
+                    下载最新Pages.zip源码 上传部署</button>
+                <button type="button" class="btn btn-secondary" onclick="closeVersionInfoModal()">取消</button>
+            </div>
         </div>
     </div>
 
@@ -8494,6 +8810,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         let pendingSSTLSPreviousValue = null;
         const LOW_PERF_STORAGE_KEY = 'adminLowPerformanceMode';
         let performanceRecheckScheduled = false;
+        const WORKER_VERSION_SOURCE_URL = 'https://raw.githubusercontent.com/cmliu/edgetunnel/main/_worker.js';
+        const PAGES_ZIP_DOWNLOAD_URL = 'https://github.com/cmliu/edgetunnel/archive/refs/heads/main.zip';
+        let cachedWorkerVersionRawText = '';
+        let cachedLatestOnlineVersion = 0;
+        let cachedCurrentVersionNumber = 0;
+        let cachedCurrentVersionFullText = '';
 
         function parseForcedLowPerformanceMode() {
             try {
@@ -9099,6 +9421,266 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
         }
 
+        function updateVersionBadge(version) {
+            const versionBadge = document.getElementById('versionBadge');
+            const versionValue = document.getElementById('versionValue');
+            if (!versionBadge || !versionValue) return;
+
+            versionBadge.classList.remove('is-latest', 'is-outdated', 'is-preview');
+
+            const rawText = String(version ?? '').trim();
+            const digitsOnly = rawText.replace(/\D/g, '');
+            const text = digitsOnly || rawText;
+            if (text) {
+                cachedCurrentVersionFullText = text;
+                cachedCurrentVersionNumber = parseVersionNumber(text);
+                const shortText = text.slice(0, 8);
+                versionValue.textContent = "v2.1." + shortText;
+                versionBadge.dataset.health = '';
+                versionBadge.hidden = false;
+                versionBadge.style.display = 'flex';
+                versionBadge.title = `当前版本: ${versionValue.textContent}`;
+            } else {
+                versionValue.textContent = '';
+                cachedCurrentVersionNumber = 0;
+                cachedCurrentVersionFullText = '';
+                versionBadge.dataset.health = '';
+                versionBadge.hidden = true;
+                versionBadge.style.display = 'none';
+                versionBadge.title = '当前版本';
+            }
+        }
+
+        function parseVersionNumber(value) {
+            const digits = String(value ?? '').replace(/\D/g, '');
+            if (!digits) return 0;
+            const parsed = Number(digits);
+            return Number.isFinite(parsed) ? parsed : 0;
+        }
+
+        function getVersionHealthMeta(healthKey) {
+            if (healthKey === 'latest') {
+                return {
+                    titleSuffix: '已是最新',
+                    summaryClass: 'state-latest',
+                    tipClass: 'is-latest',
+                    tipText: '已是最新'
+                };
+            }
+            if (healthKey === 'preview') {
+                return {
+                    titleSuffix: '测试版',
+                    summaryClass: 'state-preview',
+                    tipClass: 'is-preview',
+                    tipText: '测试版'
+                };
+            }
+            return {
+                titleSuffix: '需要更新',
+                summaryClass: 'state-outdated',
+                tipClass: 'is-outdated',
+                tipText: '需要更新'
+            };
+        }
+
+        function applyVersionInfoHealthState(healthKey) {
+            const summaryEl = document.getElementById('versionInfoSummary');
+            const stateTextEl = document.getElementById('currentVersionStateText');
+            if (!summaryEl || !stateTextEl) return;
+
+            const meta = getVersionHealthMeta(healthKey);
+            summaryEl.classList.remove('state-latest', 'state-outdated', 'state-preview');
+            stateTextEl.classList.remove('is-latest', 'is-outdated', 'is-preview');
+            summaryEl.classList.add(meta.summaryClass);
+            stateTextEl.classList.add(meta.tipClass);
+            stateTextEl.textContent = meta.tipText;
+        }
+
+        function setVersionBadgeHealthState(diff) {
+            const versionBadge = document.getElementById('versionBadge');
+            const versionValue = document.getElementById('versionValue');
+            if (!versionBadge) return;
+
+            let healthKey = 'outdated';
+            if (diff === 0) {
+                healthKey = 'latest';
+            } else if (diff > 0) {
+                healthKey = 'preview';
+            }
+            const meta = getVersionHealthMeta(healthKey);
+
+            versionBadge.classList.remove('is-latest', 'is-outdated', 'is-preview');
+            if (healthKey === 'latest') {
+                versionBadge.classList.add('is-latest');
+            } else if (healthKey === 'outdated') {
+                versionBadge.classList.add('is-outdated');
+            } else {
+                versionBadge.classList.add('is-preview');
+            }
+            versionBadge.dataset.health = healthKey;
+            versionBadge.title = `当前版本: ${versionValue?.textContent || ''} ${meta.titleSuffix}`;
+            applyVersionInfoHealthState(healthKey);
+        }
+
+        async function fetchLatestOnlineVersionNumber() {
+            cachedWorkerVersionRawText = '';
+            cachedLatestOnlineVersion = 0;
+
+            try {
+                const workerText = await fetchWithAutoMirror(WORKER_VERSION_SOURCE_URL, 'Worker 主程序');
+                cachedWorkerVersionRawText = workerText;
+
+                const versionMatch = workerText.match(/^\s*const\s+Version\s*=\s*['"]([^'"]+)['"]\s*;?/m);
+                const latestVersion = versionMatch ? parseVersionNumber(versionMatch[1]) : 0;
+                cachedLatestOnlineVersion = latestVersion;
+                console.log(`[Version] 在线最新版本识别: raw="${versionMatch ? versionMatch[1] : ''}", parsed=${latestVersion}`);
+                return latestVersion;
+            } catch (error) {
+                console.warn('[Version] 在线获取最新版本失败，按 0 处理:', error);
+                cachedLatestOnlineVersion = 0;
+                return 0;
+            }
+        }
+
+        async function updateVersionBadgeHealthByLatest(currentVersion) {
+            const currentVersionNumber = parseVersionNumber(currentVersion);
+            const latestVersionNumber = await fetchLatestOnlineVersionNumber();
+            const diff = currentVersionNumber - latestVersionNumber;
+            console.log(`[Version] 版本比较: current=${currentVersionNumber}, latest=${latestVersionNumber}, diff=${diff}`);
+            setVersionBadgeHealthState(diff);
+        }
+
+        async function loadVersionByUUID(uuid) {
+            const uuidValue = String(uuid || '').trim();
+            if (!uuidValue) {
+                updateVersionBadge(0);
+                await updateVersionBadgeHealthByLatest(0);
+                return;
+            }
+
+            const maxRetries = 3;
+            let lastError = null;
+
+            for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                try {
+                    const response = await fetch(`/version?_t=${Date.now()}&uuid=${encodeURIComponent(uuidValue)}`, {
+                        method: 'GET',
+                        headers: {
+                            'Cache-Control': 'no-cache, no-store, must-revalidate',
+                            'Pragma': 'no-cache',
+                            'Expires': '0'
+                        }
+                    });
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                    const data = await response.json();
+                    if (!data || typeof data !== 'object' || !Object.prototype.hasOwnProperty.call(data, 'Version')) {
+                        throw new Error('missing Version field');
+                    }
+
+                    const currentVersion = parseVersionNumber(data.Version);
+                    console.log(`[Version] 当前版本识别: raw="${data.Version}", parsed=${currentVersion}, attempt=${attempt}/${maxRetries}`);
+                    updateVersionBadge(currentVersion);
+                    await updateVersionBadgeHealthByLatest(currentVersion);
+                    return;
+                } catch (error) {
+                    lastError = error;
+                    console.warn(`[Version] 获取版本号失败(第${attempt}/${maxRetries}次):`, error);
+                    if (attempt < maxRetries) {
+                        await new Promise(resolve => setTimeout(resolve, 300));
+                    }
+                }
+            }
+
+            console.warn('[Version] 获取版本号重试3次仍失败，按 0 处理:', lastError);
+            updateVersionBadge(0);
+            await updateVersionBadgeHealthByLatest(0);
+        }
+
+        function onVersionBadgeKeydown(event) {
+            if (!event) return;
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openVersionInfoModal();
+            }
+        }
+
+        function openVersionInfoModal() {
+            const versionBadge = document.getElementById('versionBadge');
+            const versionValue = document.getElementById('versionValue');
+            const modal = document.getElementById('versionInfoModal');
+            const latestVersionValueEl = document.getElementById('latestVersionInfoValue');
+            const currentVersionValueEl = document.getElementById('currentVersionInfoValue');
+            if (!versionBadge || !versionValue || !modal || !latestVersionValueEl || !currentVersionValueEl) return;
+            if (versionBadge.hidden || versionBadge.style.display === 'none') return;
+
+            const currentVersionFullText = cachedCurrentVersionFullText || String(versionValue.textContent || '').replace(/^v2\.1\./, '');
+            const currentVersion = parseVersionNumber(currentVersionFullText);
+            const latestVersion = cachedLatestOnlineVersion || 0;
+            latestVersionValueEl.textContent = `v2.1.${latestVersion}`;
+            currentVersionValueEl.textContent = `v2.1.${currentVersionFullText || currentVersion || 0}`;
+
+            let healthKey = versionBadge.dataset.health || '';
+            if (!healthKey) {
+                if (versionBadge.classList.contains('is-latest')) {
+                    healthKey = 'latest';
+                } else if (versionBadge.classList.contains('is-preview')) {
+                    healthKey = 'preview';
+                } else {
+                    healthKey = 'outdated';
+                }
+            }
+            applyVersionInfoHealthState(healthKey);
+            modal.classList.add('show');
+        }
+
+        function closeVersionInfoModal(event) {
+            if (event && event.target.id !== 'versionInfoModal') return;
+            const modal = document.getElementById('versionInfoModal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        async function copyLatestWorkerSourceToClipboard() {
+            const source = String(cachedWorkerVersionRawText || '');
+            if (!source) {
+                showToast('暂无可复制的最新 Worker.js 源码', 'error');
+                return;
+            }
+
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(source);
+                } else {
+                    const tempTextarea = document.createElement('textarea');
+                    tempTextarea.value = source;
+                    tempTextarea.style.position = 'fixed';
+                    tempTextarea.style.opacity = '0';
+                    tempTextarea.style.left = '-9999px';
+                    tempTextarea.style.top = '0';
+                    document.body.appendChild(tempTextarea);
+                    tempTextarea.focus();
+                    tempTextarea.select();
+                    const success = document.execCommand('copy');
+                    document.body.removeChild(tempTextarea);
+                    if (!success) throw new Error('execCommand copy failed');
+                }
+
+                showToast('✅ 已复制最新 Worker.js 源码到剪贴板', 'success');
+            } catch (error) {
+                console.error('[Version] 复制最新 Worker.js 源码失败:', error);
+                showToast('复制失败，请手动复制源码', 'error');
+            }
+        }
+
+        function openLatestPagesZipDownload() {
+            const popup = window.open(PAGES_ZIP_DOWNLOAD_URL, '_blank', 'noopener,noreferrer');
+            if (!popup) {
+                showToast('浏览器拦截了新窗口，请允许弹窗后再试', 'warning');
+            }
+        }
+
         // 初始化增强型文本编辑器
         function initLineEditor(textareaId) {
             const ta = document.getElementById(textareaId);
@@ -9170,9 +9752,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 currentConfig = await response.json();
                 originalConfig = JSON.parse(JSON.stringify(currentConfig));
                 renderUI();
+                loadVersionByUUID(currentConfig.UUID);
                 // 设置网页标题
                 document.title = `${currentConfig.优选订阅生成?.SUBNAME || 'edgetunnel'} 设置页面 - 管理后台`;
             } catch (error) {
+                updateVersionBadge('');
                 showToast('加载配置失败: ' + error.message, 'error');
             }
         }
@@ -9851,6 +10435,33 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             });
         }
 
+        function updateProtocolOptionAvailability(protocol) {
+            const ssTLSSelect = document.getElementById('ssTLS');
+            const enable0RTT = document.getElementById('enable0RTT');
+            const skipVerify = document.getElementById('skipVerify');
+            const tlsFragmentShadowrocket = document.getElementById('tlsFragmentShadowrocket');
+            const tlsFragmentHapp = document.getElementById('tlsFragmentHapp');
+
+            const isShadowsocks = protocol === 'ss';
+            const isShadowsocksNoTLS = isShadowsocks && ssTLSSelect && ssTLSSelect.value === 'false';
+
+            if (enable0RTT) {
+                enable0RTT.disabled = isShadowsocks;
+                if (isShadowsocks && enable0RTT.checked) {
+                    enable0RTT.checked = false;
+                }
+            }
+
+            [skipVerify, tlsFragmentShadowrocket, tlsFragmentHapp].forEach((checkbox) => {
+                if (checkbox) {
+                    checkbox.disabled = isShadowsocksNoTLS;
+                    if (isShadowsocksNoTLS && checkbox.checked) {
+                        checkbox.checked = false;
+                    }
+                }
+            });
+        }
+
         function updateProtocol() {
             const protocolSelect = document.getElementById('protocol');
             const ssMethodGroup = document.getElementById('ssMethodGroup');
@@ -9864,6 +10475,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             const protocol = protocolSelect.value;
             updateSpecifiedPortLabelsByProtocol(protocol);
+            updateProtocolOptionAvailability(protocol);
             const transport = document.getElementById('transport');
             if (transport) {
                 const shouldLockTransport = protocol === 'ss';
@@ -15618,6 +16230,60 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             };
         }
 
+        // 统一调用 IP 详情接口（按 IP 查询）
+        async function fetchIpInfoByIp(ip) {
+            const requestIp = String(ip || '').trim();
+            if (!requestIp) {
+                throw new Error('missing ip');
+            }
+
+            const apis = [
+                {
+                    name: 'cm-eo',
+                    url: `https://api.cmliussss.net/api/ipinfo?ip=${encodeURIComponent(requestIp)}`
+                }, 
+                {
+                    name: 'cm-cf',
+                    url: `https://cf.090227.xyz/api/ipsb?ip=${encodeURIComponent(requestIp)}`
+                }
+            ];
+
+            const requestTasks = apis.map(async api => {
+                const response = await fetch(api.url, { cache: 'no-store' });
+                if (!response.ok) {
+                    throw new Error(`${api.name} HTTP ${response.status}`);
+                }
+                const data = await response.json();
+                if (!data || typeof data !== 'object') {
+                    throw new Error(`${api.name} invalid payload`);
+                }
+                return data;
+            });
+
+            try {
+                return await Promise.any(requestTasks);
+            } catch (error) {
+                throw new Error(`ipinfo all failed for ${requestIp}`);
+            }
+        }
+
+        function formatIpInfoLocation(info) {
+            const countryCode = String(info?.country_code || '未知').trim() || '未知';
+            const rawAsn = info?.asn;
+            const asnText = rawAsn === undefined || rawAsn === null
+                ? ''
+                : (/^\d+$/.test(String(rawAsn).trim()) ? `AS${String(rawAsn).trim()}` : String(rawAsn).trim());
+            const asnName = String(
+                info?.as_name ||
+                info?.asn_organization ||
+                info?.organization ||
+                info?.isp ||
+                ''
+            ).trim();
+
+            return `${countryCode} ${asnText} ${asnName}`.trim() || '未知';
+        }
+
         // 获取国内测试数据 (多源并发：HEAD + JSONP，提取IP后查询ipinfo)
         async function fetchIpipData() {
             setStatus('status-ipip', 'loading');
@@ -15647,6 +16313,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     type: 'jsonp',
                     name: '腾讯新闻',
                     url: 'https://r.inews.qq.com/api/ip2city?otype=jsonp',
+                    callbackParam: 'callback',
+                    extractIp: payload => payload?.ip
+                },
+                {
+                    type: 'jsonp',
+                    name: '太平洋科技',
+                    url: 'https://whois.pconline.com.cn/ipJson.jsp',
                     callbackParam: 'callback',
                     extractIp: payload => payload?.ip
                 },
@@ -15706,32 +16379,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 };
             });
 
+            let fastestSuccess;
             try {
-                const fastestSuccess = await Promise.any(requestTasks.map(task => task.promise));
-                requestTasks.forEach(task => task.cancel && task.cancel());
-
-                const infoResponse = await fetch(
-                    `https://api.cmliussss.net/api/ipinfo?ip=${encodeURIComponent(fastestSuccess.requestIp)}&_t=${Date.now()}`
-                );
-                if (!infoResponse.ok) {
-                    throw new Error(`ipinfo HTTP ${infoResponse.status}`);
-                }
-
-                const info = await infoResponse.json();
-                const ip = (info.ip || fastestSuccess.requestIp || '未知').trim();
-                const location = `${info.country_code || '未知'} ${info.asn || ''} ${info.as_name || ''}`.trim();
-
-                setNetworkFieldValue('ipip-ip', ip, 'ip');
-                setNetworkFieldValue('ipip-country', location || '未知', 'location');
-                applyNetworkCardFlag('ipip-country');
-                setStatus('status-ipip', 'success');
-
-                if (titleElement) {
-                    titleElement.innerHTML = `<span class="status-indicator" id="status-ipip"></span><div class="title-text"><div class="title-main">国内测试</div><div class="title-subtitle">${fastestSuccess.providerName}</div></div>`;
-                    setStatus('status-ipip', 'success');
-                }
-
-                console.log(`[国内测试] 成功: IP=${ip}, 位置=${location}, 来源=${fastestSuccess.source}`);
+                fastestSuccess = await Promise.any(requestTasks.map(task => task.promise));
             } catch (error) {
                 requestTasks.forEach(task => task.cancel && task.cancel());
 
@@ -15744,6 +16394,36 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 }
                 setStatus('status-ipip', 'error');
                 console.error('国内测试 所有测试源都失败:', error);
+                return;
+            }
+
+            requestTasks.forEach(task => task.cancel && task.cancel());
+
+            const fallbackIp = String(fastestSuccess.requestIp || '未知').trim() || '未知';
+            setNetworkFieldValue('ipip-ip', fallbackIp, 'ip');
+            clearNetworkFieldValue('ipip-country');
+            applyNetworkCardFlag('ipip-country');
+
+            if (titleElement) {
+                titleElement.innerHTML = `<span class="status-indicator" id="status-ipip"></span><div class="title-text"><div class="title-main">国内测试</div><div class="title-subtitle">${fastestSuccess.providerName}</div></div>`;
+                setStatus('status-ipip', 'loading');
+            }
+
+            try {
+                const info = await fetchIpInfoByIp(fastestSuccess.requestIp);
+                const ip = String(info.ip || fastestSuccess.requestIp || '未知').trim();
+                const location = formatIpInfoLocation(info);
+
+                setNetworkFieldValue('ipip-ip', ip, 'ip');
+                setNetworkFieldValue('ipip-country', location || '未知', 'location');
+                applyNetworkCardFlag('ipip-country');
+                setStatus('status-ipip', 'success');
+                console.log(`[国内测试] 成功: IP=${ip}, 位置=${location}, 来源=${fastestSuccess.source}`);
+            } catch (detailError) {
+                setNetworkFieldValue('ipip-country', '未知', 'location');
+                applyNetworkCardFlag('ipip-country');
+                setStatus('status-ipip', 'success');
+                console.warn(`[国内测试] 已获取IP=${fallbackIp}，但查询详细信息失败:`, detailError);
             }
         }
 
@@ -15813,37 +16493,112 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
         }
 
-        // 获取推特入口数据
+        // 获取墙外测试数据（谷歌优先，失败回退 X.com）
         async function fetchTwitterData() {
             setStatus('status-twitter', 'loading');
-            try {
-                const timestamp = Date.now();
-                const response = await fetch(`https://help.x.com/cdn-cgi/trace?_t=${timestamp}`);
-                const text = await response.text();
+            const statusElement = document.querySelector('#status-twitter');
+            const titleElement = statusElement ? statusElement.parentElement : null;
+            const tipElement = document.getElementById('twitter-tip');
 
-                // 解析文本格式的响应 (key=value 格式,每行一个)
-                const data = {};
-                text.split('\n').forEach(line => {
-                    const [key, value] = line.split('=');
-                    if (key && value) {
-                        data[key.trim()] = value.trim();
+            const renderTwitterTitle = (subtitle) => {
+                if (!titleElement) return;
+                titleElement.innerHTML = `<span class="status-indicator" id="status-twitter"></span><div class="title-text"><div class="title-main">墙外测试</div><div class="title-subtitle">${subtitle}</div></div>`;
+            };
+
+            const renderTwitterTip = (sourceName) => {
+                if (!tipElement) return;
+                tipElement.textContent = `· 您访问 ${sourceName} 所使用的IP`;
+            };
+
+            const testSources = [
+                {
+                    name: '谷歌(Google)',
+                    getIp: async () => {
+                        const jsonpTask = createJsonpRequest('https://jsonp-ip.appspot.com/', 'callback', 8000);
+                        try {
+                            const payload = await jsonpTask.promise;
+                            const requestIp = String(payload?.ip || '').trim();
+                            if (!requestIp) {
+                                throw new Error('google jsonp missing ip');
+                            }
+                            return requestIp;
+                        } finally {
+                            jsonpTask.cancel();
+                        }
                     }
-                });
+                },
+                {
+                    name: '推特(X.com)',
+                    getIp: async () => {
+                        const response = await fetch(`https://help.x.com/cdn-cgi/trace?_t=${Date.now()}`, {
+                            cache: 'no-store'
+                        });
+                        if (!response.ok) {
+                            throw new Error(`x trace HTTP ${response.status}`);
+                        }
 
-                const twIp = data.ip || '未知';
-                const twLoc = ((data.loc || '') + ' ' + (data.colo || '')).trim() || '未知';
-                setNetworkFieldValue('twitter-ip', twIp, 'ip');
-                setNetworkFieldValue('twitter-country', twLoc, 'location');
+                        const text = await response.text();
+                        const ipLine = text.split('\n').find(line => line.startsWith('ip='));
+                        const requestIp = String(ipLine ? ipLine.slice(3) : '').trim();
+                        if (!requestIp) {
+                            throw new Error('x trace missing ip');
+                        }
+                        return requestIp;
+                    }
+                }
+            ];
+
+            try {
+                let fastestSuccess = null;
+                for (const source of testSources) {
+                    try {
+                        const requestIp = await source.getIp();
+                        fastestSuccess = {
+                            providerName: source.name,
+                            requestIp
+                        };
+                        break;
+                    } catch (sourceError) {
+                        console.log(`[墙外测试] ${source.name} 失败: ${sourceError.message}`);
+                    }
+                }
+
+                if (!fastestSuccess) {
+                    throw new Error('all outside entry sources failed');
+                }
+
+                const fallbackIp = String(fastestSuccess.requestIp || '未知').trim() || '未知';
+                setNetworkFieldValue('twitter-ip', fallbackIp, 'ip');
+                clearNetworkFieldValue('twitter-country');
                 applyNetworkCardFlag('twitter-country');
-                setStatus('status-twitter', 'success');
+                renderTwitterTitle(fastestSuccess.providerName);
+                renderTwitterTip(fastestSuccess.providerName);
+                setStatus('status-twitter', 'loading');
 
-                console.log(`[Twitter] 成功: IP=${twIp}, 位置=${twLoc}`);
+                try {
+                    const info = await fetchIpInfoByIp(fastestSuccess.requestIp);
+                    const twIp = String(info.ip || fastestSuccess.requestIp || '未知').trim();
+                    const twLoc = formatIpInfoLocation(info);
+                    setNetworkFieldValue('twitter-ip', twIp, 'ip');
+                    setNetworkFieldValue('twitter-country', twLoc, 'location');
+                    applyNetworkCardFlag('twitter-country');
+                    setStatus('status-twitter', 'success');
+                    console.log(`[墙外测试] 成功: IP=${twIp}, 位置=${twLoc}, 来源=${fastestSuccess.providerName}`);
+                } catch (detailError) {
+                    setNetworkFieldValue('twitter-country', '未知', 'location');
+                    applyNetworkCardFlag('twitter-country');
+                    setStatus('status-twitter', 'success');
+                    console.warn(`[墙外测试] 已获取IP=${fallbackIp}，但查询详细信息失败:`, detailError);
+                }
             } catch (error) {
                 setNetworkFieldError('twitter-ip', '翻墙失败');
                 clearNetworkFieldValue('twitter-country');
                 applyNetworkCardFlag('twitter-country');
                 setStatus('status-twitter', 'error');
-                console.error('推特入口接口错误:', error);
+                renderTwitterTitle('Google → X.com');
+                renderTwitterTip('墙外站点');
+                setStatus('status-twitter', 'error');
+                console.error('墙外测试接口错误:', error);
             }
         }
 
@@ -17419,4 +18174,3 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 </body>
 
 </html>
-

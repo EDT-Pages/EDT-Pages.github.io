@@ -16941,11 +16941,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     console.warn(`[墙外测试] 已获取IP=${fallbackIp}，但查询详细信息失败:`, detailError);
                 }
             } catch (error) {
-                setNetworkFieldError('twitter-ip', '翻墙失败');
+                setNetworkFieldError('twitter-ip', '翻墙未开启');
                 clearNetworkFieldValue('twitter-country');
                 applyNetworkCardFlag('twitter-country');
                 setStatus('status-twitter', 'error');
-                renderTwitterTitle('Google → X.com');
+                renderTwitterTitle('翻墙失败');
                 renderTwitterTip('墙外站点');
                 setStatus('status-twitter', 'error');
                 console.error('墙外测试接口错误:', error);

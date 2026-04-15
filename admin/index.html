@@ -1441,7 +1441,8 @@
         /* SOCKS5 模态框样式 */
         #getMoreProxyIPModal .modal,
         #exploreSocks5Modal .modal,
-        #exploreHTTPModal .modal {
+        #exploreHTTPModal .modal,
+        #exploreHTTPSModal .modal {
             max-width: 900px;
             width: 95%;
             padding: 0;
@@ -1478,7 +1479,8 @@
             /* SOCKS5和HTTP弹窗的主容器样式调整 */
             #getMoreProxyIPModal .modal,
             #exploreSocks5Modal .modal,
-            #exploreHTTPModal .modal {
+            #exploreHTTPModal .modal,
+            #exploreHTTPSModal .modal {
                 /* 改为上下排列方式（竖直方向） */
                 flex-direction: column;
                 /* 最大高度：浏览器可视区高度 - 100px（为顶部导航栏和按钮留出空间） */
@@ -1581,7 +1583,8 @@
 
             #getMoreProxyIPModal .modal,
             #exploreSocks5Modal .modal,
-            #exploreHTTPModal .modal {
+            #exploreHTTPModal .modal,
+            #exploreHTTPSModal .modal {
                 flex-direction: column;
                 max-width: 550px;
             }
@@ -7470,6 +7473,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             <option value="auto">PROXYIP</option>
                             <option value="socks5">SOCKS5</option>
                             <option value="http">HTTP</option>
+                            <option value="https" id="httpsProxyOption" hidden style="display: none;">HTTPS</option>
                         </select>
                     </div>
 
@@ -7528,6 +7532,25 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         </div>
                     </div>
 
+                    <div id="httpsSection" class="hidden-section">
+                        <div class="form-group">
+                            <label for="httpsAddr">HTTPS</label>
+                            <div class="input-wrapper">
+                                <div class="readonly-wrapper proxy-input-wrapper"
+                                    onclick="openProxyVerificationModal('https')">
+                                    <input type="text" id="httpsAddr" title="HTTPS"
+                                        placeholder="user:password@127.0.0.1:8443" readonly class="subapi-input">
+                                </div>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="globalHTTPS" title="启用全局代理: 将非CFCDN站点的流量也走HTTPS代理"
+                                        onchange="markModified('proxy')">
+                                    <label for="globalHTTPS" class="checkbox-label"
+                                        title="启用全局代理: 将非CFCDN站点的流量也走HTTPS代理">启用全局代理</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="module-footer">
                         <button type="button" class="btn btn-proxyip-help" onclick="showProxyIPHelpModal()"
                             title="了解 ProxyIP 的相关信息">
@@ -7552,6 +7575,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             onclick="showExploreHTTPModal()" style="display: none; padding: 10px 16px;"
                             title="从HTTP列表中选择可用的代理">
                             🌐 获取更多 HTTP
+                        </button>
+                        <button type="button" class="btn btn-search-proxy" id="exploreHTTPSBtn"
+                            onclick="showExploreHTTPSModal()" style="display: none; padding: 10px 16px;"
+                            title="从HTTPS列表中选择可用的代理">
+                            🌐 获取更多 HTTPS
                         </button>
                         <div class="btn-group">
                             <button type="button" class="btn btn-secondary" onclick="cancelEdit('proxy')" disabled
@@ -8813,6 +8841,55 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         </div>
     </div>
 
+    <!-- 探索HTTPS弹窗 -->
+    <div class="modal-overlay" id="exploreHTTPSModal">
+        <div class="modal">
+            <div class="modal-map-side">
+                <div id="proxy-map-https" class="proxy-map-container"></div>
+            </div>
+            <div class="modal-content-side">
+                <button type="button" class="modal-close" onclick="closeExploreHTTPSModal(event)"
+                    style="cursor: pointer;">×</button>
+                <h2 class="section-title" style="margin-bottom: 10px; text-align: center;">🌐 获取更多 HTTPS</h2>
+                <p style="text-align: center; color: #666; font-size: 13px; margin-bottom: 20px;">
+                    代理资源来自 Github、<a href="https://t.me/Enkelte_notif" target="_blank" rel="noopener noreferrer">Notif
+                        💬</a>频道、OTC大佬 等开源社区。
+                </p>
+                <div class="http-list-container">
+                    <div class="form-group">
+                        <label for="httpsRegionSelect">🏳️‍🌈 选择目标地区</label>
+                        <div class="input-wrapper">
+                            <select id="httpsRegionSelect" onchange="onHTTPSRegionChange()" style="padding-left: 16px;">
+                                <option value="">加载中...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="httpsProxySelectGroup">
+                        <label for="httpsProxySelect">🌐 选择目标代理</label>
+                        <div class="input-wrapper">
+                            <select id="httpsProxySelect" onchange="updateHTTPSConfirmButton(); updateProxyMap('https');"
+                                style="padding-left: 16px; font-family: 'Fira Code', monospace; font-size: 12px;">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group"
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: auto; padding-top: 20px;">
+                    <button type="button" class="btn btn-primary" id="httpsConfirmBtn" onclick="confirmSelectHTTPS()"
+                        disabled>
+                        确定
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="closeExploreHTTPSModal(event)">
+                        取消
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- gRPC 功能提示弹窗 -->
     <div class="modal-overlay" id="transportGrpcModal" onclick="closeTransportGrpcModal(event)">
         <div class="modal" onclick="event.stopPropagation()">
@@ -8938,10 +9015,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         let performanceRecheckScheduled = false;
         const WORKER_VERSION_SOURCE_URL = 'https://raw.githubusercontent.com/cmliu/edgetunnel/main/_worker.js';
         const PAGES_ZIP_DOWNLOAD_URL = 'https://github.com/cmliu/edgetunnel/archive/refs/heads/main.zip';
+        const HTTPS_PROXY_MIN_VERSION = 20260413174651;
         let cachedWorkerVersionRawText = '';
         let cachedLatestOnlineVersion = 0;
         let cachedCurrentVersionNumber = 0;
         let cachedCurrentVersionFullText = '';
+        let httpsProxyFeatureEnabled = false;
 
         function parseForcedLowPerformanceMode() {
             try {
@@ -9584,6 +9663,29 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             return Number.isFinite(parsed) ? parsed : 0;
         }
 
+        function setHttpsProxyFeatureAvailability(currentVersion) {
+            httpsProxyFeatureEnabled = parseVersionNumber(currentVersion) >= HTTPS_PROXY_MIN_VERSION;
+
+            const httpsOption = document.getElementById('httpsProxyOption');
+            if (httpsOption) {
+                httpsOption.hidden = !httpsProxyFeatureEnabled;
+                httpsOption.style.display = httpsProxyFeatureEnabled ? '' : 'none';
+            }
+
+            const proxyMode = document.getElementById('proxyMode');
+            if (!proxyMode) return;
+
+            if (!httpsProxyFeatureEnabled && proxyMode.value === 'https') {
+                proxyMode.value = 'http';
+                updateProxyMode(false);
+                return;
+            }
+
+            if (proxyMode.value === 'https') {
+                updateProxyMode(false);
+            }
+        }
+
         function getVersionHealthMeta(healthKey) {
             if (healthKey === 'latest') {
                 return {
@@ -9680,6 +9782,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const uuidValue = String(uuid || '').trim();
             if (!uuidValue) {
                 updateVersionBadge(0);
+                setHttpsProxyFeatureAvailability(0);
                 await updateVersionBadgeHealthByLatest(0);
                 return;
             }
@@ -9707,6 +9810,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     const currentVersion = parseVersionNumber(data.Version);
                     console.log(`[Version] 当前版本识别: raw="${data.Version}", parsed=${currentVersion}, attempt=${attempt}/${maxRetries}`);
                     updateVersionBadge(currentVersion);
+                    setHttpsProxyFeatureAvailability(currentVersion);
                     await updateVersionBadgeHealthByLatest(currentVersion);
                     return;
                 } catch (error) {
@@ -9720,6 +9824,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             console.warn('[Version] 获取版本号重试3次仍失败，按 0 处理:', lastError);
             updateVersionBadge(0);
+            setHttpsProxyFeatureAvailability(0);
             await updateVersionBadgeHealthByLatest(0);
         }
 
@@ -10080,6 +10185,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 document.getElementById('proxyMode').value = 'http';
                 document.getElementById('httpAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
                 document.getElementById('globalHTTP').checked = currentConfig.反代?.SOCKS5?.全局 || false;
+            } else if (socksEnabled === 'https') {
+                document.getElementById('proxyMode').value = 'https';
+                document.getElementById('httpsAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
+                document.getElementById('globalHTTPS').checked = currentConfig.反代?.SOCKS5?.全局 || false;
             }
             updateProxyMode();
 
@@ -10894,9 +11003,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             return input;
         }
 
-        // 处理SOCKS5和HTTP代理地址
+        // 处理SOCKS5、HTTP和HTTPS代理地址
         function processProxyAddress(type) {
-            const fieldId = type === 'socks5' ? 'socks5Addr' : 'httpAddr';
+            const fieldId = type === 'socks5' ? 'socks5Addr' : (type === 'https' ? 'httpsAddr' : 'httpAddr');
             const input = document.getElementById(fieldId).value.trim();
             let cleanAddress = '';
 
@@ -10922,7 +11031,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             // 检测并移除协议前缀
             const socks5Prefixes = ['socks5://', 'socks5=', 'socks5://'];
-            const httpPrefixes = ['http://', 'http=', 'https://'];
+            const httpPrefixes = ['http://', 'http='];
+            const httpsPrefixes = ['https://', 'https='];
 
             for (const prefix of socks5Prefixes) {
                 if (input.toLowerCase().startsWith(prefix)) {
@@ -10932,6 +11042,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
 
             for (const prefix of httpPrefixes) {
+                if (input.toLowerCase().startsWith(prefix)) {
+                    input = input.substring(prefix.length).trim();
+                    break;
+                }
+            }
+
+            for (const prefix of httpsPrefixes) {
                 if (input.toLowerCase().startsWith(prefix)) {
                     input = input.substring(prefix.length).trim();
                     break;
@@ -10959,13 +11076,29 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 document.getElementById('proxyIP').value = '';
                 document.getElementById('socks5Addr').value = cleanAddress;
                 document.getElementById('httpAddr').value = '';
+                document.getElementById('httpsAddr').value = '';
+
+                updateProxyMode();
+                return;
+            }
+
+            // 检查是否包含https协议
+            if (lowerInput.includes('https://') || lowerInput.includes('https=') || lowerInput.startsWith('/https')) {
+                // 切换到HTTPS模式
+                document.getElementById('proxyMode').value = 'https';
+
+                // 清空其他模式的内容，填充HTTPS
+                document.getElementById('proxyIP').value = '';
+                document.getElementById('socks5Addr').value = '';
+                document.getElementById('httpAddr').value = '';
+                document.getElementById('httpsAddr').value = cleanAddress;
 
                 updateProxyMode();
                 return;
             }
 
             // 检查是否包含http协议
-            if (lowerInput.includes('http://') || lowerInput.includes('http=') || lowerInput.includes('https://') || lowerInput.startsWith('/http')) {
+            if (lowerInput.includes('http://') || lowerInput.includes('http=') || lowerInput.startsWith('/http')) {
                 // 切换到HTTP模式
                 document.getElementById('proxyMode').value = 'http';
 
@@ -10973,17 +11106,20 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 document.getElementById('proxyIP').value = '';
                 document.getElementById('socks5Addr').value = '';
                 document.getElementById('httpAddr').value = cleanAddress;
+                document.getElementById('httpsAddr').value = '';
 
                 updateProxyMode();
                 return;
             }
         }
 
-        function updateProxyMode() {
+        function updateProxyMode(markSectionModified = true) {
             const mode = document.getElementById('proxyMode').value;
+            const allowHttpsMode = mode === 'https' && httpsProxyFeatureEnabled;
             document.getElementById('proxyIPSection').style.display = mode === 'auto' ? 'block' : 'none';
             document.getElementById('socks5Section').style.display = mode === 'socks5' ? 'block' : 'none';
             document.getElementById('httpSection').style.display = mode === 'http' ? 'block' : 'none';
+            document.getElementById('httpsSection').style.display = allowHttpsMode ? 'block' : 'none';
 
             // 根据选择的模式填充对应的数据
             if (mode === 'auto') {
@@ -11000,6 +11136,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             } else if (mode === 'http') {
                 document.getElementById('httpAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
                 document.getElementById('globalHTTP').checked = currentConfig.反代?.SOCKS5?.全局 || false;
+            } else if (mode === 'https') {
+                document.getElementById('httpsAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
+                document.getElementById('globalHTTPS').checked = currentConfig.反代?.SOCKS5?.全局 || false;
             }
 
             // 更新 "获取更多PROXYIP" 按钮的显示状态
@@ -11020,7 +11159,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 exploreHTTPBtn.style.display = mode === 'http' ? 'inline-block' : 'none';
             }
 
-            markModified('proxy');
+            // 更新 "探索更多HTTPS" 按钮的显示状态
+            const exploreHTTPSBtn = document.getElementById('exploreHTTPSBtn');
+            if (exploreHTTPSBtn) {
+                exploreHTTPSBtn.style.display = allowHttpsMode ? 'inline-block' : 'none';
+            }
+
+            if (markSectionModified) {
+                markModified('proxy');
+            }
         }
 
         function toggleAutoProxy() {
@@ -11561,6 +11708,19 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     showToast('HTTP地址不能为空', 'error');
                     return;
                 }
+            } else if (mode === 'https') {
+                if (!httpsProxyFeatureEnabled) {
+                    showToast('当前后端版本暂不支持HTTPS反代', 'error');
+                    return;
+                }
+                socksEnabled = 'https';
+                socksAccount = document.getElementById('httpsAddr').value.trim();
+                globalProxy = document.getElementById('globalHTTPS').checked;
+
+                if (!socksAccount) {
+                    showToast('HTTPS地址不能为空', 'error');
+                    return;
+                }
             }
 
             currentConfig.反代 = {
@@ -11799,6 +11959,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     document.getElementById('proxyMode').value = 'http';
                     document.getElementById('httpAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
                     document.getElementById('globalHTTP').checked = currentConfig.反代?.SOCKS5?.全局 || false;
+                } else if (socksEnabled === 'https') {
+                    document.getElementById('proxyMode').value = 'https';
+                    document.getElementById('httpsAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
+                    document.getElementById('globalHTTPS').checked = currentConfig.反代?.SOCKS5?.全局 || false;
                 }
                 updateProxyMode();
             } else if (section === 'convert') {
@@ -13164,17 +13328,17 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
         function openProxyVerificationModal(proxyType) {
             currentProxyType = proxyType;
-            currentProxyFieldId = proxyType === 'socks5' ? 'socks5Addr' : 'httpAddr';
+            currentProxyFieldId = proxyType === 'socks5' ? 'socks5Addr' : (proxyType === 'https' ? 'httpsAddr' : 'httpAddr');
 
             // 设置模态框标题和标签
-            const title = proxyType === 'socks5' ? '🔒 SOCKS5代理验证' : '🌐 HTTP代理验证';
-            const label = proxyType === 'socks5' ? 'SOCKS5代理:' : 'HTTP代理:';
+            const title = proxyType === 'socks5' ? '🔒 SOCKS5代理验证' : (proxyType === 'https' ? '🌐 HTTPS代理验证' : '🌐 HTTP代理验证');
+            const label = proxyType === 'socks5' ? 'SOCKS5代理:' : (proxyType === 'https' ? 'HTTPS代理:' : 'HTTP代理:');
 
             document.getElementById('proxyVerificationTitle').textContent = title;
             document.getElementById('proxyVerificationLabel').textContent = label;
             document.getElementById('proxyVerificationInput').placeholder = proxyType === 'socks5'
                 ? 'user:password@127.0.0.1:1080'
-                : 'user:password@127.0.0.1:8080';
+                : (proxyType === 'https' ? 'user:password@127.0.0.1:8443' : 'user:password@127.0.0.1:8080');
 
             // 设置输入框的当前值
             const currentValue = document.getElementById(currentProxyFieldId).value;
@@ -13228,6 +13392,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 const params = new URLSearchParams();
                 if (currentProxyType === 'socks5') {
                     params.append('socks5', processedAddress);
+                } else if (currentProxyType === 'https') {
+                    params.append('https', processedAddress);
                 } else {
                     params.append('http', processedAddress);
                 }
@@ -13344,7 +13510,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             // 检测并移除协议前缀
             const socks5Prefixes = ['socks5://', 'socks5=', 'socks5://'];
-            const httpPrefixes = ['http://', 'http=', 'https://'];
+            const httpPrefixes = ['http://', 'http='];
+            const httpsPrefixes = ['https://', 'https='];
 
             for (const prefix of socks5Prefixes) {
                 if (input.toLowerCase().startsWith(prefix)) {
@@ -13354,6 +13521,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
 
             for (const prefix of httpPrefixes) {
+                if (input.toLowerCase().startsWith(prefix)) {
+                    input = input.substring(prefix.length).trim();
+                    break;
+                }
+            }
+
+            for (const prefix of httpsPrefixes) {
                 if (input.toLowerCase().startsWith(prefix)) {
                     input = input.substring(prefix.length).trim();
                     break;
@@ -14773,6 +14947,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         document.getElementById('proxyMode').value = 'http';
                         document.getElementById('httpAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
                         document.getElementById('globalHTTP').checked = currentConfig.反代?.SOCKS5?.全局 || false;
+                    } else if (socksEnabled === 'https') {
+                        document.getElementById('proxyMode').value = 'https';
+                        document.getElementById('httpsAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
+                        document.getElementById('globalHTTPS').checked = currentConfig.反代?.SOCKS5?.全局 || false;
                     }
                     updateProxyMode();
                 } else if (section === 'convert') {
@@ -17799,6 +17977,22 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 abortController: null,
                 verifySingleFunction: (proxy, signal) => verifySingleProxy(proxy, 'http', signal)
             },
+            https: {
+                modalId: 'exploreHTTPSModal',
+                regionSelectId: 'httpsRegionSelect',
+                proxySelectId: 'httpsProxySelect',
+                proxySelectGroupId: 'httpsProxySelectGroup',
+                confirmBtnId: 'httpsConfirmBtn',
+                listData: 'httpsListData',
+                countryMap: 'httpsCountryMap',
+                verificationStatus: 'httpsVerificationStatus',
+                verificationTimeouts: 'httpsVerificationTimeouts',
+                url: 'https://raw.githubusercontent.com/EDT-Pages/Proxy-List/main/data/https.json',
+                description: 'HTTPS列表',
+                inputId: 'httpsAddr',
+                abortController: null,
+                verifySingleFunction: (proxy, signal) => verifySingleProxy(proxy, 'https', signal)
+            },
             proxyip: {
                 modalId: 'getMoreProxyIPModal',
                 regionSelectId: 'proxyIPDataRegionSelect',
@@ -18061,17 +18255,19 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         const lastMappedProxy = {
             socks5: null,
             http: null,
+            https: null,
             proxyip: null
         };
 
         const proxyMaps = {
             socks5: { map: null, marker: null },
             http: { map: null, marker: null },
+            https: { map: null, marker: null },
             proxyip: { map: null, marker: null }
         };
 
         function initProxyMap(type) {
-            const containerId = type === 'socks5' ? 'proxy-map-socks5' : (type === 'http' ? 'proxy-map-http' : 'proxy-map-proxyip');
+            const containerId = type === 'socks5' ? 'proxy-map-socks5' : (type === 'http' ? 'proxy-map-http' : (type === 'https' ? 'proxy-map-https' : 'proxy-map-proxyip'));
             const container = document.getElementById(containerId);
             if (!container) return;
 
@@ -18332,6 +18528,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         const proxyDisplayUpdateState = {
             socks5: { lastUpdate: 0, pending: false, timer: null, selectOpen: false, listenersAdded: false },
             http: { lastUpdate: 0, pending: false, timer: null, selectOpen: false, listenersAdded: false },
+            https: { lastUpdate: 0, pending: false, timer: null, selectOpen: false, listenersAdded: false },
             proxyip: { lastUpdate: 0, pending: false, timer: null, selectOpen: false, listenersAdded: false }
         };
 
@@ -18510,9 +18707,21 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         function verifySingleProxy(proxy, type, signal) {
             return new Promise((resolve) => {
                 const config = proxyConfigs[type];
-                const { protocol, proxy: proxyUrl } = proxy;
-                const cleanProxy = proxyUrl.replace(protocol + '://', '');
-                const checkUrl = `/admin/check?${protocol}=${encodeURIComponent(cleanProxy)}&_t=${Date.now()}`;
+                const protocol = proxy.protocol || type;
+                const proxyUrl = proxy.proxy;
+                if (!proxyUrl) {
+                    resolve();
+                    return;
+                }
+                let cleanProxy = String(proxyUrl);
+                for (const prefix of ['socks5://', 'http://', 'https://', 'socks5=', 'http=', 'https=']) {
+                    if (cleanProxy.toLowerCase().startsWith(prefix)) {
+                        cleanProxy = cleanProxy.substring(prefix.length).trim();
+                        break;
+                    }
+                }
+                const checkProtocol = type === 'https' ? 'https' : protocol;
+                const checkUrl = `/admin/check?${checkProtocol}=${encodeURIComponent(cleanProxy)}&_t=${Date.now()}`;
 
                 // 如果已经终止，直接返回
                 if (signal && signal.aborted) {
@@ -18573,6 +18782,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         let httpVerificationStatus = {}; // 存储验证状态
         let httpVerificationTimeouts = {}; // 存储超时计时器
 
+        // 存储HTTPS数据
+        let httpsListData = [];
+        let httpsCountryMap = {};
+        let httpsVerificationStatus = {}; // 存储验证状态
+        let httpsVerificationTimeouts = {}; // 存储超时计时器
+
         function showExploreHTTPModal() {
             showExploreProxyModal('http');
         }
@@ -18616,6 +18831,50 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
         function updateHTTPConfirmButton() {
             updateProxyConfirmButton('http');
+        }
+
+        function showExploreHTTPSModal() {
+            showExploreProxyModal('https');
+        }
+
+        function closeExploreHTTPSModal(event) {
+            closeExploreProxyModal('https', event);
+        }
+
+        function loadHTTPSList() {
+            loadProxyList('https');
+        }
+
+        function populateHTTPSRegionSelect() {
+            populateProxyRegionSelect('https');
+        }
+
+        function onHTTPSRegionChange() {
+            onProxyRegionChange('https');
+        }
+
+        function populateHTTPSProxySelect(selectedCountry) {
+            populateProxySelect(selectedCountry, 'httpsProxySelect', httpsCountryMap, httpsVerificationStatus, 'https');
+        }
+
+        function verifyHTTPSProxies(proxies) {
+            verifyProxies(proxies, verifySingleHTTPS);
+        }
+
+        function verifySingleHTTPS(proxy, signal) {
+            return verifySingleProxy(proxy, 'https', signal);
+        }
+
+        function updateHTTPSDisplay() {
+            updateProxyDisplay('https');
+        }
+
+        function confirmSelectHTTPS() {
+            confirmSelectProxy('https');
+        }
+
+        function updateHTTPSConfirmButton() {
+            updateProxyConfirmButton('https');
         }
 
         // ============ HOSTS 检查相关函数 ============

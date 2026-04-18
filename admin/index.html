@@ -1908,6 +1908,212 @@
             box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
         }
 
+        .btn-version-changelog {
+            background: linear-gradient(135deg, #f59e0b 0, #d97706 100%);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.35);
+        }
+
+        .btn-version-changelog:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(245, 158, 11, 0.42);
+        }
+
+        .btn-version-changelog:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
+        }
+
+        .version-changelog-modal {
+            width: min(1120px, 96vw);
+            max-width: 1120px;
+            text-align: left;
+        }
+
+        .version-changelog-wrapper {
+            margin-top: 0;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.95) 0%, rgba(241, 245, 249, 0.92) 100%);
+        }
+
+        .version-changelog-content {
+            max-height: min(68vh, 760px);
+            overflow-y: auto;
+            padding-right: 6px;
+            color: #1f2937;
+            font-size: 14px;
+            line-height: 1.7;
+            word-break: break-word;
+        }
+
+        .version-changelog-content h3 {
+            margin: 12px 0 8px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .version-changelog-content .changelog-version-row {
+            margin: 12px 0 10px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.34);
+            background: linear-gradient(135deg, rgba(226, 232, 240, 0.55) 0%, rgba(241, 245, 249, 0.74) 100%);
+            display: block;
+        }
+
+        .version-changelog-content .changelog-version-row.is-latest {
+            border-color: rgba(16, 185, 129, 0.52);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.1) 100%);
+            box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.22);
+        }
+
+        .version-changelog-content .changelog-version-row.is-current {
+            border-color: rgba(245, 158, 11, 0.62);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.1) 100%);
+            box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.24);
+        }
+
+        .version-changelog-content .changelog-version-row.is-current.is-latest {
+            border-color: rgba(16, 185, 129, 0.62);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(245, 158, 11, 0.14) 100%);
+            box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.22), 0 0 0 1px rgba(245, 158, 11, 0.38);
+        }
+
+        .version-changelog-content .changelog-version-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .version-changelog-content .changelog-version-main {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .version-changelog-content .changelog-version-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 10px;
+            border-radius: 999px;
+            background: #111827;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.4;
+            letter-spacing: 0.2px;
+        }
+
+        .version-changelog-content .changelog-version-date {
+            font-size: 11px;
+            color: #475569;
+            font-weight: 400;
+            opacity: 0.82;
+        }
+
+        .version-changelog-content .changelog-version-meta {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .version-changelog-content .changelog-version-current,
+        .version-changelog-content .changelog-version-latest {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.35;
+            white-space: nowrap;
+        }
+
+        .version-changelog-content .changelog-version-latest {
+            color: #065f46;
+            border: 1px solid rgba(16, 185, 129, 0.46);
+            background: rgba(16, 185, 129, 0.2);
+        }
+
+        .version-changelog-content .changelog-version-current {
+            color: #92400e;
+            border: 1px solid rgba(245, 158, 11, 0.54);
+            background: rgba(245, 158, 11, 0.2);
+        }
+
+        .version-changelog-content .changelog-version-body {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed rgba(100, 116, 139, 0.35);
+        }
+
+        .version-changelog-content .changelog-version-row.is-latest .changelog-version-body {
+            border-top-color: rgba(16, 185, 129, 0.42);
+        }
+
+        .version-changelog-content .changelog-version-row.is-current .changelog-version-body {
+            border-top-color: rgba(245, 158, 11, 0.46);
+        }
+
+        .version-changelog-content .changelog-version-body h4 {
+            margin: 10px 0 6px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .version-changelog-content .changelog-version-body p {
+            margin: 0 0 10px;
+        }
+
+        .version-changelog-content .changelog-version-body ul {
+            margin: 0 0 10px 18px;
+            padding: 0;
+        }
+
+        .version-changelog-content .changelog-version-body li {
+            margin: 0 0 6px;
+        }
+
+        .version-changelog-content code {
+            padding: 1px 6px;
+            border-radius: 6px;
+            background: rgba(15, 23, 42, 0.08);
+            font-size: 12px;
+        }
+
+        .version-changelog-content a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .version-changelog-content a:hover {
+            text-decoration: underline;
+        }
+
+        .version-changelog-placeholder {
+            margin: 0;
+            color: #6b7280;
+        }
+
+        .version-changelog-actions {
+            margin-top: 12px;
+            display: block;
+        }
+
+        .version-changelog-actions .btn {
+            width: 100%;
+        }
+
         /* 复选框样式 */
         .checkbox-group {
             display: flex;
@@ -2119,6 +2325,15 @@
             .version-info-summary {
                 font-size: 14px;
                 padding: 12px;
+            }
+
+            .version-changelog-wrapper {
+                padding: 10px;
+            }
+
+            .version-changelog-content {
+                max-height: 58vh;
+                font-size: 13px;
             }
 
             .page-wrapper {
@@ -2511,6 +2726,94 @@
             color: #e9d5ff;
             background: rgba(147, 51, 234, 0.24);
             border-color: rgba(196, 181, 253, 0.52);
+        }
+
+        html.dark-mode .btn-version-changelog {
+            background: linear-gradient(135deg, #f59e0b 0, #b45309 100%);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        html.dark-mode .version-changelog-wrapper {
+            border-color: rgba(100, 116, 139, 0.46);
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.75) 100%);
+        }
+
+        html.dark-mode .version-changelog-content {
+            color: #e5e7eb;
+        }
+
+        html.dark-mode .version-changelog-content h3,
+        html.dark-mode .version-changelog-content .changelog-version-body h4 {
+            color: #f9fafb;
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-row {
+            border-color: rgba(148, 163, 184, 0.38);
+            background: linear-gradient(135deg, rgba(51, 65, 85, 0.45) 0%, rgba(30, 41, 59, 0.52) 100%);
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-row.is-latest {
+            border-color: rgba(52, 211, 153, 0.56);
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.32) 0%, rgba(4, 120, 87, 0.2) 100%);
+            box-shadow: inset 0 0 0 1px rgba(52, 211, 153, 0.22);
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-row.is-current {
+            border-color: rgba(251, 191, 36, 0.68);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.34) 0%, rgba(217, 119, 6, 0.2) 100%);
+            box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.26);
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-row.is-current.is-latest {
+            border-color: rgba(52, 211, 153, 0.62);
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.28) 0%, rgba(245, 158, 11, 0.24) 100%);
+            box-shadow: inset 0 0 0 1px rgba(52, 211, 153, 0.24), 0 0 0 1px rgba(251, 191, 36, 0.46);
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-badge {
+            background: rgba(15, 23, 42, 0.9);
+            color: #f8fafc;
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-date {
+            color: #94a3b8;
+            opacity: 0.84;
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-latest {
+            color: #bbf7d0;
+            border-color: rgba(52, 211, 153, 0.6);
+            background: rgba(5, 150, 105, 0.35);
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-current {
+            color: #fde68a;
+            border-color: rgba(251, 191, 36, 0.66);
+            background: rgba(245, 158, 11, 0.36);
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-body {
+            border-top-color: rgba(148, 163, 184, 0.44);
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-row.is-latest .changelog-version-body {
+            border-top-color: rgba(52, 211, 153, 0.45);
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-row.is-current .changelog-version-body {
+            border-top-color: rgba(251, 191, 36, 0.5);
+        }
+
+        html.dark-mode .version-changelog-content code {
+            background: rgba(148, 163, 184, 0.22);
+        }
+
+        html.dark-mode .version-changelog-content a {
+            color: #93c5fd;
+        }
+
+        html.dark-mode .version-changelog-placeholder {
+            color: #94a3b8;
         }
 
         html.dark-mode .btn-secondary {
@@ -7794,7 +8097,25 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     复制最新Worker.js源码 到剪贴板</button>
                 <button type="button" class="btn btn-version-download" onclick="openLatestPagesZipDownload()">📦
                     下载最新Pages.zip源码 上传部署</button>
+                <button type="button" class="btn btn-version-changelog" id="versionChangelogToggleBtn"
+                    onclick="openVersionChangelogModal()">📜 查看更新日志</button>
                 <button type="button" class="btn btn-secondary" onclick="closeVersionInfoModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 更新日志弹窗 -->
+    <div class="modal-overlay" id="versionChangelogModal" onclick="closeVersionChangelogModal(event)">
+        <div class="modal version-changelog-modal" onclick="event.stopPropagation()">
+            <button type="button" class="modal-close" onclick="closeVersionChangelogModal()">×</button>
+            <h2 class="version-info-title">📜 更新日志</h2>
+            <div class="version-changelog-wrapper">
+                <div class="version-changelog-content" id="versionChangelogContent">
+                    <p class="version-changelog-placeholder">等待加载更新日志...</p>
+                </div>
+            </div>
+            <div class="version-changelog-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeVersionChangelogModal()">关闭</button>
             </div>
         </div>
     </div>
@@ -9015,11 +9336,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         let performanceRecheckScheduled = false;
         const WORKER_VERSION_SOURCE_URL = 'https://raw.githubusercontent.com/cmliu/edgetunnel/main/_worker.js';
         const PAGES_ZIP_DOWNLOAD_URL = 'https://github.com/cmliu/edgetunnel/archive/refs/heads/main.zip';
+        const CHANGELOG_RAW_URL = 'https://raw.githubusercontent.com/EDT-Pages/EDT-Pages.github.io/refs/heads/main/CHANGELOG';
         const HTTPS_PROXY_MIN_VERSION = 20260413174651;
         let cachedWorkerVersionRawText = '';
         let cachedLatestOnlineVersion = 0;
         let cachedCurrentVersionNumber = 0;
         let cachedCurrentVersionFullText = '';
+        let cachedChangelogRawText = '';
+        let cachedChangelogLoadedAt = 0;
+        let pendingChangelogLoadPromise = null;
         let httpsProxyFeatureEnabled = false;
 
         function parseForcedLowPerformanceMode() {
@@ -9755,7 +10080,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             cachedLatestOnlineVersion = 0;
 
             try {
-                const workerText = await fetchWithAutoMirror(WORKER_VERSION_SOURCE_URL, 'Worker 主程序');
+                const workerText = await fetchWithAutoMirror(WORKER_VERSION_SOURCE_URL + '?_t=' + Date.now(), 'Worker 主程序');
                 cachedWorkerVersionRawText = workerText;
 
                 const versionMatch = workerText.match(/^\s*const\s+Version\s*=\s*['"]([^'"]+)['"]\s*;?/m);
@@ -9909,6 +10234,366 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const popup = window.open(PAGES_ZIP_DOWNLOAD_URL, '_blank', 'noopener,noreferrer');
             if (!popup) {
                 showToast('浏览器拦截了新窗口，请允许弹窗后再试', 'warning');
+            }
+        }
+
+        function escapeMarkdownHtml(text) {
+            return String(text ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function sanitizeHttpUrl(urlText) {
+            try {
+                const parsed = new URL(String(urlText || '').trim(), window.location.href);
+                if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+                    return parsed.href;
+                }
+            } catch (_) {
+                // ignore invalid URLs
+            }
+            return '';
+        }
+
+        function renderChangelogInline(rawText) {
+            const formatInlineText = (text) => {
+                return escapeMarkdownHtml(text)
+                    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                    .replace(/`([^`]+)`/g, '<code>$1</code>');
+            };
+
+            const source = String(rawText ?? '');
+            const linkPattern = /\[([^\]]+)\]\(([^)\s]+)\)/g;
+            let html = '';
+            let cursor = 0;
+            let match = null;
+
+            while ((match = linkPattern.exec(source)) !== null) {
+                const [fullMatch, label, href] = match;
+                html += formatInlineText(source.slice(cursor, match.index));
+
+                const safeHref = sanitizeHttpUrl(href);
+                if (safeHref) {
+                    html += `<a href="${escapeMarkdownHtml(safeHref)}" target="_blank" rel="noopener">${formatInlineText(label)}</a>`;
+                } else {
+                    html += formatInlineText(fullMatch);
+                }
+
+                cursor = match.index + fullMatch.length;
+            }
+
+            html += formatInlineText(source.slice(cursor));
+            return html;
+        }
+
+        function buildVersionMatchCandidates(value) {
+            const set = new Set();
+            const raw = String(value ?? '').trim();
+            if (!raw) return set;
+
+            const digits = raw.replace(/\D/g, '');
+            if (digits) {
+                set.add(digits);
+                if (digits.length === 14) {
+                    set.add(`21${digits}`);
+                }
+                if (digits.startsWith('21') && digits.length > 2) {
+                    set.add(digits.slice(2));
+                }
+            }
+
+            const versionBodyMatch = raw.match(/(?:^|v)2\.1\.(\d+)/i);
+            if (versionBodyMatch && versionBodyMatch[1]) {
+                set.add(versionBodyMatch[1]);
+                set.add(`21${versionBodyMatch[1]}`);
+            }
+
+            return set;
+        }
+
+        function parseChangelogVersionHeading(headingText) {
+            const source = String(headingText ?? '').trim();
+            const match = source.match(/^\[([^\]]+)\](?:\s*-\s*(.+))?$/);
+
+            if (!match) {
+                return {
+                    versionText: source,
+                    dateText: '',
+                    candidates: buildVersionMatchCandidates(source)
+                };
+            }
+
+            const versionText = String(match[1] || '').trim();
+            const dateText = String(match[2] || '').trim();
+            return {
+                versionText,
+                dateText,
+                candidates: buildVersionMatchCandidates(versionText)
+            };
+        }
+
+        function resolveCurrentVersionDisplayText() {
+            const currentVersionInfoEl = document.getElementById('currentVersionInfoValue');
+            const fromInfo = String(currentVersionInfoEl?.textContent || '').trim();
+            if (fromInfo) return fromInfo;
+            if (cachedCurrentVersionFullText) return `v2.1.${cachedCurrentVersionFullText}`;
+            return '';
+        }
+
+        function isCurrentVersionMatched(currentCandidates, headingCandidates) {
+            if (!currentCandidates || currentCandidates.size === 0) return false;
+            if (!headingCandidates || headingCandidates.size === 0) return false;
+
+            for (const candidate of headingCandidates) {
+                if (currentCandidates.has(candidate)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function renderChangelogSectionBody(sectionLines) {
+            const htmlParts = [];
+            let inList = false;
+
+            const closeList = () => {
+                if (inList) {
+                    htmlParts.push('</ul>');
+                    inList = false;
+                }
+            };
+
+            for (const rawLine of sectionLines) {
+                const line = String(rawLine ?? '').trim();
+                if (!line) {
+                    closeList();
+                    continue;
+                }
+
+                let match = line.match(/^###\s+(.+)$/);
+                if (match) {
+                    closeList();
+                    htmlParts.push(`<h4>${renderChangelogInline(match[1])}</h4>`);
+                    continue;
+                }
+
+                match = line.match(/^-\s+(.+)$/);
+                if (match) {
+                    if (!inList) {
+                        htmlParts.push('<ul>');
+                        inList = true;
+                    }
+                    htmlParts.push(`<li>${renderChangelogInline(match[1])}</li>`);
+                    continue;
+                }
+
+                closeList();
+                htmlParts.push(`<p>${renderChangelogInline(line)}</p>`);
+            }
+
+            closeList();
+            return htmlParts.join('');
+        }
+
+        function renderChangelogMarkdown(markdownText) {
+            const lines = String(markdownText ?? '').replace(/\r\n?/g, '\n').split('\n');
+            const htmlParts = [];
+            let versionEntryCount = 0;
+            let currentVersionPosition = 0;
+            let currentVersionHeadingText = '';
+
+            const currentVersionDisplayText = resolveCurrentVersionDisplayText();
+            const currentVersionCandidates = buildVersionMatchCandidates(
+                currentVersionDisplayText || cachedCurrentVersionFullText
+            );
+
+            const sections = [];
+            let currentSection = null;
+            const prefaceLines = [];
+
+            for (const rawLine of lines) {
+                const trimmedLine = String(rawLine ?? '').trim();
+                const versionMatch = trimmedLine.match(/^##\s+(.+)$/);
+
+                if (versionMatch) {
+                    if (currentSection) {
+                        sections.push(currentSection);
+                    }
+                    currentSection = {
+                        heading: versionMatch[1],
+                        bodyLines: []
+                    };
+                    continue;
+                }
+
+                if (currentSection) {
+                    currentSection.bodyLines.push(rawLine);
+                } else {
+                    prefaceLines.push(rawLine);
+                }
+            }
+
+            if (currentSection) {
+                sections.push(currentSection);
+            }
+
+            const prefaceHtml = renderChangelogSectionBody(prefaceLines);
+            if (prefaceHtml) {
+                htmlParts.push(prefaceHtml);
+            }
+
+            const sectionMetaList = sections.map(section => {
+                const parsedHeading = parseChangelogVersionHeading(section.heading);
+                return {
+                    section,
+                    parsedHeading,
+                    versionNumber: parseVersionNumber(parsedHeading.versionText)
+                };
+            });
+
+            let latestVersionNumberInChangelog = 0;
+            for (const sectionMeta of sectionMetaList) {
+                if (sectionMeta.versionNumber > latestVersionNumberInChangelog) {
+                    latestVersionNumberInChangelog = sectionMeta.versionNumber;
+                }
+            }
+
+            for (const sectionMeta of sectionMetaList) {
+                versionEntryCount += 1;
+                const { section, parsedHeading, versionNumber } = sectionMeta;
+                const isCurrent = isCurrentVersionMatched(currentVersionCandidates, parsedHeading.candidates);
+                const isLatest = latestVersionNumberInChangelog > 0
+                    ? versionNumber === latestVersionNumberInChangelog
+                    : versionEntryCount === 1;
+
+                if (isCurrent && !currentVersionPosition) {
+                    currentVersionPosition = versionEntryCount;
+                    currentVersionHeadingText = parsedHeading.versionText;
+                }
+
+                const badgeText = parsedHeading.versionText
+                    ? (parsedHeading.versionText.startsWith('v') ? parsedHeading.versionText : `v${parsedHeading.versionText}`)
+                    : '未知版本';
+                const dateHtml = parsedHeading.dateText
+                    ? `<span class="changelog-version-date">${escapeMarkdownHtml(parsedHeading.dateText)}</span>`
+                    : '';
+                const latestTagHtml = isLatest ? '<span class="changelog-version-latest">最新版本</span>' : '';
+                const currentTagHtml = isCurrent ? '<span class="changelog-version-current">当前版本</span>' : '';
+                const versionMetaHtml = (latestTagHtml || currentTagHtml)
+                    ? `<div class="changelog-version-meta">${latestTagHtml}${currentTagHtml}</div>`
+                    : '';
+                const bodyHtml = renderChangelogSectionBody(section.bodyLines);
+                const bodyWrapHtml = bodyHtml ? `<div class="changelog-version-body">${bodyHtml}</div>` : '';
+
+                htmlParts.push(
+                    `<div class="changelog-version-row${isCurrent ? ' is-current' : ''}${isLatest ? ' is-latest' : ''}">
+                        <div class="changelog-version-head">
+                            <div class="changelog-version-main">
+                                <span class="changelog-version-badge">${escapeMarkdownHtml(badgeText)}</span>
+                                ${dateHtml}
+                            </div>
+                            ${versionMetaHtml}
+                        </div>
+                        ${bodyWrapHtml}
+                    </div>`
+                );
+            }
+
+            return {
+                html: htmlParts.join(''),
+                versionEntryCount,
+                currentVersionPosition,
+                currentVersionHeadingText,
+                currentVersionDisplayText
+            };
+        }
+
+        function formatVersionChangelogTime(timestamp) {
+            if (!timestamp || !Number.isFinite(timestamp)) {
+                return '';
+            }
+            return new Date(timestamp).toLocaleString('zh-CN', { hour12: false });
+        }
+
+        async function loadVersionChangelog(forceReload = false) {
+            const contentEl = document.getElementById('versionChangelogContent');
+            if (!contentEl) return;
+
+            if (!forceReload && cachedChangelogRawText) {
+                const renderResult = renderChangelogMarkdown(cachedChangelogRawText);
+                contentEl.innerHTML = renderResult.html || '<p class="version-changelog-placeholder">暂无更新日志内容。</p>';
+                const cachedAtText = formatVersionChangelogTime(cachedChangelogLoadedAt);
+                if (cachedAtText) {
+                    console.log(`[请求RAW] 使用缓存更新日志，上次加载时间=${cachedAtText}`);
+                } else {
+                    console.log('[请求RAW] 使用缓存更新日志');
+                }
+                if (renderResult.currentVersionPosition > 0) {
+                    console.log(
+                        `[更新日志] 当前版本定位成功: ${renderResult.currentVersionDisplayText || '当前版本'} 命中 ${renderResult.currentVersionHeadingText || ''}，位于第${renderResult.currentVersionPosition}条（共${renderResult.versionEntryCount}条）`
+                    );
+                } else if (renderResult.versionEntryCount > 0) {
+                    console.log(
+                        `[更新日志] 当前版本未匹配到日志条目: ${renderResult.currentVersionDisplayText || '未知版本'}，日志共${renderResult.versionEntryCount}条`
+                    );
+                }
+                return;
+            }
+
+            if (pendingChangelogLoadPromise) {
+                return pendingChangelogLoadPromise;
+            }
+
+            console.log('[请求RAW] 进度: 正在拉取更新日志');
+            contentEl.innerHTML = '<p class="version-changelog-placeholder">正在加载更新日志...</p>';
+
+            pendingChangelogLoadPromise = (async () => {
+                try {
+                    const changelogText = await fetchWithAutoMirror(CHANGELOG_RAW_URL + '?_t=' + Date.now(), '更新日志');
+                    cachedChangelogRawText = changelogText;
+                    cachedChangelogLoadedAt = Date.now();
+
+                    const renderResult = renderChangelogMarkdown(changelogText);
+                    contentEl.innerHTML = renderResult.html || '<p class="version-changelog-placeholder">暂无更新日志内容。</p>';
+                    console.log(`[请求RAW] 成功: 更新日志已加载，时间=${formatVersionChangelogTime(cachedChangelogLoadedAt)}`);
+                    if (renderResult.currentVersionPosition > 0) {
+                        console.log(
+                            `[更新日志] 当前版本定位成功: ${renderResult.currentVersionDisplayText || '当前版本'} 命中 ${renderResult.currentVersionHeadingText || ''}，位于第${renderResult.currentVersionPosition}条（共${renderResult.versionEntryCount}条）`
+                        );
+                    } else if (renderResult.versionEntryCount > 0) {
+                        console.log(
+                            `[更新日志] 当前版本未匹配到日志条目: ${renderResult.currentVersionDisplayText || '未知版本'}，日志共${renderResult.versionEntryCount}条`
+                        );
+                    }
+                } catch (error) {
+                    console.error('[请求RAW] 更新日志拉取失败:', error);
+                    contentEl.innerHTML = '<p class="version-changelog-placeholder">更新日志拉取失败，请稍后重试。</p>';
+                    showToast('更新日志加载失败: ' + error.message, 'error');
+                } finally {
+                    pendingChangelogLoadPromise = null;
+                }
+            })();
+
+            return pendingChangelogLoadPromise;
+        }
+
+        async function openVersionChangelogModal() {
+            closeVersionInfoModal();
+            const modal = document.getElementById('versionChangelogModal');
+            if (!modal) return;
+
+            modal.classList.add('show');
+            await loadVersionChangelog(false);
+        }
+
+        function closeVersionChangelogModal(event) {
+            if (event && event.target.id !== 'versionChangelogModal') return;
+            const modal = document.getElementById('versionChangelogModal');
+            if (modal) {
+                modal.classList.remove('show');
             }
         }
 

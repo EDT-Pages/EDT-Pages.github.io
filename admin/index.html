@@ -2070,6 +2070,52 @@
             color: #1f2937;
         }
 
+        .version-changelog-content .changelog-version-body .changelog-subtitle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .version-changelog-content .changelog-version-body .changelog-subtitle-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            flex: 0 0 16px;
+            opacity: 0.95;
+        }
+
+        .version-changelog-content .changelog-version-body .changelog-subtitle-icon svg {
+            display: block;
+            width: 16px;
+            height: 16px;
+        }
+
+        .version-changelog-content .changelog-version-body .changelog-subtitle.is-new {
+            color: #047857;
+        }
+
+        .version-changelog-content .changelog-version-body .changelog-subtitle.is-debug {
+            color: #bd70ff;
+        }
+
+        .version-changelog-content .changelog-version-body .changelog-subtitle.is-improve {
+            color: #2563eb;
+        }
+
+        .version-changelog-content .changelog-version-body ul.changelog-sublist.is-new>li::marker {
+            color: #047857;
+        }
+
+        .version-changelog-content .changelog-version-body ul.changelog-sublist.is-debug>li::marker {
+            color: #bd70ff;
+        }
+
+        .version-changelog-content .changelog-version-body ul.changelog-sublist.is-improve>li::marker {
+            color: #2563eb;
+        }
+
         .version-changelog-content .changelog-version-body p {
             margin: 0 0 10px;
         }
@@ -2745,6 +2791,30 @@
         html.dark-mode .version-changelog-content h3,
         html.dark-mode .version-changelog-content .changelog-version-body h4 {
             color: #f9fafb;
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-body .changelog-subtitle.is-new {
+            color: #6ee7b7;
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-body .changelog-subtitle.is-debug {
+            color: #bd70ff;
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-body .changelog-subtitle.is-improve {
+            color: #93c5fd;
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-body ul.changelog-sublist.is-new>li::marker {
+            color: #6ee7b7;
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-body ul.changelog-sublist.is-debug>li::marker {
+            color: #bd70ff;
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-body ul.changelog-sublist.is-improve>li::marker {
+            color: #93c5fd;
         }
 
         html.dark-mode .version-changelog-content .changelog-version-row {
@@ -9189,7 +9259,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     <div class="form-group" id="httpsProxySelectGroup">
                         <label for="httpsProxySelect">🌐 选择目标代理</label>
                         <div class="input-wrapper">
-                            <select id="httpsProxySelect" onchange="updateHTTPSConfirmButton(); updateProxyMap('https');"
+                            <select id="httpsProxySelect"
+                                onchange="updateHTTPSConfirmButton(); updateProxyMap('https');"
                                 style="padding-left: 16px; font-family: 'Fira Code', monospace; font-size: 12px;">
                                 <option value=""></option>
                             </select>
@@ -10355,9 +10426,47 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             return false;
         }
 
+        function getChangelogSubheadingMeta(rawHeadingText) {
+            const normalized = String(rawHeadingText ?? '').trim().toLowerCase();
+            const 新增功能 = ['新增功能', 'added', 'add', 'new'].map(s => s.toLowerCase());
+            const 问题修复 = ['问题修复', 'debug', 'bug', 'fixed', 'fix'].map(s => s.toLowerCase());
+            const 功能改进 = ['功能改进', 'enhancement', 'improve', 'improvement', 'optimize', 'optimization', 'change', 'changed'].map(s => s.toLowerCase());
+            if (新增功能.includes(normalized)) {
+                return {
+                    type: 'new',
+                    label: '新增功能',
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus w-4 h-4"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>`
+                };
+            }
+            if (问题修复.includes(normalized)) {
+                return {
+                    type: 'debug',
+                    label: '问题修复',
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bug w-4 h-4"><path d="m8 2 1.88 1.88"></path><path d="M14.12 3.88 16 2"></path><path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"></path><path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"></path><path d="M12 20v-9"></path><path d="M6.53 9C4.6 8.8 3 7.1 3 5"></path><path d="M6 13H2"></path><path d="M3 21c0-2.1 1.7-3.9 3.8-4"></path><path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"></path><path d="M22 13h-4"></path><path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"></path></svg>`
+                };
+            }
+            if (功能改进.includes(normalized)) {
+                return {
+                    type: 'improve',
+                    label: '功能改进',
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw w-4 h-4"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>`
+                };
+            }
+            return null;
+        }
+
+        function renderChangelogSubheading(rawHeadingText, resolvedMeta = null) {
+            const meta = resolvedMeta || getChangelogSubheadingMeta(rawHeadingText);
+            if (!meta) {
+                return `<h4>${renderChangelogInline(rawHeadingText)}</h4>`;
+            }
+            return `<h4 class="changelog-subtitle is-${meta.type}"><span class="changelog-subtitle-icon">${meta.icon}</span><span class="changelog-subtitle-text">${escapeMarkdownHtml(meta.label)}</span></h4>`;
+        }
+
         function renderChangelogSectionBody(sectionLines) {
             const htmlParts = [];
             let inList = false;
+            let currentSubtitleType = '';
 
             const closeList = () => {
                 if (inList) {
@@ -10376,14 +10485,19 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 let match = line.match(/^###\s+(.+)$/);
                 if (match) {
                     closeList();
-                    htmlParts.push(`<h4>${renderChangelogInline(match[1])}</h4>`);
+                    const subtitleMeta = getChangelogSubheadingMeta(match[1]);
+                    currentSubtitleType = subtitleMeta ? subtitleMeta.type : '';
+                    htmlParts.push(renderChangelogSubheading(match[1], subtitleMeta));
                     continue;
                 }
 
                 match = line.match(/^-\s+(.+)$/);
                 if (match) {
                     if (!inList) {
-                        htmlParts.push('<ul>');
+                        const listClassName = currentSubtitleType
+                            ? `changelog-sublist is-${currentSubtitleType}`
+                            : 'changelog-sublist';
+                        htmlParts.push(`<ul class="${listClassName}">`);
                         inList = true;
                     }
                     htmlParts.push(`<li>${renderChangelogInline(match[1])}</li>`);

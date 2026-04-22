@@ -18611,15 +18611,17 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             window[config.verificationTimeouts][proxyIp] = timeoutId;
 
             try {
-                const response = await fetch(`https://check-proxyip-api.cmliussss.net/check?proxyip=${proxyIp}`, { signal });
+                const response = await fetch(`https://api.check.proxyip.cmliussss.net/check?proxyip=${proxyIp}`, { signal });
                 clearTimeout(window[config.verificationTimeouts][proxyIp]);
 
                 if (response.ok) {
                     const data = await response.json();
-                    if (data.success && data.type === 'ProxyIP') {
+                    if (data.success) {
                         window[config.verificationStatus][proxyIp] = {
                             status: 'success',
-                            responseTime: data.responseTime
+                            responseTime: data.responseTime,
+                            supports_ipv4: data.supports_ipv4 === true,
+                            supports_ipv6: data.supports_ipv6 === true
                         };
                     } else {
                         window[config.verificationStatus][proxyIp] = {
@@ -18922,17 +18924,32 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // 辅助函数：生成代理选项HTML
             function generateProxyOption(proxy, isSelectable = false) {
                 const status = verificationStatus[proxy.proxy] || { status: 'pending' };
-                let emoji = '⏳';
+                let emoji = '⏳⏳';
                 let statusText = '验证中';
 
                 if (status.status === 'success') {
-                    emoji = '✅';
+                    if (type === 'proxyip') {
+                        const supportsV4 = status.supports_ipv4 === true;
+                        const supportsV6 = status.supports_ipv6 === true;
+
+                        if (supportsV4 && supportsV6) {
+                            emoji = '✅✅';
+                        } else if (supportsV4 && !supportsV6) {
+                            emoji = '✅🔴';
+                        } else if (!supportsV4 && supportsV6) {
+                            emoji = '🔴✅';
+                        } else {
+                            emoji = '🔴🔴';
+                        }
+                    } else {
+                        emoji = '✅';
+                    }
                     statusText = `${status.responseTime}ms`;
                 } else if (status.status === 'timeout') {
-                    emoji = '🔴';
+                    emoji = '🔴🔴';
                     statusText = '已超时';
                 } else if (status.status === 'failed') {
-                    emoji = '🔴';
+                    emoji = '🔴🔴';
                     statusText = '不可用';
                 }
 

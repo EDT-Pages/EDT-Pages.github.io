@@ -18924,7 +18924,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // 辅助函数：生成代理选项HTML
             function generateProxyOption(proxy, isSelectable = false) {
                 const status = verificationStatus[proxy.proxy] || { status: 'pending' };
-                let emoji = '⏳⏳';
+                let emoji = '⏳';
                 let statusText = '验证中';
 
                 if (status.status === 'success') {
@@ -18946,10 +18946,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     }
                     statusText = `${status.responseTime}ms`;
                 } else if (status.status === 'timeout') {
-                    emoji = '🔴🔴';
+                    emoji = '🔴';
                     statusText = '已超时';
                 } else if (status.status === 'failed') {
-                    emoji = '🔴🔴';
+                    emoji = '🔴';
                     statusText = '不可用';
                 }
 

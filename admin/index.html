@@ -10767,6 +10767,17 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             render();
         }
 
+        function refreshLineEditor(textarea) {
+            if (!textarea) return;
+
+            if (typeof textarea._refreshLineEditor === 'function') {
+                textarea._refreshLineEditor();
+                return;
+            }
+
+            textarea.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
         async function loadConfig() {
             try {
                 // 禁用 Rocket Loader 对该请求的影响
@@ -16954,8 +16965,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const allResults = optimizeResults[currentSelectedCountry];
             // 只保存前16个
             const resultsToSave = allResults.slice(0, 16);
-            // 修改格式：包含国家、类型和时间信息
-            const newContent = resultsToSave.map(r => `${r.ip}:${r.port}#${r.remark}|${r.type}|${r.time}ms`).join('\n');
+            const newContent = resultsToSave.map(r => `${r.ip}:${r.port}#${r.remark} ${r.type} ${r.time}ms`).join('\n');
             console.log(`[在线优选] 成功: ${currentSelectedCountry} 保存 ${resultsToSave.length} 个 IP（总共 ${allResults.length} 个）`);
 
             const textarea = document.getElementById('customIPs');
@@ -17002,6 +17012,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     showToast('已追加到自定义优选地址 (前16个)', 'success');
                 }
             }
+
+            refreshLineEditor(textarea);
 
             // 标记为已修改
             markModified('sub');

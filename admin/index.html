@@ -2104,6 +2104,10 @@
             color: #2563eb;
         }
 
+        .version-changelog-content .changelog-version-body .changelog-subtitle.is-delete {
+            color: #8a7058;
+        }
+
         .version-changelog-content .changelog-version-body ul.changelog-sublist.is-new>li::marker {
             color: #047857;
         }
@@ -2114,6 +2118,16 @@
 
         .version-changelog-content .changelog-version-body ul.changelog-sublist.is-improve>li::marker {
             color: #2563eb;
+        }
+
+        .version-changelog-content .changelog-version-body ul.changelog-sublist.is-delete>li::marker {
+            color: #8a7058;
+        }
+
+        .version-changelog-content .changelog-version-body ul.changelog-sublist.is-delete>li {
+            text-decoration: line-through;
+            text-decoration-color: rgba(138, 112, 88, 0.58);
+            text-decoration-thickness: 1px;
         }
 
         .version-changelog-content .changelog-version-body p {
@@ -2805,6 +2819,10 @@
             color: #93c5fd;
         }
 
+        html.dark-mode .version-changelog-content .changelog-version-body .changelog-subtitle.is-delete {
+            color: #d1b693;
+        }
+
         html.dark-mode .version-changelog-content .changelog-version-body ul.changelog-sublist.is-new>li::marker {
             color: #6ee7b7;
         }
@@ -2815,6 +2833,14 @@
 
         html.dark-mode .version-changelog-content .changelog-version-body ul.changelog-sublist.is-improve>li::marker {
             color: #93c5fd;
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-body ul.changelog-sublist.is-delete>li::marker {
+            color: #d1b693;
+        }
+
+        html.dark-mode .version-changelog-content .changelog-version-body ul.changelog-sublist.is-delete>li {
+            text-decoration-color: rgba(209, 182, 147, 0.7);
         }
 
         html.dark-mode .version-changelog-content .changelog-version-row {
@@ -9403,7 +9429,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         let performanceRecheckScheduled = false;
         const WORKER_VERSION_SOURCE_URL = 'https://raw.githubusercontent.com/cmliu/edgetunnel/main/_worker.js';
         const PAGES_ZIP_DOWNLOAD_URL = 'https://github.com/cmliu/edgetunnel/archive/refs/heads/main.zip';
-        const CHANGELOG_RAW_URL = 'https://raw.githubusercontent.com/EDT-Pages/EDT-Pages.github.io/refs/heads/main/CHANGELOG';
+        const CHANGELOG_RAW_URL = 'https://raw.githubusercontent.com/cmliu/edgetunnel/refs/heads/main/CHANGELOG';
         const HTTPS_PROXY_MIN_VERSION = 20260413174651;
         let cachedWorkerVersionRawText = '';
         let cachedLatestOnlineVersion = 0;
@@ -10427,6 +10453,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const 新增功能 = ['新增功能', 'added', 'add', 'new'].map(s => s.toLowerCase());
             const 问题修复 = ['问题修复', 'debug', 'bug', 'fixed', 'fix'].map(s => s.toLowerCase());
             const 功能改进 = ['功能改进', 'enhancement', 'improve', 'improvement', 'optimize', 'optimization', 'change', 'changed'].map(s => s.toLowerCase());
+            const 功能移除 = ['功能移除', 'delete', 'deleted', 'remove', 'removed', 'removal'].map(s => s.toLowerCase());
             if (新增功能.includes(normalized)) {
                 return {
                     type: 'new',
@@ -10446,6 +10473,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     type: 'improve',
                     label: '功能改进',
                     icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw w-4 h-4"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>`
+                };
+            }
+            if (功能移除.includes(normalized)) {
+                return {
+                    type: 'delete',
+                    label: '功能移除',
+                    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2 w-4 h-4"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>`
                 };
             }
             return null;
@@ -17608,6 +17642,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 {
                     url: `https://api.ipapi.is`,
                     parse: d => ({ ip: d.ip, loc: `${d.location?.country_code || '未知'} AS${d.asn?.asn || ''} ${d.asn?.org || ''}`.trim() })
+                },
+                {
+                    url: `https://api.cmliussss.net/api/ipinfo?_t=${Date.now()}`,
+                    parse: d => ({ ip: d.ip, loc: `${d.country_code || '未知'} ${d.asn || ''} ${d.as_name || ''}`.trim() })
                 }
             ];
 

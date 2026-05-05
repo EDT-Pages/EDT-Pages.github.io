@@ -7869,6 +7869,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             <option value="socks5">SOCKS5</option>
                             <option value="http">HTTP</option>
                             <option value="https" id="httpsProxyOption" hidden style="display: none;">HTTPS</option>
+                            <option value="turn" id="turnProxyOption" hidden style="display: none;">TURN</option>
+                            <option value="sstp" id="sstpProxyOption" hidden style="display: none;">SSTP</option>
                         </select>
                     </div>
 
@@ -7941,6 +7943,44 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                         onchange="markModified('proxy')">
                                     <label for="globalHTTPS" class="checkbox-label"
                                         title="启用全局代理: 将非CFCDN站点的流量也走HTTPS代理">启用全局代理</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="turnSection" class="hidden-section">
+                        <div class="form-group">
+                            <label for="turnAddr">TURN</label>
+                            <div class="input-wrapper">
+                                <div class="readonly-wrapper proxy-input-wrapper"
+                                    onclick="openProxyVerificationModal('turn')">
+                                    <input type="text" id="turnAddr" title="TURN"
+                                        placeholder="user:password@127.0.0.1:3478" readonly class="subapi-input">
+                                </div>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="globalTURN" title="启用全局代理: 将非CFCDN站点的流量也走TURN代理"
+                                        onchange="markModified('proxy')">
+                                    <label for="globalTURN" class="checkbox-label"
+                                        title="启用全局代理: 将非CFCDN站点的流量也走TURN代理">启用全局代理</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="sstpSection" class="hidden-section">
+                        <div class="form-group">
+                            <label for="sstpAddr">SSTP</label>
+                            <div class="input-wrapper">
+                                <div class="readonly-wrapper proxy-input-wrapper"
+                                    onclick="openProxyVerificationModal('sstp')">
+                                    <input type="text" id="sstpAddr" title="SSTP"
+                                        placeholder="user:password@127.0.0.1:443" readonly class="subapi-input">
+                                </div>
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="globalSSTP" title="启用全局代理: 将非CFCDN站点的流量也走SSTP代理"
+                                        onchange="markModified('proxy')">
+                                    <label for="globalSSTP" class="checkbox-label"
+                                        title="启用全局代理: 将非CFCDN站点的流量也走SSTP代理">启用全局代理</label>
                                 </div>
                             </div>
                         </div>
@@ -8627,14 +8667,14 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                         <strong>💡 解决方案：</strong><br>
                         为了解决这个问题，我们需要借助外部服务器（ProxyIP、SOCKS5 或 HTTP）作为「跳板」，通过这些第三方服务器来代理访问 Cloudflare
-                        的服务。<br><b>相当于找了一面（ProxyIP/SOCKS5/HTTP）镜子，这样 Cloudflare 就能通过镜子看到了自己。</b><br><br>
+                        的服务。<br><b>相当于找了一面（ProxyIP/SOCKS5/HTTP/HTTPS/TURN/SSTP）镜子，这样 Cloudflare 就能通过镜子看到了自己。</b><br><br>
 
                         <strong>📍 实际效果：</strong>
                         <ul style="margin: 12px 0 0 20px; padding-left: 0;">
                             <li style="margin-bottom: 8px;">👤 访问<strong>非 Cloudflare CDN
                                     的网站</strong>时（如<b>油管、谷歌</b>等），你的 IP 由「优选 IP」决定</li>
                             <li>🌐 访问<strong>由 Cloudflare CDN 托管的网站</strong>时（如<b>推特、ChatGPT</b>等），你的 IP
-                                由「反代模式（PROXYIP/SOCKS5/HTTP）」决定</li>
+                                由「反代模式（PROXYIP/SOCKS5/HTTP/HTTPS/TURN/SSTP）」决定</li>
                         </ul>
                     </div>
                 </div>
@@ -8686,7 +8726,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             <div style="color: var(--primary-color); font-size: 1.5rem;">→</div>
                             <div
                                 style="background: #f3e5f5; padding: 12px; border-radius: 8px; text-align: center; flex: 1; min-width: 120px;">
-                                <div style="font-weight: 600; color: #7b1fa2;">PROXYIP/SOCKS5/HTTP 服务器</div>
+                                <div style="font-weight: 600; color: #7b1fa2;">PROXYIP/SOCKS5/HTTP/HTTPS/TURN/SSTP 服务器</div>
                                 <div style="font-size: 0.9rem; color: var(--text-secondary);">第三方代理</div>
                             </div>
                             <div style="color: var(--primary-color); font-size: 1.5rem;">→</div>
@@ -8710,7 +8750,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                 站点</strong>时（如<b>油管、谷歌</b>等），你的 IP 归属地由「优选 IP」决定</li>
                         <li style="color: var(--text-secondary);">🌐 访问<strong>由 Cloudflare CDN
                                 托管的网站</strong>时（如<b>推特、ChatGPT</b>等），你的 IP
-                            归属地由「ProxyIP/SOCKS5/HTTP」决定</li>
+                            归属地由「ProxyIP/SOCKS5/HTTP/HTTPS/TURN/SSTP」决定</li>
                     </ul>
                 </div>
             </div>
@@ -9431,6 +9471,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         const PAGES_ZIP_DOWNLOAD_URL = 'https://github.com/cmliu/edgetunnel/archive/refs/heads/main.zip';
         const CHANGELOG_RAW_URL = 'https://raw.githubusercontent.com/cmliu/edgetunnel/refs/heads/main/CHANGELOG';
         const HTTPS_PROXY_MIN_VERSION = 20260413174651;
+        const TURN_SSTP_PROXY_MIN_VERSION = 20260504172138;
         let cachedWorkerVersionRawText = '';
         let cachedLatestOnlineVersion = 0;
         let cachedCurrentVersionNumber = 0;
@@ -9439,6 +9480,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         let cachedChangelogLoadedAt = 0;
         let pendingChangelogLoadPromise = null;
         let httpsProxyFeatureEnabled = false;
+        let turnSstpProxyFeatureEnabled = false;
 
         function parseForcedLowPerformanceMode() {
             try {
@@ -10082,7 +10124,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         }
 
         function setHttpsProxyFeatureAvailability(currentVersion) {
-            httpsProxyFeatureEnabled = parseVersionNumber(currentVersion) >= HTTPS_PROXY_MIN_VERSION;
+            const versionNumber = parseVersionNumber(currentVersion);
+            httpsProxyFeatureEnabled = versionNumber >= HTTPS_PROXY_MIN_VERSION;
+            turnSstpProxyFeatureEnabled = versionNumber >= TURN_SSTP_PROXY_MIN_VERSION;
 
             const httpsOption = document.getElementById('httpsProxyOption');
             if (httpsOption) {
@@ -10090,16 +10134,30 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 httpsOption.style.display = httpsProxyFeatureEnabled ? '' : 'none';
             }
 
+            const turnOption = document.getElementById('turnProxyOption');
+            if (turnOption) {
+                turnOption.hidden = !turnSstpProxyFeatureEnabled;
+                turnOption.style.display = turnSstpProxyFeatureEnabled ? '' : 'none';
+            }
+
+            const sstpOption = document.getElementById('sstpProxyOption');
+            if (sstpOption) {
+                sstpOption.hidden = !turnSstpProxyFeatureEnabled;
+                sstpOption.style.display = turnSstpProxyFeatureEnabled ? '' : 'none';
+            }
+
             const proxyMode = document.getElementById('proxyMode');
             if (!proxyMode) return;
 
-            if (!httpsProxyFeatureEnabled && proxyMode.value === 'https') {
+            const isUnsupportedHttps = proxyMode.value === 'https' && !httpsProxyFeatureEnabled;
+            const isUnsupportedTurnSstp = ['turn', 'sstp'].includes(proxyMode.value) && !turnSstpProxyFeatureEnabled;
+            if (isUnsupportedHttps || isUnsupportedTurnSstp) {
                 proxyMode.value = 'http';
                 updateProxyMode(false);
                 return;
             }
 
-            if (proxyMode.value === 'https') {
+            if (['https', 'turn', 'sstp'].includes(proxyMode.value)) {
                 updateProxyMode(false);
             }
         }
@@ -11029,16 +11087,16 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 document.getElementById('proxyMode').value = 'https';
                 document.getElementById('httpsAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
                 document.getElementById('globalHTTPS').checked = currentConfig.反代?.SOCKS5?.全局 || false;
+            } else if (socksEnabled === 'turn') {
+                document.getElementById('proxyMode').value = 'turn';
+                document.getElementById('turnAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
+                document.getElementById('globalTURN').checked = currentConfig.反代?.SOCKS5?.全局 || false;
+            } else if (socksEnabled === 'sstp') {
+                document.getElementById('proxyMode').value = 'sstp';
+                document.getElementById('sstpAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
+                document.getElementById('globalSSTP').checked = currentConfig.反代?.SOCKS5?.全局 || false;
             }
             updateProxyMode();
-
-            // 检查路径模板字段是否存在
-            const pathTemplateConfigBtn = document.getElementById('pathTemplateConfigBtn');
-            if (currentConfig.反代?.路径模板 !== undefined) {
-                pathTemplateConfigBtn.style.display = '';
-            } else {
-                pathTemplateConfigBtn.style.display = 'none';
-            }
 
             // 订阅转换配置
             document.getElementById('subAPI').value = currentConfig.订阅转换配置?.SUBAPI || '';
@@ -11843,9 +11901,16 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             return input;
         }
 
-        // 处理SOCKS5、HTTP和HTTPS代理地址
+        // 处理SOCKS5、HTTP、HTTPS、TURN和SSTP代理地址
         function processProxyAddress(type) {
-            const fieldId = type === 'socks5' ? 'socks5Addr' : (type === 'https' ? 'httpsAddr' : 'httpAddr');
+            const proxyAddressFieldMap = {
+                socks5: 'socks5Addr',
+                http: 'httpAddr',
+                https: 'httpsAddr',
+                turn: 'turnAddr',
+                sstp: 'sstpAddr'
+            };
+            const fieldId = proxyAddressFieldMap[type] || 'httpAddr';
             const input = document.getElementById(fieldId).value.trim();
             let cleanAddress = '';
 
@@ -11873,6 +11938,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const socks5Prefixes = ['socks5://', 'socks5=', 'socks5://'];
             const httpPrefixes = ['http://', 'http='];
             const httpsPrefixes = ['https://', 'https='];
+            const turnPrefixes = ['turn://', 'turn='];
+            const sstpPrefixes = ['sstp://', 'sstp='];
 
             for (const prefix of socks5Prefixes) {
                 if (input.toLowerCase().startsWith(prefix)) {
@@ -11889,6 +11956,20 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
 
             for (const prefix of httpsPrefixes) {
+                if (input.toLowerCase().startsWith(prefix)) {
+                    input = input.substring(prefix.length).trim();
+                    break;
+                }
+            }
+
+            for (const prefix of turnPrefixes) {
+                if (input.toLowerCase().startsWith(prefix)) {
+                    input = input.substring(prefix.length).trim();
+                    break;
+                }
+            }
+
+            for (const prefix of sstpPrefixes) {
                 if (input.toLowerCase().startsWith(prefix)) {
                     input = input.substring(prefix.length).trim();
                     break;
@@ -11917,6 +11998,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 document.getElementById('socks5Addr').value = cleanAddress;
                 document.getElementById('httpAddr').value = '';
                 document.getElementById('httpsAddr').value = '';
+                document.getElementById('turnAddr').value = '';
+                document.getElementById('sstpAddr').value = '';
 
                 updateProxyMode();
                 return;
@@ -11932,6 +12015,42 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 document.getElementById('socks5Addr').value = '';
                 document.getElementById('httpAddr').value = '';
                 document.getElementById('httpsAddr').value = cleanAddress;
+                document.getElementById('turnAddr').value = '';
+                document.getElementById('sstpAddr').value = '';
+
+                updateProxyMode();
+                return;
+            }
+
+            // 检查是否包含turn协议
+            if (lowerInput.includes('turn://') || lowerInput.includes('turn=') || lowerInput.startsWith('/turn')) {
+                // 切换到TURN模式
+                document.getElementById('proxyMode').value = 'turn';
+
+                // 清空其他模式的内容，填充TURN
+                document.getElementById('proxyIP').value = '';
+                document.getElementById('socks5Addr').value = '';
+                document.getElementById('httpAddr').value = '';
+                document.getElementById('httpsAddr').value = '';
+                document.getElementById('turnAddr').value = cleanAddress;
+                document.getElementById('sstpAddr').value = '';
+
+                updateProxyMode();
+                return;
+            }
+
+            // 检查是否包含sstp协议
+            if (lowerInput.includes('sstp://') || lowerInput.includes('sstp=') || lowerInput.startsWith('/sstp')) {
+                // 切换到SSTP模式
+                document.getElementById('proxyMode').value = 'sstp';
+
+                // 清空其他模式的内容，填充SSTP
+                document.getElementById('proxyIP').value = '';
+                document.getElementById('socks5Addr').value = '';
+                document.getElementById('httpAddr').value = '';
+                document.getElementById('httpsAddr').value = '';
+                document.getElementById('turnAddr').value = '';
+                document.getElementById('sstpAddr').value = cleanAddress;
 
                 updateProxyMode();
                 return;
@@ -11947,6 +12066,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 document.getElementById('socks5Addr').value = '';
                 document.getElementById('httpAddr').value = cleanAddress;
                 document.getElementById('httpsAddr').value = '';
+                document.getElementById('turnAddr').value = '';
+                document.getElementById('sstpAddr').value = '';
 
                 updateProxyMode();
                 return;
@@ -11956,10 +12077,14 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         function updateProxyMode(markSectionModified = true) {
             const mode = document.getElementById('proxyMode').value;
             const allowHttpsMode = mode === 'https' && httpsProxyFeatureEnabled;
+            const allowTurnMode = mode === 'turn' && turnSstpProxyFeatureEnabled;
+            const allowSstpMode = mode === 'sstp' && turnSstpProxyFeatureEnabled;
             document.getElementById('proxyIPSection').style.display = mode === 'auto' ? 'block' : 'none';
             document.getElementById('socks5Section').style.display = mode === 'socks5' ? 'block' : 'none';
             document.getElementById('httpSection').style.display = mode === 'http' ? 'block' : 'none';
             document.getElementById('httpsSection').style.display = allowHttpsMode ? 'block' : 'none';
+            document.getElementById('turnSection').style.display = allowTurnMode ? 'block' : 'none';
+            document.getElementById('sstpSection').style.display = allowSstpMode ? 'block' : 'none';
 
             // 根据选择的模式填充对应的数据
             if (mode === 'auto') {
@@ -11979,6 +12104,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             } else if (mode === 'https') {
                 document.getElementById('httpsAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
                 document.getElementById('globalHTTPS').checked = currentConfig.反代?.SOCKS5?.全局 || false;
+            } else if (mode === 'turn') {
+                document.getElementById('turnAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
+                document.getElementById('globalTURN').checked = currentConfig.反代?.SOCKS5?.全局 || false;
+            } else if (mode === 'sstp') {
+                document.getElementById('sstpAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
+                document.getElementById('globalSSTP').checked = currentConfig.反代?.SOCKS5?.全局 || false;
             }
 
             // 更新 "获取更多PROXYIP" 按钮的显示状态
@@ -12003,6 +12134,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const exploreHTTPSBtn = document.getElementById('exploreHTTPSBtn');
             if (exploreHTTPSBtn) {
                 exploreHTTPSBtn.style.display = allowHttpsMode ? 'inline-block' : 'none';
+            }
+
+            // 更新 "路径模板配置" 按钮的显示状态
+            const pathTemplateConfigBtn = document.getElementById('pathTemplateConfigBtn');
+            if (pathTemplateConfigBtn) {
+                const supportsPathTemplate = currentConfig.反代?.路径模板 !== undefined && ['auto', 'socks5', 'http'].includes(mode);
+                pathTemplateConfigBtn.style.display = supportsPathTemplate ? 'inline-block' : 'none';
             }
 
             if (markSectionModified) {
@@ -12561,15 +12699,45 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     showToast('HTTPS地址不能为空', 'error');
                     return;
                 }
+            } else if (mode === 'turn') {
+                if (!turnSstpProxyFeatureEnabled) {
+                    showToast('当前后端版本暂不支持TURN反代', 'error');
+                    return;
+                }
+                socksEnabled = 'turn';
+                socksAccount = document.getElementById('turnAddr').value.trim();
+                globalProxy = document.getElementById('globalTURN').checked;
+
+                if (!socksAccount) {
+                    showToast('TURN地址不能为空', 'error');
+                    return;
+                }
+            } else if (mode === 'sstp') {
+                if (!turnSstpProxyFeatureEnabled) {
+                    showToast('当前后端版本暂不支持SSTP反代', 'error');
+                    return;
+                }
+                socksEnabled = 'sstp';
+                socksAccount = document.getElementById('sstpAddr').value.trim();
+                globalProxy = document.getElementById('globalSSTP').checked;
+
+                if (!socksAccount) {
+                    showToast('SSTP地址不能为空', 'error');
+                    return;
+                }
             }
 
+            const existingReverseProxyConfig = currentConfig.反代 || {};
+            const existingSocks5Config = existingReverseProxyConfig.SOCKS5 || {};
             currentConfig.反代 = {
+                ...existingReverseProxyConfig,
                 PROXYIP: proxyIP,
                 SOCKS5: {
+                    ...existingSocks5Config,
                     启用: socksEnabled,
                     全局: globalProxy,
                     账号: socksAccount,
-                    白名单: currentConfig.反代.SOCKS5.白名单
+                    白名单: existingSocks5Config.白名单
                 }
             };
 
@@ -12803,6 +12971,14 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     document.getElementById('proxyMode').value = 'https';
                     document.getElementById('httpsAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
                     document.getElementById('globalHTTPS').checked = currentConfig.反代?.SOCKS5?.全局 || false;
+                } else if (socksEnabled === 'turn') {
+                    document.getElementById('proxyMode').value = 'turn';
+                    document.getElementById('turnAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
+                    document.getElementById('globalTURN').checked = currentConfig.反代?.SOCKS5?.全局 || false;
+                } else if (socksEnabled === 'sstp') {
+                    document.getElementById('proxyMode').value = 'sstp';
+                    document.getElementById('sstpAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
+                    document.getElementById('globalSSTP').checked = currentConfig.反代?.SOCKS5?.全局 || false;
                 }
                 updateProxyMode();
             } else if (section === 'convert') {
@@ -14165,20 +14341,57 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         // 全局变量存储当前验证的代理类型
         let currentProxyType = null;
         let currentProxyFieldId = null;
+        const proxyVerificationConfigs = {
+            socks5: {
+                type: 'socks5',
+                fieldId: 'socks5Addr',
+                title: '🔒 SOCKS5代理验证',
+                label: 'SOCKS5代理:',
+                placeholder: 'user:password@127.0.0.1:1080'
+            },
+            http: {
+                type: 'http',
+                fieldId: 'httpAddr',
+                title: '🌐 HTTP代理验证',
+                label: 'HTTP代理:',
+                placeholder: 'user:password@127.0.0.1:8080'
+            },
+            https: {
+                type: 'https',
+                fieldId: 'httpsAddr',
+                title: '🌐 HTTPS代理验证',
+                label: 'HTTPS代理:',
+                placeholder: 'user:password@127.0.0.1:8443'
+            },
+            turn: {
+                type: 'turn',
+                fieldId: 'turnAddr',
+                title: '🔁 TURN代理验证',
+                label: 'TURN代理:',
+                placeholder: 'user:password@127.0.0.1:3478'
+            },
+            sstp: {
+                type: 'sstp',
+                fieldId: 'sstpAddr',
+                title: '🔐 SSTP代理验证',
+                label: 'SSTP代理:',
+                placeholder: 'user:password@127.0.0.1:443'
+            }
+        };
+
+        function getProxyVerificationConfig(proxyType) {
+            return proxyVerificationConfigs[proxyType] || proxyVerificationConfigs.http;
+        }
 
         function openProxyVerificationModal(proxyType) {
-            currentProxyType = proxyType;
-            currentProxyFieldId = proxyType === 'socks5' ? 'socks5Addr' : (proxyType === 'https' ? 'httpsAddr' : 'httpAddr');
+            const config = getProxyVerificationConfig(proxyType);
+            currentProxyType = config.type;
+            currentProxyFieldId = config.fieldId;
 
             // 设置模态框标题和标签
-            const title = proxyType === 'socks5' ? '🔒 SOCKS5代理验证' : (proxyType === 'https' ? '🌐 HTTPS代理验证' : '🌐 HTTP代理验证');
-            const label = proxyType === 'socks5' ? 'SOCKS5代理:' : (proxyType === 'https' ? 'HTTPS代理:' : 'HTTP代理:');
-
-            document.getElementById('proxyVerificationTitle').textContent = title;
-            document.getElementById('proxyVerificationLabel').textContent = label;
-            document.getElementById('proxyVerificationInput').placeholder = proxyType === 'socks5'
-                ? 'user:password@127.0.0.1:1080'
-                : (proxyType === 'https' ? 'user:password@127.0.0.1:8443' : 'user:password@127.0.0.1:8080');
+            document.getElementById('proxyVerificationTitle').textContent = config.title;
+            document.getElementById('proxyVerificationLabel').textContent = config.label;
+            document.getElementById('proxyVerificationInput').placeholder = config.placeholder;
 
             // 设置输入框的当前值
             const currentValue = document.getElementById(currentProxyFieldId).value;
@@ -14230,13 +14443,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                 // 构建请求参数
                 const params = new URLSearchParams();
-                if (currentProxyType === 'socks5') {
-                    params.append('socks5', processedAddress);
-                } else if (currentProxyType === 'https') {
-                    params.append('https', processedAddress);
-                } else {
-                    params.append('http', processedAddress);
-                }
+                params.append(currentProxyType, processedAddress);
 
                 // 创建 AbortController 实现 5 秒超时
                 const controller = new AbortController();
@@ -14352,6 +14559,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const socks5Prefixes = ['socks5://', 'socks5=', 'socks5://'];
             const httpPrefixes = ['http://', 'http='];
             const httpsPrefixes = ['https://', 'https='];
+            const turnPrefixes = ['turn://', 'turn='];
+            const sstpPrefixes = ['sstp://', 'sstp='];
 
             for (const prefix of socks5Prefixes) {
                 if (input.toLowerCase().startsWith(prefix)) {
@@ -14368,6 +14577,20 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
 
             for (const prefix of httpsPrefixes) {
+                if (input.toLowerCase().startsWith(prefix)) {
+                    input = input.substring(prefix.length).trim();
+                    break;
+                }
+            }
+
+            for (const prefix of turnPrefixes) {
+                if (input.toLowerCase().startsWith(prefix)) {
+                    input = input.substring(prefix.length).trim();
+                    break;
+                }
+            }
+
+            for (const prefix of sstpPrefixes) {
                 if (input.toLowerCase().startsWith(prefix)) {
                     input = input.substring(prefix.length).trim();
                     break;
@@ -15791,6 +16014,14 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         document.getElementById('proxyMode').value = 'https';
                         document.getElementById('httpsAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
                         document.getElementById('globalHTTPS').checked = currentConfig.反代?.SOCKS5?.全局 || false;
+                    } else if (socksEnabled === 'turn') {
+                        document.getElementById('proxyMode').value = 'turn';
+                        document.getElementById('turnAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
+                        document.getElementById('globalTURN').checked = currentConfig.反代?.SOCKS5?.全局 || false;
+                    } else if (socksEnabled === 'sstp') {
+                        document.getElementById('proxyMode').value = 'sstp';
+                        document.getElementById('sstpAddr').value = currentConfig.反代?.SOCKS5?.账号 || '';
+                        document.getElementById('globalSSTP').checked = currentConfig.反代?.SOCKS5?.全局 || false;
                     }
                     updateProxyMode();
                 } else if (section === 'convert') {
@@ -19516,7 +19747,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // 填入代理地址
             const input = document.getElementById(config.inputId);
             if (input) {
-                input.value = selectedProxy.replace(/^socks5:\/\/|^http:\/\/|^https:\/\//, '');
+                input.value = selectedProxy.replace(/^socks5:\/\/|^http:\/\/|^https:\/\/|^turn:\/\/|^sstp:\/\//, '');
                 input.dispatchEvent(new Event('change', { bubbles: true }));
                 markModified('proxy');
             }
@@ -19567,13 +19798,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     return;
                 }
                 let cleanProxy = String(proxyUrl);
-                for (const prefix of ['socks5://', 'http://', 'https://', 'socks5=', 'http=', 'https=']) {
+                for (const prefix of ['socks5://', 'http://', 'https://', 'turn://', 'sstp://', 'socks5=', 'http=', 'https=', 'turn=', 'sstp=']) {
                     if (cleanProxy.toLowerCase().startsWith(prefix)) {
                         cleanProxy = cleanProxy.substring(prefix.length).trim();
                         break;
                     }
                 }
-                const checkProtocol = type === 'https' ? 'https' : protocol;
+                const checkProtocol = ['https', 'turn', 'sstp'].includes(type) ? type : protocol;
                 const checkUrl = `/admin/check?${checkProtocol}=${encodeURIComponent(cleanProxy)}&_t=${Date.now()}`;
 
                 // 如果已经终止，直接返回

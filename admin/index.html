@@ -3504,7 +3504,8 @@
             }
 
             .module-footer .btn-online-optimize:not(.hidden-section),
-            .module-footer .btn-api-optimize:not(.hidden-section) {
+            .module-footer .btn-api-optimize:not(.hidden-section),
+            .module-footer .btn-chain-proxy:not(.hidden-section) {
                 flex: 1;
                 min-width: calc(50% - 5px);
             }
@@ -3702,6 +3703,22 @@
             box-shadow: 0 2px 10px rgba(59, 130, 246, 0.4);
         }
 
+        .btn-chain-proxy {
+            background: linear-gradient(135deg, #8b5cf6 0, #6d28d9 100%);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-chain-proxy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-chain-proxy:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(139, 92, 246, 0.4);
+        }
+
         /* API优选模态框样式 */
         .api-optimize-modal {
             overflow-y: auto;
@@ -3800,11 +3817,218 @@
             font-weight: 500;
         }
 
+        .chain-proxy-modal .api-form-row-item {
+            grid-template-columns: 110px 1fr;
+        }
+
+        .chain-proxy-preferred-wrapper,
+        .chain-proxy-input-wrapper {
+            display: grid;
+            gap: 6px;
+            align-items: center;
+            min-width: 0;
+        }
+
+        .chain-proxy-preferred-wrapper {
+            grid-template-columns: minmax(0, 1fr) auto minmax(72px, 96px);
+        }
+
+        .chain-proxy-input-wrapper {
+            grid-template-columns: minmax(84px, 104px) auto minmax(0, 1fr);
+        }
+
+        .chain-proxy-preferred-wrapper input,
+        .chain-proxy-input-wrapper select,
+        .chain-proxy-input-wrapper input {
+            width: 100%;
+            min-width: 0;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        .chain-proxy-status {
+            display: none;
+            margin: 8px 0 20px;
+            padding: 14px 16px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .chain-verify-card {
+            overflow: hidden;
+            border: 1px solid rgba(16, 185, 129, 0.28);
+            border-radius: 10px;
+            background: linear-gradient(180deg, #f8fffc 0%, #ecfdf5 100%);
+            color: #064e3b;
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.12);
+        }
+
+        .chain-verify-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(16, 185, 129, 0.18);
+            background: rgba(255, 255, 255, 0.72);
+        }
+
+        .chain-verify-title {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            min-width: 0;
+            font-weight: 700;
+            color: #065f46;
+        }
+
+        .chain-verify-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: #10b981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+            flex-shrink: 0;
+        }
+
+        .chain-verify-badge {
+            flex-shrink: 1;
+            max-width: 60%;
+            min-width: 0;
+            overflow: hidden;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: rgba(16, 185, 129, 0.13);
+            color: #047857;
+            font-size: 12px;
+            font-weight: 700;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .chain-verify-body {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 14px;
+        }
+
+        .chain-route {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+            gap: 8px;
+            align-items: stretch;
+        }
+
+        .chain-route-node {
+            min-width: 0;
+            padding: 10px;
+            border: 1px solid rgba(5, 150, 105, 0.16);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.82);
+        }
+
+        .chain-route-label {
+            margin-bottom: 5px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #047857;
+            text-transform: uppercase;
+        }
+
+        .chain-route-value {
+            overflow: hidden;
+            color: #064e3b;
+            font-family: 'Fira Code', 'Monaco', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .chain-route-arrow {
+            display: flex;
+            align-items: center;
+            color: #10b981;
+            font-weight: 800;
+            opacity: 0.88;
+        }
+
+        .chain-ip-link {
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .btn-chain-add {
+            flex: 1;
+            background: linear-gradient(135deg, #d1d5db 0, #9ca3af 100%);
+            color: #fff;
+            opacity: 0.72;
+            pointer-events: none;
+        }
+
+        .btn-chain-add:not([disabled]) {
+            background: linear-gradient(135deg, #8b5cf6 0, #6d28d9 100%);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .btn-chain-add:hover:not([disabled]) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.5);
+        }
+
+        .chain-proxy-buttons {
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .chain-proxy-buttons .btn {
+            flex: 1;
+        }
+
+        .chain-proxy-modal .btn-verify-api:disabled,
+        .chain-proxy-modal .btn-chain-add:disabled {
+            background: linear-gradient(135deg, #d1d5db 0, #9ca3af 100%);
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.72;
+            pointer-events: none;
+        }
+
         /* 移动端适配 */
         @media (max-width: 768px) {
             .api-form-row-dual {
                 grid-template-columns: 1fr;
             }
+
+            .chain-proxy-modal .api-form-row-item {
+                grid-template-columns: 1fr;
+                align-items: stretch;
+            }
+
+            .chain-proxy-preferred-wrapper {
+                grid-template-columns: minmax(0, 1fr) auto minmax(68px, 0.45fr);
+            }
+
+            .chain-proxy-input-wrapper {
+                grid-template-columns: minmax(78px, 0.6fr) auto minmax(0, 1.4fr);
+            }
+
+            .chain-route {
+                grid-template-columns: 1fr;
+            }
+
+            .chain-route-arrow {
+                justify-content: center;
+                transform: rotate(90deg);
+            }
+
         }
 
         .api-results-container {
@@ -3855,6 +4079,11 @@
             }
 
             .btn-append-api {
+                grid-column: 1 !important;
+                grid-row: 2 !important;
+            }
+
+            .btn-chain-add {
                 grid-column: 1 !important;
                 grid-row: 2 !important;
             }
@@ -4297,6 +4526,11 @@
             color: #fff;
         }
 
+        html.dark-mode .btn-chain-proxy {
+            background: linear-gradient(135deg, #8b5cf6 0, #6d28d9 100%);
+            color: #fff;
+        }
+
         html.dark-mode .btn-verify-api {
             background: linear-gradient(135deg, #10b981 0, #059669 100%);
             color: #fff;
@@ -4319,6 +4553,46 @@
 
         html.dark-mode .btn-close-api:hover {
             background: var(--border-color);
+        }
+
+        html.dark-mode .chain-proxy-preferred-wrapper input,
+        html.dark-mode .chain-proxy-input-wrapper select,
+        html.dark-mode .chain-proxy-input-wrapper input {
+            background: var(--input-bg);
+            color: var(--text-primary);
+            border-color: var(--input-border);
+        }
+
+        html.dark-mode .chain-verify-card {
+            border-color: rgba(52, 211, 153, 0.24);
+            background: linear-gradient(180deg, rgba(6, 78, 59, 0.34) 0%, rgba(4, 47, 46, 0.36) 100%);
+            color: var(--text-primary);
+        }
+
+        html.dark-mode .chain-verify-head {
+            border-bottom-color: rgba(52, 211, 153, 0.18);
+            background: rgba(15, 23, 42, 0.38);
+        }
+
+        html.dark-mode .chain-verify-title,
+        html.dark-mode .chain-route-value {
+            color: var(--text-primary);
+        }
+
+        html.dark-mode .chain-route-node {
+            border-color: rgba(52, 211, 153, 0.18);
+            background: rgba(15, 23, 42, 0.52);
+        }
+
+        html.dark-mode .btn-chain-add:not([disabled]) {
+            background: linear-gradient(135deg, #8b5cf6 0, #6d28d9 100%);
+            color: #fff;
+        }
+
+        html.dark-mode .chain-proxy-modal .btn-verify-api:disabled,
+        html.dark-mode .chain-proxy-modal .btn-chain-add:disabled {
+            background: linear-gradient(135deg, #4b5563 0, #374151 100%);
+            color: rgba(255, 255, 255, 0.78);
         }
 
         /* 隐藏元素 */
@@ -7642,6 +7916,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             onclick="openOnlineOptimizeModal()">在线优选</button>
                         <button type="button" class="btn btn-api-optimize hidden-section" id="apiOptimizeBtn"
                             onclick="openAPIOptimizeModal()">订阅接口</button>
+                        <button type="button" class="btn btn-chain-proxy hidden-section" id="chainProxyBtn"
+                            onclick="openChainProxyModal()">链式代理</button>
                         <div class="btn-group">
                             <button type="button" class="btn btn-secondary" onclick="cancelEdit('sub')" disabled
                                 id="cancelSubBtn">取消</button>
@@ -8640,6 +8916,58 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         </div>
     </div>
 
+    <!-- 链式代理模态框 -->
+    <div class="modal-overlay" id="chainProxyModal">
+        <div class="modal api-optimize-modal chain-proxy-modal">
+            <h2 class="api-optimize-modal-title">🔗 添加链式代理节点</h2>
+
+            <div class="api-form-group chain-proxy-form">
+                <div class="api-form-row-item">
+                    <label for="chainProxyNodeName">节点名称:</label>
+                    <input type="text" id="chainProxyNodeName" title="节点名称" placeholder="链式代理">
+                </div>
+
+                <div class="api-form-row-item">
+                    <label for="chainProxyHost">优选:</label>
+                    <div class="chain-proxy-preferred-wrapper">
+                        <input type="text" id="chainProxyHost" title="优选域名/IP" placeholder="当前网页域名">
+                        <span class="proxy-protocol-separator">:</span>
+                        <input type="text" id="chainProxyPort" title="优选端口 1~65535" inputmode="numeric"
+                            placeholder="443" oninput="normalizeChainProxyPortInput()">
+                    </div>
+                </div>
+
+                <div class="api-form-row-item chain-proxy-protocol-row">
+                    <label for="chainProxyProtocol">链式代理:</label>
+                    <div class="chain-proxy-input-wrapper">
+                        <select id="chainProxyProtocol" title="链式代理协议" onchange="resetChainProxyValidation()">
+                            <option value="socks5">socks5</option>
+                            <option value="http">http</option>
+                            <option value="https">https</option>
+                            <option value="turn">turn</option>
+                            <option value="sstp">sstp</option>
+                        </select>
+                        <span class="proxy-protocol-separator">://</span>
+                        <input type="text" id="chainProxyAddress" title="链式代理地址"
+                            placeholder="user:pass@127.0.0.1:1080"
+                            oninput="sanitizeChainProxyAddressInput(); updateChainProxyVerifyState()"
+                            onchange="sanitizeChainProxyAddressInput(); updateChainProxyVerifyState()">
+                    </div>
+                </div>
+            </div>
+
+            <div id="chainProxyStatus" class="chain-proxy-status"></div>
+
+            <div class="api-buttons chain-proxy-buttons">
+                <button type="button" class="btn btn-verify-api" id="btnVerifyChainProxy"
+                    onclick="verifyChainProxyAvailability()" disabled>可用性验证</button>
+                <button type="button" class="btn btn-chain-add" id="btnAddChainProxy" onclick="addChainProxyNode()"
+                    disabled>添加</button>
+                <button type="button" class="btn btn-close-api" onclick="closeChainProxyModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 代理验证模态框 -->
     <div class="modal-overlay" id="proxyVerificationModal">
         <div class="modal" id="proxyVerificationContent" onclick="event.stopPropagation()">
@@ -9536,6 +9864,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         const CHANGELOG_RAW_URL = 'https://raw.githubusercontent.com/cmliu/edgetunnel/refs/heads/main/CHANGELOG';
         const HTTPS_PROXY_MIN_VERSION = 20260413174651;
         const TURN_SSTP_PROXY_MIN_VERSION = 20260504172138;
+        const CHAIN_PROXY_MIN_VERSION = 20260506175102;
         let cachedWorkerVersionRawText = '';
         let cachedLatestOnlineVersion = 0;
         let cachedCurrentVersionNumber = 0;
@@ -9545,6 +9874,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         let pendingChangelogLoadPromise = null;
         let httpsProxyFeatureEnabled = false;
         let turnSstpProxyFeatureEnabled = false;
+        let chainProxyFeatureEnabled = false;
         let proxyFeatureAvailabilityInitialized = false;
         const PROXY_PROTOCOLS = ['socks5', 'http', 'https', 'turn', 'sstp'];
 
@@ -10300,6 +10630,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const versionNumber = parseVersionNumber(currentVersion);
             httpsProxyFeatureEnabled = versionNumber >= HTTPS_PROXY_MIN_VERSION;
             turnSstpProxyFeatureEnabled = versionNumber >= TURN_SSTP_PROXY_MIN_VERSION;
+            chainProxyFeatureEnabled = versionNumber >= CHAIN_PROXY_MIN_VERSION;
+            updateChainProxyButtonVisibility();
 
             const httpsOption = document.getElementById('httpsProxyOption');
             if (httpsOption) {
@@ -11383,7 +11715,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 }
             }
 
-            // 显示或隐藏在线优选和订阅接口按钮（仅在自定义优选模式下显示）
+            // 显示或隐藏在线优选、订阅接口和链式代理按钮（仅在自定义优选模式下显示）
             const onlineOptimizeBtn = document.getElementById('onlineOptimizeBtn');
             const apiOptimizeBtn = document.getElementById('apiOptimizeBtn');
             if (onlineOptimizeBtn) {
@@ -11400,6 +11732,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     apiOptimizeBtn.classList.add('hidden-section');
                 }
             }
+            updateChainProxyButtonVisibility(mode);
 
             // 当切换到自定义优选时，自动加载现有的ADD.txt内容
             if (mode === 'custom') {
@@ -11407,6 +11740,19 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
 
             markModified('sub');
+        }
+
+        function updateChainProxyButtonVisibility(mode = null) {
+            const chainProxyBtn = document.getElementById('chainProxyBtn');
+            const ipMode = document.getElementById('ipMode');
+            const activeMode = mode || ipMode?.value || '';
+            if (!chainProxyBtn) return;
+
+            if (activeMode === 'custom' && chainProxyFeatureEnabled) {
+                chainProxyBtn.classList.remove('hidden-section');
+            } else {
+                chainProxyBtn.classList.add('hidden-section');
+            }
         }
 
         // 处理优选订阅生成器URL
@@ -14726,6 +15072,447 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             updateProxyMode(false, false);
             markModified('proxy');
             closeProxyVerificationModal();
+        }
+
+        function getDefaultChainProxyHost() {
+            const hostname = String(window.location.hostname || '').trim();
+            return hostname || String(document.getElementById('nodeHost')?.value || '').trim();
+        }
+
+        function openChainProxyModal() {
+            if (!chainProxyFeatureEnabled) {
+                showToast('当前后端版本暂不支持链式代理', 'error');
+                return;
+            }
+
+            const modal = document.getElementById('chainProxyModal');
+            const nodeNameInput = document.getElementById('chainProxyNodeName');
+            const hostInput = document.getElementById('chainProxyHost');
+            const portInput = document.getElementById('chainProxyPort');
+            const protocolSelect = document.getElementById('chainProxyProtocol');
+            const addressInput = document.getElementById('chainProxyAddress');
+            const statusEl = document.getElementById('chainProxyStatus');
+            const addBtn = document.getElementById('btnAddChainProxy');
+
+            if (!modal || !nodeNameInput || !hostInput || !portInput || !protocolSelect || !addressInput) return;
+
+            nodeNameInput.value = '';
+            nodeNameInput.placeholder = '链式代理';
+            hostInput.value = getDefaultChainProxyHost();
+            hostInput.placeholder = getDefaultChainProxyHost() || '当前网页域名';
+            portInput.value = '';
+            protocolSelect.value = 'socks5';
+            addressInput.value = '';
+            if (statusEl) {
+                statusEl.style.display = 'none';
+                statusEl.textContent = '';
+            }
+            if (addBtn) {
+                addBtn.disabled = true;
+                delete addBtn.dataset.validProtocol;
+                delete addBtn.dataset.validAddress;
+                delete addBtn.dataset.validKey;
+                delete addBtn.dataset.defaultNodeName;
+            }
+
+            updateChainProxyVerifyState(false);
+            modal.classList.add('show');
+            setTimeout(() => addressInput.focus(), 0);
+        }
+
+        function closeChainProxyModal() {
+            document.getElementById('chainProxyModal')?.classList.remove('show');
+        }
+
+        function resetChainProxyValidation() {
+            const addBtn = document.getElementById('btnAddChainProxy');
+            const nodeNameInput = document.getElementById('chainProxyNodeName');
+            const statusEl = document.getElementById('chainProxyStatus');
+            if (addBtn) {
+                addBtn.disabled = true;
+                delete addBtn.dataset.validProtocol;
+                delete addBtn.dataset.validAddress;
+                delete addBtn.dataset.validKey;
+                delete addBtn.dataset.defaultNodeName;
+            }
+            if (nodeNameInput && !String(nodeNameInput.value || '').trim()) {
+                nodeNameInput.placeholder = '链式代理';
+            }
+            if (statusEl) {
+                statusEl.style.display = 'none';
+                statusEl.textContent = '';
+            }
+            updateChainProxyVerifyState(false);
+        }
+
+        function updateChainProxyVerifyState(resetValidation = true) {
+            if (resetValidation) {
+                const addBtn = document.getElementById('btnAddChainProxy');
+                const nodeNameInput = document.getElementById('chainProxyNodeName');
+                const statusEl = document.getElementById('chainProxyStatus');
+                if (addBtn) {
+                    addBtn.disabled = true;
+                    delete addBtn.dataset.validProtocol;
+                    delete addBtn.dataset.validAddress;
+                    delete addBtn.dataset.validKey;
+                    delete addBtn.dataset.defaultNodeName;
+                }
+                if (nodeNameInput && !String(nodeNameInput.value || '').trim()) {
+                    nodeNameInput.placeholder = '链式代理';
+                }
+                if (statusEl) {
+                    statusEl.style.display = 'none';
+                    statusEl.textContent = '';
+                }
+            }
+
+            const addressInput = document.getElementById('chainProxyAddress');
+            const verifyBtn = document.getElementById('btnVerifyChainProxy');
+            if (!verifyBtn) return;
+
+            verifyBtn.disabled = !String(addressInput?.value || '').trim();
+        }
+
+        function normalizeChainProxyNodeName(value) {
+            const cleanValue = String(value || '').replace(/[\r\n]+/g, ' ').trim();
+            if (!cleanValue) return '';
+
+            try {
+                return decodeURIComponent(cleanValue);
+            } catch (error) {
+                return cleanValue;
+            }
+        }
+
+        function sanitizeChainProxyAddressInput() {
+            const addressInput = document.getElementById('chainProxyAddress');
+            const protocolSelect = document.getElementById('chainProxyProtocol');
+            const nodeNameInput = document.getElementById('chainProxyNodeName');
+            if (!addressInput || !protocolSelect) return;
+
+            let value = addressInput.value.trimStart();
+            const lowerValue = value.toLowerCase();
+            for (const protocol of PROXY_PROTOCOLS) {
+                const protocolPrefix = `${protocol}://`;
+                const legacyPrefix = `${protocol}=`;
+                if (lowerValue.startsWith(protocolPrefix)) {
+                    protocolSelect.value = protocol;
+                    value = value.slice(protocolPrefix.length).trimStart();
+                    break;
+                }
+                if (lowerValue.startsWith(legacyPrefix)) {
+                    protocolSelect.value = protocol;
+                    value = value.slice(legacyPrefix.length).trimStart();
+                    break;
+                }
+            }
+
+            const hashIndex = value.indexOf('#');
+            if (hashIndex >= 0) {
+                const nodeName = normalizeChainProxyNodeName(value.slice(hashIndex + 1));
+                if (nodeName && nodeNameInput) {
+                    nodeNameInput.value = nodeName;
+                }
+                value = value.slice(0, hashIndex).trimEnd();
+            }
+
+            if (addressInput.value !== value) {
+                addressInput.value = value;
+            }
+        }
+
+        function normalizeChainProxyPortInput() {
+            const portInput = document.getElementById('chainProxyPort');
+            if (!portInput) return;
+
+            let value = portInput.value.replace(/\D/g, '');
+            if (value) {
+                const numberValue = Number(value);
+                if (numberValue < 1) value = '1';
+                if (numberValue > 65535) value = '65535';
+            }
+            portInput.value = value;
+        }
+
+        function showChainProxyStatus(message, type = 'info', asHtml = false) {
+            const statusEl = document.getElementById('chainProxyStatus');
+            if (!statusEl) return;
+
+            if (asHtml) {
+                statusEl.innerHTML = message;
+            } else {
+                statusEl.textContent = message;
+            }
+            statusEl.style.display = 'block';
+            statusEl.style.padding = type === 'chain-success' ? '0' : '14px 16px';
+            statusEl.style.color = type === 'chain-success' ? '' : '#fff';
+            statusEl.style.background = type === 'chain-success'
+                ? 'transparent'
+                : type === 'success'
+                    ? 'linear-gradient(135deg, #10b981 0, #059669 100%)'
+                    : type === 'error'
+                        ? 'linear-gradient(135deg, #ef4444 0, #dc2626 100%)'
+                        : 'linear-gradient(135deg, #3b82f6 0, #1d4ed8 100%)';
+        }
+
+        function maskChainProxyAddressForDisplay(address) {
+            const raw = String(address || '').trim();
+            const atIndex = raw.lastIndexOf('@');
+            if (atIndex <= 0) return raw;
+
+            const userInfo = raw.slice(0, atIndex);
+            const target = raw.slice(atIndex + 1);
+            const colonIndex = userInfo.indexOf(':');
+            if (colonIndex < 0) return `***@${target}`;
+            return `${userInfo.slice(0, colonIndex)}:***@${target}`;
+        }
+
+        function extractChainProxyCountryCode(loc) {
+            const value = String(loc || '').trim().toUpperCase();
+            if (!value || value === '未知') return '';
+
+            const bracketMatch = value.match(/\[([A-Z]{2})\]/);
+            if (bracketMatch) return bracketMatch[1];
+
+            const codeMatch = value.match(/\b[A-Z]{2}\b/);
+            if (codeMatch) return codeMatch[0];
+
+            return '';
+        }
+
+        function buildChainProxyDefaultNodeName(loc, protocol) {
+            const countryCode = extractChainProxyCountryCode(loc);
+            const protocolLabel = normalizeProxyProtocol(protocol || 'socks5').toUpperCase();
+            return `${countryCode ? `${countryCode} ` : ''}链式${protocolLabel}代理`;
+        }
+
+        function renderChainProxyAvailabilitySuccessCard(options) {
+            const {
+                ip,
+                loc,
+                responseTimeDisplay,
+                preferredHost,
+                preferredPort,
+                protocol,
+                proxyAddress
+            } = options || {};
+            const safeIp = escapeMarkdownHtml(ip || '未知');
+            const safeLoc = escapeMarkdownHtml(loc || '未知');
+            const safeResponseTime = escapeMarkdownHtml(responseTimeDisplay || '未知');
+            const safeBadgeRegion = escapeMarkdownHtml(extractChainProxyCountryCode(loc) || loc || '未知');
+            const safePreferred = escapeMarkdownHtml(`${preferredHost || '未填写'}:${preferredPort || '443'}`);
+            const safeProtocol = escapeMarkdownHtml(protocol || 'socks5');
+            const safeProtocolLabel = escapeMarkdownHtml(`${protocol || 'socks5'}代理`);
+            const safeProxyAddress = escapeMarkdownHtml(maskChainProxyAddressForDisplay(proxyAddress || ''));
+
+            return `
+                <div class="chain-verify-card">
+                    <div class="chain-verify-head">
+                        <div class="chain-verify-title">
+                            <span class="chain-verify-dot"></span>
+                            <span>验证通过</span>
+                        </div>
+                        <span class="chain-verify-badge" title="地区: ${safeLoc} ${safeResponseTime}">地区: ${safeBadgeRegion} ${safeResponseTime}</span>
+                    </div>
+
+                    <div class="chain-verify-body">
+                        <div class="chain-route">
+                            <div class="chain-route-node">
+                                <div class="chain-route-label">优选入口</div>
+                                <div class="chain-route-value" title="${safePreferred}">${safePreferred}</div>
+                            </div>
+                            <div class="chain-route-arrow">→</div>
+                            <div class="chain-route-node">
+                                <div class="chain-route-label">${safeProtocolLabel}</div>
+                                <div class="chain-route-value" title="${safeProtocol}://${safeProxyAddress}">${safeProtocol}://${safeProxyAddress}</div>
+                            </div>
+                            <div class="chain-route-arrow">→</div>
+                            <div class="chain-route-node">
+                                <div class="chain-route-label">落地地址</div>
+                                <div class="chain-route-value chain-ip-link" data-raw-value="${safeIp}" onclick="showIpDetailForProxy(this.dataset.rawValue, this)" title="${safeIp}">
+                                    ${safeIp} 🔍
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getChainProxyValidationKey(protocol, address) {
+            return `${protocol}://${address}`;
+        }
+
+        async function verifyChainProxyAvailability() {
+            const protocolSelect = document.getElementById('chainProxyProtocol');
+            const addressInput = document.getElementById('chainProxyAddress');
+            const verifyBtn = document.getElementById('btnVerifyChainProxy');
+            const addBtn = document.getElementById('btnAddChainProxy');
+            const protocol = normalizeProxyProtocol(protocolSelect?.value || 'socks5');
+            const input = String(addressInput?.value || '').trim();
+
+            if (!input) {
+                showChainProxyStatus('❌ 请输入链式代理地址', 'error');
+                updateChainProxyVerifyState(false);
+                return;
+            }
+
+            const processedAddress = processProxyAddressForValidation(input, protocol);
+            if (!processedAddress) {
+                showChainProxyStatus('❌ 链式代理地址格式无效', 'error');
+                updateChainProxyVerifyState(false);
+                return;
+            }
+
+            const validationKey = getChainProxyValidationKey(protocol, processedAddress);
+            if (addBtn) {
+                addBtn.disabled = true;
+                delete addBtn.dataset.validProtocol;
+                delete addBtn.dataset.validAddress;
+                delete addBtn.dataset.validKey;
+                delete addBtn.dataset.defaultNodeName;
+            }
+
+            try {
+                if (verifyBtn) verifyBtn.disabled = true;
+                showChainProxyStatus('⏳ 验证中...', 'info');
+
+                const params = new URLSearchParams();
+                params.append(protocol, processedAddress);
+
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 12000);
+                const response = await fetch(`/admin/check?${params}&_t=${Date.now()}`, {
+                    method: 'GET',
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
+                const data = await response.json();
+                if (!Object.prototype.hasOwnProperty.call(data, 'success')) {
+                    showChainProxyStatus('❌ <strong>后端版本过旧</strong><br><small style="opacity: 0.9;">请升级 edgetunnel 代码</small>', 'error', true);
+                    return;
+                }
+
+                if (data.success === false) {
+                    showChainProxyStatus(`❌ <strong>代理无效</strong><br><small style="opacity: 0.9;">${escapeMarkdownHtml(data.error || '未知错误')}</small>`, 'error', true);
+                    return;
+                }
+
+                const currentProtocol = normalizeProxyProtocol(protocolSelect?.value || 'socks5');
+                const currentProcessedAddress = processProxyAddressForValidation(String(addressInput?.value || '').trim(), currentProtocol);
+                if (validationKey !== getChainProxyValidationKey(currentProtocol, currentProcessedAddress)) {
+                    showChainProxyStatus('ℹ️ 链式代理内容已变化，请重新验证', 'info');
+                    return;
+                }
+
+                const ip = data.ip || '未知';
+                const loc = data.loc || '未知';
+                const responseTime = data.responseTime || 0;
+                const responseTimeDisplay = responseTime > 0 ? `${responseTime}ms` : '未知';
+                const defaultNodeName = buildChainProxyDefaultNodeName(loc, protocol);
+                const nodeNameInput = document.getElementById('chainProxyNodeName');
+                if (nodeNameInput && !String(nodeNameInput.value || '').trim()) {
+                    nodeNameInput.placeholder = defaultNodeName;
+                }
+                const previewHost = normalizeChainProxyPreferredHost(
+                    document.getElementById('chainProxyHost')?.value || getDefaultChainProxyHost()
+                );
+                const previewPort = String(document.getElementById('chainProxyPort')?.value || '').trim() || '443';
+                showChainProxyStatus(
+                    renderChainProxyAvailabilitySuccessCard({
+                        ip,
+                        loc,
+                        responseTimeDisplay,
+                        preferredHost: previewHost,
+                        preferredPort: previewPort,
+                        protocol,
+                        proxyAddress: processedAddress
+                    }),
+                    'chain-success',
+                    true
+                );
+
+                if (addBtn) {
+                    addBtn.disabled = false;
+                    addBtn.dataset.validProtocol = protocol;
+                    addBtn.dataset.validAddress = processedAddress;
+                    addBtn.dataset.validKey = validationKey;
+                    addBtn.dataset.defaultNodeName = defaultNodeName;
+                }
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    showChainProxyStatus('❌ <strong>验证超时</strong><br><small style="opacity: 0.9;">请求超过 10 秒无响应，请检查代理连接</small>', 'error', true);
+                } else {
+                    showChainProxyStatus(`❌ <strong>验证失败</strong><br><small style="opacity: 0.9;">${escapeMarkdownHtml(error.message)}</small>`, 'error', true);
+                }
+            } finally {
+                if (verifyBtn) {
+                    verifyBtn.disabled = !String(addressInput?.value || '').trim();
+                }
+            }
+        }
+
+        function normalizeChainProxyPreferredHost(host) {
+            const cleanHost = String(host || '').replace(/[\r\n]+/g, '').trim();
+            const colonCount = (cleanHost.match(/:/g) || []).length;
+            if (colonCount > 1 && !cleanHost.startsWith('[') && !cleanHost.endsWith(']')) {
+                return `[${cleanHost}]`;
+            }
+            return cleanHost;
+        }
+
+        function addChainProxyNode() {
+            const addBtn = document.getElementById('btnAddChainProxy');
+            const validProtocol = addBtn?.dataset.validProtocol || '';
+            const validAddress = addBtn?.dataset.validAddress || '';
+            const protocolSelect = document.getElementById('chainProxyProtocol');
+            const addressInput = document.getElementById('chainProxyAddress');
+            const currentProtocol = normalizeProxyProtocol(protocolSelect?.value || 'socks5');
+            const currentAddress = processProxyAddressForValidation(String(addressInput?.value || '').trim(), currentProtocol);
+            const currentKey = getChainProxyValidationKey(currentProtocol, currentAddress);
+            if (!validProtocol || !validAddress) {
+                showToast('请先点击"可用性验证"按钮通过验证', 'error');
+                return;
+            }
+            if (addBtn?.dataset.validKey !== currentKey) {
+                showToast('链式代理内容已变化，请重新验证', 'error');
+                resetChainProxyValidation();
+                return;
+            }
+
+            const nodeName = String(document.getElementById('chainProxyNodeName')?.value || '')
+                .replace(/[\r\n]+/g, ' ')
+                .trim() || addBtn?.dataset.defaultNodeName || buildChainProxyDefaultNodeName('', validProtocol);
+            const preferredHost = normalizeChainProxyPreferredHost(
+                document.getElementById('chainProxyHost')?.value || getDefaultChainProxyHost()
+            );
+            const portValue = String(document.getElementById('chainProxyPort')?.value || '').trim() || '443';
+            const portNumber = Number(portValue);
+
+            if (!preferredHost) {
+                showChainProxyStatus('❌ 优选域名/IP不能为空', 'error');
+                return;
+            }
+            if (!Number.isInteger(portNumber) || portNumber < 1 || portNumber > 65535) {
+                showChainProxyStatus('❌ 优选端口只能填写 1~65535 的数字', 'error');
+                return;
+            }
+
+            const chainProxyURL = `${validProtocol}://${validAddress}`;
+            const line = `${preferredHost}:${portNumber}#${nodeName}$${chainProxyURL}`;
+            const customIPsTextarea = document.getElementById('customIPs');
+            if (!customIPsTextarea) return;
+
+            const currentValue = customIPsTextarea.value.trim();
+            customIPsTextarea.value = currentValue ? `${currentValue}\n${line}` : line;
+            if (customIPsTextarea._refreshLineEditor) {
+                customIPsTextarea._refreshLineEditor();
+            }
+
+            markModified('sub');
+            closeChainProxyModal();
+            showToast('✅ 链式代理节点已追加到自定义优选地址', 'success');
         }
 
         function openSubAPIModal() {

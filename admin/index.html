@@ -4401,6 +4401,223 @@
             line-height: 1.8;
         }
 
+        .simple-explanation.proxyip-simple-guide {
+            background: #f8fafc;
+            color: var(--text-secondary);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-left: 4px solid #10b981;
+            padding: 18px;
+            border-radius: 8px;
+            line-height: 1.7;
+        }
+
+        .proxyip-simple-guide strong,
+        .proxyip-simple-guide b {
+            color: var(--text-primary);
+        }
+
+        .proxyip-route-card {
+            background: #fff;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+        }
+
+        .proxyip-simple-guide .proxyip-route-card:first-child {
+            margin-top: 0;
+        }
+
+        .proxyip-route-card.direct {
+            border-left: 4px solid #0ea5e9;
+        }
+
+        .proxyip-route-card.proxy {
+            border-left: 4px solid #a855f7;
+        }
+
+        .proxyip-route-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .proxyip-route-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .proxyip-route-desc {
+            margin-top: 4px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .proxyip-route-badge {
+            flex: 0 0 auto;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .proxyip-route-card.direct .proxyip-route-badge {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .proxyip-route-card.proxy .proxyip-route-badge {
+            background: #f3e8ff;
+            color: #7e22ce;
+        }
+
+        .proxyip-route-flow {
+            display: grid;
+            grid-template-columns: minmax(130px, 1fr) auto minmax(150px, 1fr) auto minmax(150px, 1fr);
+            align-items: stretch;
+            gap: 10px;
+            margin: 12px 0 14px;
+        }
+
+        .proxyip-route-flow.four-step {
+            grid-template-columns: minmax(120px, 1fr) auto minmax(140px, 1fr) auto minmax(140px, 1fr) auto minmax(150px, 1fr);
+        }
+
+        .proxyip-route-node {
+            min-width: 0;
+            min-height: 104px;
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            background: #f8fafc;
+        }
+
+        .proxyip-logo-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            min-height: 34px;
+        }
+
+        .proxyip-logo {
+            display: block;
+            width: 32px;
+            height: 32px;
+            flex: 0 0 auto;
+        }
+
+        .proxyip-logo-cloudflare {
+            width: 44px;
+            height: 30px;
+        }
+
+        .proxyip-logo-ip,
+        .proxyip-logo-proxy {
+            border-radius: 8px;
+        }
+
+        .proxyip-route-node.entry {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+        }
+
+        .proxyip-route-node.worker {
+            background: #fff7ed;
+            border-color: #fed7aa;
+        }
+
+        .proxyip-route-node.proxy-node {
+            background: #faf5ff;
+            border-color: #e9d5ff;
+        }
+
+        .proxyip-route-node.target {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+
+        .proxyip-route-node-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.45;
+        }
+
+        .proxyip-route-node small {
+            color: var(--text-secondary);
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+
+        .proxyip-route-arrow {
+            align-self: center;
+            color: var(--primary-color);
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .proxyip-seen-by {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            padding: 12px;
+            color: #92400e;
+            line-height: 1.7;
+        }
+
+        .proxyip-seen-by strong {
+            color: #78350f;
+        }
+
+        .proxyip-note {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 760px) {
+
+            .proxyip-route-head {
+                flex-direction: column;
+            }
+
+            .proxyip-route-flow,
+            .proxyip-route-flow.four-step {
+                grid-template-columns: 1fr;
+            }
+
+            .proxyip-route-node {
+                min-height: auto;
+                text-align: left;
+            }
+
+            .proxyip-logo-row {
+                justify-content: flex-start;
+            }
+
+            .proxyip-route-arrow {
+                transform: rotate(90deg);
+                line-height: 1;
+                padding: 2px 0;
+            }
+        }
+
         .toggle-switch {
             display: flex;
             align-items: center;
@@ -4434,6 +4651,60 @@
             background: #1b4620;
             color: #81c784;
             border-left-color: #4caf50;
+        }
+
+        html.dark-mode .simple-explanation.proxyip-simple-guide {
+            background: #0f172a;
+            color: #cbd5e1;
+            border-color: #334155;
+            border-left-color: #10b981;
+        }
+
+        html.dark-mode .proxyip-route-card {
+            background: #111827;
+            border-color: #334155;
+            box-shadow: none;
+        }
+
+        html.dark-mode .proxyip-route-node {
+            background: #1f2937;
+            border-color: #334155;
+        }
+
+        html.dark-mode .proxyip-route-node.entry {
+            background: #172554;
+            border-color: #1d4ed8;
+        }
+
+        html.dark-mode .proxyip-route-node.worker {
+            background: #431407;
+            border-color: #c2410c;
+        }
+
+        html.dark-mode .proxyip-route-node.proxy-node {
+            background: #2e1065;
+            border-color: #7e22ce;
+        }
+
+        html.dark-mode .proxyip-route-node.target {
+            background: #052e16;
+            border-color: #15803d;
+        }
+
+        html.dark-mode .proxyip-seen-by {
+            background: #422006;
+            border-color: #92400e;
+            color: #fde68a;
+        }
+
+        html.dark-mode .proxyip-seen-by strong {
+            color: #fef3c7;
+        }
+
+        html.dark-mode .proxyip-note {
+            background: #450a0a;
+            border-color: #991b1b;
+            color: #fecaca;
         }
 
         html.dark-mode .btn-proxyip-help {
@@ -7850,8 +8121,8 @@
                     <div class="form-group">
                         <label for="ipMode">优选订阅模式</label>
                         <select id="ipMode" title="优选订阅模式" onchange="updateIPMode()">
-                            <option value="generator">优选订阅生成器</option>
-                            <option value="random">随机优选</option>
+                            <option value="generator">优选订阅生成器（抄作业，直接使用大佬优选好的结果）</option>
+                            <option value="random">随机优选（根据订阅时的网络自动下发对应网络的官方优选）</option>
                             <option value="custom">自定义订阅（支持汇聚订阅）</option>
                         </select>
                     </div>
@@ -8932,8 +9203,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     <div class="chain-proxy-preferred-wrapper">
                         <input type="text" id="chainProxyHost" title="优选域名/IP" placeholder="当前网页域名">
                         <span class="proxy-protocol-separator">:</span>
-                        <input type="text" id="chainProxyPort" title="优选端口 1~65535" inputmode="numeric"
-                            placeholder="443" oninput="normalizeChainProxyPortInput()">
+                        <input type="text" id="chainProxyPort" title="优选端口 1~65535，可留空" inputmode="numeric"
+                            placeholder="可选" oninput="normalizeChainProxyPortInput()">
                     </div>
                 </div>
 
@@ -9050,24 +9321,164 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 <div class="api-docs">
                     <h2 class="section-title">🤔 为什么需要反代模式？PROXYIP又是什么？</h2>
 
-                    <div class="simple-explanation">
-                        <strong>用最简单的话解释：</strong><br><br>
+                    <div class="simple-explanation proxyip-simple-guide">
+                        <div class="proxyip-route-card direct">
+                            <div class="proxyip-route-head">
+                                <div>
+                                    <div class="proxyip-route-title">场景一：访问非 Cloudflare CDN 站点</div>
+                                    <div class="proxyip-route-desc">例如油管、谷歌。Worker 可以直接访问，不需要先找 PROXYIP。</div>
+                                </div>
+                                <div class="proxyip-route-badge">实际落地IP 由 优选域名/IP 决定</div>
+                            </div>
 
-                        <strong>🚀 问题是这样的：</strong><br>
-                        我们的 edgetunnel 服务部署在 Cloudflare Workers 上。但是 Cloudflare 有个限制——他们的 Workers 无法直接访问 Cloudflare
-                        自己的服务。<br><b>这就像名叫 Cloudflare 的小白永远无法从自己的眼睛里看到自己。</b><br><br>
+                            <div class="proxyip-route-flow">
+                                <div class="proxyip-route-node entry">
+                                    <div class="proxyip-logo-row" aria-hidden="true">
+                                        <svg class="proxyip-logo proxyip-logo-ip" viewBox="0 0 48 48"
+                                            focusable="false">
+                                            <rect x="5" y="8" width="38" height="32" rx="8" fill="#2563eb" />
+                                            <path d="M14 18h20M14 30h20M24 14c-3 4-3 16 0 20M24 14c3 4 3 16 0 20"
+                                                fill="none" stroke="#bfdbfe" stroke-width="2"
+                                                stroke-linecap="round" />
+                                            <circle cx="24" cy="24" r="12" fill="none" stroke="#fff"
+                                                stroke-width="2" />
+                                        </svg>
+                                    </div>
+                                    <div class="proxyip-route-node-title">优选域名/IP</div>
+                                    <small>你连到 Cloudflare 的入口</small>
+                                </div>
+                                <div class="proxyip-route-arrow">→</div>
+                                <div class="proxyip-route-node worker">
+                                    <div class="proxyip-logo-row" aria-hidden="true">
+                                        <svg class="proxyip-logo proxyip-logo-cloudflare" viewBox="0 0 64 40"
+                                            focusable="false">
+                                            <path fill="#f6821f"
+                                                d="M46.2 16.8C44.8 9.5 38.4 4 30.8 4c-6 0-11.2 3.4-13.9 8.5C9.7 13 4 19 4 26.3c0 1.3.2 2.6.6 3.8h40.8c4.9 0 8.8-4 8.8-8.9 0-4.6-3.5-8.4-8-8.4Z" />
+                                            <path fill="#faae40"
+                                                d="M55.2 30.1c2.9-1.5 4.8-4.5 4.8-8 0-4.8-3.7-8.8-8.4-9.1C49.9 7.8 46.2 3.7 41.4 1.7c2 2.4 3.2 5.5 3.2 8.8 0 2.1-.5 4.1-1.3 5.9h2.1c4.9 0 8.8 4 8.8 8.9 0 1.7-.5 3.4-1.4 4.8h2.4Z" />
+                                        </svg>
+                                    </div>
+                                    <div class="proxyip-route-node-title">Cloudflare Worker</div>
+                                    <small>就近机房处理请求</small>
+                                </div>
+                                <div class="proxyip-route-arrow">→</div>
+                                <div class="proxyip-route-node target">
+                                    <div class="proxyip-logo-row" aria-hidden="true">
+                                        <svg class="proxyip-logo" viewBox="0 0 48 48" focusable="false">
+                                            <rect x="4" y="11" width="40" height="26" rx="7" fill="#ff0000" />
+                                            <path d="M21 18.5 32 24l-11 5.5v-11Z" fill="#fff" />
+                                        </svg>
+                                        <svg class="proxyip-logo" viewBox="0 0 48 48" focusable="false">
+                                            <path fill="#FFC107"
+                                                d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.7-.4-3.9Z" />
+                                            <path fill="#FF3D00"
+                                                d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7Z" />
+                                            <path fill="#4CAF50"
+                                                d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44Z" />
+                                            <path fill="#1976D2"
+                                                d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.7-.4-3.9Z" />
+                                        </svg>
+                                    </div>
+                                    <div class="proxyip-route-node-title">油管 / 谷歌</div>
+                                    <small>非 Cloudflare CDN 站点</small>
+                                </div>
+                            </div>
 
-                        <strong>💡 解决方案：</strong><br>
-                        为了解决这个问题，我们需要借助外部服务器（ProxyIP、SOCKS5 或 HTTP）作为「跳板」，通过这些第三方服务器来代理访问 Cloudflare
-                        的服务。<br><b>相当于找了一面（ProxyIP/其他代理）镜子，这样 Cloudflare 就能通过镜子看到了自己。</b><br><br>
+                            <div class="proxyip-seen-by">
+                                <strong>落地 IP：</strong>
+                                由优选 IP 指向的 Cloudflare 机房决定。比如优选到新加坡 CF，目标站看到的通常就是新加坡附近的 CF 出口。
+                            </div>
+                        </div>
 
-                        <strong>📍 实际效果：</strong>
-                        <ul style="margin: 12px 0 0 20px; padding-left: 0;">
-                            <li style="margin-bottom: 8px;">👤 访问<strong>非 Cloudflare CDN
-                                    的网站</strong>时（如<b>油管、谷歌</b>等），你的 IP 由「优选 IP」决定</li>
-                            <li>🌐 访问<strong>由 Cloudflare CDN 托管的网站</strong>时（如<b>推特、ChatGPT</b>等），你的 IP
-                                由「反代模式（PROXYIP/其他代理）」决定</li>
-                        </ul>
+                        <div class="proxyip-route-card proxy">
+                            <div class="proxyip-route-head">
+                                <div>
+                                    <div class="proxyip-route-title">场景二：访问 Cloudflare CDN 站点</div>
+                                    <div class="proxyip-route-desc">例如推特、ChatGPT。Worker 不能直接访问 Cloudflare 自己，所以需要跳板。</div>
+                                </div>
+                                <div class="proxyip-route-badge">实际落地IP 由 PROXYIP/代理 决定</div>
+                            </div>
+
+                            <div class="proxyip-route-flow four-step">
+                                <div class="proxyip-route-node entry">
+                                    <div class="proxyip-logo-row" aria-hidden="true">
+                                        <svg class="proxyip-logo proxyip-logo-ip" viewBox="0 0 48 48"
+                                            focusable="false">
+                                            <rect x="5" y="8" width="38" height="32" rx="8" fill="#2563eb" />
+                                            <path d="M14 18h20M14 30h20M24 14c-3 4-3 16 0 20M24 14c3 4 3 16 0 20"
+                                                fill="none" stroke="#bfdbfe" stroke-width="2"
+                                                stroke-linecap="round" />
+                                            <circle cx="24" cy="24" r="12" fill="none" stroke="#fff"
+                                                stroke-width="2" />
+                                        </svg>
+                                    </div>
+                                    <div class="proxyip-route-node-title">优选域名/IP</div>
+                                    <small>只负责把你带到 Worker</small>
+                                </div>
+                                <div class="proxyip-route-arrow">→</div>
+                                <div class="proxyip-route-node worker">
+                                    <div class="proxyip-logo-row" aria-hidden="true">
+                                        <svg class="proxyip-logo proxyip-logo-cloudflare" viewBox="0 0 64 40"
+                                            focusable="false">
+                                            <path fill="#f6821f"
+                                                d="M46.2 16.8C44.8 9.5 38.4 4 30.8 4c-6 0-11.2 3.4-13.9 8.5C9.7 13 4 19 4 26.3c0 1.3.2 2.6.6 3.8h40.8c4.9 0 8.8-4 8.8-8.9 0-4.6-3.5-8.4-8-8.4Z" />
+                                            <path fill="#faae40"
+                                                d="M55.2 30.1c2.9-1.5 4.8-4.5 4.8-8 0-4.8-3.7-8.8-8.4-9.1C49.9 7.8 46.2 3.7 41.4 1.7c2 2.4 3.2 5.5 3.2 8.8 0 2.1-.5 4.1-1.3 5.9h2.1c4.9 0 8.8 4 8.8 8.9 0 1.7-.5 3.4-1.4 4.8h2.4Z" />
+                                        </svg>
+                                    </div>
+                                    <div class="proxyip-route-node-title">Cloudflare Worker</div>
+                                    <small>发现目标也在 Cloudflare</small>
+                                </div>
+                                <div class="proxyip-route-arrow">→</div>
+                                <div class="proxyip-route-node proxy-node">
+                                    <div class="proxyip-logo-row" aria-hidden="true">
+                                        <svg class="proxyip-logo proxyip-logo-proxy" viewBox="0 0 48 48"
+                                            focusable="false">
+                                            <rect x="7" y="8" width="34" height="28" rx="7" fill="#7c3aed" />
+                                            <path d="M16 18h16M16 25h16M18 36v4M30 36v4M14 40h20" fill="none"
+                                                stroke="#fff" stroke-width="3" stroke-linecap="round" />
+                                            <circle cx="16" cy="25" r="1.8" fill="#ddd6fe" />
+                                            <circle cx="32" cy="25" r="1.8" fill="#ddd6fe" />
+                                        </svg>
+                                    </div>
+                                    <div class="proxyip-route-node-title">PROXYIP / 其他代理</div>
+                                    <small>外部跳板，帮 Worker 继续访问</small>
+                                </div>
+                                <div class="proxyip-route-arrow">→</div>
+                                <div class="proxyip-route-node target">
+                                    <div class="proxyip-logo-row" aria-hidden="true">
+                                        <svg class="proxyip-logo" viewBox="0 0 48 48" focusable="false">
+                                            <circle cx="24" cy="24" r="21" fill="#111827" />
+                                            <path fill="#fff"
+                                                d="M28.7 21.8 39.6 9h-5.1l-8.1 9.5L19.9 9H8.6l11.5 16.8L8.4 39h5.1l9-10.5 7.2 10.5h11.1L28.7 21.8Zm-3.2 3.7-1.1-1.6-9.1-12.8h2.3l7.7 10.9 1.1 1.6 9.7 13.4h-2.3l-8.3-11.5Z" />
+                                        </svg>
+                                        <svg class="proxyip-logo" viewBox="0 0 48 48" focusable="false">
+                                            <circle cx="24" cy="24" r="21" fill="#10a37f" />
+                                            <g fill="none" stroke="#fff" stroke-width="2.6"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M24 11.5 34.8 17.7v12.6L24 36.5l-10.8-6.2V17.7L24 11.5Z" />
+                                                <path d="M24 11.5v9.2l7.9 4.6" />
+                                                <path d="m34.8 17.7-7.9 4.6v9.2" />
+                                                <path d="m34.8 30.3-7.9-4.6-7.9 4.6" />
+                                                <path d="m13.2 30.3 7.9-4.6v-9.2" />
+                                                <path d="m13.2 17.7 7.9 4.6 7.9-4.6" />
+                                            </g>
+                                        </svg>
+                                    </div>
+                                    <div class="proxyip-route-node-title">推特 / ChatGPT</div>
+                                    <small>Cloudflare CDN 站点</small>
+                                </div>
+                            </div>
+
+                            <div class="proxyip-seen-by">
+                                <strong>落地 IP：</strong>
+                                由 PROXYIP/其他代理 决定。目标站看到的是跳板服务器在访问，不是优选 IP。
+                            </div>
+                        </div>
+
+                        <div class="proxyip-note">
+                            反代模式 使用 其他代理 且开启「全局代理」后，非Cloudflare站点也会走 其他代理，落地 IP 会跟着代理变化。
+                        </div>
                     </div>
                 </div>
             </div>
@@ -15286,6 +15697,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             return `${countryCode ? `${countryCode} ` : ''}链式${protocolLabel}代理`;
         }
 
+        function buildChainProxyPreferredEndpoint(host, port) {
+            const cleanHost = String(host || '').trim() || '未填写';
+            const cleanPort = String(port || '').trim();
+            return cleanPort ? `${cleanHost}:${cleanPort}` : cleanHost;
+        }
+
         function renderChainProxyAvailabilitySuccessCard(options) {
             const {
                 ip,
@@ -15300,7 +15717,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const safeLoc = escapeMarkdownHtml(loc || '未知');
             const safeResponseTime = escapeMarkdownHtml(responseTimeDisplay || '未知');
             const safeBadgeRegion = escapeMarkdownHtml(extractChainProxyCountryCode(loc) || loc || '未知');
-            const safePreferred = escapeMarkdownHtml(`${preferredHost || '未填写'}:${preferredPort || '443'}`);
+            const safePreferred = escapeMarkdownHtml(buildChainProxyPreferredEndpoint(preferredHost, preferredPort));
             const safeProtocol = escapeMarkdownHtml(protocol || 'socks5');
             const safeProtocolLabel = escapeMarkdownHtml(`${protocol || 'socks5'}代理`);
             const safeProxyAddress = escapeMarkdownHtml(maskChainProxyAddressForDisplay(proxyAddress || ''));
@@ -15418,7 +15835,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 const previewHost = normalizeChainProxyPreferredHost(
                     document.getElementById('chainProxyHost')?.value || getDefaultChainProxyHost()
                 );
-                const previewPort = String(document.getElementById('chainProxyPort')?.value || '').trim() || '443';
+                const previewPort = String(document.getElementById('chainProxyPort')?.value || '').trim();
                 showChainProxyStatus(
                     renderChainProxyAvailabilitySuccessCard({
                         ip,
@@ -15487,20 +15904,21 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const preferredHost = normalizeChainProxyPreferredHost(
                 document.getElementById('chainProxyHost')?.value || getDefaultChainProxyHost()
             );
-            const portValue = String(document.getElementById('chainProxyPort')?.value || '').trim() || '443';
-            const portNumber = Number(portValue);
+            const portValue = String(document.getElementById('chainProxyPort')?.value || '').trim();
+            const portNumber = portValue ? Number(portValue) : null;
 
             if (!preferredHost) {
                 showChainProxyStatus('❌ 优选域名/IP不能为空', 'error');
                 return;
             }
-            if (!Number.isInteger(portNumber) || portNumber < 1 || portNumber > 65535) {
+            if (portValue && (!Number.isInteger(portNumber) || portNumber < 1 || portNumber > 65535)) {
                 showChainProxyStatus('❌ 优选端口只能填写 1~65535 的数字', 'error');
                 return;
             }
 
             const chainProxyURL = `${validProtocol}://${validAddress}`;
-            const line = `${preferredHost}:${portNumber}#${nodeName}$${chainProxyURL}`;
+            const preferredEndpoint = buildChainProxyPreferredEndpoint(preferredHost, portNumber);
+            const line = `${preferredEndpoint}#${nodeName}$${chainProxyURL}`;
             const customIPsTextarea = document.getElementById('customIPs');
             if (!customIPsTextarea) return;
 

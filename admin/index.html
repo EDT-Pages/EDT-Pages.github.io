@@ -12494,7 +12494,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 }
             }
 
-            [skipVerify, tlsFragmentShadowrocket, tlsFragmentHapp].forEach((checkbox) => {
+            [tlsFragmentShadowrocket, tlsFragmentHapp].forEach((checkbox) => {
                 if (checkbox) {
                     checkbox.disabled = isShadowsocksNoTLS;
                     if (isShadowsocksNoTLS && checkbox.checked) {

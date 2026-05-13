@@ -3182,6 +3182,10 @@
             gap: 10px;
         }
 
+        .module-title.non-collapsible {
+            cursor: default;
+        }
+
         .module-title .collapse-icon {
             width: 24px;
             height: 24px;
@@ -8109,12 +8113,9 @@
             </div>
 
             <!-- 模块2: 编辑订阅生成 -->
-            <div class="module collapsed">
-                <div class="module-title" onclick="toggleModule(this)">
+            <div class="module" id="preferredSubscriptionModule">
+                <div class="module-title non-collapsible">
                     ⚡️ 优选订阅生成
-                    <svg class="collapse-icon" viewBox="0 0 24 24">
-                        <path d="M7 10l5 5 5-5z" />
-                    </svg>
                 </div>
                 <div class="module-content">
 
@@ -13044,6 +13045,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const module = titleEl.parentElement;
             const content = module.querySelector('.module-content');
 
+            if (module.id === 'preferredSubscriptionModule') {
+                module.classList.remove('collapsed');
+                return;
+            }
+
             // If there's no collapsible content, just toggle the class
             if (!content) {
                 module.classList.toggle('collapsed');
@@ -13804,7 +13810,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             document.querySelectorAll('.module').forEach((module, index) => {
                 const title = module.querySelector('.module-title')?.textContent?.trim() || ('module-' + index);
                 // 不保存"查看操作日志"和"当前网络信息"模块的状态
-                if (title !== '📋 查看操作日志' && title !== '🌍 当前网络信息') {
+                if (title !== '📋 查看操作日志' && title !== '🌍 当前网络信息' && module.id !== 'preferredSubscriptionModule') {
                     states[title] = !module.classList.contains('collapsed');
                 }
             });
@@ -13827,6 +13833,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 if (title === '📋 查看操作日志') {
                     shouldBeExpanded = false;
                 } else if (title === '🌍 当前网络信息') {
+                    shouldBeExpanded = true;
+                } else if (module.id === 'preferredSubscriptionModule') {
                     shouldBeExpanded = true;
                 } else {
                     shouldBeExpanded = isFirstVisit ? false : (states[title] !== false); // 第一次默认折叠，之后按保存的状态

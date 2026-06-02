@@ -9,9 +9,7 @@
     <script data-cfasync="false" src="https://cdn.jsdelivr.net/npm/@keeex/qrcodejs-kx@1.0.2/qrcode.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&family=Orbitron:wght@700;800;900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
     <!-- Leaflet Map Resources -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -3015,7 +3013,23 @@
         }
 
         html.dark-mode .module-title .collapse-icon {
-            fill: var(--text-secondary)
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.12);
+            fill: #a0a0a0;
+        }
+
+        html.dark-mode .module-title:not(.non-collapsible):hover .collapse-icon {
+            background: rgba(124, 58, 237, 0.1);
+            border-color: rgba(167, 139, 250, 0.24);
+            fill: #c4b5fd;
+        }
+
+        html.dark-mode .module.collapsed .collapse-icon,
+        html.dark-mode .module.network-detail-collapsed .collapse-icon {
+            background: rgba(124, 58, 237, 0.14);
+            border-color: rgba(167, 139, 250, 0.3);
+            fill: #c4b5fd;
+            box-shadow: 0 2px 6px -4px rgba(124, 58, 237, 0.8);
         }
 
         html.dark-mode .footer-hint {
@@ -3187,15 +3201,33 @@
         }
 
         .module-title .collapse-icon {
-            width: 24px;
-            height: 24px;
-            transition: none;
-            fill: #666;
+            margin-left: auto;
+            width: 18px;
+            height: 18px;
+            padding: 5px;
+            box-sizing: content-box;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: #fff;
+            fill: #6b7280;
             flex-shrink: 0;
+            transform: rotate(0deg);
+            transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, fill 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .module.collapsed .collapse-icon {
-            transform: rotate(90deg)
+        .module-title:not(.non-collapsible):hover .collapse-icon {
+            background: #f9fafb;
+            border-color: #d1d5db;
+            fill: #374151;
+        }
+
+        .module.collapsed .collapse-icon,
+        .module.network-detail-collapsed .collapse-icon {
+            transform: rotate(90deg);
+            background: #fff7ed;
+            border-color: #fed7aa;
+            fill: #ea580c;
+            box-shadow: 0 2px 6px -4px rgba(234, 88, 12, 0.7);
         }
 
         .module>.module-content {
@@ -3434,11 +3466,6 @@
         }
 
         @media(max-width:768px) {
-            .optimize-params-row {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
             .card-container {
                 padding: 20px;
                 margin: 0
@@ -3578,6 +3605,16 @@
         @media(max-width:480px) {
             .card-container {
                 padding: 15px
+            }
+
+            .module-title {
+                gap: 8px;
+            }
+
+            .module-title .collapse-icon {
+                width: 18px;
+                height: 18px;
+                padding: 4px;
             }
 
             .ech-tabs::-webkit-scrollbar {
@@ -4462,6 +4499,13 @@
             line-height: 1.7;
         }
 
+        .proxyip-doc-link {
+            color: #2563eb;
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
         .proxyip-route-badge {
             flex: 0 0 auto;
             padding: 5px 9px;
@@ -4622,29 +4666,6 @@
             }
         }
 
-        .toggle-switch {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .toggle-switch input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-
-        .toggle-switch label {
-            cursor: pointer;
-            margin: 0;
-            font-weight: 600;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
         html.dark-mode .code-block {
             background: #2a2a2a;
             color: #ffd699;
@@ -4693,6 +4714,10 @@
         html.dark-mode .proxyip-route-node.target {
             background: #052e16;
             border-color: #15803d;
+        }
+
+        html.dark-mode .proxyip-doc-link {
+            color: #93c5fd;
         }
 
         html.dark-mode .proxyip-seen-by {
@@ -5159,139 +5184,6 @@
             flex: 1;
         }
 
-        /* 在线优选模态框样式 */
-        .optimize-modal {
-            overflow-y: auto;
-            width: 90vw;
-            max-width: 960px;
-            margin: 0 auto;
-            max-height: 90vh;
-        }
-
-        .optimize-modal-title {
-            margin-bottom: 20px;
-        }
-
-        .ip-detection-box {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 8px;
-            padding: 14px;
-            margin-bottom: 20px;
-        }
-
-        .optimize-params-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 20px;
-            align-items: flex-end;
-        }
-
-        .optimize-concurrency-input {
-            width: 100%;
-            max-width: none;
-        }
-
-        @media (max-width: 768px) {
-            .optimize-params-row {
-                display: block;
-            }
-
-            .optimize-params-row .form-group {
-                margin-bottom: 15px;
-            }
-        }
-
-        .ip-detection-info {
-            font-size: 14px;
-            color: #374151;
-            line-height: 1.6;
-        }
-
-        .ip-detection-warning {
-            color: #ef4444;
-            font-size: 12px;
-            margin-top: 8px;
-            line-height: 1.5;
-        }
-
-        .optimize-progress-bar {
-            width: 100%;
-            height: 30px;
-            background: #4b5563;
-            border-radius: 15px;
-            overflow: hidden;
-            position: relative;
-            margin: 20px 0;
-        }
-
-        .optimize-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
-            transition: width 0.3s ease, background 0.3s ease;
-            position: absolute;
-            top: 0;
-            left: 0;
-            border-radius: 15px;
-        }
-
-        .optimize-progress-text {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 13px;
-            font-weight: 700;
-            z-index: 1;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-        }
-
-        .optimize-results-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .optimize-tab {
-            padding: 8px 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            background: white;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .optimize-tab:hover {
-            border-color: #10b981;
-        }
-
-        .optimize-tab.active {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            border-color: #10b981;
-        }
-
-        .optimize-results-content {
-            background: #f9fafb;
-            border-radius: 8px;
-            padding: 15px;
-            min-height: 200px;
-            max-height: 400px;
-            overflow-y: auto;
-            font-family: 'Monaco', 'Courier New', monospace;
-            font-size: 13px;
-            line-height: 1.1;
-            text-align: left;
-        }
-
         .ech-tabs {
             display: flex;
             gap: 6px;
@@ -5368,171 +5260,71 @@
             display: block;
         }
 
-        .optimize-result-item {
-            padding: 1px 0;
-            color: #1f2937;
-            text-align: left;
+        #onlineOptimizeModal {
+            align-items: stretch;
+            justify-content: stretch;
+            background: #f5f7fb;
+            padding: 0;
         }
 
-        .optimize-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-top: 8px;
+        #onlineOptimizeModal.show {
+            display: block;
         }
 
-        @media (max-width: 768px) {
-            .optimize-buttons {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .save-tip {
-                order: -1;
-                margin-right: 0;
-                margin-bottom: 10px;
-                width: 100%;
-                min-height: 0;
-            }
-
-            .btn-start-optimize {
-                order: 1;
-                flex: 1;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .btn-save-override {
-                order: 2;
-                flex: 1;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .btn-save-append {
-                order: 3;
-                flex: 1;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .optimize-buttons .btn-secondary {
-                order: 4;
-                flex: 1;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .optimize-buttons {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                grid-template-rows: auto auto auto;
-                gap: 10px;
-                margin-top: 15px;
-            }
-
-            .save-tip {
-                grid-column: 1 / -1;
-                order: unset;
-            }
-
-            .btn-start-optimize {
-                grid-column: 1;
-                grid-row: 2;
-                order: unset;
-            }
-
-            .btn-save-override {
-                grid-column: 2;
-                grid-row: 2;
-                order: unset;
-            }
-
-            .btn-save-append {
-                grid-column: 1;
-                grid-row: 3;
-                order: unset;
-            }
-
-            .optimize-buttons .btn-secondary {
-                grid-column: 2;
-                grid-row: 3;
-                order: unset;
-            }
+        .online-optimize-fullscreen {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #f5f7fb;
+            overflow: hidden;
         }
 
-        .btn-start-optimize {
-            background: linear-gradient(135deg, #10b981 0, #059669 100%);
-            color: #fff;
+        .online-optimize-frame {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            background: #f5f7fb;
         }
 
-        .btn-save-override,
-        .btn-save-append {
-            opacity: 0.5;
-            pointer-events: none;
+        .online-optimize-fallback-close {
+            position: fixed;
+            top: 14px;
+            right: 18px;
+            z-index: 2000000002;
+            width: 38px;
+            height: 38px;
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.92);
+            color: #475467;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+            box-shadow: 0 10px 24px rgba(23, 32, 51, 0.12);
         }
 
-        .btn-save-override:not([disabled]),
-        .btn-save-append:not([disabled]) {
-            opacity: 1;
-            pointer-events: all;
+        .online-optimize-fallback-close:hover {
+            color: #111827;
+            background: #ffffff;
         }
 
-        .save-tip {
-            font-size: 12px;
-            color: #7a7f88;
-            font-weight: normal;
-            display: flex;
-            align-items: center;
-            min-height: 32px;
-            margin-right: auto;
-            line-height: 1.2;
+        html.dark-mode #onlineOptimizeModal,
+        html.dark-mode .online-optimize-fullscreen,
+        html.dark-mode .online-optimize-frame {
+            background: #0f172a;
         }
 
-        .btn-save-override {
-            background: linear-gradient(135deg, #f59e0b 0, #d97706 100%);
-            color: #fff;
+        html.dark-mode .online-optimize-fallback-close {
+            border-color: rgba(75, 85, 99, 0.9);
+            background: rgba(17, 24, 39, 0.92);
+            color: #d1d5db;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
         }
 
-        .btn-save-append {
-            background: linear-gradient(135deg, #3b82f6 0, #1d4ed8 100%);
-            color: #fff;
-        }
-
-        html.dark-mode .ip-detection-box {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
-            border-color: rgba(59, 130, 246, 0.3);
-        }
-
-        html.dark-mode .ip-detection-info {
-            color: var(--text-primary);
-        }
-
-        html.dark-mode .optimize-progress-bar {
-            background: #1f2937;
-        }
-
-        html.dark-mode .optimize-tab {
-            background: var(--input-bg);
-            border-color: var(--border-color);
-            color: var(--text-primary);
-        }
-
-        html.dark-mode .optimize-tab.active {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-        }
-
-        html.dark-mode .optimize-results-content {
-            background: var(--input-bg);
-        }
-
-        html.dark-mode .optimize-result-item {
-            color: var(--text-primary);
+        html.dark-mode .online-optimize-fallback-close:hover {
+            background: #111827;
+            color: #ffffff;
         }
 
         html.dark-mode .ech-tab {
@@ -7947,7 +7739,7 @@
             </div>
 
             <!-- 网络信息模块 -->
-            <div class="module advanced-module">
+            <div class="module advanced-module network-detail-collapsed">
                 <div class="module-title" onclick="toggleNetworkModule(this)">
                     🌍 当前网络信息
                     <svg class="collapse-icon" viewBox="0 0 24 24" style="transform: rotate(90deg);">
@@ -8511,12 +8303,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                 <select id="proxyProtocol" title="代理协议" onchange="updateProxyProtocol()">
                                     <option value="socks5">socks5</option>
                                     <option value="http">http</option>
-                                    <option value="https" id="httpsProxyOption" hidden
-                                        style="display: none;">https</option>
-                                    <option value="turn" id="turnProxyOption" hidden
-                                        style="display: none;">turn</option>
-                                    <option value="sstp" id="sstpProxyOption" hidden
-                                        style="display: none;">sstp</option>
+                                    <option value="https" id="httpsProxyOption" hidden style="display: none;">https
+                                    </option>
+                                    <option value="turn" id="turnProxyOption" hidden style="display: none;">turn
+                                    </option>
+                                    <option value="sstp" id="sstpProxyOption" hidden style="display: none;">sstp
+                                    </option>
                                 </select>
                                 <span class="proxy-protocol-separator">://</span>
 
@@ -9060,77 +8852,2746 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         </div>
     </div>
 
-    <!-- 在线优选弹窗 -->
+    <!-- 在线优选全屏模块 -->
     <div class="modal-overlay" id="onlineOptimizeModal">
-        <div class="modal optimize-modal" onclick="event.stopPropagation()">
-            <button type="button" class="modal-close" onclick="closeOnlineOptimizeModal()">×</button>
-            <h2 class="optimize-modal-title">🚀 在线优选</h2>
-
-            <!-- IP检测信息 -->
-            <div id="ipDetectionBox" class="ip-detection-box">
-                <div class="ip-detection-info">
-                    正在检测您的网络环境...
-                </div>
-            </div>
-
-            <!-- 参数选择 -->
-            <div class="optimize-params-row">
-                <div class="form-group">
-                    <label for="optimizeIPLibrary">IP库：</label>
-                    <select id="optimizeIPLibrary">
-                        <option value="cf-official">CF官方列表</option>
-                        <option value="cm-list">CM整理列表</option>
-                        <option value="as13335">AS13335列表</option>
-                        <option value="as209242">AS209242列表</option>
-                        <option value="reverse-proxy">CM反代列表</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="optimizePort">端口：</label>
-                    <select id="optimizePort">
-                        <option value="443">443</option>
-                        <option value="2053">2053</option>
-                        <option value="2083">2083</option>
-                        <option value="2087">2087</option>
-                        <option value="2096">2096</option>
-                        <option value="8443">8443</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="optimizeConcurrency">测试线程数：</label>
-                    <input type="number" id="optimizeConcurrency" min="1" max="32" value="8"
-                        class="optimize-concurrency-input" placeholder="1-32" oninput="validateConcurrency(this)"
-                        onchange="validateConcurrency(this)">
-                </div>
-            </div>
-
-            <!-- 进度条 -->
-            <div class="optimize-progress-bar hidden-section" id="optimizeProgressBar">
-                <div class="optimize-progress-fill" id="optimizeProgressFill"></div>
-                <div class="optimize-progress-text" id="optimizeProgressText">0/512 (0.00%) - 成功: 0, 失败: 0</div>
-            </div>
-
-            <!-- 结果选项卡 -->
-            <div id="optimizeResultsTabs" class="optimize-results-tabs hidden-section"></div>
-
-            <!-- 结果内容 -->
-            <div id="optimizeResultsContent" class="optimize-results-content hidden-section"></div>
-
-            <!-- 按钮组 -->
-            <div class="optimize-buttons">
-                <span class="save-tip">💡 保存提示：仅保存延迟最低的前16个优选IP</span>
-                <button type="button" class="btn btn-start-optimize" id="btnStartOptimize"
-                    onclick="startOptimize()">开始优选</button>
-                <button type="button" class="btn btn-save-override" id="btnSaveOverride"
-                    onclick="saveOptimizeResults('override')" disabled>覆盖保存</button>
-                <button type="button" class="btn btn-save-append" id="btnSaveAppend"
-                    onclick="saveOptimizeResults('append')" disabled>追加保存</button>
-                <button type="button" class="btn btn-secondary" onclick="closeOnlineOptimizeModal()">关闭</button>
-            </div>
+        <div class="online-optimize-fullscreen" onclick="event.stopPropagation()">
+            <button type="button" class="online-optimize-fallback-close" title="关闭" aria-label="关闭"
+                onclick="closeOnlineOptimizeModal()">×</button>
+            <iframe id="onlineOptimizeFrame" class="online-optimize-frame" title="在线优选"></iframe>
         </div>
     </div>
+
+
+    <template id="onlineOptimizeTemplate">
+        <!doctype html>
+        <html lang="zh-CN">
+
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>BestCF</title>
+            <style>
+                :root {
+                    color-scheme: light;
+                    --bg: #f5f7fb;
+                    --panel: #ffffff;
+                    --panel-soft: #f9fbfd;
+                    --text: #172033;
+                    --muted: #667085;
+                    --line: #d9e0ea;
+                    --line-strong: #b8c4d6;
+                    --blue: #2563eb;
+                    --blue-dark: #1d4ed8;
+                    --green: #0f9f6e;
+                    --green-soft: #e8f7f0;
+                    --amber: #b7791f;
+                    --amber-soft: #fff7e6;
+                    --red: #c2413d;
+                    --red-soft: #fff0ef;
+                    --ink-soft: #eff4f9;
+                    --shadow: 0 18px 45px rgba(23, 32, 51, 0.08);
+                    --radius: 8px;
+                    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+                    --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                }
+
+                * {
+                    box-sizing: border-box;
+                }
+
+                body {
+                    margin: 0;
+                    min-height: 100vh;
+                    background: var(--bg);
+                    color: var(--text);
+                    font-family: var(--sans);
+                    letter-spacing: 0;
+                }
+
+                button,
+                input,
+                select,
+                textarea {
+                    font: inherit;
+                }
+
+                button {
+                    border: 0;
+                }
+
+                .shell {
+                    width: min(1440px, calc(100% - 32px));
+                    margin: 0 auto;
+                    padding: 28px 0 36px;
+                }
+
+                .topbar {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 16px;
+                    margin-bottom: 18px;
+                }
+
+                .brand {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    min-width: 0;
+                }
+
+                .brand-mark {
+                    display: grid;
+                    width: 42px;
+                    height: 42px;
+                    place-items: center;
+                    border: 1px solid #c9d7eb;
+                    border-radius: var(--radius);
+                    background: #ffffff;
+                    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.12);
+                    color: var(--blue);
+                    flex: 0 0 auto;
+                }
+
+                .brand h1 {
+                    margin: 0;
+                    font-size: 24px;
+                    line-height: 1.15;
+                    font-weight: 760;
+                }
+
+                .brand small {
+                    display: block;
+                    margin-top: 4px;
+                    color: var(--muted);
+                    font-size: 13px;
+                }
+
+                .layout {
+                    display: grid;
+                    grid-template-columns: minmax(0, 1fr);
+                    gap: 18px;
+                    align-items: start;
+                }
+
+                .stack {
+                    display: grid;
+                    gap: 18px;
+                }
+
+                .panel {
+                    background: var(--panel);
+                    border: 1px solid var(--line);
+                    border-radius: var(--radius);
+                    box-shadow: var(--shadow);
+                    overflow: hidden;
+                }
+
+                .panel-head {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 12px;
+                    padding: 16px 18px;
+                    border-bottom: 1px solid var(--line);
+                    background: #ffffff;
+                }
+
+                .panel-title {
+                    margin: 0;
+                    font-size: 16px;
+                    font-weight: 740;
+                    line-height: 1.25;
+                }
+
+                .panel-body {
+                    padding: 18px;
+                }
+
+                .network-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 12px;
+                }
+
+                .network-item {
+                    display: grid;
+                    grid-template-columns: 68px minmax(0, 1fr) auto;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 13px;
+                    border: 1px solid var(--line);
+                    border-radius: var(--radius);
+                    background: var(--panel-soft);
+                }
+
+                .network-item.is-hidden {
+                    display: none;
+                }
+
+                .network-kind {
+                    display: grid;
+                    width: 56px;
+                    height: 56px;
+                    place-items: center;
+                    border-radius: var(--radius);
+                    background: #eef4ff;
+                    color: var(--blue);
+                    font-family: var(--mono);
+                    font-weight: 800;
+                    font-size: 15px;
+                }
+
+                .network-address {
+                    min-width: 0;
+                    overflow-wrap: anywhere;
+                    font-family: var(--mono);
+                    font-size: 14px;
+                    font-weight: 680;
+                }
+
+                .muted {
+                    color: var(--muted);
+                }
+
+                .tiny {
+                    font-size: 12px;
+                    line-height: 1.35;
+                }
+
+                .tag {
+                    display: inline-flex;
+                    align-items: center;
+                    min-height: 24px;
+                    padding: 3px 8px;
+                    border-radius: 999px;
+                    font-size: 12px;
+                    font-weight: 700;
+                    white-space: nowrap;
+                }
+
+                .tag.ok {
+                    color: #08734f;
+                    background: var(--green-soft);
+                }
+
+                .tag.warn {
+                    color: var(--amber);
+                    background: var(--amber-soft);
+                }
+
+                .tag.bad {
+                    color: var(--red);
+                    background: var(--red-soft);
+                }
+
+                .tag.idle {
+                    color: #475467;
+                    background: #eef2f6;
+                }
+
+                .notice {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin-top: 14px;
+                    padding: 11px 12px;
+                    border-radius: var(--radius);
+                    border: 1px solid var(--line);
+                    background: #f8fafc;
+                    color: var(--muted);
+                    line-height: 1.45;
+                }
+
+                .notice.ok {
+                    border-color: #b9e8d3;
+                    background: var(--green-soft);
+                    color: #08734f;
+                }
+
+                .notice.bad {
+                    border-color: #ffc9c5;
+                    background: var(--red-soft);
+                    color: var(--red);
+                }
+
+                .notice.warn {
+                    border-color: #ffe2a6;
+                    background: var(--amber-soft);
+                    color: var(--amber);
+                }
+
+                .form-grid {
+                    display: grid;
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 12px;
+                }
+
+                .form-grid.compact {
+                    grid-template-columns: repeat(4, minmax(0, 1fr));
+                }
+
+                .settings-block {
+                    margin-bottom: 16px;
+                }
+
+                .field {
+                    display: grid;
+                    gap: 7px;
+                    min-width: 0;
+                }
+
+                .field label {
+                    color: #344054;
+                    font-size: 13px;
+                    font-weight: 720;
+                }
+
+                .label-row {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                }
+
+                .help-tip {
+                    position: relative;
+                    display: inline-grid;
+                    width: 18px;
+                    height: 18px;
+                    place-items: center;
+                    border: 1px solid #d4a72c;
+                    border-radius: 50%;
+                    background: #fff8db;
+                    color: #8a6100;
+                    font-size: 12px;
+                    font-weight: 800;
+                    line-height: 1;
+                    cursor: help;
+                }
+
+                .help-tip::after {
+                    position: absolute;
+                    right: 50%;
+                    bottom: calc(100% + 9px);
+                    width: max-content;
+                    max-width: min(300px, 72vw);
+                    padding: 8px 10px;
+                    border: 1px solid #d8c073;
+                    border-radius: var(--radius);
+                    background: #fffdf2;
+                    box-shadow: 0 12px 28px rgba(23, 32, 51, 0.14);
+                    color: #5d4300;
+                    content: attr(data-tip);
+                    font-size: 12px;
+                    font-weight: 650;
+                    line-height: 1.45;
+                    opacity: 0;
+                    pointer-events: none;
+                    transform: translate(50%, 4px);
+                    transition: opacity 0.15s ease, transform 0.15s ease;
+                    z-index: 4;
+                    white-space: normal;
+                }
+
+                .help-tip::before {
+                    position: absolute;
+                    right: 50%;
+                    bottom: calc(100% + 4px);
+                    width: 9px;
+                    height: 9px;
+                    background: #fffdf2;
+                    border-right: 1px solid #d8c073;
+                    border-bottom: 1px solid #d8c073;
+                    content: "";
+                    opacity: 0;
+                    pointer-events: none;
+                    transform: translate(50%, 4px) rotate(45deg);
+                    transition: opacity 0.15s ease, transform 0.15s ease;
+                    z-index: 5;
+                }
+
+                .help-tip:hover::after,
+                .help-tip:hover::before,
+                .help-tip:focus::after,
+                .help-tip:focus::before {
+                    opacity: 1;
+                    transform: translate(50%, 0) rotate(0deg);
+                }
+
+                .help-tip:hover::before,
+                .help-tip:focus::before {
+                    transform: translate(50%, 0) rotate(45deg);
+                }
+
+                .control-row {
+                    display: grid;
+                    grid-template-columns: minmax(0, 1fr) auto auto;
+                    gap: 10px;
+                    align-items: end;
+                }
+
+                .input,
+                .select {
+                    width: 100%;
+                    min-height: 42px;
+                    border: 1px solid var(--line-strong);
+                    border-radius: var(--radius);
+                    padding: 9px 11px;
+                    background: #ffffff;
+                    color: var(--text);
+                    outline: none;
+                }
+
+                .input:focus,
+                .select:focus,
+                textarea:focus {
+                    border-color: var(--blue);
+                    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+                }
+
+                .input:disabled,
+                .select:disabled,
+                button:disabled {
+                    cursor: not-allowed;
+                    opacity: 0.56;
+                }
+
+                .btn {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+                    min-height: 42px;
+                    padding: 9px 14px;
+                    border-radius: var(--radius);
+                    background: var(--blue);
+                    color: #ffffff;
+                    font-weight: 760;
+                    cursor: pointer;
+                    white-space: nowrap;
+                    transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+                }
+
+                .btn:hover:not(:disabled) {
+                    background: var(--blue-dark);
+                    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.18);
+                    transform: translateY(-1px);
+                }
+
+                .btn.secondary {
+                    border: 1px solid var(--line-strong);
+                    background: #ffffff;
+                    color: #25324a;
+                }
+
+                .btn.secondary:hover:not(:disabled) {
+                    background: #f8fafc;
+                    box-shadow: 0 10px 24px rgba(23, 32, 51, 0.08);
+                }
+
+                .btn.danger {
+                    background: var(--red);
+                }
+
+                .btn.danger:hover:not(:disabled) {
+                    background: #a83531;
+                    box-shadow: 0 10px 24px rgba(194, 65, 61, 0.16);
+                }
+
+                .btn.success {
+                    background: var(--green);
+                    color: #ffffff;
+                }
+
+                .btn.success:hover:not(:disabled) {
+                    background: #0b8159;
+                    box-shadow: 0 10px 24px rgba(15, 159, 110, 0.16);
+                }
+
+                .icon-btn {
+                    display: inline-grid;
+                    width: 38px;
+                    height: 38px;
+                    place-items: center;
+                    border: 1px solid var(--line);
+                    border-radius: var(--radius);
+                    background: #ffffff;
+                    color: #344054;
+                    cursor: pointer;
+                }
+
+                .icon-btn:hover:not(:disabled) {
+                    background: #f3f6fa;
+                }
+
+                .icon {
+                    width: 18px;
+                    height: 18px;
+                    flex: 0 0 auto;
+                    stroke: currentColor;
+                    stroke-width: 2;
+                    stroke-linecap: round;
+                    stroke-linejoin: round;
+                    fill: none;
+                }
+
+                .editor {
+                    margin-top: 16px;
+                    border: 1px solid var(--line-strong);
+                    border-radius: var(--radius);
+                    overflow: hidden;
+                    background: #ffffff;
+                }
+
+                .editor-bar {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 10px;
+                    min-height: 44px;
+                    padding: 6px 8px 6px 12px;
+                    border-bottom: 1px solid var(--line);
+                    background: #f8fafc;
+                }
+
+                .editor-count {
+                    font-family: var(--mono);
+                    font-size: 13px;
+                    color: #475467;
+                }
+
+                .editor-body {
+                    display: grid;
+                    grid-template-columns: 58px minmax(0, 1fr);
+                    height: 376px;
+                    min-height: 0;
+                    overflow: hidden;
+                    background: #ffffff;
+                }
+
+                .line-gutter {
+                    height: 100%;
+                    overflow: hidden;
+                    border-right: 1px solid var(--line);
+                    background: #eef2f6;
+                    color: #667085;
+                    font-family: var(--mono);
+                    font-size: 13px;
+                    line-height: 22px;
+                    text-align: right;
+                    user-select: none;
+                    position: relative;
+                }
+
+                .line-gutter pre {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    left: 0;
+                    margin: 0;
+                    padding: 12px 10px 12px 4px;
+                    font: inherit;
+                    line-height: inherit;
+                    white-space: pre;
+                    will-change: transform;
+                }
+
+                .textarea-wrap {
+                    position: relative;
+                    min-width: 0;
+                    height: 100%;
+                    overflow: hidden;
+                    background: #ffffff;
+                }
+
+                .line-shades {
+                    position: absolute;
+                    inset: 0;
+                    padding: 12px 0;
+                    pointer-events: none;
+                    will-change: transform;
+                    z-index: 0;
+                }
+
+                .shade-line {
+                    height: 22px;
+                }
+
+                .shade-line:nth-child(odd) {
+                    background: #ffffff;
+                }
+
+                .shade-line:nth-child(even) {
+                    background: #f8fafc;
+                }
+
+                textarea {
+                    display: block;
+                    position: relative;
+                    z-index: 1;
+                    width: 100%;
+                    height: 100%;
+                    min-height: 0;
+                    resize: none;
+                    border: 0;
+                    padding: 12px 12px;
+                    color: #111827;
+                    background: transparent;
+                    font-family: var(--mono);
+                    font-size: 13px;
+                    line-height: 22px;
+                    outline: none;
+                    white-space: pre;
+                    overflow: auto;
+                }
+
+                .actions {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    align-items: center;
+                    margin-top: 16px;
+                }
+
+                .progress {
+                    display: grid;
+                    gap: 7px;
+                    margin-top: 14px;
+                }
+
+                .progress-meta {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 12px;
+                }
+
+                .progress-meta #latencyStatus {
+                    min-width: 0;
+                    overflow-wrap: anywhere;
+                }
+
+                .progress-meta #progressText {
+                    flex: 0 0 auto;
+                    font-family: var(--mono);
+                    white-space: nowrap;
+                }
+
+                .progress-line {
+                    height: 9px;
+                    overflow: hidden;
+                    border-radius: 999px;
+                    background: #e7edf5;
+                }
+
+                .progress-bar {
+                    width: 0;
+                    height: 100%;
+                    border-radius: inherit;
+                    background: linear-gradient(90deg, #2563eb, #0f9f6e);
+                    transition: width 0.2s ease;
+                }
+
+                .result-wrap {
+                    max-height: 731px;
+                    overflow: auto;
+                }
+
+                table {
+                    width: 100%;
+                    min-width: 760px;
+                    border-collapse: collapse;
+                    table-layout: fixed;
+                }
+
+                th,
+                td {
+                    padding: 12px 10px;
+                    border-bottom: 1px solid var(--line);
+                    text-align: left;
+                    vertical-align: middle;
+                    overflow-wrap: anywhere;
+                }
+
+                th {
+                    background: #f8fafc;
+                    color: #344054;
+                    font-size: 13px;
+                    font-weight: 780;
+                    height: 43px;
+                    position: sticky;
+                    top: 0;
+                    z-index: 1;
+                }
+
+                td {
+                    font-size: 13px;
+                    height: 43px;
+                }
+
+                .selection-cell {
+                    width: 46px;
+                    text-align: center;
+                }
+
+                .selection-cell input {
+                    width: 16px;
+                    height: 16px;
+                    margin: 0;
+                    cursor: pointer;
+                    accent-color: var(--green);
+                }
+
+                .result-row {
+                    cursor: pointer;
+                }
+
+                .result-row:hover td {
+                    background: #f3f8f6;
+                }
+
+                .result-row.is-selected td {
+                    background: var(--green-soft);
+                }
+
+                .result-row.is-selected:hover td {
+                    background: #d7f0e4;
+                }
+
+                .sort-header {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    gap: 6px;
+                    width: 100%;
+                    min-height: 20px;
+                    padding: 0;
+                    background: transparent;
+                    color: inherit;
+                    cursor: pointer;
+                    font-weight: inherit;
+                    text-align: left;
+                }
+
+                .sort-header:hover {
+                    color: var(--blue);
+                }
+
+                .sort-mark {
+                    min-width: 12px;
+                    color: var(--blue);
+                    font-size: 11px;
+                    line-height: 1;
+                }
+
+                td.ip-cell {
+                    font-family: var(--mono);
+                }
+
+                .country-cell {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    min-width: 0;
+                    max-width: 100%;
+                }
+
+                .country-flag {
+                    width: 20px;
+                    height: 14px;
+                    flex: 0 0 auto;
+                    border-radius: 2px;
+                    box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.14);
+                    object-fit: cover;
+                    background: #ffffff;
+                }
+
+                .country-code {
+                    min-width: 0;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                .empty {
+                    padding: 26px 12px;
+                    color: var(--muted);
+                    text-align: center;
+                }
+
+                .link-btn {
+                    padding: 0;
+                    background: transparent;
+                    color: var(--blue);
+                    cursor: pointer;
+                    font-weight: 760;
+                }
+
+                .link-btn:hover:not(:disabled) {
+                    color: var(--blue-dark);
+                    text-decoration: underline;
+                }
+
+                .result-footer {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 12px;
+                    padding: 14px 18px;
+                    border-top: 1px solid var(--line);
+                    background: #ffffff;
+                }
+
+                .result-actions {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 12px;
+                    padding: 14px 18px;
+                    border-top: 1px solid var(--line);
+                    background: #ffffff;
+                }
+
+                .result-actions-group {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: center;
+                    gap: 10px;
+                }
+
+                .selection-status {
+                    min-width: 72px;
+                    text-align: right;
+                }
+
+                .network-warning-overlay {
+                    position: fixed;
+                    inset: 0;
+                    z-index: 50;
+                    display: none;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 18px;
+                    background: rgba(0, 0, 0, 0.72);
+                    backdrop-filter: blur(3px);
+                }
+
+                .network-warning-overlay.is-visible {
+                    display: flex;
+                }
+
+                .network-warning-modal {
+                    width: min(620px, 100%);
+                    border: 3px solid #ffffff;
+                    border-radius: var(--radius);
+                    background: #dc2626;
+                    box-shadow: 0 28px 80px rgba(127, 29, 29, 0.72), 0 0 0 8px rgba(220, 38, 38, 0.24);
+                    color: #ffffff;
+                    overflow: hidden;
+                    animation: networkWarningPop 0.18s ease-out;
+                }
+
+                .network-warning-body {
+                    display: grid;
+                    gap: 12px;
+                    padding: 24px 24px 18px;
+                    line-height: 1.7;
+                    font-size: 18px;
+                    font-weight: 820;
+                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.28);
+                }
+
+                .network-warning-heading {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    font-size: 26px;
+                    line-height: 1.25;
+                    font-weight: 900;
+                    letter-spacing: 0;
+                }
+
+                .network-warning-heading::before,
+                .network-warning-heading::after {
+                    content: "";
+                    flex: 1;
+                    height: 2px;
+                    background: rgba(255, 255, 255, 0.72);
+                }
+
+                .network-warning-actions {
+                    display: flex;
+                    justify-content: flex-end;
+                    padding: 0 24px 24px;
+                }
+
+                .network-warning-actions .btn {
+                    min-width: 120px;
+                    border: 2px solid #ffffff;
+                    background: #ffffff;
+                    color: #b91c1c;
+                    box-shadow: 0 12px 28px rgba(127, 29, 29, 0.28);
+                    font-size: 16px;
+                    font-weight: 900;
+                }
+
+                .network-warning-actions .btn:hover:not(:disabled) {
+                    background: #fff1f2;
+                    color: #7f1d1d;
+                    box-shadow: 0 16px 36px rgba(127, 29, 29, 0.36);
+                }
+
+                @keyframes networkWarningPop {
+                    0% {
+                        opacity: 0;
+                        transform: scale(0.96);
+                    }
+
+                    100% {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+                }
+
+                .kbd-row {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 8px;
+                    margin-top: 12px;
+                }
+
+                .pill {
+                    display: inline-flex;
+                    align-items: center;
+                    min-height: 26px;
+                    padding: 4px 8px;
+                    border: 1px solid var(--line);
+                    border-radius: 999px;
+                    background: #ffffff;
+                    color: #475467;
+                    font-family: var(--mono);
+                    font-size: 12px;
+                }
+
+                html.dark-mode {
+                    color-scheme: dark;
+                    --bg: #0f172a;
+                    --panel: #111827;
+                    --panel-soft: #182235;
+                    --text: #e5e7eb;
+                    --muted: #9ca3af;
+                    --line: #263247;
+                    --line-strong: #3a475c;
+                    --blue: #60a5fa;
+                    --blue-dark: #3b82f6;
+                    --green: #34d399;
+                    --green-soft: rgba(52, 211, 153, 0.16);
+                    --amber: #fbbf24;
+                    --amber-soft: rgba(251, 191, 36, 0.16);
+                    --red: #f87171;
+                    --red-soft: rgba(248, 113, 113, 0.15);
+                    --ink-soft: #1f2937;
+                    --shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+                }
+
+                html.dark-mode body,
+                html.dark-mode .panel,
+                html.dark-mode .panel-head,
+                html.dark-mode .panel-body,
+                html.dark-mode .result-footer,
+                html.dark-mode .result-actions,
+                html.dark-mode .textarea-wrap,
+                html.dark-mode .editor,
+                html.dark-mode .icon-btn,
+                html.dark-mode .btn.secondary,
+                html.dark-mode .pill {
+                    background: var(--panel);
+                    color: var(--text);
+                }
+
+                html.dark-mode .network-item,
+                html.dark-mode .editor-bar,
+                html.dark-mode th,
+                html.dark-mode .line-gutter,
+                html.dark-mode .shade-line:nth-child(even),
+                html.dark-mode .notice,
+                html.dark-mode .tag.idle {
+                    background: var(--panel-soft);
+                    color: var(--muted);
+                }
+
+                html.dark-mode .shade-line:nth-child(odd) {
+                    background: #0f172a;
+                }
+
+                html.dark-mode .shade-line:nth-child(even) {
+                    background: #182235;
+                }
+
+                html.dark-mode .brand-mark,
+                html.dark-mode .network-kind,
+                html.dark-mode .input,
+                html.dark-mode .select,
+                html.dark-mode textarea {
+                    background: #0b1220;
+                    color: var(--text);
+                    border-color: var(--line-strong);
+                }
+
+                html.dark-mode .textarea-wrap textarea {
+                    background: transparent;
+                }
+
+                html.dark-mode .tag.ok {
+                    color: #8ff0c2;
+                    background: rgba(52, 211, 153, 0.16);
+                }
+
+                html.dark-mode .tag.warn {
+                    color: #fde68a;
+                    background: rgba(251, 191, 36, 0.16);
+                }
+
+                html.dark-mode .tag.bad {
+                    color: #fecaca;
+                    background: rgba(248, 113, 113, 0.16);
+                }
+
+                html.dark-mode .help-tip {
+                    border-color: #85670f;
+                    background: #29230f;
+                    color: #fde68a;
+                }
+
+                html.dark-mode .help-tip::after,
+                html.dark-mode .help-tip::before {
+                    border-color: #85670f;
+                    background: #29230f;
+                    color: #fde68a;
+                }
+
+                html.dark-mode .network-warning-overlay {
+                    background: rgba(0, 0, 0, 0.78);
+                }
+
+                html.dark-mode .network-warning-modal {
+                    border-color: #ffffff;
+                    background: #b91c1c;
+                    color: #ffffff;
+                    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.65), 0 0 0 8px rgba(248, 113, 113, 0.18);
+                }
+
+                html.dark-mode .field label,
+                html.dark-mode th,
+                html.dark-mode .icon-btn,
+                html.dark-mode .btn.secondary {
+                    color: #d1d5db;
+                }
+
+                html.dark-mode .result-row:hover td {
+                    background: rgba(52, 211, 153, 0.10);
+                }
+
+                html.dark-mode .result-row.is-selected td,
+                html.dark-mode .result-row.is-selected:hover td {
+                    background: rgba(52, 211, 153, 0.22);
+                }
+
+                html.dark-mode .progress-line {
+                    background: #1f2937;
+                }
+
+                html.dark-mode .link-btn {
+                    color: #93c5fd;
+                }
+
+                html.dark-mode .link-btn:hover:not(:disabled) {
+                    color: #bfdbfe;
+                }
+
+                @media (max-width: 980px) {
+                    .layout {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .form-grid.compact {
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                    }
+                }
+
+                @media (max-width: 640px) {
+                    .shell {
+                        width: min(100% - 20px, 1440px);
+                        padding-top: 16px;
+                    }
+
+                    .topbar {
+                        align-items: flex-start;
+                        flex-direction: column;
+                    }
+
+                    .brand h1 {
+                        font-size: 21px;
+                    }
+
+                    .panel-head,
+                    .panel-body,
+                    .result-footer,
+                    .result-actions {
+                        padding-left: 12px;
+                        padding-right: 12px;
+                    }
+
+                    .result-actions {
+                        align-items: stretch;
+                        flex-direction: column;
+                    }
+
+                    .result-actions-group {
+                        width: 100%;
+                    }
+
+                    .selection-status {
+                        width: 100%;
+                        text-align: left;
+                    }
+
+                    .form-grid,
+                    .form-grid.compact,
+                    .control-row {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .network-grid {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .network-item {
+                        grid-template-columns: 1fr;
+                    }
+
+                    .network-kind {
+                        width: 100%;
+                        height: 40px;
+                    }
+
+                    .network-address {
+                        text-align: center;
+                    }
+
+                    .editor-body {
+                        grid-template-columns: 46px minmax(0, 1fr);
+                    }
+
+                    .line-gutter {
+                        font-size: 12px;
+                    }
+
+                    textarea {
+                        font-size: 12px;
+                    }
+
+                    .btn {
+                        width: 100%;
+                    }
+                }
+            </style>
+        </head>
+
+        <body>
+            <main class="shell">
+                <header class="topbar">
+                    <div class="brand">
+                        <div class="brand-mark" aria-hidden="true">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path d="M12 3v18"></path>
+                                <path d="M3 12h18"></path>
+                                <path d="M5.6 5.6c4.5 3.8 8.3 3.8 12.8 0"></path>
+                                <path d="M5.6 18.4c4.5-3.8 8.3-3.8 12.8 0"></path>
+                                <circle cx="12" cy="12" r="9"></circle>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1>BestCF</h1>
+                            <small>在线优选</small>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="layout">
+                    <div class="stack">
+                        <section class="network-grid" aria-label="网络环境">
+                            <article class="network-item" id="ipv4Card">
+                                <div class="network-kind">IPv4</div>
+                                <strong class="network-address" id="ipv4Value">检测中</strong>
+                                <span class="tag idle" id="ipv4Tag">等待</span>
+                            </article>
+
+                            <article class="network-item" id="ipv6Card">
+                                <div class="network-kind">IPv6</div>
+                                <strong class="network-address" id="ipv6Value">检测中</strong>
+                                <span class="tag idle" id="ipv6Tag">等待</span>
+                            </article>
+                        </section>
+                    </div>
+
+                    <div class="stack">
+                        <section class="panel" aria-labelledby="inputTitle">
+                            <div class="panel-head">
+                                <h2 class="panel-title" id="inputTitle">待选列表</h2>
+                            </div>
+                            <div class="panel-body">
+                                <div class="settings-block">
+                                    <div class="form-grid compact">
+                                        <div class="field">
+                                            <label for="limitInput">待测IP数</label>
+                                            <input class="input" id="limitInput" type="number" min="1" max="4096"
+                                                step="1" value="512">
+                                        </div>
+                                        <div class="field">
+                                            <label for="timeoutInput">超时时间 ms</label>
+                                            <input class="input" id="timeoutInput" type="number" min="100" max="10000"
+                                                step="50" value="500">
+                                        </div>
+                                        <div class="field">
+                                            <label for="threadsInput">并发线程</label>
+                                            <input class="input" id="threadsInput" type="number" min="1" max="32"
+                                                step="1" value="16">
+                                        </div>
+                                        <div class="field">
+                                            <div class="label-row">
+                                                <label for="portInput">优选端口</label>
+                                                <span class="help-tip" tabindex="0" role="img" aria-label="端口说明"
+                                                    data-tip="端口为 0 时，随机设置 443、2053、2083、2087、2096、8443 端口。">!</span>
+                                            </div>
+                                            <input class="input" id="portInput" type="number" min="0" max="65535"
+                                                step="1" value="0">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="control-row">
+                                    <div class="field">
+                                        <label for="librarySelect">IP库</label>
+                                        <select class="select" id="librarySelect" disabled></select>
+                                    </div>
+                                    <button class="btn secondary" id="importBtn" type="button" disabled>
+                                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <path d="M7 10l5 5 5-5"></path>
+                                            <path d="M12 15V3"></path>
+                                        </svg>
+                                        IP库导入
+                                    </button>
+                                    <button class="btn" id="latencyBtn" type="button" disabled>
+                                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M5 12h4l3-7 3 14 3-7h1"></path>
+                                        </svg>
+                                        优选延迟
+                                    </button>
+                                </div>
+
+                                <div class="editor">
+                                    <div class="editor-bar">
+                                        <span class="editor-count" id="lineCount">0 行</span>
+                                        <button class="icon-btn" id="clearBtn" type="button" title="清空列表"
+                                            aria-label="清空列表">
+                                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                                <path d="M3 6h18"></path>
+                                                <path d="M8 6V4h8v2"></path>
+                                                <path d="M19 6l-1 14H6L5 6"></path>
+                                                <path d="M10 11v5"></path>
+                                                <path d="M14 11v5"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="editor-body">
+                                        <div class="line-gutter" id="lineGutter" aria-hidden="true">
+                                            <pre id="lineNumbers">1</pre>
+                                        </div>
+                                        <div class="textarea-wrap">
+                                            <div class="line-shades" id="lineShades" aria-hidden="true">
+                                                <div class="shade-line"></div>
+                                            </div>
+                                            <textarea id="ipInput" spellcheck="false"
+                                                placeholder="1.0.0.0:443&#10;[2606:4700::0]:443&#10;103.22.200.0/22"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="progress">
+                                    <div class="progress-meta">
+                                        <span class="tiny muted" id="latencyStatus">等待网络检测</span>
+                                        <span class="tiny muted" id="progressText">0 / 0</span>
+                                    </div>
+                                    <div class="progress-line" aria-hidden="true">
+                                        <div class="progress-bar" id="latencyProgress"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="panel" aria-labelledby="resultTitle">
+                            <div class="panel-head">
+                                <h2 class="panel-title" id="resultTitle">优选结果</h2>
+                                <span class="tag idle" id="resultCount">0 个可用</span>
+                            </div>
+                            <div class="result-footer">
+                                <span class="tiny muted" id="speedStatus">等待测速</span>
+                                <button class="btn success" id="speedAllBtn" type="button" disabled>
+                                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M13 2 3 14h8l-1 8 11-14h-8l0-6Z"></path>
+                                    </svg>
+                                    全部测速
+                                </button>
+                            </div>
+                            <div class="result-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th class="selection-cell"><input id="selectAllHeader" type="checkbox"
+                                                    title="全选" aria-label="全选"></th>
+                                            <th style="width: 27%"><button class="sort-header" type="button"
+                                                    data-sort="address">优选IP <span class="sort-mark"
+                                                        data-sort-mark="address"></span></button></th>
+                                            <th style="width: 12%"><button class="sort-header" type="button"
+                                                    data-sort="ipType">IP类型 <span class="sort-mark"
+                                                        data-sort-mark="ipType"></span></button></th>
+                                            <th style="width: 15%"><button class="sort-header" type="button"
+                                                    data-sort="type">优选类型 <span class="sort-mark"
+                                                        data-sort-mark="type"></span></button></th>
+                                            <th style="width: 14%"><button class="sort-header" type="button"
+                                                    data-sort="country">国家/地区 <span class="sort-mark"
+                                                        data-sort-mark="country"></span></button></th>
+                                            <th style="width: 14%"><button class="sort-header" type="button"
+                                                    data-sort="latency">延迟(ms) <span class="sort-mark"
+                                                        data-sort-mark="latency"></span></button></th>
+                                            <th style="width: 18%"><button class="sort-header" type="button"
+                                                    data-sort="speed">速度(Mbps) <span class="sort-mark"
+                                                        data-sort-mark="speed"></span></button></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resultBody">
+                                        <tr>
+                                            <td class="empty" colspan="7">暂无结果</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="result-actions">
+                                <div class="result-actions-group">
+                                    <button class="btn secondary" id="selectAllBtn" type="button">全选</button>
+                                    <button class="btn secondary" id="invertSelectBtn" type="button">反选</button>
+                                    <button class="btn secondary" id="clearSelectBtn" type="button">取消选择</button>
+                                </div>
+                                <div class="result-actions-group">
+                                    <span class="tiny muted selection-status" id="selectionStatus">已选 0 个</span>
+                                    <button class="btn success" id="saveSelectedBtn" type="button" disabled>保存</button>
+                                    <button class="btn secondary" id="closeBestCFBtn" type="button">关闭</button>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </main>
+
+            <div class="network-warning-overlay" id="networkWarningOverlay" role="dialog" aria-modal="true"
+                aria-labelledby="networkWarningTitle">
+                <div class="network-warning-modal">
+                    <div class="network-warning-body">
+                        <div class="network-warning-heading">红牌警告</div>
+                        <div id="networkWarningTitle">⚠️ 检测到您当前很可能处于代理/VPN环境中！请确保处于CN网络直连环境下再进行在线优选，否则优选测试结果将因为代理变得毫无意义！
+                        </div>
+                    </div>
+                    <div class="network-warning-actions">
+                        <button class="btn" id="networkWarningConfirmBtn" type="button">确定</button>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function syncEmbeddedTheme() {
+                    try {
+                        const parentDoc = window.parent && window.parent.document;
+                        const parentDark = Boolean(parentDoc && (
+                            parentDoc.documentElement.classList.contains("dark-mode") ||
+                            parentDoc.body.classList.contains("dark-mode")
+                        ));
+                        document.documentElement.classList.toggle("dark-mode", parentDark);
+                    } catch (error) {
+                        document.documentElement.classList.remove("dark-mode");
+                    }
+                }
+
+                syncEmbeddedTheme();
+                try {
+                    const parentDoc = window.parent && window.parent.document;
+                    if (parentDoc) {
+                        new MutationObserver(syncEmbeddedTheme).observe(parentDoc.documentElement, { attributes: true, attributeFilter: ["class"] });
+                        new MutationObserver(syncEmbeddedTheme).observe(parentDoc.body, { attributes: true, attributeFilter: ["class"] });
+                    }
+                } catch (error) {
+                    // Standalone demo mode does not need parent theme sync.
+                }
+                const TLS_PORTS = [443, 2053, 2083, 2087, 2096, 8443];
+                const DETECT_ENDPOINTS = {
+                    ipv4: "https://68100000.nip.cmliussss.hidns.vip",
+                    ipv6: "https://2606-4700--.nip.cmliussss.hidns.vip"
+                };
+                const IP_LIBRARIES = [
+                    { label: "CF官方列表v4", family: "ipv4", url: "https://cf.090227.xyz/ips-v4" },
+                    { label: "CF官方列表v6", family: "ipv6", url: "https://cf.090227.xyz/ips-v6" },
+                    { label: "CM优选列表v4", family: "ipv4", url: "https://raw.githubusercontent.com/cmliu/cmliu/main/CF-CIDR.txt" },
+                    { label: "AS13335列表v4", family: "ipv4", url: "https://raw.githubusercontent.com/ipverse/asn-ip/master/as/13335/ipv4-aggregated.txt" },
+                    { label: "AS13335列表v6", family: "ipv6", url: "https://raw.githubusercontent.com/ipverse/asn-ip/master/as/13335/ipv6-aggregated.txt" },
+                    { label: "AS209242列表v4", family: "ipv4", url: "https://raw.githubusercontent.com/ipverse/asn-ip/master/as/209242/ipv4-aggregated.txt" },
+                    { label: "AS209242列表v6", family: "ipv6", url: "https://raw.githubusercontent.com/ipverse/asn-ip/master/as/209242/ipv6-aggregated.txt" }
+                ];
+
+                const state = {
+                    ipv4: null,
+                    ipv6: null,
+                    network: { ipv4: null, ipv6: null },
+                    locations: [],
+                    locationsByIata: new Map(),
+                    latencyRun: null,
+                    speedRun: null,
+                    editorResizeObserver: null,
+                    results: [],
+                    selectedIds: new Set(),
+                    nextResultId: 1,
+                    sort: { key: "latency", dir: "asc" }
+                };
+
+                const $ = (selector) => document.querySelector(selector);
+                const els = {
+                    ipv4Value: $("#ipv4Value"),
+                    ipv4Card: $("#ipv4Card"),
+                    ipv4Tag: $("#ipv4Tag"),
+                    ipv6Value: $("#ipv6Value"),
+                    ipv6Card: $("#ipv6Card"),
+                    ipv6Tag: $("#ipv6Tag"),
+                    librarySelect: $("#librarySelect"),
+                    importBtn: $("#importBtn"),
+                    ipInput: $("#ipInput"),
+                    lineCount: $("#lineCount"),
+                    lineGutter: $("#lineGutter"),
+                    lineNumbers: $("#lineNumbers"),
+                    lineShades: $("#lineShades"),
+                    clearBtn: $("#clearBtn"),
+                    limitInput: $("#limitInput"),
+                    timeoutInput: $("#timeoutInput"),
+                    threadsInput: $("#threadsInput"),
+                    portInput: $("#portInput"),
+                    latencyBtn: $("#latencyBtn"),
+                    latencyStatus: $("#latencyStatus"),
+                    latencyProgress: $("#latencyProgress"),
+                    progressText: $("#progressText"),
+                    resultBody: $("#resultBody"),
+                    resultCount: $("#resultCount"),
+                    speedStatus: $("#speedStatus"),
+                    speedAllBtn: $("#speedAllBtn"),
+                    selectAllHeader: $("#selectAllHeader"),
+                    selectAllBtn: $("#selectAllBtn"),
+                    invertSelectBtn: $("#invertSelectBtn"),
+                    clearSelectBtn: $("#clearSelectBtn"),
+                    saveSelectedBtn: $("#saveSelectedBtn"),
+                    closeBestCFBtn: $("#closeBestCFBtn"),
+                    selectionStatus: $("#selectionStatus"),
+                    networkWarningOverlay: $("#networkWarningOverlay"),
+                    networkWarningConfirmBtn: $("#networkWarningConfirmBtn")
+                };
+
+                document.addEventListener("DOMContentLoaded", () => {
+                    bindEvents();
+                    updateEditorMeta();
+                    detectNetwork();
+                    if ("ResizeObserver" in window) {
+                        state.editorResizeObserver = new ResizeObserver(updateEditorMeta);
+                        state.editorResizeObserver.observe(els.ipInput);
+                    }
+                });
+
+                function bindEvents() {
+                    els.importBtn.addEventListener("click", importLibrary);
+                    els.ipInput.addEventListener("input", updateEditorMeta);
+                    els.ipInput.addEventListener("scroll", syncEditorScroll);
+                    els.clearBtn.addEventListener("click", () => {
+                        els.ipInput.value = "";
+                        updateEditorMeta();
+                    });
+                    [els.limitInput, els.timeoutInput, els.threadsInput, els.portInput].forEach((input) => {
+                        input.addEventListener("change", () => clampNumberInput(input));
+                    });
+                    els.latencyBtn.addEventListener("click", () => {
+                        if (state.latencyRun) {
+                            stopLatencyRun();
+                            return;
+                        }
+                        startLatencyRun();
+                    });
+                    els.speedAllBtn.addEventListener("click", () => {
+                        if (state.speedRun) {
+                            stopSpeedRun();
+                            return;
+                        }
+                        startAllSpeedTests();
+                    });
+                    els.resultBody.addEventListener("click", (event) => {
+                        const checkbox = event.target.closest("[data-select-id]");
+                        if (checkbox) {
+                            setResultSelected(checkbox.dataset.selectId, checkbox.checked);
+                            return;
+                        }
+
+                        const button = event.target.closest("[data-speed-index]");
+                        if (button) {
+                            const index = Number(button.dataset.speedIndex);
+                            startSingleSpeedTest(index);
+                            return;
+                        }
+
+                        const row = event.target.closest("[data-result-id]");
+                        if (!row) return;
+                        toggleResultSelected(row.dataset.resultId);
+                    });
+                    els.selectAllHeader.addEventListener("change", () => {
+                        if (els.selectAllHeader.checked) {
+                            selectAllResults();
+                        } else {
+                            clearSelectedResults();
+                        }
+                    });
+                    els.selectAllBtn.addEventListener("click", selectAllResults);
+                    els.invertSelectBtn.addEventListener("click", invertSelectedResults);
+                    els.clearSelectBtn.addEventListener("click", clearSelectedResults);
+                    els.saveSelectedBtn.addEventListener("click", saveSelectedResults);
+                    els.closeBestCFBtn.addEventListener("click", closeBestCFModule);
+      els.networkWarningConfirmBtn.addEventListener("click", confirmNetworkWarning);
+                    document.querySelectorAll("[data-sort]").forEach((button) => {
+                        button.addEventListener("click", () => setResultSort(button.dataset.sort));
+                    });
+                }
+
+                function svgStopIcon() {
+                    return '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1"></rect></svg>';
+                }
+
+                function svgPulseIcon() {
+                    return '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h4l3-7 3 14 3-7h1"></path></svg>';
+                }
+
+                function svgBoltIcon() {
+                    return '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 3 14h8l-1 8 11-14h-8l0-6Z"></path></svg>';
+                }
+
+                async function detectNetwork() {
+                    if (state.latencyRun) stopLatencyRun();
+                    if (state.speedRun) stopSpeedRun();
+
+                    state.ipv4 = null;
+                    state.ipv6 = null;
+                    state.network = { ipv4: null, ipv6: null };
+                    state.locations = [];
+                    state.locationsByIata = new Map();
+                    state.results = [];
+                    state.selectedIds.clear();
+                    state.nextResultId = 1;
+                    renderResults();
+                    setProgress(0, 0);
+
+                    renderNetworkCard("ipv4", { status: "loading" });
+                    renderNetworkCard("ipv6", { status: "loading" });
+                    updateLibraryOptions();
+                    updateActionAvailability();
+
+                    const checks = await Promise.allSettled([
+                        detectStack("ipv4"),
+                        detectStack("ipv6")
+                    ]);
+
+                    checks.forEach((result, index) => {
+                        const family = index === 0 ? "ipv4" : "ipv6";
+                        if (result.status === "fulfilled") {
+                            state.network[family] = result.value;
+                            if (result.value.allowed) {
+                                if (result.value.ipType === "ipv4") state.ipv4 = result.value.ip;
+                                if (result.value.ipType === "ipv6") state.ipv6 = result.value.ip;
+                            }
+                        } else {
+                            state.network[family] = {
+                                status: "failed",
+                                error: result.reason && result.reason.message ? result.reason.message : "检测失败"
+                            };
+                        }
+                    });
+
+                    renderNetworkCard("ipv4", state.network.ipv4);
+                    renderNetworkCard("ipv6", state.network.ipv6);
+                    updateLibraryOptions();
+                    await loadLocations();
+                    updateServiceStatus();
+                    updateActionAvailability();
+                    if (availableFamilies().length === 0) showNetworkWarning();
+                }
+
+    function showNetworkWarning() {
+      els.networkWarningOverlay.classList.add("is-visible");
+      els.networkWarningConfirmBtn.focus();
+    }
+
+    function confirmNetworkWarning() {
+      if (window.parent && window.parent !== window) {
+        try {
+          window.parent.location.reload();
+          return;
+        } catch (error) {
+          // Fall back to postMessage below when direct parent access is unavailable.
+        }
+
+        try {
+          window.parent.postMessage({ type: "bestcf-force-reload" }, "*");
+          return;
+        } catch (error) {
+          // Ignore and reload the current document as a last resort.
+        }
+      }
+
+      window.location.reload();
+    }
+
+                async function detectStack(family) {
+                    const base = DETECT_ENDPOINTS[family];
+                    const data = await fetchJson(`${base}/ip.json?_t=${Date.now()}`, 6500);
+                    const allowed = data.country === "CN";
+                    return {
+                        status: "done",
+                        allowed,
+                        ip: data.ip || "",
+                        ipType: data.ipType || family,
+                        country: data.country || "未知",
+                        cnIspCode: data.cnIspCode || "",
+                        preferredType: preferredTypeFromCnIspCode(data.cnIspCode),
+                        colo: data.colo || "",
+                        asn: data.asn || ""
+                    };
+                }
+
+                async function loadLocations() {
+                    const bases = [];
+                    if (state.ipv4) bases.push(DETECT_ENDPOINTS.ipv4);
+                    if (state.ipv6) bases.push(DETECT_ENDPOINTS.ipv6);
+
+                    for (const base of bases) {
+                        try {
+                            const locations = await fetchJson(`${base}/locations?_t=${Date.now()}`, 8000);
+                            if (!Array.isArray(locations)) continue;
+                            state.locations = locations;
+                            state.locationsByIata = new Map(
+                                locations
+                                    .filter((item) => item && item.iata)
+                                    .map((item) => [String(item.iata).toUpperCase(), item])
+                            );
+                            return;
+                        } catch (error) {
+                            state.locations = [];
+                            state.locationsByIata = new Map();
+                        }
+                    }
+                }
+
+                function renderNetworkCard(family, info) {
+                    const card = family === "ipv4" ? els.ipv4Card : els.ipv6Card;
+                    const value = family === "ipv4" ? els.ipv4Value : els.ipv6Value;
+                    const tag = family === "ipv4" ? els.ipv4Tag : els.ipv6Tag;
+
+                    if (!info || info.status === "loading") {
+                        card.classList.remove("is-hidden");
+                        value.textContent = "检测中";
+                        tag.className = "tag idle";
+                        tag.textContent = "等待";
+                        return;
+                    }
+
+                    if (info.status === "failed" || !info.allowed) {
+                        card.classList.add("is-hidden");
+                        value.textContent = "不可用";
+                        tag.className = "tag bad";
+                        tag.textContent = info.status === "failed" ? "失败" : (info.country || "非CN");
+                        return;
+                    }
+
+                    card.classList.remove("is-hidden");
+                    value.textContent = maskIpForDisplay(info.ip, info.ipType || family);
+                    tag.className = "tag ok";
+                    tag.textContent = `${info.country || "未知"} · ${String(info.cnIspCode || "unknown").toUpperCase()}`;
+                }
+
+                function maskIpForDisplay(ip, family) {
+                    if (!ip) return "未获取";
+                    if (family === "ipv6") return maskIpv6ForDisplay(ip);
+                    return maskIpv4ForDisplay(ip);
+                }
+
+                function maskIpv4ForDisplay(ip) {
+                    const parts = ip.split(".");
+                    if (parts.length !== 4) return "已脱敏";
+                    return `${parts[0]}.***.**.${parts[3]}`;
+                }
+
+                function maskIpv6ForDisplay(ip) {
+                    const normalized = normalizeIpv6(ip);
+                    if (!normalized) return "已脱敏";
+                    const groups = expandIpv6Groups(normalized);
+                    if (!groups) return "已脱敏";
+                    return `${groups[0]}:****:****:${groups[7]}`;
+                }
+
+                function updateServiceStatus() {
+                    const available = availableFamilies();
+                    if (available.length === 0) {
+                        els.latencyStatus.textContent = "网络不可用";
+                        return;
+                    }
+
+                    els.latencyStatus.textContent = "等待优选";
+                }
+
+                function availableFamilies() {
+                    const list = [];
+                    if (state.ipv4) list.push("ipv4");
+                    if (state.ipv6) list.push("ipv6");
+                    return list;
+                }
+
+                function updateLibraryOptions() {
+                    const families = new Set(availableFamilies());
+                    const options = IP_LIBRARIES.filter((item) => families.has(item.family));
+                    els.librarySelect.innerHTML = "";
+                    if (!options.length) {
+                        const option = document.createElement("option");
+                        option.textContent = "无可用IP库";
+                        option.value = "";
+                        els.librarySelect.appendChild(option);
+                        els.librarySelect.disabled = true;
+                        els.importBtn.disabled = true;
+                        return;
+                    }
+
+                    options.forEach((item, index) => {
+                        const option = document.createElement("option");
+                        option.value = String(index);
+                        option.textContent = item.label;
+                        option.dataset.url = item.url;
+                        option.dataset.family = item.family;
+                        els.librarySelect.appendChild(option);
+                    });
+                    els.librarySelect.disabled = false;
+                    els.importBtn.disabled = false;
+                }
+
+                function updateActionAvailability() {
+                    const hasService = availableFamilies().length > 0;
+                    const latencyActive = Boolean(state.latencyRun);
+                    const speedActive = Boolean(state.speedRun);
+                    els.latencyBtn.disabled = speedActive || (!hasService && !latencyActive);
+                    els.speedAllBtn.disabled = latencyActive || (state.results.length === 0 && !speedActive);
+                }
+
+                async function importLibrary() {
+                    const option = els.librarySelect.selectedOptions[0];
+                    if (!option || !option.dataset.url) return;
+                    els.importBtn.disabled = true;
+                    const original = els.importBtn.innerHTML;
+                    els.importBtn.textContent = "导入中";
+                    try {
+                        const text = await fetchText(`${option.dataset.url}${option.dataset.url.includes("?") ? "&" : "?"}_t=${Date.now()}`, 20000);
+                        els.ipInput.value = text.trim();
+                        updateEditorMeta();
+                        els.latencyStatus.textContent = `已导入 ${option.textContent}`;
+                    } catch (error) {
+                        els.latencyStatus.textContent = `导入失败：${friendlyError(error)}`;
+                    } finally {
+                        els.importBtn.innerHTML = original;
+                        els.importBtn.disabled = false;
+                    }
+                }
+
+                function updateEditorMeta() {
+                    const value = els.ipInput.value;
+                    const lines = value.length ? value.split(/\r\n|\r|\n/).length : 0;
+                    els.lineCount.textContent = `${lines} 行`;
+                    const displayLines = Math.max(1, lines);
+                    els.lineNumbers.textContent = Array.from({ length: displayLines }, (_, index) => index + 1).join("\n");
+                    const visibleLines = Math.ceil((els.ipInput.clientHeight || 360) / 22) + 2;
+                    const shadeLines = Math.max(displayLines, visibleLines);
+                    els.lineShades.innerHTML = Array.from({ length: shadeLines }, () => '<div class="shade-line"></div>').join("");
+                    syncEditorScroll();
+                }
+
+                function syncEditorScroll() {
+                    const scrollTop = els.ipInput.scrollTop;
+                    const offset = `translate3d(0, ${-scrollTop}px, 0)`;
+                    els.lineNumbers.style.transform = offset;
+                    els.lineShades.style.transform = offset;
+                }
+
+                async function startLatencyRun() {
+                    const settings = readSettings();
+                    let candidates;
+                    try {
+                        candidates = prepareCandidates(els.ipInput.value, settings.limit, settings.port);
+                    } catch (error) {
+                        els.latencyStatus.textContent = friendlyError(error);
+                        return;
+                    }
+
+                    els.ipInput.value = candidates.join("\n");
+                    updateEditorMeta();
+                    state.results = [];
+                    state.selectedIds.clear();
+                    state.nextResultId = 1;
+                    state.sort = { key: "latency", dir: "asc" };
+                    renderResults();
+
+                    const run = {
+                        stopped: false,
+                        controllers: new Set(),
+                        completed: 0,
+                        total: candidates.length
+                    };
+                    state.latencyRun = run;
+                    els.latencyBtn.classList.add("danger");
+                    els.latencyBtn.innerHTML = `${svgStopIcon()}停止优选`;
+                    els.latencyStatus.textContent = `正在优选 ${candidates.length} 个地址`;
+                    setProgress(0, candidates.length);
+                    updateActionAvailability();
+
+                    await runPool(candidates, settings.threads, async (address) => {
+                        if (run.stopped) return;
+                        try {
+                            const result = await testLatency(address, settings.timeout, run);
+                            if (result && !run.stopped) {
+                                result.id = state.nextResultId++;
+                                state.results.push(result);
+                                state.results.sort((a, b) => a.latency - b.latency);
+                                renderResults();
+                            }
+                        } catch (error) {
+                            // Unavailable addresses are intentionally skipped from the result list.
+                        } finally {
+                            run.completed += 1;
+                            setProgress(run.completed, run.total);
+                        }
+                    }, run);
+
+                    if (run.stopped) {
+                        els.latencyStatus.textContent = `已停止，保留 ${state.results.length} 个结果`;
+                    } else {
+                        els.latencyStatus.textContent = `优选完成，${state.results.length} 个可用`;
+                    }
+                    state.latencyRun = null;
+                    els.latencyBtn.classList.remove("danger");
+                    els.latencyBtn.innerHTML = `${svgPulseIcon()}优选延迟`;
+                    updateActionAvailability();
+                    renderResults();
+                }
+
+                function stopLatencyRun() {
+                    const run = state.latencyRun;
+                    if (!run) return;
+                    run.stopped = true;
+                    for (const controller of run.controllers) controller.abort();
+                    els.latencyStatus.textContent = "正在停止优选";
+                }
+
+                async function testLatency(address, timeout, run) {
+                    const parsed = parseAddressWithPort(address);
+                    if (!parsed) throw new Error("地址格式无效");
+                    const url = buildProbeUrl(parsed, "ip.json");
+
+                    await testOptionsConnectivity(url, timeout * 2, run);
+
+                    const started = performance.now();
+                    const response = await fetchWithTimeout(url, { method: "GET", timeout, run });
+                    if (!response.ok) throw new Error("GET 不可用");
+                    const data = await response.json();
+                    const latency = Math.max(1, Math.round(performance.now() - started));
+                    if (latency > timeout) throw new Error("延迟超过超时时间");
+                    const official = isOfficialPreferredIp(data);
+                    const responseIpType = data.ipType || "";
+                    const type = official ? officialPreferredType(data) : "优选反代";
+                    const country = official ? countryFromColo(data.colo) : (data.country || "未知");
+
+                    return {
+                        address,
+                        parsed,
+                        type,
+                        country,
+                        latency,
+                        speedState: "pending",
+                        speedMbps: null,
+                        ipType: responseIpType,
+                        responseIp: data.ip || "",
+                        colo: data.colo || "",
+                        raw: data
+                    };
+                }
+
+                function isOfficialPreferredIp(data) {
+                    if (data.ip && (data.ip === state.ipv4 || data.ip === state.ipv6)) return true;
+                    const country = String(data.country || "").toUpperCase();
+                    const cnIspCode = String(data.cnIspCode || "").toLowerCase();
+                    return country === "CN" && cnIspCode !== "other";
+                }
+
+                function officialPreferredType(data) {
+                    const family = officialResultFamily(data);
+                    const info = networkInfoByIpType(family);
+                    if (info && info.preferredType) return info.preferredType;
+
+                    const cnIspCode = normalizeCnIspCode(info && info.cnIspCode) || displayedCnIspCode(family);
+                    return preferredTypeFromCnIspCode(cnIspCode);
+                }
+
+                function preferredTypeFromCnIspCode(cnIspCode) {
+                    const normalizedCode = normalizeCnIspCode(cnIspCode);
+                    const typeMap = {
+                        ct: "电信优选",
+                        cu: "联通优选",
+                        cmcc: "移动优选"
+                    };
+                    return typeMap[normalizedCode] || "官方优选";
+                }
+
+                function officialResultFamily(data) {
+                    if (data && data.ip) {
+                        if (data.ip === state.ipv4) return "ipv4";
+                        if (data.ip === state.ipv6) return "ipv6";
+                    }
+
+                    return String(data && data.ipType ? data.ipType : "").toLowerCase();
+                }
+
+                function networkInfoByIpType(family) {
+                    if (family === "ipv4" || family === "ipv6") {
+                        const direct = state.network[family];
+                        if (direct && String(direct.ipType || "").toLowerCase() === family) return direct;
+
+                        const matched = Object.values(state.network).find((info) =>
+                            info && String(info.ipType || "").toLowerCase() === family
+                        );
+                        if (matched) return matched;
+
+                        return direct || null;
+                    }
+
+                    return null;
+                }
+
+                function normalizeCnIspCode(value) {
+                    return String(value || "").trim().toLowerCase();
+                }
+
+                function displayedCnIspCode(family) {
+                    const tag = family === "ipv4" ? els.ipv4Tag : (family === "ipv6" ? els.ipv6Tag : null);
+                    const text = tag ? String(tag.textContent || "") : "";
+                    const parts = text.split("·");
+                    return normalizeCnIspCode(parts.length > 1 ? parts[1] : "");
+                }
+
+                async function testOptionsConnectivity(url, timeout, run) {
+                    let lastError = null;
+                    for (let attempt = 0; attempt < 3; attempt += 1) {
+                        if (run && run.stopped) throw new Error("已停止");
+                        try {
+                            const response = await fetchWithTimeout(url, { method: "OPTIONS", timeout, run });
+                            if (response.ok) return;
+                            lastError = new Error(`OPTIONS HTTP ${response.status}`);
+                        } catch (error) {
+                            lastError = error;
+                            if (run && run.stopped) throw error;
+                        }
+                    }
+                    throw lastError || new Error("OPTIONS 不可用");
+                }
+
+                function countryFromColo(colo) {
+                    if (!colo) return "未知";
+                    const match = state.locationsByIata.get(String(colo).toUpperCase());
+                    return match && match.cca2 ? match.cca2 : "未知";
+                }
+
+                async function startSingleSpeedTest(index) {
+                    const result = state.results[index];
+                    if (!result || result.speedState === "testing") return;
+                    const run = { stopped: false, controllers: new Set() };
+                    result.speedState = "testing";
+                    result.speedRemaining = 10;
+                    renderResults();
+                    try {
+                        const speed = await testDownloadSpeed(result.parsed, run, (remaining) => {
+                            result.speedRemaining = remaining;
+                            renderResults();
+                        });
+                        result.speedState = "done";
+                        result.speedMbps = speed;
+                    } catch (error) {
+                        result.speedState = run.stopped ? "stopped" : "failed";
+                    } finally {
+                        result.speedRemaining = null;
+                        renderResults();
+                    }
+                }
+
+                async function startAllSpeedTests() {
+                    if (!state.results.length) return;
+                    const settings = readSettings();
+                    const concurrency = Math.max(1, Math.ceil(settings.threads / 8));
+                    const run = {
+                        stopped: false,
+                        controllers: new Set(),
+                        completed: 0,
+                        total: state.results.length
+                    };
+                    state.speedRun = run;
+                    els.speedAllBtn.classList.add("danger");
+                    els.speedAllBtn.innerHTML = `${svgStopIcon()}停止测速`;
+                    els.speedStatus.textContent = `正在测速 0 / ${run.total}`;
+                    updateActionAvailability();
+
+                    state.results.forEach((item) => {
+                        item.speedState = "pending";
+                        item.speedMbps = null;
+                    });
+                    renderResults();
+
+                    await runPool(state.results, concurrency, async (result) => {
+                        if (run.stopped) return;
+                        result.speedState = "testing";
+                        result.speedRemaining = 10;
+                        renderResults();
+                        try {
+                            const speed = await testDownloadSpeed(result.parsed, run, (remaining) => {
+                                result.speedRemaining = remaining;
+                                renderResults();
+                            });
+                            if (!run.stopped) {
+                                result.speedState = "done";
+                                result.speedMbps = speed;
+                            }
+                        } catch (error) {
+                            result.speedState = run.stopped ? "stopped" : "failed";
+                        } finally {
+                            result.speedRemaining = null;
+                            run.completed += 1;
+                            els.speedStatus.textContent = `正在测速 ${run.completed} / ${run.total}`;
+                            renderResults();
+                        }
+                    }, run);
+
+                    if (run.stopped) {
+                        state.results.forEach((item) => {
+                            if (item.speedState === "pending" || item.speedState === "testing") item.speedState = "stopped";
+                        });
+                        els.speedStatus.textContent = "测速已停止";
+                    } else {
+                        els.speedStatus.textContent = "全部测速完成";
+                    }
+
+                    state.speedRun = null;
+                    els.speedAllBtn.classList.remove("danger");
+                    els.speedAllBtn.innerHTML = `${svgBoltIcon()}全部测速`;
+                    renderResults();
+                    updateActionAvailability();
+                }
+
+                function stopSpeedRun() {
+                    const run = state.speedRun;
+                    if (!run) return;
+                    run.stopped = true;
+                    for (const controller of run.controllers) controller.abort();
+                    els.speedStatus.textContent = "正在停止测速";
+                }
+
+                async function testDownloadSpeed(parsed, run, onTick) {
+                    const url = buildProbeUrl(parsed, "__down", { bytes: "20000000" });
+                    const controller = new AbortController();
+                    const maxDuration = 10000;
+                    let timedOut = false;
+                    let totalBytes = 0;
+                    let started = 0;
+                    let lastRemaining = 10;
+                    let ticker = null;
+                    const timeout = window.setTimeout(() => {
+                        timedOut = true;
+                        controller.abort();
+                    }, maxDuration);
+                    if (run) {
+                        run.controllers.add(controller);
+                        if (run.stopped) controller.abort();
+                    }
+
+                    const finishSpeed = () => {
+                        const elapsed = Math.max(1, performance.now() - started);
+                        return totalBytes > 0 ? (totalBytes * 8) / (elapsed / 1000) / 1000000 : 0;
+                    };
+                    const reportRemaining = () => {
+                        const elapsed = performance.now() - started;
+                        const remaining = Math.max(0, Math.ceil((maxDuration - elapsed) / 1000));
+                        if (remaining !== lastRemaining) {
+                            lastRemaining = remaining;
+                            if (typeof onTick === "function") onTick(remaining);
+                        }
+                    };
+
+                    try {
+                        started = performance.now();
+                        if (typeof onTick === "function") onTick(10);
+                        ticker = window.setInterval(reportRemaining, 250);
+                        const response = await fetch(url, {
+                            method: "GET",
+                            cache: "no-store",
+                            signal: controller.signal
+                        });
+                        if (!response.ok) throw new Error("下载失败");
+
+                        if (!response.body || !response.body.getReader) {
+                            const buffer = await response.arrayBuffer();
+                            totalBytes = buffer.byteLength;
+                            if (typeof onTick === "function") onTick(0);
+                            return finishSpeed();
+                        }
+
+                        const reader = response.body.getReader();
+
+                        while (true) {
+                            if (performance.now() - started >= maxDuration) {
+                                timedOut = true;
+                                controller.abort();
+                                break;
+                            }
+                            const { done, value } = await reader.read();
+                            if (done) break;
+                            const size = value.byteLength || value.length || 0;
+                            totalBytes += size;
+                            reportRemaining();
+                        }
+
+                        if (typeof onTick === "function") onTick(0);
+                        return finishSpeed();
+                    } catch (error) {
+                        if (timedOut && totalBytes > 0) {
+                            if (typeof onTick === "function") onTick(0);
+                            return finishSpeed();
+                        }
+                        throw error;
+                    } finally {
+                        window.clearTimeout(timeout);
+                        if (ticker) window.clearInterval(ticker);
+                        if (run) run.controllers.delete(controller);
+                    }
+                }
+
+                function renderResults() {
+                    els.resultCount.textContent = `${state.results.length} 个可用`;
+                    renderSortMarks();
+                    syncSelectionWithResults();
+                    if (!state.results.length) {
+                        els.resultBody.innerHTML = '<tr><td class="empty" colspan="7">暂无结果</td></tr>';
+                        updateSelectionState();
+                        updateActionAvailability();
+                        return;
+                    }
+
+                    els.resultBody.innerHTML = getSortedResults().map(({ item, index }) => {
+                        const id = String(item.id);
+                        const selected = state.selectedIds.has(id);
+                        return `<tr class="result-row${selected ? " is-selected" : ""}" data-result-id="${escapeHtml(id)}">
+          <td class="selection-cell"><input type="checkbox" data-select-id="${escapeHtml(id)}" aria-label="选择 ${escapeHtml(item.address)}" ${selected ? "checked" : ""}></td>
+          <td class="ip-cell">${escapeHtml(item.address)}</td>
+          <td>${escapeHtml(item.ipType || "未知")}</td>
+          <td>${escapeHtml(item.type)}</td>
+          <td>${renderCountryCell(item.country)}</td>
+          <td>${item.latency}ms</td>
+          <td>${renderSpeedCell(item, index)}</td>
+        </tr>`;
+                    }).join("");
+                    updateSelectionState();
+                    updateActionAvailability();
+                }
+
+                function syncSelectionWithResults() {
+                    const validIds = new Set();
+                    state.results.forEach((item) => {
+                        if (!item.id) item.id = state.nextResultId++;
+                        validIds.add(String(item.id));
+                    });
+                    for (const id of [...state.selectedIds]) {
+                        if (!validIds.has(id)) state.selectedIds.delete(id);
+                    }
+                }
+
+                function updateSelectionState() {
+                    const total = state.results.length;
+                    const selected = state.selectedIds.size;
+                    els.selectionStatus.textContent = `已选 ${selected} 个`;
+                    els.saveSelectedBtn.disabled = selected === 0;
+                    els.selectAllBtn.disabled = total === 0;
+                    els.invertSelectBtn.disabled = total === 0;
+                    els.clearSelectBtn.disabled = selected === 0;
+                    els.selectAllHeader.disabled = total === 0;
+                    els.selectAllHeader.checked = total > 0 && selected === total;
+                    els.selectAllHeader.indeterminate = selected > 0 && selected < total;
+                }
+
+                function setResultSelected(id, selected) {
+                    if (!id) return;
+                    if (selected) {
+                        state.selectedIds.add(String(id));
+                    } else {
+                        state.selectedIds.delete(String(id));
+                    }
+                    renderResults();
+                }
+
+                function toggleResultSelected(id) {
+                    if (!id) return;
+                    setResultSelected(id, !state.selectedIds.has(String(id)));
+                }
+
+                function selectAllResults() {
+                    state.results.forEach((item) => state.selectedIds.add(String(item.id)));
+                    renderResults();
+                }
+
+                function invertSelectedResults() {
+                    state.results.forEach((item) => {
+                        const id = String(item.id);
+                        if (state.selectedIds.has(id)) {
+                            state.selectedIds.delete(id);
+                        } else {
+                            state.selectedIds.add(id);
+                        }
+                    });
+                    renderResults();
+                }
+
+                function clearSelectedResults() {
+                    state.selectedIds.clear();
+                    renderResults();
+                }
+
+                function selectedResults() {
+                    return state.results.filter((item) => state.selectedIds.has(String(item.id)));
+                }
+
+                function saveSelectedResults() {
+                    const lines = selectedResults().map(formatResultForAdmin).filter(Boolean);
+                    if (!lines.length) {
+                        updateSelectionState();
+                        return;
+                    }
+
+                    if (sendSelectedResultsToParent(lines)) return;
+                    copySelectedResults(lines);
+                }
+
+                function formatResultForAdmin(item) {
+                    const details = [`${item.latency}ms`];
+                    if (item.speedState === "done" && Number.isFinite(item.speedMbps) && item.speedMbps > 0) {
+                        details.push(`${Math.ceil(item.speedMbps)}Mbps`);
+                    }
+                    return `${item.address}#${item.country} ${item.type}[${details.join(" ")}]`;
+                }
+
+                function sendSelectedResultsToParent(lines) {
+                    if (!window.parent || window.parent === window) return false;
+                    try {
+                        if (typeof window.parent.appendOnlineOptimizeSelections === "function") {
+                            return Boolean(window.parent.appendOnlineOptimizeSelections(lines));
+                        }
+                    } catch (error) {
+                        // Fall back to postMessage below when direct same-origin access is unavailable.
+                    }
+
+                    try {
+                        window.parent.postMessage({ type: "bestcf-save-results", lines }, "*");
+                        return true;
+                    } catch (error) {
+                        return false;
+                    }
+                }
+
+                async function copySelectedResults(lines) {
+                    try {
+                        await navigator.clipboard.writeText(lines.join("\n"));
+                        els.selectionStatus.textContent = `已复制 ${lines.length} 个`;
+                    } catch (error) {
+                        els.selectionStatus.textContent = "保存失败";
+                    }
+                }
+
+                function closeBestCFModule() {
+                    if (window.parent && window.parent !== window) {
+                        try {
+                            if (typeof window.parent.closeOnlineOptimizeModal === "function") {
+                                window.parent.closeOnlineOptimizeModal();
+                                return;
+                            }
+                        } catch (error) {
+                            // Fall back to postMessage below when direct same-origin access is unavailable.
+                        }
+
+                        try {
+                            window.parent.postMessage({ type: "bestcf-close" }, "*");
+                            return;
+                        } catch (error) {
+                            // Ignore and use the standalone fallback.
+                        }
+                    }
+
+                    if (history.length > 1) history.back();
+                }
+
+                function setResultSort(key) {
+                    if (state.sort.key === key) {
+                        state.sort.dir = state.sort.dir === "asc" ? "desc" : "asc";
+                    } else {
+                        state.sort = { key, dir: "asc" };
+                    }
+                    renderResults();
+                }
+
+                function renderSortMarks() {
+                    document.querySelectorAll("[data-sort-mark]").forEach((mark) => {
+                        mark.textContent = mark.dataset.sortMark === state.sort.key
+                            ? (state.sort.dir === "asc" ? "▲" : "▼")
+                            : "";
+                    });
+                }
+
+                function getSortedResults() {
+                    const direction = state.sort.dir === "asc" ? 1 : -1;
+                    return state.results
+                        .map((item, index) => ({ item, index }))
+                        .sort((a, b) => {
+                            const left = sortValue(a.item, state.sort.key);
+                            const right = sortValue(b.item, state.sort.key);
+                            const emptyCompared = compareEmptyValue(left, right);
+                            if (emptyCompared !== 0) return emptyCompared;
+                            const compared = compareResultValue(left, right);
+                            if (compared !== 0) return compared * direction;
+                            return a.index - b.index;
+                        });
+                }
+
+                function sortValue(item, key) {
+                    if (key === "speed") return item.speedState === "done" ? item.speedMbps : null;
+                    return item[key];
+                }
+
+                function compareResultValue(left, right) {
+                    if (typeof left === "number" && typeof right === "number") return left - right;
+                    return String(left).localeCompare(String(right), "zh-Hans-CN", { numeric: true, sensitivity: "base" });
+                }
+
+                function compareEmptyValue(left, right) {
+                    const leftEmpty = left === null || left === undefined || left === "";
+                    const rightEmpty = right === null || right === undefined || right === "";
+                    if (leftEmpty && rightEmpty) return 0;
+                    if (leftEmpty) return 1;
+                    if (rightEmpty) return -1;
+                    return 0;
+                }
+
+                function renderSpeedCell(item, index) {
+                    if (item.speedState === "testing") return `<span class="muted">测速中 ${item.speedRemaining ?? 10}s</span>`;
+                    if (item.speedState === "done") return `<button class="link-btn" type="button" data-speed-index="${index}"><strong>${Math.ceil(item.speedMbps)}Mbps</strong></button>`;
+                    if (item.speedState === "failed") return '<span class="tag bad">失败</span>';
+                    if (item.speedState === "stopped") return '<span class="muted">测速已停止</span>';
+                    return `<button class="link-btn" type="button" data-speed-index="${index}">待测试</button>`;
+                }
+
+                function renderCountryCell(country) {
+                    const text = String(country || "未知").trim() || "未知";
+                    const countryCode = /^[a-zA-Z]{2}$/.test(text) ? text.toLowerCase() : "";
+                    const flag = countryCode
+                        ? `<img class="country-flag" src="https://ipdata.co/flags/${countryCode}.png" alt="" loading="lazy" onerror="this.remove()">`
+                        : "";
+                    return `<span class="country-cell">${flag}<span class="country-code">${escapeHtml(text)}</span></span>`;
+                }
+
+                function prepareCandidates(rawText, limit, preferredPort) {
+                    const lines = rawText
+                        .split(/\r\n|\r|\n/)
+                        .map(cleanInputLine)
+                        .filter(Boolean);
+
+                    if (!lines.length) throw new Error("请先填写待优选IP列表");
+
+                    const fixed = [];
+                    const cidrs = [];
+                    for (const line of lines) {
+                        if (line.includes("/")) {
+                            const cidr = parseCidr(line);
+                            if (cidr) cidrs.push(cidr);
+                            continue;
+                        }
+                        const normalized = normalizeAddress(line, preferredPort);
+                        if (normalized) fixed.push(normalized);
+                    }
+
+                    const candidates = [];
+                    const seen = new Set();
+                    const addCandidate = (address) => {
+                        if (!address || seen.has(address) || candidates.length >= limit) return false;
+                        seen.add(address);
+                        candidates.push(address);
+                        return true;
+                    };
+
+                    fixed.forEach(addCandidate);
+
+                    if (cidrs.length && candidates.length < limit) {
+                        let attempts = 0;
+                        const maxAttempts = Math.max(limit * 12, cidrs.length * 8);
+                        while (candidates.length < limit && attempts < maxAttempts) {
+                            const cidr = cidrs[attempts % cidrs.length];
+                            addCandidate(randomAddressFromCidr(cidr, preferredPort));
+                            attempts += 1;
+                        }
+                    }
+
+                    if (!candidates.length) throw new Error("没有可用的IP地址");
+                    return candidates.slice(0, limit);
+                }
+
+                function cleanInputLine(line) {
+                    return line
+                        .replace(/：/g, ":")
+                        .replace(/#.*/, "")
+                        .replace(/[ \t]/g, "")
+                        .trim();
+                }
+
+                function normalizeAddress(line, preferredPort) {
+                    const fallbackPort = choosePort(preferredPort);
+                    const bracketed = line.match(/^\[([0-9a-fA-F:.]+)](?::?(\d{1,5}))?$/);
+                    if (bracketed) {
+                        const ip = normalizeIpv6(bracketed[1]);
+                        if (!ip) return null;
+                        const port = validPortOrDefault(bracketed[2], fallbackPort);
+                        return `[${ip}]:${port}`;
+                    }
+
+                    const ipv4 = line.match(/^(\d{1,3}(?:\.\d{1,3}){3})(?::(\d{1,5}))?$/);
+                    if (ipv4 && isValidIpv4(ipv4[1])) {
+                        const port = validPortOrDefault(ipv4[2], fallbackPort);
+                        return `${ipv4[1]}:${port}`;
+                    }
+
+                    const ipv6Direct = normalizeIpv6(line);
+                    if (ipv6Direct) return `[${ipv6Direct}]:${fallbackPort}`;
+
+                    const lastColon = line.lastIndexOf(":");
+                    if (lastColon > 0) {
+                        const maybeIp = line.slice(0, lastColon);
+                        const maybePort = line.slice(lastColon + 1);
+                        const ip = normalizeIpv6(maybeIp);
+                        if (ip && /^\d{1,5}$/.test(maybePort)) {
+                            return `[${ip}]:${validPortOrDefault(maybePort, fallbackPort)}`;
+                        }
+                    }
+
+                    return null;
+                }
+
+                function parseCidr(line) {
+                    const parts = line.split("/");
+                    if (parts.length !== 2) return null;
+                    const prefix = Number(parts[1]);
+                    if (!Number.isInteger(prefix)) return null;
+
+                    if (parts[0].includes(".")) {
+                        const value = ipv4ToBigInt(parts[0]);
+                        if (value === null || prefix < 0 || prefix > 32) return null;
+                        const hostBits = 32 - prefix;
+                        const network = value & prefixMask(32, prefix);
+                        return { family: "ipv4", bits: 32, prefix, hostBits, network, size: 1n << BigInt(hostBits) };
+                    }
+
+                    const value = ipv6ToBigInt(parts[0]);
+                    if (value === null || prefix < 0 || prefix > 128) return null;
+                    const hostBits = 128 - prefix;
+                    const network = value & prefixMask(128, prefix);
+                    return { family: "ipv6", bits: 128, prefix, hostBits, network, size: 1n << BigInt(hostBits) };
+                }
+
+                function randomAddressFromCidr(cidr, preferredPort) {
+                    const value = cidr.network + randomBigIntBelow(cidr.size);
+                    const port = choosePort(preferredPort);
+                    if (cidr.family === "ipv4") return `${bigIntToIpv4(value)}:${port}`;
+                    return `[${bigIntToIpv6(value)}]:${port}`;
+                }
+
+                function parseAddressWithPort(address) {
+                    const ipv4 = address.match(/^(\d{1,3}(?:\.\d{1,3}){3}):(\d{1,5})$/);
+                    if (ipv4 && isValidIpv4(ipv4[1])) {
+                        const port = Number(ipv4[2]);
+                        if (port >= 1 && port <= 65535) return { family: "ipv4", ip: ipv4[1], port };
+                    }
+
+                    const ipv6 = address.match(/^\[([0-9a-fA-F:.]+)]:(\d{1,5})$/);
+                    if (ipv6) {
+                        const ip = normalizeIpv6(ipv6[1]);
+                        const port = Number(ipv6[2]);
+                        if (ip && port >= 1 && port <= 65535) return { family: "ipv6", ip, port };
+                    }
+                    return null;
+                }
+
+                function buildProbeUrl(parsed, path, params = {}) {
+                    const label = parsed.family === "ipv4"
+                        ? ipv4ToHexLabel(parsed.ip)
+                        : parsed.ip.toLowerCase().replace(/:/g, "-");
+                    const search = new URLSearchParams({ _t: String(Date.now()), ...params });
+                    return `https://${label}.nip.cmliussss.hidns.vip:${parsed.port}/${path}?${search.toString()}`;
+                }
+
+                function ipv4ToHexLabel(ip) {
+                    return ip.split(".")
+                        .map((part) => Number(part).toString(16).padStart(2, "0"))
+                        .join("")
+                        .toUpperCase();
+                }
+
+                function isValidIpv4(ip) {
+                    const parts = ip.split(".");
+                    if (parts.length !== 4) return false;
+                    return parts.every((part) => {
+                        if (!/^\d{1,3}$/.test(part)) return false;
+                        const value = Number(part);
+                        return value >= 0 && value <= 255;
+                    });
+                }
+
+                function ipv4ToBigInt(ip) {
+                    if (!isValidIpv4(ip)) return null;
+                    return ip.split(".").reduce((acc, part) => (acc << 8n) + BigInt(Number(part)), 0n);
+                }
+
+                function bigIntToIpv4(value) {
+                    return [24n, 16n, 8n, 0n]
+                        .map((shift) => Number((value >> shift) & 255n))
+                        .join(".");
+                }
+
+                function normalizeIpv6(ip) {
+                    const value = ipv6ToBigInt(ip);
+                    return value === null ? null : bigIntToIpv6(value);
+                }
+
+                function expandIpv6Groups(ip) {
+                    const value = ipv6ToBigInt(ip);
+                    if (value === null) return null;
+                    const groups = [];
+                    for (let index = 7; index >= 0; index -= 1) {
+                        groups.push(Number((value >> BigInt(index * 16)) & 0xffffn).toString(16));
+                    }
+                    return groups;
+                }
+
+                function ipv6ToBigInt(ip) {
+                    if (!ip || /[^0-9a-fA-F:.]/.test(ip)) return null;
+                    if ((ip.match(/::/g) || []).length > 1) return null;
+
+                    const sides = ip.split("::");
+                    let left = sides[0] ? sides[0].split(":") : [];
+                    let right = sides.length === 2 && sides[1] ? sides[1].split(":") : [];
+                    if (sides.length === 1 && left.length !== 8) return null;
+                    if (sides.length === 2) {
+                        const fill = 8 - left.length - right.length;
+                        if (fill < 1) return null;
+                        left = [...left, ...Array(fill).fill("0"), ...right];
+                    }
+                    if (left.length !== 8) return null;
+
+                    let result = 0n;
+                    for (const group of left) {
+                        if (!/^[0-9a-fA-F]{1,4}$/.test(group)) return null;
+                        result = (result << 16n) + BigInt(parseInt(group, 16));
+                    }
+                    return result;
+                }
+
+                function bigIntToIpv6(value) {
+                    const groups = [];
+                    for (let index = 7; index >= 0; index -= 1) {
+                        groups.push(Number((value >> BigInt(index * 16)) & 0xffffn).toString(16));
+                    }
+
+                    let bestStart = -1;
+                    let bestLength = 0;
+                    for (let index = 0; index < groups.length;) {
+                        if (groups[index] !== "0") {
+                            index += 1;
+                            continue;
+                        }
+                        let end = index;
+                        while (end < groups.length && groups[end] === "0") end += 1;
+                        const length = end - index;
+                        if (length > bestLength && length > 1) {
+                            bestStart = index;
+                            bestLength = length;
+                        }
+                        index = end;
+                    }
+
+                    if (bestStart === -1) return groups.join(":");
+                    const before = groups.slice(0, bestStart).join(":");
+                    const after = groups.slice(bestStart + bestLength).join(":");
+                    if (!before && !after) return "::";
+                    if (!before) return `::${after}`;
+                    if (!after) return `${before}::`;
+                    return `${before}::${after}`;
+                }
+
+                function prefixMask(bits, prefix) {
+                    if (prefix === 0) return 0n;
+                    const all = (1n << BigInt(bits)) - 1n;
+                    const host = (1n << BigInt(bits - prefix)) - 1n;
+                    return all ^ host;
+                }
+
+                function randomBigIntBelow(max) {
+                    if (max <= 1n) return 0n;
+                    const bits = max.toString(2).length;
+                    const bytes = Math.ceil(bits / 8);
+                    const mask = (1n << BigInt(bits)) - 1n;
+                    const buffer = new Uint8Array(bytes);
+                    while (true) {
+                        crypto.getRandomValues(buffer);
+                        let value = 0n;
+                        for (const byte of buffer) value = (value << 8n) + BigInt(byte);
+                        value &= mask;
+                        if (value < max) return value;
+                    }
+                }
+
+                function choosePort(preferredPort) {
+                    if (preferredPort > 0) return preferredPort;
+                    return TLS_PORTS[Math.floor(Math.random() * TLS_PORTS.length)];
+                }
+
+                function validPortOrDefault(value, fallback) {
+                    if (!value) return fallback;
+                    const port = Number(value);
+                    return Number.isInteger(port) && port >= 1 && port <= 65535 ? port : fallback;
+                }
+
+                function readSettings() {
+                    [els.limitInput, els.timeoutInput, els.threadsInput, els.portInput].forEach((input) => clampNumberInput(input));
+                    return {
+                        limit: Number(els.limitInput.value),
+                        timeout: Number(els.timeoutInput.value),
+                        threads: Number(els.threadsInput.value),
+                        port: Number(els.portInput.value)
+                    };
+                }
+
+                function clampNumberInput(input) {
+                    const min = Number(input.min);
+                    const max = Number(input.max);
+                    const fallback = Number(input.defaultValue || min);
+                    let value = Number(input.value);
+                    if (!Number.isFinite(value)) value = fallback;
+                    value = Math.min(max, Math.max(min, Math.round(value)));
+                    input.value = String(value);
+                }
+
+                async function runPool(items, concurrency, worker, run) {
+                    let cursor = 0;
+                    const size = Math.min(Math.max(1, concurrency), items.length);
+                    const workers = Array.from({ length: size }, async () => {
+                        while (!run.stopped && cursor < items.length) {
+                            const index = cursor;
+                            cursor += 1;
+                            await worker(items[index], index);
+                        }
+                    });
+                    await Promise.all(workers);
+                }
+
+                async function fetchJson(url, timeout) {
+                    const response = await fetchWithTimeout(url, { method: "GET", timeout });
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    return response.json();
+                }
+
+                async function fetchText(url, timeout) {
+                    const mirrored = await fetchTextWithParentMirror(url);
+                    if (mirrored !== null) return mirrored;
+
+                    const response = await fetchWithTimeout(url, { method: "GET", timeout });
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    return response.text();
+                }
+
+                async function fetchTextWithParentMirror(url) {
+                    if (!String(url).startsWith("https://raw.githubusercontent.com")) return null;
+                    if (!window.parent || window.parent === window) return null;
+
+                    try {
+                        if (typeof window.parent.fetchWithAutoMirror !== "function") return null;
+                        return await window.parent.fetchWithAutoMirror(url, "BestCF IP库");
+                    } catch (error) {
+                        return null;
+                    }
+                }
+
+                function fetchWithTimeout(url, { method = "GET", timeout = 8000, run = null } = {}) {
+                    const controller = new AbortController();
+                    const timer = window.setTimeout(() => controller.abort(), timeout);
+                    if (run) {
+                        run.controllers.add(controller);
+                        if (run.stopped) controller.abort();
+                    }
+                    return fetch(url, {
+                        method,
+                        cache: "no-store",
+                        signal: controller.signal
+                    }).finally(() => {
+                        window.clearTimeout(timer);
+                        if (run) run.controllers.delete(controller);
+                    });
+                }
+
+                function setProgress(done, total) {
+                    const percent = total ? Math.min(100, Math.round((done / total) * 100)) : 0;
+                    els.latencyProgress.style.width = `${percent}%`;
+                    els.progressText.textContent = `${done} / ${total}`;
+                }
+
+                function escapeHtml(value) {
+                    return String(value)
+                        .replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;")
+                        .replace(/"/g, "&quot;")
+                        .replace(/'/g, "&#039;");
+                }
+
+                function friendlyError(error) {
+                    if (!error) return "操作失败";
+                    if (error.name === "AbortError") return "请求超时或已停止";
+                    return error.message || "操作失败";
+                }
+            </script>
+        </body>
+
+        </html>
+
+    </template>
 
     <!-- API优选模态框 -->
     <div class="modal-overlay" id="apiOptimizeModal">
@@ -9220,8 +11681,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             <option value="sstp">sstp</option>
                         </select>
                         <span class="proxy-protocol-separator">://</span>
-                        <input type="text" id="chainProxyAddress" title="链式代理地址"
-                            placeholder="user:pass@127.0.0.1:1080"
+                        <input type="text" id="chainProxyAddress" title="链式代理地址" placeholder="user:pass@127.0.0.1:1080"
                             oninput="sanitizeChainProxyAddressInput(); updateChainProxyVerifyState()"
                             onchange="sanitizeChainProxyAddressInput(); updateChainProxyVerifyState()">
                     </div>
@@ -9317,8 +11777,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         <div class="modal proxyip-help-modal" onclick="event.stopPropagation()">
             <button type="button" class="modal-close" onclick="closeProxyIPHelpModal()">×</button>
 
-            <!-- 简易模式 -->
-            <div id="proxyIPHelpSimple" style="display: none;">
+            <!-- 小白说明 -->
+            <div id="proxyIPHelpSimple" style="display: block;">
                 <div class="api-docs">
                     <h2 class="section-title">🤔 为什么需要反代模式？PROXYIP又是什么？</h2>
 
@@ -9327,7 +11787,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             <div class="proxyip-route-head">
                                 <div>
                                     <div class="proxyip-route-title">场景一：访问非 Cloudflare CDN 站点</div>
-                                    <div class="proxyip-route-desc">例如油管、谷歌。Worker 可以直接访问，不需要先找 PROXYIP。</div>
+                                    <div class="proxyip-route-desc">例如：油管、谷歌。Worker 可以直接访问，不需要先找 PROXYIP。</div>
                                 </div>
                                 <div class="proxyip-route-badge">实际落地IP 由 优选域名/IP 决定</div>
                             </div>
@@ -9335,14 +11795,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             <div class="proxyip-route-flow">
                                 <div class="proxyip-route-node entry">
                                     <div class="proxyip-logo-row" aria-hidden="true">
-                                        <svg class="proxyip-logo proxyip-logo-ip" viewBox="0 0 48 48"
-                                            focusable="false">
+                                        <svg class="proxyip-logo proxyip-logo-ip" viewBox="0 0 48 48" focusable="false">
                                             <rect x="5" y="8" width="38" height="32" rx="8" fill="#2563eb" />
                                             <path d="M14 18h20M14 30h20M24 14c-3 4-3 16 0 20M24 14c3 4 3 16 0 20"
-                                                fill="none" stroke="#bfdbfe" stroke-width="2"
-                                                stroke-linecap="round" />
-                                            <circle cx="24" cy="24" r="12" fill="none" stroke="#fff"
-                                                stroke-width="2" />
+                                                fill="none" stroke="#bfdbfe" stroke-width="2" stroke-linecap="round" />
+                                            <circle cx="24" cy="24" r="12" fill="none" stroke="#fff" stroke-width="2" />
                                         </svg>
                                     </div>
                                     <div class="proxyip-route-node-title">优选域名/IP</div>
@@ -9395,7 +11852,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             <div class="proxyip-route-head">
                                 <div>
                                     <div class="proxyip-route-title">场景二：访问 Cloudflare CDN 站点</div>
-                                    <div class="proxyip-route-desc">例如推特、ChatGPT。Worker 不能直接访问 Cloudflare 自己，所以需要跳板。</div>
+                                    <div class="proxyip-route-desc">
+                                        例如：推特、ChatGPT。根据 <a
+                                            href="https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/"
+                                            target="_blank" rel="noopener" class="proxyip-doc-link">TCP Sockets
+                                            官方文档</a>，Worker 不能直接访问 Cloudflare 自己，所以需要跳板。
+                                    </div>
                                 </div>
                                 <div class="proxyip-route-badge">实际落地IP 由 PROXYIP/代理 决定</div>
                             </div>
@@ -9403,14 +11865,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             <div class="proxyip-route-flow four-step">
                                 <div class="proxyip-route-node entry">
                                     <div class="proxyip-logo-row" aria-hidden="true">
-                                        <svg class="proxyip-logo proxyip-logo-ip" viewBox="0 0 48 48"
-                                            focusable="false">
+                                        <svg class="proxyip-logo proxyip-logo-ip" viewBox="0 0 48 48" focusable="false">
                                             <rect x="5" y="8" width="38" height="32" rx="8" fill="#2563eb" />
                                             <path d="M14 18h20M14 30h20M24 14c-3 4-3 16 0 20M24 14c3 4 3 16 0 20"
-                                                fill="none" stroke="#bfdbfe" stroke-width="2"
-                                                stroke-linecap="round" />
-                                            <circle cx="24" cy="24" r="12" fill="none" stroke="#fff"
-                                                stroke-width="2" />
+                                                fill="none" stroke="#bfdbfe" stroke-width="2" stroke-linecap="round" />
+                                            <circle cx="24" cy="24" r="12" fill="none" stroke="#fff" stroke-width="2" />
                                         </svg>
                                     </div>
                                     <div class="proxyip-route-node-title">优选域名/IP</div>
@@ -9455,8 +11914,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                         </svg>
                                         <svg class="proxyip-logo" viewBox="0 0 48 48" focusable="false">
                                             <circle cx="24" cy="24" r="21" fill="#10a37f" />
-                                            <g fill="none" stroke="#fff" stroke-width="2.6"
-                                                stroke-linecap="round" stroke-linejoin="round">
+                                            <g fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"
+                                                stroke-linejoin="round">
                                                 <path d="M24 11.5 34.8 17.7v12.6L24 36.5l-10.8-6.2V17.7L24 11.5Z" />
                                                 <path d="M24 11.5v9.2l7.9 4.6" />
                                                 <path d="m34.8 17.7-7.9 4.6v9.2" />
@@ -9482,87 +11941,6 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- 详细模式 -->
-            <div id="proxyIPHelpDetail" style="display: block;">
-                <div class="api-docs">
-                    <h2 class="section-title">🤔 为什么需要反代模式？PROXYIP又是什么？</h2>
-                    <h3 style="color: var(--text-primary); margin: 24px 0 16px;">❓ 为什么需要反代模式？</h3>
-                    <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-                        根据 Cloudflare Workers 的 <a
-                            href="https://developers.cloudflare.com/workers/runtime-apis/tcp-sockets/" target="_blank"
-                            rel="noopener" style="color: var(--primary-color); text-decoration: none;">TCP Sockets
-                            官方文档</a> 说明，存在以下技术限制：
-                    </p>
-                    <div class="code-block">
-                        ⚠️ Outbound TCP sockets to <a href="https://www.cloudflare.com/ips/" target="_blank"
-                            rel="noopener" style="color: inherit; text-decoration: underline;">Cloudflare IP ranges
-                            ↗</a> are temporarily blocked, but will be re-enabled shortly.
-                    </div>
-
-                    <p style="margin: 16px 0; line-height: 1.8; color: var(--text-secondary);">
-                        这意味着 Cloudflare Workers 无法直接连接到 Cloudflare 自有的 IP 地址段。为了解决这个限制，需要借助第三方云服务商的服务器作为「跳板」：
-                    </p>
-
-                    <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-                        而我们的 <b>edgetunnel</b> 是部署在 Cloudflare Workers 上的代理服务。根据 Cloudflare Workers 的限制政策，Workers
-                        节点无法直接连接到
-                        Cloudflare 自有的 IP 地址段。这意味着：
-                    </p>
-                    <ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
-                        <li style="margin-bottom: 8px; color: var(--text-secondary);">✅ 可以正常访问非 Cloudflare CDN 的站点</li>
-                        <li style="color: var(--text-secondary);">❌ 无法直接访问由 Cloudflare CDN 托管的网站</li>
-                    </ul>
-                    <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-                        因此需要反代模式来解决这个问题。反代模式通过第三方服务器作为「中介」，帮助 Workers 绕过这一限制。
-                    </p>
-
-                    <div
-                        style="background: var(--bg-secondary); padding: 20px; border-radius: var(--border-radius-sm); margin: 20px 0;">
-                        <div
-                            style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 16px;">
-                            <div
-                                style="background: #e3f2fd; padding: 12px; border-radius: 8px; text-align: center; flex: 1; min-width: 120px;">
-                                <div style="font-weight: 600; color: #1976d2;">Cloudflare Workers</div>
-                                <div style="font-size: 0.9rem; color: var(--text-secondary);">发起请求</div>
-                            </div>
-                            <div style="color: var(--primary-color); font-size: 1.5rem;">→</div>
-                            <div
-                                style="background: #f3e5f5; padding: 12px; border-radius: 8px; text-align: center; flex: 1; min-width: 120px;">
-                                <div style="font-weight: 600; color: #7b1fa2;">PROXYIP/其他代理 服务器</div>
-                                <div style="font-size: 0.9rem; color: var(--text-secondary);">第三方代理</div>
-                            </div>
-                            <div style="color: var(--primary-color); font-size: 1.5rem;">→</div>
-                            <div
-                                style="background: #e8f5e8; padding: 12px; border-radius: 8px; text-align: center; flex: 1; min-width: 120px;">
-                                <div style="font-weight: 600; color: #388e3c;">Cloudflare 服务</div>
-                                <div style="font-size: 0.9rem; color: var(--text-secondary);">目标服务</div>
-                            </div>
-                        </div>
-                        <p style="text-align: center; color: var(--text-secondary); font-size: 0.95rem; margin: 0;">
-                            通过第三方服务器反向代理 Cloudflare 的 443 端口，实现 Workers 对 Cloudflare 服务的访问
-                        </p>
-                    </div>
-
-                    <h3 style="color: var(--text-primary); margin: 24px 0 16px;">💡 实际应用效果</h3>
-                    <p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-                        因此，你访问网络时的 IP 归属地取决于访问的目标网站类型：
-                    </p>
-                    <ul style="margin: 12px 0; padding-left: 20px; line-height: 1.8;">
-                        <li style="margin-bottom: 12px; color: var(--text-secondary);">👤 访问<strong>非 Cloudflare CDN
-                                站点</strong>时（如<b>油管、谷歌</b>等），你的 IP 归属地由「优选 IP」决定</li>
-                        <li style="color: var(--text-secondary);">🌐 访问<strong>由 Cloudflare CDN
-                                托管的网站</strong>时（如<b>推特、ChatGPT</b>等），你的 IP
-                            归属地由「ProxyIP/其他代理」决定</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- 切换按钮 -->
-            <div class="toggle-switch">
-                <input type="checkbox" id="proxyIPSimpleMode" onchange="toggleProxyIPHelpMode()">
-                <label for="proxyIPSimpleMode">我是小白，我看不懂</label>
             </div>
 
             <button type="button" class="btn btn-primary btn-close-modal" onclick="closeProxyIPHelpModal()"
@@ -10277,6 +12655,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
         const HTTPS_PROXY_MIN_VERSION = 20260413174651;
         const TURN_SSTP_PROXY_MIN_VERSION = 20260504172138;
         const CHAIN_PROXY_MIN_VERSION = 20260506175102;
+        const SKIP_VERIFY_WARNING_BYPASS_MIN_VERSION = 20260601154939;
         let cachedWorkerVersionRawText = '';
         let cachedLatestOnlineVersion = 0;
         let cachedCurrentVersionNumber = 0;
@@ -13081,6 +15460,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
         // 网络信息模块的折叠/展开函数
         function toggleNetworkModule(titleEl) {
+            const module = titleEl.parentElement;
             const content = document.getElementById('network-module-content');
             const icon = titleEl.querySelector('.collapse-icon');
 
@@ -13088,6 +15468,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             if (isHidden) {
                 // Expand - show latency tests and start testing
+                module.classList.remove('network-detail-collapsed');
                 animateSectionHeight(content, true);
 
                 if (icon) {
@@ -13098,6 +15479,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 startLatencyTest();
             } else {
                 // Collapse - hide latency tests
+                module.classList.add('network-detail-collapsed');
                 stopLatencyTest();
                 animateSectionHeight(content, false);
 
@@ -13255,6 +15637,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
         function handleSkipVerifyChange(event) {
             if (event.target.checked) {
+                if (cachedCurrentVersionNumber >= SKIP_VERIFY_WARNING_BYPASS_MIN_VERSION) {
+                    markModified('config');
+                    return;
+                }
+
                 // 显示警告弹窗
                 event.target.checked = false; // 先取消勾选
                 document.getElementById('skipVerifyWarningModal').classList.add('show');
@@ -16041,6 +18428,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
         // ProxyIP 帮助模态框函数
         function showProxyIPHelpModal() {
+            const simpleDiv = document.getElementById('proxyIPHelpSimple');
+            if (simpleDiv) simpleDiv.style.display = 'block';
             document.getElementById('proxyIPHelpModal').classList.add('show');
         }
 
@@ -16241,22 +18630,6 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             } catch (error) {
                 console.error('保存路径模板失败:', error);
                 showToast('保存路径模板失败: ' + error.message, 'error');
-            }
-        }
-
-        function toggleProxyIPHelpMode() {
-            const checkbox = document.getElementById('proxyIPSimpleMode');
-            const simpleDiv = document.getElementById('proxyIPHelpSimple');
-            const detailDiv = document.getElementById('proxyIPHelpDetail');
-
-            if (checkbox.checked) {
-                // 显示简易模式
-                simpleDiv.style.display = 'block';
-                detailDiv.style.display = 'none';
-            } else {
-                // 显示详细模式
-                simpleDiv.style.display = 'none';
-                detailDiv.style.display = 'block';
             }
         }
 
@@ -17322,90 +19695,85 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
         // ==================== 在线优选相关函数 ====================
 
-        // IP打码函数 - 将IP中间段打码
-        function expandIPv6(ip) {
-            // 移除可能的[]包围
-            ip = ip.replace(/^\[|\]$/g, '');
-            // 如果没有::，直接split
-            if (!ip.includes('::')) {
-                return ip.split(':').map(part => part.padStart(4, '0')).join(':');
-            }
-            // 处理::
-            const parts = ip.split('::');
-            const left = parts[0] ? parts[0].split(':') : [];
-            const right = parts[1] ? parts[1].split(':') : [];
-            const missing = 8 - left.length - right.length;
-            const middle = new Array(missing).fill('0000');
-            const full = left.concat(middle).concat(right);
-            return full.map(part => part.padStart(4, '0')).join(':');
-        }
+        // 打开在线优选全屏模块
+        function openOnlineOptimizeModal() {
+            const modal = document.getElementById('onlineOptimizeModal');
+            const frame = document.getElementById('onlineOptimizeFrame');
+            if (!modal || !frame) return;
 
-        function maskIP(ip) {
-            if (!ip) return ip;
-            // 检查是否为IPv4
-            if (ip.includes('.') && !ip.includes(':')) {
-                // IPv4: 例如 192.168.1.1 -> 192.*.*.1
-                const parts = ip.split('.');
-                if (parts.length === 4) {
-                    return `${parts[0]}.*.*.${parts[3]}`;
+            if (!frame.dataset.loaded) {
+                const template = document.getElementById('onlineOptimizeTemplate');
+                if (!template) {
+                    showToast('在线优选模块加载失败', 'error');
+                    return;
                 }
-            } else if (ip.includes(':')) {
-                // IPv6: 扩展并打码中间部分
-                const expanded = expandIPv6(ip);
-                const parts = expanded.split(':');
-                if (parts.length === 8) {
-                    return `${parts[0]}:****:****:****:****:****:${parts[6]}:${parts[7]}`;
-                }
+                frame.srcdoc = template.innerHTML.trim();
+                frame.dataset.loaded = 'true';
             }
-            return ip;
-        }
 
-        // 切换IP显示模式
-        function toggleIPDisplay() {
-            ipDisplayMode = ipDisplayMode === 'masked' ? 'full' : 'masked';
-            updateIPDisplay();
-        }
-
-        // 更新IP显示
-        function updateIPDisplay() {
-            const displayIP = ipDisplayMode === 'masked' ? maskIP(currentDetectedIP) : currentDetectedIP;
-            const ipElement = document.getElementById('ipDisplayElement');
-            if (ipElement) {
-                ipElement.textContent = displayIP;
+            if (!document.body.dataset.onlineOptimizePreviousOverflow) {
+                document.body.dataset.onlineOptimizePreviousOverflow = document.body.style.overflow || 'auto';
             }
+            document.body.style.overflow = 'hidden';
+            modal.classList.add('show');
         }
 
-        let optimizeResults = {}; // 存储优选结果
-        let currentSelectedCountry = ''; // 当前选中的国家
-        let locationsData = []; // 存储位置数据
-        let currentIPLibrary = ''; // 当前使用的IP库类型
-        let currentDetectedIP = ''; // 当前检测到的IP
-        let ipDisplayMode = 'masked'; // IP显示模式: 'masked' 或 'full'
-
-        // 打开在线优选模态框
-        async function openOnlineOptimizeModal() {
-            document.getElementById('onlineOptimizeModal').classList.add('show');
-
-            // 重置状态
-            optimizeResults = {};
-            currentSelectedCountry = '';
-            document.getElementById('optimizeProgressBar').classList.add('hidden-section');
-            document.getElementById('optimizeResultsTabs').classList.add('hidden-section');
-            document.getElementById('optimizeResultsContent').classList.add('hidden-section');
-            document.getElementById('btnSaveOverride').disabled = true;
-            document.getElementById('btnSaveAppend').disabled = true;
-            document.getElementById('btnStartOptimize').disabled = true;
-            document.getElementById('btnStartOptimize').textContent = '检测中...';
-
-            // 检测IP和环境
-            await detectIPAndEnvironment();
-        }
-
-        // 关闭在线优选模态框
+        // 关闭在线优选全屏模块
         function closeOnlineOptimizeModal(event) {
             if (event && event.target !== event.currentTarget) return;
-            document.getElementById('onlineOptimizeModal').classList.remove('show');
+            const modal = document.getElementById('onlineOptimizeModal');
+            if (modal) modal.classList.remove('show');
+
+            if (document.body.dataset.onlineOptimizePreviousOverflow !== undefined) {
+                const previousOverflow = document.body.dataset.onlineOptimizePreviousOverflow;
+                document.body.style.overflow = previousOverflow === 'auto' ? '' : previousOverflow;
+                delete document.body.dataset.onlineOptimizePreviousOverflow;
+            }
         }
+
+        function appendOnlineOptimizeSelections(lines) {
+            if (!Array.isArray(lines) || lines.length === 0) {
+                showToast('请先勾选需要保存的优选结果', 'warning');
+                return false;
+            }
+
+            const textarea = document.getElementById('customIPs');
+            if (!textarea) {
+                showToast('未找到自定义优选地址输入框', 'error');
+                return false;
+            }
+
+            const newLines = lines
+                .map(line => String(line || '').trim())
+                .filter(Boolean);
+
+            if (!newLines.length) {
+                showToast('没有可保存的优选结果', 'warning');
+                return false;
+            }
+
+            const currentValue = textarea.value.trim();
+            textarea.value = currentValue ? `${currentValue}\n${newLines.join('\n')}` : newLines.join('\n');
+            refreshLineEditor(textarea);
+            markModified('sub');
+            showToast(`✅ 已追加 ${newLines.length} 条优选结果到自定义优选地址`, 'success');
+            closeOnlineOptimizeModal();
+            return true;
+        }
+
+        window.addEventListener('message', (event) => {
+            const frame = document.getElementById('onlineOptimizeFrame');
+            if (!frame || event.source !== frame.contentWindow) return;
+
+            const data = event.data || {};
+            if (data.type === 'bestcf-save-results') {
+                appendOnlineOptimizeSelections(data.lines);
+            } else if (data.type === 'bestcf-close') {
+                closeOnlineOptimizeModal();
+            } else if (data.type === 'bestcf-force-reload') {
+                window.location.reload();
+            }
+        });
 
         // ==================== API优选相关函数 ====================
 
@@ -17720,212 +20088,6 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             closeAPIOptimizeModal();
         }
 
-        // 检测IP和网络环境
-        async function detectIPAndEnvironment() {
-            console.log('[在线优选] 开始: 检测网络环境');
-            const detectionBox = document.getElementById('ipDetectionBox');
-            const btnStart = document.getElementById('btnStartOptimize');
-            detectionBox.innerHTML = '<div class="ip-detection-info">正在检测您的网络环境...</div>';
-
-            try {
-                // 首先尝试本地路径
-                let response, text;
-                try {
-                    console.log('[在线优选] 进度: 尝试使用当前域名本地路径进行检测');
-                    response = await fetch(`/cdn-cgi/trace?_t=${Date.now()}`, {
-                        signal: AbortSignal.timeout(5000), // 5秒超时
-                        cache: 'no-store' // 禁用所有缓存
-                    });
-                    text = await response.text();
-                    console.log('[在线优选] 成功: 本地路径检测通过（使用本地域名）');
-                    // 保存使用的检测域名供locations使用
-                    window.detectDomain = window.location.origin;
-                } catch (primaryError) {
-                    console.warn('[在线优选] 本地路径检测失败，尝试使用主链接 speed.cloudflare.com...', primaryError);
-                    response = await fetch(`https://speed.cloudflare.com/cdn-cgi/trace?_t=${Date.now()}`, {
-                        signal: AbortSignal.timeout(5000), // 5秒超时
-                        cache: 'no-store' // 禁用所有缓存
-                    });
-                    text = await response.text();
-                    console.log('[在线优选] 成功: 主链接检测通过');
-                    // 保存使用的检测域名供locations使用
-                    window.detectDomain = 'https://speed.cloudflare.com';
-                }
-                //console.log('[在线优选] 调试: 检测响应:\n' + text);
-
-                // 解析响应
-                const lines = text.trim().split('\n');
-                const data = {};
-                lines.forEach(line => {
-                    const [key, value] = line.split('=');
-                    if (key && value) data[key.trim()] = value.trim();
-                });
-
-                const ip = data.ip || '未知';
-                const loc = data.loc || '未知';
-                currentDetectedIP = ip; // 保存完整IP
-                ipDisplayMode = 'masked'; // 默认显示打码IP
-                console.log(`[在线优选] 结果: IP=${ip}, 国家=${loc}`);
-
-                // 显示打码的IP，并添加点击事件
-                const displayIP = maskIP(ip);
-                let html = `<div class="ip-detection-info">当前访问IP: <strong id="ipDisplayElement" style="cursor: pointer; transition: all 0.2s ease;" title="点击切换显示模式">${displayIP}</strong> | 访问国家: <strong>${loc}</strong></div>`;
-
-                if (loc !== 'CN') {
-                    console.warn('[在线优选] 警告: 检测到非CN地区访问，可能处于代理/VPN环境');
-                    html += `<div class="ip-detection-warning" style="font-size: 16px; font-weight: 700; color: #dc2626; margin-top: 12px; line-height: 1.6;">⚠️ 检测到您当前很可能处于代理/VPN环境中！请确保处于直连网络环境下再进行在线优选，否则优选测试结果将因为不准确变得毫无意义！</div>`;
-                    // 非CN地区，禁用开始优选按钮
-                    btnStart.disabled = true;
-                    btnStart.textContent = '仅限CN地区';
-                } else {
-                    // CN地区，启用开始优选按钮
-                    btnStart.disabled = false;
-                    btnStart.textContent = '开始优选';
-                    console.log('[在线优选] 成功: 检测为 CN 地区，已启用优选按钮');
-                }
-
-                detectionBox.innerHTML = html;
-
-                // 为IP元素添加点击事件
-                const ipElement = document.getElementById('ipDisplayElement');
-                if (ipElement) {
-                    ipElement.addEventListener('click', toggleIPDisplay);
-                }
-            } catch (error) {
-                console.error('[在线优选] 检测失败:', error);
-                detectionBox.innerHTML = '<div class="ip-detection-info">⚠️ 无法访问 https://speed.cloudflare.com/cdn-cgi/trace 检测网络环境，请检查网络连接或关闭代理</div>';
-                // 检测失败，禁用按钮
-                btnStart.disabled = true;
-                btnStart.textContent = '检测失败';
-            }
-        }
-
-        // 验证测试线程数输入
-        function validateConcurrency(input) {
-            let value = parseInt(input.value);
-            if (isNaN(value) || value < 1) {
-                input.value = 1;
-            } else if (value > 32) {
-                input.value = 32;
-            }
-        }
-
-        // 开始优选
-        async function startOptimize() {
-            console.log('[在线优选] 开始: 优选流程');
-            const btnStart = document.getElementById('btnStartOptimize');
-            btnStart.disabled = true;
-            btnStart.textContent = '优选中...';
-
-            const progressBar = document.getElementById('optimizeProgressBar');
-            const progressFill = document.getElementById('optimizeProgressFill');
-            const progressText = document.getElementById('optimizeProgressText');
-            progressBar.classList.remove('hidden-section');
-            progressFill.style.width = '0%';
-            progressText.textContent = '0/512 (0.00%)';
-
-            document.getElementById('optimizeResultsTabs').classList.add('hidden-section');
-            document.getElementById('optimizeResultsContent').classList.add('hidden-section');
-
-            try {
-                // 加载locations数据
-                console.log('[在线优选] 步骤1: 加载位置数据');
-                await loadLocationsData();
-
-                // 获取用户选择
-                const ipLibrary = document.getElementById('optimizeIPLibrary').value;
-                const port = document.getElementById('optimizePort').value;
-                let concurrency = parseInt(document.getElementById('optimizeConcurrency').value) || 8;
-
-                // 验证并发线程数
-                if (isNaN(concurrency) || concurrency < 1 || concurrency > 32) {
-                    concurrency = 8;
-                    document.getElementById('optimizeConcurrency').value = '8';
-                }
-
-                console.log(`[在线优选] 步骤2: 用户选择 - IP库=${ipLibrary}, 端口=${port}, 并发线程=${concurrency}`);
-                currentIPLibrary = ipLibrary; // 保存当前IP库类型
-
-                // 获取IP列表
-                console.log('[在线优选] 步骤3: 获取 IP 列表');
-                const ips = await getIPList(ipLibrary, port);
-
-                if (ips.length === 0) {
-                    console.error('[在线优选] 错误: 未能获取到IP列表');
-                    showToast('未能获取到IP列表', 'error');
-                    return;
-                }
-
-                console.log(`[在线优选] 成功: 已获取 ${ips.length} 个 IP`);
-
-                // 测速（多线程并发）
-                console.log('[在线优选] 步骤4: 开始 IP 测速（多线程并发）');
-                const results = await testIPsConcurrent(ips, progressFill, progressText, concurrency);
-                console.log(`[在线优选] 完成: 测速完成，有效 IP 数量=${results.length}`);
-
-                // 分类结果
-                console.log('[在线优选] 步骤5: 开始分类结果');
-                classifyResults(results);
-
-                // 显示结果
-                console.log('[在线优选] 步骤6: 显示结果');
-                displayResults();
-
-                console.log('[在线优选] 完成: 优选流程已完成');
-                showToast('优选完成！', 'success');
-
-            } catch (error) {
-                console.error('[在线优选] 优选过程出错:', error);
-                showToast('优选过程出错: ' + error.message, 'error');
-            } finally {
-                btnStart.disabled = false;
-                btnStart.textContent = '开始优选';
-            }
-        }
-
-        // 加载locations数据
-        async function loadLocationsData() {
-            const backupUrl = 'https://zip.cm.edu.kg/locations.json';
-
-            try {
-                // 使用当前域名加载位置数据，避免跨域问题
-                const url = `${window.detectDomain}/locations`;
-                console.log(`[在线优选] 进度: 加载位置数据 URL=${url}`);
-
-                const response = await fetch(url, { headers: { 'Referer': window.detectDomain + '/' } });
-                const data = await response.json();
-
-                // 检查返回的数据是否为空对象或空数组
-                if (!data || (Array.isArray(data) && data.length === 0) || (typeof data === 'object' && !Array.isArray(data) && Object.keys(data).length === 0)) {
-                    console.warn('[在线优选] 主接口返回空数据，尝试备份接口...');
-                    throw new Error('主接口返回空数据');
-                }
-
-                locationsData = data;
-                console.log(`[在线优选] 成功: 已加载 ${locationsData.length} 个位置数据`);
-            } catch (error) {
-                console.error('[在线优选] 加载locations数据失败:', error);
-
-                // 尝试从备份接口获取
-                try {
-                    console.log(`[在线优选] 进度: 尝试从备份接口加载 URL=${backupUrl}`);
-                    const backupResponse = await fetch(backupUrl, { headers: { 'Referer': 'https://zip.cm.edu.kg/' } });
-                    const backupData = await backupResponse.json();
-
-                    if (backupData && Array.isArray(backupData) && backupData.length > 0) {
-                        locationsData = backupData;
-                        console.log(`[在线优选] 成功: 从备份接口加载到 ${locationsData.length} 个位置数据`);
-                    } else {
-                        console.error('[在线优选] 备份接口也返回空数据');
-                        locationsData = [];
-                    }
-                } catch (backupError) {
-                    console.error('[在线优选] 备份接口加载失败:', backupError);
-                    locationsData = [];
-                }
-            }
-        }
-
         // 智能镜像拉取函数 - 原始地址与镜像并发抢占，谁先成功就用谁
         async function fetchWithAutoMirror(originalUrl, description = '资源') {
             const rawGithubPrefix = 'https://raw.githubusercontent.com';
@@ -17989,539 +20151,6 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         : `${description}拉取失败，原始链接不可用`
                 );
             }
-        }
-
-        // 获取IP列表
-        async function getIPList(ipLibrary, port) {
-            // 定义各个IP库的原始URLs（仅使用官方地址）
-            const urlMap = {
-                'cf-official': 'https://cf.090227.xyz/ips-v4',
-                'cm-list': 'https://raw.githubusercontent.com/cmliu/cmliu/main/CF-CIDR.txt',
-                'as13335': 'https://raw.githubusercontent.com/ipverse/asn-ip/master/as/13335/ipv4-aggregated.txt',
-                'as209242': 'https://raw.githubusercontent.com/ipverse/asn-ip/master/as/209242/ipv4-aggregated.txt',
-                'reverse-proxy': 'https://zip.cm.edu.kg/all.txt'
-            };
-
-            try {
-                const url = urlMap[ipLibrary];
-                if (!url) throw new Error(`未知的IP库类型: ${ipLibrary}`);
-
-                console.log(`[在线优选] 进度: 获取 ${ipLibrary} 的 IP 列表`);
-                const text = await fetchWithAutoMirror(url, `${ipLibrary}数据`);
-
-                if (ipLibrary === 'reverse-proxy') {
-                    // 处理反向代理列表
-                    console.log('[在线优选] 进度: 处理反向代理列表');
-                    return processReverseProxyList(text, port);
-                } else {
-                    // 处理CIDR列表
-                    console.log('[在线优选] 进度: 处理 CIDR 列表');
-                    return processCIDRList(text, port);
-                }
-            } catch (error) {
-                console.error('[在线优选] 获取IP列表失败:', error);
-                throw new Error('获取IP列表失败: ' + error.message);
-            }
-        }
-
-        // 处理反向代理列表
-        function processReverseProxyList(text, targetPort) {
-            const lines = text.trim().split('\n');
-            const filteredIPs = [];
-
-            console.log(`[在线优选] 调试: 反向代理列表原始行数=${lines.length}`);
-
-            for (const line of lines) {
-                const trimmed = line.trim();
-                if (!trimmed || trimmed.startsWith('#')) continue;
-
-                // 格式: IP:PORT#备注
-                const match = trimmed.match(/^([^:]+):(\d+)#(.+)$/);
-                if (match) {
-                    const [, ip, linePort, remark] = match;
-                    if (linePort === targetPort) {
-                        filteredIPs.push(`${ip}:${linePort}#${remark}`);
-                    }
-                }
-            }
-
-            console.log(`[在线优选] 结果: 匹配端口=${targetPort} 的 IP 数量=${filteredIPs.length}`);
-
-            // 如果超过512个，随机选择512个
-            if (filteredIPs.length > 512) {
-                console.log('[在线优选] 提示: IP 数量超过 512，将随机选择 512 个');
-                return shuffleArray(filteredIPs).slice(0, 512);
-            }
-
-            return filteredIPs;
-        }
-
-        // 处理CIDR列表
-        function processCIDRList(text, port) {
-            const lines = text.trim().split('\n');
-            const cidrs = lines.filter(line => line.trim() && !line.startsWith('#'));
-
-            console.log(`[在线优选] 调试: CIDR 列表数量=${cidrs.length}`);
-
-            const ips = [];
-            const targetCount = 512;
-
-            while (ips.length < targetCount && cidrs.length > 0) {
-                for (const cidr of cidrs) {
-                    if (ips.length >= targetCount) break;
-
-                    const ip = generateRandomIPFromCIDR(cidr);
-                    const ipWithPort = `${ip}:${port}`;
-
-                    // 检查是否重复
-                    if (!ips.includes(ipWithPort)) {
-                        ips.push(ipWithPort);
-                    }
-                }
-            }
-
-            console.log(`[在线优选] 成功: 已生成 ${ips.length} 个随机 IP`);
-            return ips;
-        }
-
-        // 从CIDR生成随机IP
-        function generateRandomIPFromCIDR(cidr) {
-            const [network, bits] = cidr.split('/');
-            const maskBits = parseInt(bits);
-            const networkParts = network.split('.').map(Number);
-
-            // 计算网络地址
-            const networkInt = (networkParts[0] << 24) | (networkParts[1] << 16) |
-                (networkParts[2] << 8) | networkParts[3];
-
-            // 计算主机位数量
-            const hostBits = 32 - maskBits;
-            const hostCount = Math.pow(2, hostBits);
-
-            // 随机选择一个主机地址
-            const randomHost = Math.floor(Math.random() * hostCount);
-            const ipInt = networkInt + randomHost;
-
-            // 转换回IP地址
-            const ip1 = (ipInt >>> 24) & 255;
-            const ip2 = (ipInt >>> 16) & 255;
-            const ip3 = (ipInt >>> 8) & 255;
-            const ip4 = ipInt & 255;
-
-            return `${ip1}.${ip2}.${ip3}.${ip4}`;
-        }
-
-        // 测试IP列表（4线程并发版本）
-        async function testIPsConcurrent(ips, progressFill, progressText, concurrency = 8) {
-            const results = [];
-            const total = ips.length;
-            let completedCount = 0;
-            let successCount = 0;
-            let failCount = 0;
-
-            console.log(`[在线优选] 开始: 并发测试 总计=${total} 个 IP（线程=${concurrency}）`);
-
-            // 更新进度的函数
-            const updateProgress = () => {
-                const progress = (completedCount / total * 100).toFixed(2);
-                // 计算红色和绿色部分的比例（相对于已完成的IP）
-                let failPercent = 0;
-                if (completedCount > 0) {
-                    failPercent = (failCount / completedCount * 100).toFixed(2);
-                }
-
-                // 设置进度条的渐变背景，红色表示失败，绿色表示成功
-                progressFill.style.background = `linear-gradient(90deg, #ef4444 0%, #ef4444 ${failPercent}%, #10b981 ${failPercent}%, #10b981 100%)`;
-                progressFill.style.width = progress + '%';
-                progressText.textContent = `${completedCount}/${total} (${progress}%) - 成功: ${successCount}, 失败: ${failCount}`;
-
-                // 每完成64个IP输出一次统计
-                if (completedCount % 64 === 0 || completedCount === total) {
-                    console.log(`[在线优选] 进度: 已完成 ${completedCount}/${total}，成功=${successCount}，失败=${failCount}`);
-                }
-            };
-
-            // 测试单个IP的包装函数
-            const testIPWrapper = async (ipWithPort) => {
-                const result = await testSingleIP(ipWithPort);
-                completedCount++;
-
-                if (result) {
-                    results.push(result);
-                    successCount++;
-                } else {
-                    failCount++;
-                }
-
-                updateProgress();
-                return result;
-            };
-
-            // 并发控制：将IP列表分成多个批次
-            const batches = [];
-            for (let i = 0; i < ips.length; i += concurrency) {
-                batches.push(ips.slice(i, i + concurrency));
-            }
-
-            // 逐批次并发执行
-            for (const batch of batches) {
-                await Promise.all(batch.map(ip => testIPWrapper(ip)));
-            }
-
-            console.log(`[在线优选] 完成: 测试完成，总计=${total}，成功=${successCount}，失败=${failCount}`);
-            return results;
-        }
-
-        // 测试IP列表（旧版单线程，保留作为备用）
-        async function testIPs(ips, progressFill) {
-            const results = [];
-            const total = ips.length;
-            let successCount = 0;
-            let failCount = 0;
-
-            console.log(`[在线优选] 开始: 开始测试 ${total} 个 IP`);
-
-            for (let i = 0; i < total; i++) {
-                const ipWithPort = ips[i];
-                const result = await testSingleIP(ipWithPort);
-
-                if (result) {
-                    results.push(result);
-                    successCount++;
-                } else {
-                    failCount++;
-                }
-
-                // 每测试50个IP输出一次统计
-                if ((i + 1) % 50 === 0 || (i + 1) === total) {
-                    console.log(`[在线优选] 进度: ${i + 1}/${total}，成功=${successCount}，失败=${failCount}`);
-                }
-
-                // 更新进度
-                const progress = ((i + 1) / total * 100).toFixed(2);
-                progressFill.style.width = progress + '%';
-                progressFill.textContent = `${i + 1}/${total} (${progress}%)`;
-            }
-
-            console.log(`[在线优选] 完成: 测试完成，总计=${total}，成功=${successCount}，失败=${failCount}`);
-            return results;
-        }
-
-        // 测试单个IP
-        async function testSingleIP(ipWithPort) {
-            try {
-                // 解析IP和端口
-                let ip, port, remark = '';
-                if (ipWithPort.includes('#')) {
-                    const [ipPort, remarkPart] = ipWithPort.split('#');
-                    [ip, port] = ipPort.split(':');
-                    remark = remarkPart;
-                } else {
-                    [ip, port] = ipWithPort.split(':');
-                }
-
-                // 转换IP为16进制
-                const hexIP = ipToHex(ip);
-                const testUrl = `https://${hexIP}.nip.cmliussss.hidns.vip:${port}/cdn-cgi/trace?_t=${Date.now()}`;
-
-                // 测试3次，取后2次平均值
-                const times = [];
-                let resultData = null;
-
-                for (let i = 0; i < 3; i++) {
-                    const start = performance.now();
-                    try {
-                        const response = await fetch(testUrl, {
-                            method: 'GET',
-                            signal: AbortSignal.timeout(5000) // 5秒超时
-                        });
-
-                        if (response.ok) {
-                            const end = performance.now();
-                            const time = end - start;
-
-                            // 第一次不计入（DNS问题）
-                            if (i > 0) {
-                                times.push(time);
-                            }
-
-                            // 只在第一次解析响应数据
-                            if (i === 0) {
-                                const text = await response.text();
-                                const lines = text.trim().split('\n');
-                                const data = {};
-                                lines.forEach(line => {
-                                    const [key, value] = line.split('=');
-                                    if (key && value) data[key] = value;
-                                });
-
-                                resultData = {
-                                    ip: ip,
-                                    port: port,
-                                    remark: remark,
-                                    responseIP: data.ip || ip,
-                                    colo: data.colo || '',
-                                    avgTime: 0 // 稍后计算
-                                };
-                            }
-                        } else {
-                            // 如果第一次就失败，直接返回null
-                            if (i === 0) {
-                                console.debug(`[在线优选] IP ${ip}:${port} 测试失败 (HTTP ${response.status})`);
-                                return null;
-                            }
-                        }
-                    } catch (error) {
-                        // 请求失败，如果是第一次就返回null
-                        if (i === 0) {
-                            console.debug(`[在线优选] IP ${ip}:${port} 测试失败 (${error.message})`);
-                            return null;
-                        }
-                    }
-                }
-
-                // 计算平均响应时间
-                if (resultData && times.length > 0) {
-                    const avgTime = times.reduce((a, b) => a + b, 0) / times.length;
-                    resultData.avgTime = Math.round(avgTime);
-                    console.debug(`[在线优选] IP ${ip}:${port} 测试成功 - 平均响应: ${resultData.avgTime}ms, colo: ${resultData.colo}`);
-                    return resultData;
-                }
-
-                return null;
-            } catch (error) {
-                return null;
-            }
-        }
-
-        // IP转16进制
-        function ipToHex(ip) {
-            return ip.split('.').map(num => {
-                const hex = parseInt(num).toString(16);
-                return hex.padStart(2, '0');
-            }).join('');
-        }
-
-        // 分类结果
-        function classifyResults(results) {
-            console.log('[在线优选] 开始: 分类结果');
-            optimizeResults = {};
-
-            // 根据IP库类型判断是否为优选反代
-            // 只有使用"反向代理列表"IP库时，备注才是"优选反代"，其余一律为"官方优选"
-            const isReverseProxy = currentIPLibrary === 'reverse-proxy';
-            const type = isReverseProxy ? '优选反代' : '官方优选';
-            console.log(`[在线优选] 调试: IP库类型=${currentIPLibrary}, 备注类型=${type}`);
-
-            for (const result of results) {
-                if (!result.colo) continue;
-
-                // 通过colo查找国家编码
-                const location = locationsData.find(loc => loc.iata === result.colo);
-                const countryCode = location ? location.cca2 : result.colo;
-
-                if (!optimizeResults[countryCode]) {
-                    optimizeResults[countryCode] = [];
-                }
-
-                optimizeResults[countryCode].push({
-                    ip: result.ip,
-                    port: result.port,
-                    remark: result.remark || countryCode,
-                    type: type,
-                    time: result.avgTime
-                });
-            }
-
-            console.log(`[在线优选] 结果: 已分类到 ${Object.keys(optimizeResults).length} 个国家/地区`);
-
-            // 对每个国家的结果按响应时间排序
-            for (const country in optimizeResults) {
-                optimizeResults[country].sort((a, b) => a.time - b.time);
-                console.log(`[在线优选] 结果: ${country}=${optimizeResults[country].length} 个 IP`);
-                // 不再限制为16个，保留所有结果
-            }
-        }
-
-        // 显示结果
-        function displayResults() {
-            console.log('[在线优选] 进度: 显示优选结果');
-            const tabsContainer = document.getElementById('optimizeResultsTabs');
-            const contentContainer = document.getElementById('optimizeResultsContent');
-
-            tabsContainer.innerHTML = '';
-            contentContainer.innerHTML = '';
-
-            const countries = Object.keys(optimizeResults).sort();
-            console.log(`[在线优选] 结果: 可用国家/地区=${countries.join(', ')}`);
-
-            if (countries.length === 0) {
-                console.warn('[在线优选] 警告: 未找到任何可用的优选IP');
-                contentContainer.innerHTML = '<div style="text-align: center; color: #6b7280;">未找到可用的优选IP</div>';
-                contentContainer.classList.remove('hidden-section');
-                return;
-            }
-
-            // 创建选项卡 - 显示实际的IP数量
-            countries.forEach((country, index) => {
-                const tab = document.createElement('div');
-                tab.className = 'optimize-tab';
-                if (index === 0) {
-                    tab.classList.add('active');
-                    currentSelectedCountry = country;
-                }
-                const actualCount = optimizeResults[country].length;
-                tab.textContent = `${country} (${actualCount})`;
-                tab.onclick = () => selectCountryTab(country);
-                tabsContainer.appendChild(tab);
-            });
-
-            // 显示第一个国家的结果
-            showCountryResults(currentSelectedCountry);
-
-            tabsContainer.classList.remove('hidden-section');
-            contentContainer.classList.remove('hidden-section');
-
-            // 启用保存按钮
-            document.getElementById('btnSaveOverride').disabled = false;
-            document.getElementById('btnSaveAppend').disabled = false;
-
-            console.log('[在线优选] 完成: 结果显示完成');
-        }
-
-        // 选择国家选项卡
-        function selectCountryTab(country) {
-            currentSelectedCountry = country;
-
-            // 更新选项卡样式
-            const tabs = document.querySelectorAll('.optimize-tab');
-            tabs.forEach(tab => {
-                if (tab.textContent === country) {
-                    tab.classList.add('active');
-                } else {
-                    tab.classList.remove('active');
-                }
-            });
-
-            // 显示对应国家的结果
-            showCountryResults(country);
-        }
-
-        // 显示国家结果
-        function showCountryResults(country, showAll = false) {
-            const contentContainer = document.getElementById('optimizeResultsContent');
-            const results = optimizeResults[country] || [];
-
-            if (results.length === 0) {
-                contentContainer.innerHTML = '<div style="text-align: center; color: #6b7280;">暂无数据</div>';
-                return;
-            }
-
-            // 默认只显示前16个，可通过showAll参数显示全部
-            const displayCount = showAll ? results.length : Math.min(16, results.length);
-            const displayResults = results.slice(0, displayCount);
-
-            const html = displayResults.map(r => {
-                // 根据延迟时间确定颜色
-                let color = '#10b981'; // 100ms以下绿色
-                if (r.time > 100 && r.time <= 200) {
-                    color = '#f59e0b'; // 101~200ms黄色
-                } else if (r.time > 200) {
-                    color = '#ef4444'; // 201ms以上红色
-                }
-
-                return `<div class="optimize-result-item" style="color: ${color}; font-weight: bold;">${r.ip}:${r.port}#${r.remark} ${r.type} ${r.time}ms</div>`;
-            }).join('');
-
-            let finalHtml = html;
-
-            // 如果有更多结果且未展开，添加展开按钮
-            if (!showAll && results.length > 16) {
-                finalHtml += `<div style="margin-top: 15px; text-align: center;">
-                    <button type="button" class="btn btn-secondary" onclick="showCountryResults('${country}', true)" style="padding: 8px 16px; font-size: 12px;">
-                        📂 展开所有IP (${results.length} 个)
-                    </button>
-                </div>`;
-            }
-
-            contentContainer.innerHTML = finalHtml;
-        }
-
-        // 保存优选结果
-        async function saveOptimizeResults(mode) {
-            console.log(`[在线优选] 进度: 保存结果（模式=${mode}）`);
-
-            if (!currentSelectedCountry || !optimizeResults[currentSelectedCountry]) {
-                console.warn('[在线优选] 未选择国家或无结果数据');
-                showToast('请先选择一个国家', 'error');
-                return;
-            }
-
-            const allResults = optimizeResults[currentSelectedCountry];
-            // 只保存前16个
-            const resultsToSave = allResults.slice(0, 16);
-            const newContent = resultsToSave.map(r => `${r.ip}:${r.port}#${r.remark} ${r.type} ${r.time}ms`).join('\n');
-            console.log(`[在线优选] 成功: ${currentSelectedCountry} 保存 ${resultsToSave.length} 个 IP（总共 ${allResults.length} 个）`);
-
-            const textarea = document.getElementById('customIPs');
-
-            if (mode === 'override') {
-                textarea.value = newContent;
-                console.log('[在线优选] 成功: 覆盖保存完成');
-                showToast('已覆盖到自定义优选地址 (前16个)', 'success');
-            } else if (mode === 'append') {
-                const currentValue = textarea.value.trim();
-
-                // 追加保存时进行去重处理
-                if (currentValue) {
-                    // 将现有内容和新内容合并
-                    const existingLines = currentValue.split('\n').map(line => line.trim()).filter(line => line);
-                    const newLines = newContent.split('\n').map(line => line.trim()).filter(line => line);
-
-                    // 使用 Set 进行去重（基于完整行内容）
-                    const uniqueLinesSet = new Set(existingLines);
-                    let addedCount = 0;
-
-                    // 添加新行，同时统计实际添加的数量
-                    newLines.forEach(line => {
-                        if (!uniqueLinesSet.has(line)) {
-                            uniqueLinesSet.add(line);
-                            addedCount++;
-                        }
-                    });
-
-                    // 合并去重后的内容
-                    textarea.value = Array.from(uniqueLinesSet).join('\n');
-
-                    console.log(`[在线优选] 成功: 追加保存完成，新增=${addedCount} 个 IP，重复=${newLines.length - addedCount} 个`);
-                    if (addedCount === 0) {
-                        showToast('所有IP均已存在，未添加新内容', 'info');
-                    } else if (addedCount < newLines.length) {
-                        showToast(`已追加 ${addedCount} 个新IP，过滤 ${newLines.length - addedCount} 个重复项`, 'success');
-                    } else {
-                        showToast(`已追加 ${addedCount} 个IP到自定义优选地址`, 'success');
-                    }
-                } else {
-                    textarea.value = newContent;
-                    console.log('[在线优选] 成功: 追加保存完成（原内容为空）');
-                    showToast('已追加到自定义优选地址 (前16个)', 'success');
-                }
-            }
-
-            refreshLineEditor(textarea);
-
-            // 标记为已修改
-            markModified('sub');
-        }
-
-        // 工具函数：数组随机打乱
-        function shuffleArray(array) {
-            const newArray = [...array];
-            for (let i = newArray.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-            }
-            return newArray;
         }
 
         // 初始化

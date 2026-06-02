@@ -10316,6 +10316,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     { label: "AS209242列表v4", family: "ipv4", url: "https://raw.githubusercontent.com/ipverse/asn-ip/master/as/209242/ipv4-aggregated.txt" },
                     { label: "AS209242列表v6", family: "ipv6", url: "https://raw.githubusercontent.com/ipverse/asn-ip/master/as/209242/ipv6-aggregated.txt" }
                 ];
+                const LIBRARY_SELECTION_CACHE_KEY = "bestcf:selected-ip-library";
 
                 const state = {
                     ipv4: null,
@@ -10332,7 +10333,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     nextResultId: 1,
                     sort: { key: "latency", dir: "asc" },
                     resultSelectionDrag: null,
-                    suppressResultClick: false
+                    suppressResultClick: false,
+                    preferredLibraryKey: ""
                 };
 
                 const $ = (selector) => document.querySelector(selector);
@@ -10386,6 +10388,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                 function bindEvents() {
                     els.importBtn.addEventListener("click", importLibrary);
+                    els.librarySelect.addEventListener("change", rememberSelectedLibrary);
                     els.ipInput.addEventListener("input", updateEditorMeta);
                     els.ipInput.addEventListener("scroll", syncEditorScroll);
                     els.clearBtn.addEventListener("click", () => {
@@ -10508,6 +10511,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 async function refreshCnNetwork({ resetResults = false, stopRuns = false } = {}) {
                     if (state.networkChecking) return availableFamilies().length > 0;
                     state.networkChecking = true;
+                    rememberSelectedLibrary();
 
                     if (stopRuns) {
                         if (state.latencyRun) stopLatencyRun();
@@ -10698,7 +10702,43 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     return list;
                 }
 
+                function librarySelectionKey(source) {
+                    if (!source) return "";
+                    const family = source.family || (source.dataset && source.dataset.family) || "";
+                    const url = source.url || (source.dataset && source.dataset.url) || "";
+                    return family && url ? `${family}|${url}` : "";
+                }
+
+                function readCachedLibraryKey() {
+                    try {
+                        return window.localStorage.getItem(LIBRARY_SELECTION_CACHE_KEY) || "";
+                    } catch (error) {
+                        return "";
+                    }
+                }
+
+                function cacheLibraryKey(key) {
+                    if (!key) return;
+                    state.preferredLibraryKey = key;
+                    try {
+                        window.localStorage.setItem(LIBRARY_SELECTION_CACHE_KEY, key);
+                    } catch (error) {
+                        // Some embedded contexts can deny storage; in-memory restore still works.
+                    }
+                }
+
+                function rememberSelectedLibrary() {
+                    const key = librarySelectionKey(els.librarySelect.selectedOptions[0]);
+                    if (key) cacheLibraryKey(key);
+                }
+
+                function preferredLibraryKey() {
+                    const currentKey = librarySelectionKey(els.librarySelect.selectedOptions[0]);
+                    return currentKey || state.preferredLibraryKey || readCachedLibraryKey();
+                }
+
                 function updateLibraryOptions() {
+                    const selectedKey = preferredLibraryKey();
                     const families = new Set(availableFamilies());
                     const options = IP_LIBRARIES.filter((item) => families.has(item.family));
                     els.librarySelect.innerHTML = "";
@@ -10712,14 +10752,25 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         return;
                     }
 
-                    options.forEach((item, index) => {
+                    options.forEach((item) => {
+                        const key = librarySelectionKey(item);
                         const option = document.createElement("option");
-                        option.value = String(index);
+                        option.value = key;
                         option.textContent = item.label;
                         option.dataset.url = item.url;
                         option.dataset.family = item.family;
+                        option.dataset.libraryKey = key;
                         els.librarySelect.appendChild(option);
                     });
+
+                    const restoredOption = selectedKey
+                        ? Array.from(els.librarySelect.options).find((option) => option.dataset.libraryKey === selectedKey)
+                        : null;
+                    if (restoredOption) {
+                        els.librarySelect.value = restoredOption.value;
+                        state.preferredLibraryKey = selectedKey;
+                    }
+
                     els.librarySelect.disabled = false;
                     els.importBtn.disabled = false;
                 }

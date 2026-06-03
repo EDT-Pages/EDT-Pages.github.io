@@ -9,7 +9,9 @@
     <script data-cfasync="false" src="https://cdn.jsdelivr.net/npm/@keeex/qrcodejs-kx@1.0.2/qrcode.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&family=Orbitron:wght@700;800;900&display=swap"
+        rel="stylesheet">
     <!-- Leaflet Map Resources -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -9085,6 +9087,22 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     background: var(--red-soft);
                 }
 
+                .speed-retry-tag {
+                    cursor: pointer;
+                    transition: transform 0.15s ease, filter 0.15s ease;
+                }
+
+                .speed-retry-tag:hover,
+                .speed-retry-tag:focus-visible {
+                    filter: brightness(0.96);
+                    transform: translateY(-1px);
+                }
+
+                .speed-retry-tag:focus-visible {
+                    outline: 2px solid rgba(239, 68, 68, 0.36);
+                    outline-offset: 2px;
+                }
+
                 .tag.idle {
                     color: #475467;
                     background: #eef2f6;
@@ -9499,7 +9517,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                 table {
                     width: 100%;
-                    min-width: 760px;
+                    min-width: 860px;
                     border-collapse: collapse;
                     table-layout: fixed;
                 }
@@ -9546,6 +9564,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     cursor: pointer;
                 }
 
+                body.is-result-dragging,
+                body.is-result-dragging * {
+                    user-select: none;
+                }
+
                 .result-row:hover td {
                     background: #f3f8f6;
                 }
@@ -9586,6 +9609,61 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                 td.ip-cell {
                     font-family: var(--mono);
+                }
+
+                .copy-address-btn {
+                    display: inline;
+                    padding: 0;
+                    border: 0;
+                    background: transparent;
+                    color: var(--blue);
+                    cursor: pointer;
+                    font: inherit;
+                    text-align: left;
+                    overflow-wrap: anywhere;
+                }
+
+                .copy-address-btn:hover,
+                .copy-address-btn:focus {
+                    color: var(--blue-dark);
+                    text-decoration: underline;
+                }
+
+                .copy-address-tip {
+                    position: fixed;
+                    z-index: 60;
+                    max-width: min(240px, calc(100vw - 24px));
+                    padding: 7px 10px;
+                    border: 1px solid #b9e8d3;
+                    border-radius: var(--radius);
+                    background: var(--green);
+                    box-shadow: 0 12px 28px rgba(15, 159, 110, 0.22);
+                    color: #ffffff;
+                    font-size: 12px;
+                    font-weight: 760;
+                    line-height: 1.35;
+                    pointer-events: none;
+                    transform: translate(-50%, -100%) translateY(-8px);
+                    animation: copyAddressTip 1.45s ease forwards;
+                    white-space: nowrap;
+                }
+
+                @keyframes copyAddressTip {
+                    0% {
+                        opacity: 0;
+                        transform: translate(-50%, -100%) translateY(0);
+                    }
+
+                    15%,
+                    78% {
+                        opacity: 1;
+                        transform: translate(-50%, -100%) translateY(-8px);
+                    }
+
+                    100% {
+                        opacity: 0;
+                        transform: translate(-50%, -100%) translateY(-14px);
+                    }
                 }
 
                 .country-cell {
@@ -9905,6 +9983,21 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     color: #93c5fd;
                 }
 
+                html.dark-mode .copy-address-btn {
+                    color: #93c5fd;
+                }
+
+                html.dark-mode .copy-address-btn:hover,
+                html.dark-mode .copy-address-btn:focus {
+                    color: #bfdbfe;
+                }
+
+                html.dark-mode .copy-address-tip {
+                    border-color: rgba(52, 211, 153, 0.38);
+                    background: #047857;
+                    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.36);
+                }
+
                 html.dark-mode .link-btn:hover:not(:disabled) {
                     color: #bfdbfe;
                 }
@@ -10135,37 +10228,31 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                 <h2 class="panel-title" id="resultTitle">优选结果</h2>
                                 <span class="tag idle" id="resultCount">0 个可用</span>
                             </div>
-                            <div class="result-footer">
-                                <span class="tiny muted" id="speedStatus">等待测速</span>
-                                <button class="btn success" id="speedAllBtn" type="button" disabled>
-                                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                                        <path d="M13 2 3 14h8l-1 8 11-14h-8l0-6Z"></path>
-                                    </svg>
-                                    全部测速
-                                </button>
-                            </div>
                             <div class="result-wrap">
                                 <table>
                                     <thead>
                                         <tr>
                                             <th class="selection-cell"><input id="selectAllHeader" type="checkbox"
                                                     title="全选" aria-label="全选"></th>
-                                            <th style="width: 27%"><button class="sort-header" type="button"
+                                            <th style="width: 24%"><button class="sort-header" type="button"
                                                     data-sort="address">优选IP <span class="sort-mark"
                                                         data-sort-mark="address"></span></button></th>
-                                            <th style="width: 12%"><button class="sort-header" type="button"
+                                            <th style="width: 11%"><button class="sort-header" type="button"
                                                     data-sort="ipType">IP类型 <span class="sort-mark"
                                                         data-sort-mark="ipType"></span></button></th>
-                                            <th style="width: 15%"><button class="sort-header" type="button"
+                                            <th style="width: 14%"><button class="sort-header" type="button"
                                                     data-sort="type">优选类型 <span class="sort-mark"
                                                         data-sort-mark="type"></span></button></th>
-                                            <th style="width: 14%"><button class="sort-header" type="button"
+                                            <th style="width: 13%"><button class="sort-header" type="button"
                                                     data-sort="country">国家/地区 <span class="sort-mark"
                                                         data-sort-mark="country"></span></button></th>
-                                            <th style="width: 14%"><button class="sort-header" type="button"
+                                            <th style="width: 10%"><button class="sort-header" type="button"
+                                                    data-sort="colo">数据中心 <span class="sort-mark"
+                                                        data-sort-mark="colo"></span></button></th>
+                                            <th style="width: 13%"><button class="sort-header" type="button"
                                                     data-sort="latency">延迟(ms) <span class="sort-mark"
                                                         data-sort-mark="latency"></span></button></th>
-                                            <th style="width: 18%"><button class="sort-header" type="button"
+                                            <th style="width: 15%"><button class="sort-header" type="button"
                                                     data-sort="speed">速度(Mbps) <span class="sort-mark"
                                                         data-sort-mark="speed"></span></button></th>
                                         </tr>
@@ -10246,6 +10333,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     { label: "AS209242列表v4", family: "ipv4", url: "https://raw.githubusercontent.com/ipverse/asn-ip/master/as/209242/ipv4-aggregated.txt" },
                     { label: "AS209242列表v6", family: "ipv6", url: "https://raw.githubusercontent.com/ipverse/asn-ip/master/as/209242/ipv6-aggregated.txt" }
                 ];
+                const LIBRARY_SELECTION_CACHE_KEY = "bestcf:selected-ip-library";
 
                 const state = {
                     ipv4: null,
@@ -10255,11 +10343,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     locationsByIata: new Map(),
                     latencyRun: null,
                     speedRun: null,
+                    networkChecking: false,
                     editorResizeObserver: null,
                     results: [],
                     selectedIds: new Set(),
                     nextResultId: 1,
-                    sort: { key: "latency", dir: "asc" }
+                    sort: { key: "latency", dir: "asc" },
+                    resultSelectionDrag: null,
+                    suppressResultClick: false,
+                    preferredLibraryKey: ""
                 };
 
                 const $ = (selector) => document.querySelector(selector);
@@ -10313,6 +10405,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                 function bindEvents() {
                     els.importBtn.addEventListener("click", importLibrary);
+                    els.librarySelect.addEventListener("change", rememberSelectedLibrary);
                     els.ipInput.addEventListener("input", updateEditorMeta);
                     els.ipInput.addEventListener("scroll", syncEditorScroll);
                     els.clearBtn.addEventListener("click", () => {
@@ -10322,21 +10415,47 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     [els.limitInput, els.timeoutInput, els.threadsInput, els.portInput].forEach((input) => {
                         input.addEventListener("change", () => clampNumberInput(input));
                     });
-                    els.latencyBtn.addEventListener("click", () => {
+                    els.latencyBtn.addEventListener("click", async () => {
                         if (state.latencyRun) {
                             stopLatencyRun();
                             return;
                         }
+                        if (state.networkChecking) return;
+                        if (!await ensureCnNetworkBeforeAction({
+                            button: els.latencyBtn,
+                            statusEl: els.latencyStatus,
+                            idleHtml: `${svgPulseIcon()}优选延迟`
+                        })) return;
                         startLatencyRun();
                     });
-                    els.speedAllBtn.addEventListener("click", () => {
-                        if (state.speedRun) {
-                            stopSpeedRun();
+                    if (els.speedAllBtn) {
+                        els.speedAllBtn.addEventListener("click", async () => {
+                            if (state.speedRun) {
+                                stopSpeedRun();
+                                return;
+                            }
+                            if (state.networkChecking) return;
+                            if (!await ensureCnNetworkBeforeAction({
+                                button: els.speedAllBtn,
+                                statusEl: els.speedStatus,
+                                idleHtml: `${svgBoltIcon()}全部测速`
+                            })) return;
+                            startAllSpeedTests();
+                        });
+                    }
+                    els.resultBody.addEventListener("click", (event) => {
+                        if (state.suppressResultClick) {
+                            state.suppressResultClick = false;
                             return;
                         }
-                        startAllSpeedTests();
-                    });
-                    els.resultBody.addEventListener("click", (event) => {
+
+                        const copyAddressBtn = event.target.closest("[data-copy-address]");
+                        if (copyAddressBtn) {
+                            event.stopPropagation();
+                            copyResultAddress(copyAddressBtn.dataset.copyAddress || "", copyAddressBtn);
+                            return;
+                        }
+
                         const checkbox = event.target.closest("[data-select-id]");
                         if (checkbox) {
                             setResultSelected(checkbox.dataset.selectId, checkbox.checked);
@@ -10354,6 +10473,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         if (!row) return;
                         toggleResultSelected(row.dataset.resultId);
                     });
+                    els.resultBody.addEventListener("mousedown", startResultSelectionDrag);
+                    els.resultBody.addEventListener("mouseover", continueResultSelectionDrag);
+                    document.addEventListener("mouseup", finishResultSelectionDrag);
+                    window.addEventListener("blur", finishResultSelectionDrag);
                     els.selectAllHeader.addEventListener("change", () => {
                         if (els.selectAllHeader.checked) {
                             selectAllResults();
@@ -10366,7 +10489,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     els.clearSelectBtn.addEventListener("click", clearSelectedResults);
                     els.saveSelectedBtn.addEventListener("click", saveSelectedResults);
                     els.closeBestCFBtn.addEventListener("click", closeBestCFModule);
-      els.networkWarningConfirmBtn.addEventListener("click", confirmNetworkWarning);
+                    els.networkWarningConfirmBtn.addEventListener("click", confirmNetworkWarning);
                     document.querySelectorAll("[data-sort]").forEach((button) => {
                         button.addEventListener("click", () => setResultSort(button.dataset.sort));
                     });
@@ -10385,79 +10508,112 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 }
 
                 async function detectNetwork() {
-                    if (state.latencyRun) stopLatencyRun();
-                    if (state.speedRun) stopSpeedRun();
+                    return refreshCnNetwork({ resetResults: true, stopRuns: true });
+                }
+
+                async function ensureCnNetworkBeforeAction({ button, statusEl, idleHtml }) {
+                    if (state.networkChecking) return false;
+                    if (button) button.innerHTML = `${svgPulseIcon()}网络验证`;
+                    if (statusEl) statusEl.textContent = "正在检测CN网络";
+                    const allowed = await refreshCnNetwork({ resetResults: false, stopRuns: false });
+                    if (!allowed) {
+                        if (button && idleHtml) button.innerHTML = idleHtml;
+                        if (statusEl) statusEl.textContent = "检测未通过，请关闭代理后重试";
+                        return false;
+                    }
+                    if (statusEl) statusEl.textContent = "CN网络检测通过";
+                    return true;
+                }
+
+                async function refreshCnNetwork({ resetResults = false, stopRuns = false } = {}) {
+                    if (state.networkChecking) return availableFamilies().length > 0;
+                    state.networkChecking = true;
+                    rememberSelectedLibrary();
+
+                    if (stopRuns) {
+                        if (state.latencyRun) stopLatencyRun();
+                        if (state.speedRun) stopSpeedRun();
+                    }
 
                     state.ipv4 = null;
                     state.ipv6 = null;
                     state.network = { ipv4: null, ipv6: null };
                     state.locations = [];
                     state.locationsByIata = new Map();
-                    state.results = [];
-                    state.selectedIds.clear();
-                    state.nextResultId = 1;
-                    renderResults();
-                    setProgress(0, 0);
+                    if (resetResults) {
+                        state.results = [];
+                        state.selectedIds.clear();
+                        state.nextResultId = 1;
+                        renderResults();
+                        setProgress(0, 0);
+                    }
 
                     renderNetworkCard("ipv4", { status: "loading" });
                     renderNetworkCard("ipv6", { status: "loading" });
                     updateLibraryOptions();
                     updateActionAvailability();
 
-                    const checks = await Promise.allSettled([
-                        detectStack("ipv4"),
-                        detectStack("ipv6")
-                    ]);
+                    try {
+                        const checks = await Promise.allSettled([
+                            detectStack("ipv4"),
+                            detectStack("ipv6")
+                        ]);
 
-                    checks.forEach((result, index) => {
-                        const family = index === 0 ? "ipv4" : "ipv6";
-                        if (result.status === "fulfilled") {
-                            state.network[family] = result.value;
-                            if (result.value.allowed) {
-                                if (result.value.ipType === "ipv4") state.ipv4 = result.value.ip;
-                                if (result.value.ipType === "ipv6") state.ipv6 = result.value.ip;
+                        checks.forEach((result, index) => {
+                            const family = index === 0 ? "ipv4" : "ipv6";
+                            if (result.status === "fulfilled") {
+                                state.network[family] = result.value;
+                                if (result.value.allowed) {
+                                    if (result.value.ipType === "ipv4") state.ipv4 = result.value.ip;
+                                    if (result.value.ipType === "ipv6") state.ipv6 = result.value.ip;
+                                }
+                            } else {
+                                state.network[family] = {
+                                    status: "failed",
+                                    error: result.reason && result.reason.message ? result.reason.message : "检测失败"
+                                };
                             }
-                        } else {
-                            state.network[family] = {
-                                status: "failed",
-                                error: result.reason && result.reason.message ? result.reason.message : "检测失败"
-                            };
-                        }
-                    });
+                        });
 
-                    renderNetworkCard("ipv4", state.network.ipv4);
-                    renderNetworkCard("ipv6", state.network.ipv6);
-                    updateLibraryOptions();
-                    await loadLocations();
-                    updateServiceStatus();
-                    updateActionAvailability();
-                    if (availableFamilies().length === 0) showNetworkWarning();
+                        renderNetworkCard("ipv4", state.network.ipv4);
+                        renderNetworkCard("ipv6", state.network.ipv6);
+                        updateLibraryOptions();
+                        await loadLocations();
+                        updateServiceStatus();
+
+                        const allowed = availableFamilies().length > 0;
+                        if (!allowed) showNetworkWarning();
+                        return allowed;
+                    } finally {
+                        state.networkChecking = false;
+                        updateActionAvailability();
+                    }
                 }
 
-    function showNetworkWarning() {
-      els.networkWarningOverlay.classList.add("is-visible");
-      els.networkWarningConfirmBtn.focus();
-    }
+                function showNetworkWarning() {
+                    els.networkWarningOverlay.classList.add("is-visible");
+                    els.networkWarningConfirmBtn.focus();
+                }
 
-    function confirmNetworkWarning() {
-      if (window.parent && window.parent !== window) {
-        try {
-          window.parent.location.reload();
-          return;
-        } catch (error) {
-          // Fall back to postMessage below when direct parent access is unavailable.
-        }
+                function confirmNetworkWarning() {
+                    if (window.parent && window.parent !== window) {
+                        try {
+                            window.parent.location.reload();
+                            return;
+                        } catch (error) {
+                            // Fall back to postMessage below when direct parent access is unavailable.
+                        }
 
-        try {
-          window.parent.postMessage({ type: "bestcf-force-reload" }, "*");
-          return;
-        } catch (error) {
-          // Ignore and reload the current document as a last resort.
-        }
-      }
+                        try {
+                            window.parent.postMessage({ type: "bestcf-force-reload" }, "*");
+                            return;
+                        } catch (error) {
+                            // Ignore and reload the current document as a last resort.
+                        }
+                    }
 
-      window.location.reload();
-    }
+                    window.location.reload();
+                }
 
                 async function detectStack(family) {
                     const base = DETECT_ENDPOINTS[family];
@@ -10563,7 +10719,43 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     return list;
                 }
 
+                function librarySelectionKey(source) {
+                    if (!source) return "";
+                    const family = source.family || (source.dataset && source.dataset.family) || "";
+                    const url = source.url || (source.dataset && source.dataset.url) || "";
+                    return family && url ? `${family}|${url}` : "";
+                }
+
+                function readCachedLibraryKey() {
+                    try {
+                        return window.localStorage.getItem(LIBRARY_SELECTION_CACHE_KEY) || "";
+                    } catch (error) {
+                        return "";
+                    }
+                }
+
+                function cacheLibraryKey(key) {
+                    if (!key) return;
+                    state.preferredLibraryKey = key;
+                    try {
+                        window.localStorage.setItem(LIBRARY_SELECTION_CACHE_KEY, key);
+                    } catch (error) {
+                        // Some embedded contexts can deny storage; in-memory restore still works.
+                    }
+                }
+
+                function rememberSelectedLibrary() {
+                    const key = librarySelectionKey(els.librarySelect.selectedOptions[0]);
+                    if (key) cacheLibraryKey(key);
+                }
+
+                function preferredLibraryKey() {
+                    const currentKey = librarySelectionKey(els.librarySelect.selectedOptions[0]);
+                    return currentKey || state.preferredLibraryKey || readCachedLibraryKey();
+                }
+
                 function updateLibraryOptions() {
+                    const selectedKey = preferredLibraryKey();
                     const families = new Set(availableFamilies());
                     const options = IP_LIBRARIES.filter((item) => families.has(item.family));
                     els.librarySelect.innerHTML = "";
@@ -10577,14 +10769,25 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         return;
                     }
 
-                    options.forEach((item, index) => {
+                    options.forEach((item) => {
+                        const key = librarySelectionKey(item);
                         const option = document.createElement("option");
-                        option.value = String(index);
+                        option.value = key;
                         option.textContent = item.label;
                         option.dataset.url = item.url;
                         option.dataset.family = item.family;
+                        option.dataset.libraryKey = key;
                         els.librarySelect.appendChild(option);
                     });
+
+                    const restoredOption = selectedKey
+                        ? Array.from(els.librarySelect.options).find((option) => option.dataset.libraryKey === selectedKey)
+                        : null;
+                    if (restoredOption) {
+                        els.librarySelect.value = restoredOption.value;
+                        state.preferredLibraryKey = selectedKey;
+                    }
+
                     els.librarySelect.disabled = false;
                     els.importBtn.disabled = false;
                 }
@@ -10593,8 +10796,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     const hasService = availableFamilies().length > 0;
                     const latencyActive = Boolean(state.latencyRun);
                     const speedActive = Boolean(state.speedRun);
-                    els.latencyBtn.disabled = speedActive || (!hasService && !latencyActive);
-                    els.speedAllBtn.disabled = latencyActive || (state.results.length === 0 && !speedActive);
+                    els.latencyBtn.disabled = state.networkChecking || speedActive || (!hasService && !latencyActive);
+                    if (els.speedAllBtn) {
+                        els.speedAllBtn.disabled = state.networkChecking ||
+                            latencyActive ||
+                            (!hasService && !speedActive) ||
+                            (state.results.length === 0 && !speedActive);
+                    }
                 }
 
                 async function importLibrary() {
@@ -10642,6 +10850,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         candidates = prepareCandidates(els.ipInput.value, settings.limit, settings.port);
                     } catch (error) {
                         els.latencyStatus.textContent = friendlyError(error);
+                        els.latencyBtn.innerHTML = `${svgPulseIcon()}优选延迟`;
                         return;
                     }
 
@@ -10854,9 +11063,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         total: state.results.length
                     };
                     state.speedRun = run;
-                    els.speedAllBtn.classList.add("danger");
-                    els.speedAllBtn.innerHTML = `${svgStopIcon()}停止测速`;
-                    els.speedStatus.textContent = `正在测速 0 / ${run.total}`;
+                    if (els.speedAllBtn) {
+                        els.speedAllBtn.classList.add("danger");
+                        els.speedAllBtn.innerHTML = `${svgStopIcon()}停止测速`;
+                    }
+                    if (els.speedStatus) els.speedStatus.textContent = `正在测速 0 / ${run.total}`;
                     updateActionAvailability();
 
                     state.results.forEach((item) => {
@@ -10884,7 +11095,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         } finally {
                             result.speedRemaining = null;
                             run.completed += 1;
-                            els.speedStatus.textContent = `正在测速 ${run.completed} / ${run.total}`;
+                            if (els.speedStatus) els.speedStatus.textContent = `正在测速 ${run.completed} / ${run.total}`;
                             renderResults();
                         }
                     }, run);
@@ -10893,14 +11104,16 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         state.results.forEach((item) => {
                             if (item.speedState === "pending" || item.speedState === "testing") item.speedState = "stopped";
                         });
-                        els.speedStatus.textContent = "测速已停止";
+                        if (els.speedStatus) els.speedStatus.textContent = "测速已停止";
                     } else {
-                        els.speedStatus.textContent = "全部测速完成";
+                        if (els.speedStatus) els.speedStatus.textContent = "全部测速完成";
                     }
 
                     state.speedRun = null;
-                    els.speedAllBtn.classList.remove("danger");
-                    els.speedAllBtn.innerHTML = `${svgBoltIcon()}全部测速`;
+                    if (els.speedAllBtn) {
+                        els.speedAllBtn.classList.remove("danger");
+                        els.speedAllBtn.innerHTML = `${svgBoltIcon()}全部测速`;
+                    }
                     renderResults();
                     updateActionAvailability();
                 }
@@ -10910,7 +11123,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     if (!run) return;
                     run.stopped = true;
                     for (const controller of run.controllers) controller.abort();
-                    els.speedStatus.textContent = "正在停止测速";
+                    if (els.speedStatus) els.speedStatus.textContent = "正在停止测速";
                 }
 
                 async function testDownloadSpeed(parsed, run, onTick) {
@@ -10997,7 +11210,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     renderSortMarks();
                     syncSelectionWithResults();
                     if (!state.results.length) {
-                        els.resultBody.innerHTML = '<tr><td class="empty" colspan="7">暂无结果</td></tr>';
+                        els.resultBody.innerHTML = '<tr><td class="empty" colspan="8">暂无结果</td></tr>';
                         updateSelectionState();
                         updateActionAvailability();
                         return;
@@ -11006,12 +11219,14 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     els.resultBody.innerHTML = getSortedResults().map(({ item, index }) => {
                         const id = String(item.id);
                         const selected = state.selectedIds.has(id);
+                        const safeAddress = escapeHtml(item.address);
                         return `<tr class="result-row${selected ? " is-selected" : ""}" data-result-id="${escapeHtml(id)}">
-          <td class="selection-cell"><input type="checkbox" data-select-id="${escapeHtml(id)}" aria-label="选择 ${escapeHtml(item.address)}" ${selected ? "checked" : ""}></td>
-          <td class="ip-cell">${escapeHtml(item.address)}</td>
+          <td class="selection-cell"><input type="checkbox" data-select-id="${escapeHtml(id)}" aria-label="选择 ${safeAddress}" ${selected ? "checked" : ""}></td>
+          <td class="ip-cell"><button class="copy-address-btn" type="button" data-copy-address="${safeAddress}" title="点击复制" aria-label="复制 ${safeAddress}">${safeAddress}</button></td>
           <td>${escapeHtml(item.ipType || "未知")}</td>
           <td>${escapeHtml(item.type)}</td>
           <td>${renderCountryCell(item.country)}</td>
+          <td>${escapeHtml(item.colo || "未知")}</td>
           <td>${item.latency}ms</td>
           <td>${renderSpeedCell(item, index)}</td>
         </tr>`;
@@ -11042,6 +11257,92 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     els.selectAllHeader.disabled = total === 0;
                     els.selectAllHeader.checked = total > 0 && selected === total;
                     els.selectAllHeader.indeterminate = selected > 0 && selected < total;
+                }
+
+                function startResultSelectionDrag(event) {
+                    if (event.button !== 0) return;
+                    const row = event.target.closest("[data-result-id]");
+                    if (!row || !els.resultBody.contains(row)) return;
+                    if (isInteractiveResultTarget(event.target)) return;
+
+                    event.preventDefault();
+                    state.resultSelectionDrag = {
+                        active: true,
+                        toggledIds: new Set(),
+                        lastRow: null
+                    };
+                    document.body.classList.add("is-result-dragging");
+                    toggleResultRowDuringDrag(row);
+                }
+
+                function continueResultSelectionDrag(event) {
+                    const drag = state.resultSelectionDrag;
+                    if (!drag || !drag.active) return;
+                    if ((event.buttons & 1) !== 1) {
+                        finishResultSelectionDrag();
+                        return;
+                    }
+
+                    const row = event.target.closest("[data-result-id]");
+                    if (!row || !els.resultBody.contains(row)) return;
+                    toggleResultRowDuringDrag(row);
+                }
+
+                function finishResultSelectionDrag() {
+                    const drag = state.resultSelectionDrag;
+                    if (!drag || !drag.active) return;
+                    drag.active = false;
+                    document.body.classList.remove("is-result-dragging");
+                    state.suppressResultClick = true;
+                    window.setTimeout(() => {
+                        state.suppressResultClick = false;
+                    }, 0);
+                }
+
+                function toggleResultRowDuringDrag(row) {
+                    const drag = state.resultSelectionDrag;
+                    if (!drag || !drag.active) return;
+                    const rows = Array.from(els.resultBody.querySelectorAll("[data-result-id]"));
+                    const currentIndex = rows.indexOf(row);
+                    const lastIndex = drag.lastRow ? rows.indexOf(drag.lastRow) : -1;
+
+                    if (currentIndex !== -1 && lastIndex !== -1) {
+                        const start = Math.min(currentIndex, lastIndex);
+                        const end = Math.max(currentIndex, lastIndex);
+                        for (let index = start; index <= end; index += 1) {
+                            toggleSingleResultRowDuringDrag(rows[index]);
+                        }
+                    } else {
+                        toggleSingleResultRowDuringDrag(row);
+                    }
+                    drag.lastRow = row;
+                }
+
+                function toggleSingleResultRowDuringDrag(row) {
+                    const drag = state.resultSelectionDrag;
+                    if (!drag || !drag.active || !row) return;
+                    const id = row.dataset.resultId;
+                    if (!id || drag.toggledIds.has(id)) return;
+
+                    const selected = !state.selectedIds.has(String(id));
+                    if (selected) {
+                        state.selectedIds.add(String(id));
+                    } else {
+                        state.selectedIds.delete(String(id));
+                    }
+                    drag.toggledIds.add(id);
+                    applyResultRowSelection(row, selected);
+                    updateSelectionState();
+                }
+
+                function applyResultRowSelection(row, selected) {
+                    row.classList.toggle("is-selected", selected);
+                    const checkbox = row.querySelector("[data-select-id]");
+                    if (checkbox) checkbox.checked = selected;
+                }
+
+                function isInteractiveResultTarget(target) {
+                    return Boolean(target.closest("button, input, select, textarea, a, label"));
                 }
 
                 function setResultSelected(id, selected) {
@@ -11099,7 +11400,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 function formatResultForAdmin(item) {
                     const details = [`${item.latency}ms`];
                     if (item.speedState === "done" && Number.isFinite(item.speedMbps) && item.speedMbps > 0) {
-                        details.push(`${Math.ceil(item.speedMbps)}Mbps`);
+                        details.push(`${formatSpeedMbps(item.speedMbps)}Mbps`);
                     }
                     return `${item.address}#${item.country} ${item.type}[${details.join(" ")}]`;
                 }
@@ -11124,11 +11425,53 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                 async function copySelectedResults(lines) {
                     try {
-                        await navigator.clipboard.writeText(lines.join("\n"));
+                        await writeClipboardText(lines.join("\n"));
                         els.selectionStatus.textContent = `已复制 ${lines.length} 个`;
                     } catch (error) {
                         els.selectionStatus.textContent = "保存失败";
                     }
+                }
+
+                async function copyResultAddress(address, anchor) {
+                    if (!address) return;
+                    try {
+                        await writeClipboardText(address);
+                        showCopyAddressTip(anchor, "已复制到粘贴板");
+                    } catch (error) {
+                        showCopyAddressTip(anchor, "复制失败");
+                    }
+                }
+
+                async function writeClipboardText(text) {
+                    if (navigator.clipboard && window.isSecureContext) {
+                        await navigator.clipboard.writeText(text);
+                        return;
+                    }
+
+                    const textarea = document.createElement("textarea");
+                    textarea.value = text;
+                    textarea.setAttribute("readonly", "");
+                    textarea.style.position = "fixed";
+                    textarea.style.left = "-9999px";
+                    textarea.style.top = "0";
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    const copied = document.execCommand("copy");
+                    textarea.remove();
+                    if (!copied) throw new Error("copy failed");
+                }
+
+                function showCopyAddressTip(anchor, message) {
+                    if (!anchor) return;
+                    document.querySelectorAll(".copy-address-tip").forEach((tip) => tip.remove());
+                    const rect = anchor.getBoundingClientRect();
+                    const tip = document.createElement("div");
+                    tip.className = "copy-address-tip";
+                    tip.textContent = message;
+                    tip.style.left = `${rect.left + rect.width / 2}px`;
+                    tip.style.top = `${rect.top}px`;
+                    document.body.appendChild(tip);
+                    window.setTimeout(() => tip.remove(), 1500);
                 }
 
                 function closeBestCFModule() {
@@ -11206,10 +11549,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                 function renderSpeedCell(item, index) {
                     if (item.speedState === "testing") return `<span class="muted">测速中 ${item.speedRemaining ?? 10}s</span>`;
-                    if (item.speedState === "done") return `<button class="link-btn" type="button" data-speed-index="${index}"><strong>${Math.ceil(item.speedMbps)}Mbps</strong></button>`;
-                    if (item.speedState === "failed") return '<span class="tag bad">失败</span>';
+                    if (item.speedState === "done") return `<button class="link-btn" type="button" data-speed-index="${index}"><strong>${formatSpeedMbps(item.speedMbps)}Mbps</strong></button>`;
+                    if (item.speedState === "failed") return `<button class="tag bad speed-retry-tag" type="button" data-speed-index="${index}" title="点击重试测速" aria-label="测速失败，点击重试">失败</button>`;
                     if (item.speedState === "stopped") return '<span class="muted">测速已停止</span>';
                     return `<button class="link-btn" type="button" data-speed-index="${index}">待测试</button>`;
+                }
+
+                function formatSpeedMbps(speedMbps) {
+                    const value = Number(speedMbps);
+                    return Number.isFinite(value) ? value.toFixed(2) : "0.00";
                 }
 
                 function renderCountryCell(country) {
@@ -15441,7 +15789,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             if (isCollapsed) {
                 // 检查是否是网络模块，如果是则加载数据
                 if (module.querySelector('.network-cards-container') && !networkInfoLoaded) {
-                    loadNetworkInfo();
+                    scheduleNetworkInfoLoad({ delayMs: 0 });
                 }
 
                 module.classList.remove('collapsed');
@@ -20192,6 +20540,87 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             { id: 'twitter-country', type: 'location' }
         ];
         const NETWORK_API_TIMEOUT_MS = 6180.3;
+        const NETWORK_BACKGROUND_START_DELAY_MS = 1200;
+        const NETWORK_BACKGROUND_IDLE_TIMEOUT_MS = 2500;
+        const NETWORK_BACKGROUND_TASK_GAP_MS = 420;
+        const NETWORK_BACKGROUND_TASK_TIMEOUT_MS = (NETWORK_API_TIMEOUT_MS * 3) + 1200;
+        let networkInfoScheduled = false;
+        let networkInfoLoadPromise = null;
+
+        function waitForPageComplete() {
+            if (document.readyState === 'complete') {
+                return Promise.resolve();
+            }
+
+            return new Promise(resolve => {
+                window.addEventListener('load', resolve, { once: true });
+            });
+        }
+
+        function waitForBrowserIdle(timeoutMs = NETWORK_BACKGROUND_IDLE_TIMEOUT_MS) {
+            return new Promise(resolve => {
+                if ('requestIdleCallback' in window) {
+                    window.requestIdleCallback(() => resolve(), { timeout: timeoutMs });
+                    return;
+                }
+
+                setTimeout(resolve, 0);
+            });
+        }
+
+        function waitForDelay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function scheduleNetworkInfoLoad(options = {}) {
+            const { delayMs = NETWORK_BACKGROUND_START_DELAY_MS } = options;
+            if (networkInfoLoaded || networkInfoLoadPromise || networkInfoScheduled) {
+                return;
+            }
+
+            networkInfoScheduled = true;
+
+            (async () => {
+                await waitForPageComplete();
+                if (delayMs > 0) {
+                    await waitForDelay(delayMs);
+                }
+                await waitForBrowserIdle();
+                await loadNetworkInfo();
+            })().catch(error => {
+                console.warn('[网络信息] 后台加载调度失败:', error);
+            }).finally(() => {
+                networkInfoScheduled = false;
+            });
+        }
+
+        async function runNetworkInfoBackgroundTask(task, index) {
+            if (index > 0) {
+                await waitForDelay(NETWORK_BACKGROUND_TASK_GAP_MS);
+            }
+
+            await waitForBrowserIdle();
+
+            let watchdogId = null;
+            const watchdog = new Promise((_, reject) => {
+                watchdogId = setTimeout(() => {
+                    reject(new Error(`${task.name} background timeout`));
+                }, NETWORK_BACKGROUND_TASK_TIMEOUT_MS);
+            });
+
+            try {
+                await Promise.race([
+                    Promise.resolve().then(task.run),
+                    watchdog
+                ]);
+            } catch (error) {
+                console.warn(`[网络信息] ${task.name} 后台任务异常:`, error);
+            } finally {
+                if (watchdogId) {
+                    clearTimeout(watchdogId);
+                }
+            }
+        }
 
         async function fetchWithTimeout(url, options = {}, timeoutMs = NETWORK_API_TIMEOUT_MS) {
             const { signal: externalSignal, ...fetchOptions } = options || {};
@@ -20585,7 +21014,69 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             return `${countryCode} ${asnText} ${asnName}`.trim() || '未知';
         }
 
-        // 获取国内测试数据 (多源并发：HEAD + JSONP，提取IP后查询ipinfo)
+        function createIpProbeRequestTask(sourceConfig) {
+            if (sourceConfig.type === 'jsonp') {
+                const jsonpTask = createJsonpRequest(sourceConfig.url, sourceConfig.callbackParam);
+                return {
+                    cancel: jsonpTask.cancel,
+                    promise: jsonpTask.promise.then(payload => {
+                        const requestIp = String(sourceConfig.extractIp(payload) || '').trim();
+                        if (!requestIp) {
+                            throw new Error(`${sourceConfig.url} missing jsonp ip`);
+                        }
+                        return {
+                            source: sourceConfig.url,
+                            requestIp,
+                            providerName: sourceConfig.name
+                        };
+                    })
+                };
+            }
+
+            const controller = new AbortController();
+            return {
+                cancel: () => controller.abort(),
+                promise: (async () => {
+                    const url = `${sourceConfig.url}${sourceConfig.url.includes('?') ? '&' : '?'}_t=${Date.now()}`;
+                    const response = await fetchWithTimeout(url, {
+                        method: 'HEAD',
+                        cache: 'no-store',
+                        signal: controller.signal
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`${sourceConfig.url} HTTP ${response.status}`);
+                    }
+
+                    const requestIp = String(response.headers.get(sourceConfig.ipHeader) || '').trim();
+                    if (!requestIp) {
+                        throw new Error(`${sourceConfig.url} missing ${sourceConfig.ipHeader}`);
+                    }
+
+                    return {
+                        source: sourceConfig.url,
+                        requestIp,
+                        providerName: sourceConfig.name
+                    };
+                })()
+            };
+        }
+
+        async function raceIpProbeSources(sourceConfigs, label) {
+            if (!sourceConfigs.length) {
+                throw new Error(`${label} has no sources`);
+            }
+
+            const requestTasks = sourceConfigs.map(createIpProbeRequestTask);
+
+            try {
+                return await Promise.any(requestTasks.map(task => task.promise));
+            } finally {
+                requestTasks.forEach(task => task.cancel && task.cancel());
+            }
+        }
+
+        // 获取国内测试数据（HEAD 优先，失败后再用 JSONP 兜底）
         async function fetchIpipData() {
             setStatus('status-ipip', 'loading');
 
@@ -20632,60 +21123,17 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     extractIp: payload => payload?.content?.localIp
                 }
             ];
-            const requestTasks = testSources.map(sourceConfig => {
-                if (sourceConfig.type === 'jsonp') {
-                    const jsonpTask = createJsonpRequest(sourceConfig.url, sourceConfig.callbackParam);
-                    return {
-                        cancel: jsonpTask.cancel,
-                        promise: jsonpTask.promise.then(payload => {
-                            const requestIp = String(sourceConfig.extractIp(payload) || '').trim();
-                            if (!requestIp) {
-                                throw new Error(`${sourceConfig.url} missing jsonp ip`);
-                            }
-                            return {
-                                source: sourceConfig.url,
-                                requestIp,
-                                providerName: sourceConfig.name
-                            };
-                        })
-                    };
-                }
-
-                const controller = new AbortController();
-                return {
-                    cancel: () => controller.abort(),
-                    promise: (async () => {
-                        const url = `${sourceConfig.url}${sourceConfig.url.includes('?') ? '&' : '?'}_t=${Date.now()}`;
-                        const response = await fetchWithTimeout(url, {
-                            method: 'HEAD',
-                            cache: 'no-store',
-                            signal: controller.signal
-                        });
-
-                        if (!response.ok) {
-                            throw new Error(`${sourceConfig.url} HTTP ${response.status}`);
-                        }
-
-                        const requestIp = String(response.headers.get(sourceConfig.ipHeader) || '').trim();
-                        if (!requestIp) {
-                            throw new Error(`${sourceConfig.url} missing ${sourceConfig.ipHeader}`);
-                        }
-
-                        return {
-                            source: sourceConfig.url,
-                            requestIp,
-                            providerName: sourceConfig.name
-                        };
-                    })()
-                };
-            });
-
+            const headSources = testSources.filter(sourceConfig => sourceConfig.type === 'head');
+            const jsonpSources = testSources.filter(sourceConfig => sourceConfig.type === 'jsonp');
             let fastestSuccess;
             try {
-                fastestSuccess = await Promise.any(requestTasks.map(task => task.promise));
+                try {
+                    fastestSuccess = await raceIpProbeSources(headSources, '国内测试 HEAD');
+                } catch (headError) {
+                    console.warn('[国内测试] HEAD 测试源不可用，后台切换到 JSONP 兜底:', headError);
+                    fastestSuccess = await raceIpProbeSources(jsonpSources, '国内测试 JSONP');
+                }
             } catch (error) {
-                requestTasks.forEach(task => task.cancel && task.cancel());
-
                 setNetworkFieldError('ipip-ip', '加载失败');
                 clearNetworkFieldValue('ipip-country');
                 applyNetworkCardFlag('ipip-country');
@@ -20697,8 +21145,6 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 console.error('国内测试 所有测试源都失败:', error);
                 return;
             }
-
-            requestTasks.forEach(task => task.cancel && task.cancel());
 
             const fallbackIp = String(fastestSuccess.requestIp || '未知').trim() || '未知';
             setNetworkFieldValue('ipip-ip', fallbackIp, 'ip');
@@ -20738,27 +21184,44 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     parse: d => ({ ip: d.ip, loc: `${d.location?.country_code || '未知'} AS${d.asn?.asn || ''} ${d.asn?.org || ''}`.trim() })
                 },
                 {
-                    url: `https://api.cmliussss.net/api/ipinfo?_t=${Date.now()}`,
+                    url: `https://api.cmliussss.net/api/ipinfo`,
                     parse: d => ({ ip: d.ip, loc: `${d.country_code || '未知'} ${d.asn || ''} ${d.as_name || ''}`.trim() })
                 }
             ];
 
-            for (const api of apis) {
-                try {
-                    const response = await fetchWithTimeout(api.url);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    const { ip, loc } = api.parse(await response.json());
-                    const edgeIp = ip || '未知';
+            const requestTasks = apis.map(api => {
+                const controller = new AbortController();
+                return {
+                    cancel: () => controller.abort(),
+                    promise: (async () => {
+                        const url = `${api.url}${api.url.includes('?') ? '&' : '?'}_t=${Date.now()}`;
+                        const response = await fetchWithTimeout(url, {
+                            cache: 'no-store',
+                            signal: controller.signal
+                        });
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        const { ip, loc } = api.parse(await response.json());
+                        const edgeIp = ip || '未知';
 
-                    setNetworkFieldValue('overseas-ip', edgeIp, 'ip');
-                    setNetworkFieldValue('overseas-country', loc || '未知', 'location');
-                    applyNetworkCardFlag('overseas-country');
-                    setStatus('status-overseas', 'success');
-                    console.log(`[国外测试] 成功: IP=${edgeIp}, 位置=${loc}`);
-                    return;
-                } catch (error) {
-                    console.log(`[国外测试] ${api.url} 失败: ${error.message}`);
-                }
+                        return { edgeIp, loc, url: api.url };
+                    })().catch(error => {
+                        console.log(`[国外测试] ${api.url} 失败: ${error.message}`);
+                        throw error;
+                    })
+                };
+            });
+
+            try {
+                const { edgeIp, loc } = await Promise.any(requestTasks.map(task => task.promise));
+                requestTasks.forEach(task => task.cancel && task.cancel());
+                setNetworkFieldValue('overseas-ip', edgeIp, 'ip');
+                setNetworkFieldValue('overseas-country', loc || '未知', 'location');
+                applyNetworkCardFlag('overseas-country');
+                setStatus('status-overseas', 'success');
+                console.log(`[国外测试] 成功: IP=${edgeIp}, 位置=${loc}`);
+                return;
+            } catch (error) {
+                requestTasks.forEach(task => task.cancel && task.cancel());
             }
 
             // 所有 API 都失败
@@ -21134,7 +21597,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             }
         }
 
-        // 获取墙外测试数据（谷歌优先，失败回退 X.com）
+        // 获取墙外测试数据（后台并发取最快可用源）
         async function fetchTwitterData() {
             setStatus('status-twitter', 'loading');
             const statusElement = document.querySelector('#status-twitter');
@@ -21158,63 +21621,77 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             const testSources = [
                 {
                     name: '谷歌(Google)',
-                    getIp: async () => {
+                    createTask: () => {
                         const jsonpTask = createJsonpRequest(`https://jsonp-ip.appspot.com/?_t=${Date.now()}`, 'callback');
-                        try {
-                            const payload = await jsonpTask.promise;
-                            const requestIp = String(payload?.ip || '').trim();
-                            if (isInvalidOutsideEntryIp(requestIp)) {
-                                if (requestIp === '0.0.0.0') {
-                                    throw new Error('google jsonp returned invalid ip 0.0.0.0');
+                        return {
+                            cancel: jsonpTask.cancel,
+                            promise: jsonpTask.promise.then(payload => {
+                                const requestIp = String(payload?.ip || '').trim();
+                                if (isInvalidOutsideEntryIp(requestIp)) {
+                                    if (requestIp === '0.0.0.0') {
+                                        throw new Error('google jsonp returned invalid ip 0.0.0.0');
+                                    }
+                                    throw new Error('google jsonp missing ip');
                                 }
-                                throw new Error('google jsonp missing ip');
-                            }
-                            return requestIp;
-                        } finally {
-                            jsonpTask.cancel();
-                        }
+                                return {
+                                    providerName: '谷歌(Google)',
+                                    requestIp
+                                };
+                            })
+                        };
                     }
                 },
                 {
                     name: '推特(X.com)',
-                    getIp: async () => {
-                        const response = await fetchWithTimeout(`https://help.x.com/cdn-cgi/trace?_t=${Date.now()}`, {
-                            cache: 'no-store'
-                        });
-                        if (!response.ok) {
-                            throw new Error(`x trace HTTP ${response.status}`);
-                        }
+                    createTask: () => {
+                        const controller = new AbortController();
+                        return {
+                            cancel: () => controller.abort(),
+                            promise: (async () => {
+                                const response = await fetchWithTimeout(`https://help.x.com/cdn-cgi/trace?_t=${Date.now()}`, {
+                                    cache: 'no-store',
+                                    signal: controller.signal
+                                });
+                                if (!response.ok) {
+                                    throw new Error(`x trace HTTP ${response.status}`);
+                                }
 
-                        const text = await response.text();
-                        const ipLine = text.split('\n').find(line => line.startsWith('ip='));
-                        const requestIp = String(ipLine ? ipLine.slice(3) : '').trim();
-                        if (isInvalidOutsideEntryIp(requestIp)) {
-                            if (requestIp === '0.0.0.0') {
-                                throw new Error('x trace returned invalid ip 0.0.0.0');
-                            }
-                            throw new Error('x trace missing ip');
-                        }
-                        return requestIp;
+                                const text = await response.text();
+                                const ipLine = text.split('\n').find(line => line.startsWith('ip='));
+                                const requestIp = String(ipLine ? ipLine.slice(3) : '').trim();
+                                if (isInvalidOutsideEntryIp(requestIp)) {
+                                    if (requestIp === '0.0.0.0') {
+                                        throw new Error('x trace returned invalid ip 0.0.0.0');
+                                    }
+                                    throw new Error('x trace missing ip');
+                                }
+                                return {
+                                    providerName: '推特(X.com)',
+                                    requestIp
+                                };
+                            })()
+                        };
                     }
                 }
             ];
 
             try {
+                const requestTasks = testSources.map(source => {
+                    const task = source.createTask();
+                    return {
+                        cancel: task.cancel,
+                        promise: task.promise.catch(sourceError => {
+                            console.log(`[墙外测试] ${source.name} 失败: ${sourceError.message}`);
+                            throw sourceError;
+                        })
+                    };
+                });
+
                 let fastestSuccess = null;
-                for (const source of testSources) {
-                    try {
-                        const requestIp = await source.getIp();
-                        if (isInvalidOutsideEntryIp(requestIp)) {
-                            throw new Error(`${source.name} returned invalid ip`);
-                        }
-                        fastestSuccess = {
-                            providerName: source.name,
-                            requestIp
-                        };
-                        break;
-                    } catch (sourceError) {
-                        console.log(`[墙外测试] ${source.name} 失败: ${sourceError.message}`);
-                    }
+                try {
+                    fastestSuccess = await Promise.any(requestTasks.map(task => task.promise));
+                } finally {
+                    requestTasks.forEach(task => task.cancel && task.cancel());
                 }
 
                 if (!fastestSuccess) {
@@ -21261,6 +21738,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
         // 加载网络信息
         async function loadNetworkInfo() {
+            if (networkInfoLoadPromise) {
+                return networkInfoLoadPromise;
+            }
+
             // 检查容器是否存在
             const container = document.querySelector('.network-cards-container');
             if (!container) return;
@@ -21269,30 +21750,29 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             // 设置加载标志
             networkInfoLoaded = true;
 
-            // 并行获取所有网络信息
-            await Promise.all([
-                fetchIpipData(),
-                fetchOverseasTestData(),
-                fetchCloudFlareData(),
-                fetchTwitterData()
-            ]);
+            const networkTasks = [
+                { name: '国外测试', run: fetchOverseasTestData },
+                { name: 'CloudFlare', run: fetchCloudFlareData },
+                { name: '国内测试', run: fetchIpipData },
+                { name: '墙外测试', run: fetchTwitterData }
+            ];
 
-            // 所有网络信息加载完成后,使 IP 可点击
-            setTimeout(() => {
-                makeIpClickable();
-            }, 500);
+            networkInfoLoadPromise = (async () => {
+                for (let i = 0; i < networkTasks.length; i++) {
+                    await runNetworkInfoBackgroundTask(networkTasks[i], i);
+                }
+
+                // 所有网络信息加载完成后,使 IP 可点击
+                setTimeout(() => {
+                    makeIpClickable();
+                }, 500);
+            })();
+
+            return networkInfoLoadPromise;
         }
 
-        // 页面加载时自动获取网络信息（因为模块现在默认展开）
-        if (document.readyState !== 'loading') {
-            // 页面已加载，直接加载数据
-            loadNetworkInfo();
-        } else {
-            // 页面还在加载，等待加载完成
-            document.addEventListener('DOMContentLoaded', () => {
-                loadNetworkInfo();
-            });
-        }
+        // 页面加载完成并进入空闲状态后，在后台获取网络信息，避免影响前台初始化
+        scheduleNetworkInfoLoad();
 
         function updateIpElementTitle(element) {
             if (!element) return;

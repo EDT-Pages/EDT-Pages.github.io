@@ -25,24 +25,12 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            overflow: hidden
+            min-height: 100vh;
+            overflow: hidden;
+            background: var(--admin-bg-base)
         }
 
         /* 通用动画 */
-        @keyframes blurOverlayAppear {
-            0% {
-                opacity: 0;
-                -webkit-backdrop-filter: blur(0px);
-                backdrop-filter: blur(0px);
-            }
-
-            100% {
-                opacity: 1;
-                -webkit-backdrop-filter: blur(12px);
-                backdrop-filter: blur(12px);
-            }
-        }
-
         @keyframes containerAppear {
             0% {
                 opacity: 0;
@@ -122,32 +110,6 @@
             to {
                 transform: rotate(360deg)
             }
-        }
-
-        /* 背景和遮罩层 */
-        #background-iframe {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-            z-index: -3 !important
-        }
-
-        #blur-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0, rgba(118, 75, 162, 0.15) 100%);
-            -webkit-backdrop-filter: blur(12px);
-            backdrop-filter: blur(12px);
-            z-index: -2 !important;
-            animation: blurOverlayAppear 1.5s ease-out forwards .3s;
-            pointer-events: none;
-            opacity: 0
         }
 
         /* 通用容器包装器 */
@@ -2488,9 +2450,7 @@
             --input-border: #e5e7eb;
             --overlay-bg: rgba(255, 255, 255, 0.7);
             --blur-overlay: rgba(0, 0, 0, 0.3);
-            --lowperf-bg-start: #f5f7fb;
-            --lowperf-bg-end: #eef2f7;
-            --lowperf-overlay: rgba(255, 255, 255, 0.14);
+            --admin-bg-base: #f8fafc;
             --latency-49: #4CAF50;
             --latency-149: #83DA00;
             --latency-299: #f58722;
@@ -2509,18 +2469,11 @@
             --input-border: #444444;
             --overlay-bg: rgba(32, 32, 32, 0.7);
             --blur-overlay: rgba(0, 0, 0, 0.8);
-            --lowperf-bg-start: #0f172a;
-            --lowperf-bg-end: #1f2937;
-            --lowperf-overlay: rgba(15, 23, 42, 0.45);
+            --admin-bg-base: #070b12;
         }
 
         html.dark-mode body {
-            background: linear-gradient(135deg, #1a1a1a 0, #2a2a2a 50%, #1a1a1a 100%) !important;
             color: var(--text-primary)
-        }
-
-        html.dark-mode #blur-overlay {
-            background: var(--blur-overlay)
         }
 
         html.dark-mode .card-container {
@@ -2533,7 +2486,7 @@
 
         html.dark-mode .header {
             background: rgba(39, 39, 39, 0.95);
-            border-image: linear-gradient(90deg, #7c3aed 0, #5b21b6 50%, #7c3aed 100%) 1
+            border-image: linear-gradient(90deg, #faab41 0, #f6821f 50%, #faab41 100%) 1
         }
 
         html.dark-mode .module {
@@ -7596,21 +7549,8 @@
         }
 
         /* 低性能模式（自动触发）：禁用高开销视觉效果，优化无硬件加速场景 */
-        html.low-performance-mode #background-iframe {
-            display: none !important;
-        }
-
-        html.low-performance-mode #blur-overlay {
-            display: block !important;
-            opacity: 1 !important;
-            animation: none !important;
-            background: var(--blur-overlay) !important;
-            -webkit-backdrop-filter: none !important;
-            backdrop-filter: none !important;
-        }
-
         html.low-performance-mode body {
-            background: linear-gradient(135deg, var(--lowperf-bg-start) 0%, var(--lowperf-bg-end) 100%) !important;
+            background: var(--admin-bg-base) !important;
         }
 
         html.low-performance-mode .card-container,
@@ -7657,12 +7597,6 @@
 </head>
 
 <body>
-    <!-- 背景内容 -->
-    <iframe id="background-iframe" src="about:blank" data-src="/" loading="lazy" title="背景内容"></iframe>
-
-    <!-- 毛玻璃效果遮盖层 -->
-    <div id="blur-overlay"></div>
-
     <!-- 管理后台容器 -->
     <div class="page-wrapper">
         <div class="card-container">
@@ -9473,6 +9407,47 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     box-shadow: 0 10px 24px rgba(15, 159, 110, 0.16);
                 }
 
+                #saveSelectedBtn.is-save-easter-shaking {
+                    animation: saveSelectedButtonShake 0.32s ease-in-out infinite;
+                    box-shadow: 0 0 0 4px rgba(15, 159, 110, 0.18), 0 14px 30px rgba(15, 159, 110, 0.24);
+                    transform-origin: center;
+                }
+
+                #saveSelectedBtn.is-save-locked {
+                    cursor: not-allowed;
+                    opacity: 0.56;
+                }
+
+                #saveSelectedBtn.is-save-locked:not(.is-save-easter-shaking):hover {
+                    background: var(--green);
+                    box-shadow: none;
+                    transform: none;
+                }
+
+                @keyframes saveSelectedButtonShake {
+
+                    0%,
+                    100% {
+                        transform: translateX(0) rotate(0deg);
+                    }
+
+                    20% {
+                        transform: translateX(-2px) rotate(-2deg);
+                    }
+
+                    40% {
+                        transform: translateX(2px) rotate(2deg);
+                    }
+
+                    60% {
+                        transform: translateX(-2px) rotate(-1.5deg);
+                    }
+
+                    80% {
+                        transform: translateX(2px) rotate(1.5deg);
+                    }
+                }
+
                 .icon-btn {
                     display: inline-grid;
                     width: 38px;
@@ -9882,6 +9857,24 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     flex-wrap: wrap;
                     align-items: center;
                     gap: 10px;
+                }
+
+                .bestcf-credit {
+                    margin-top: 18px;
+                    color: var(--muted);
+                    font-size: 12px;
+                    line-height: 1.6;
+                    text-align: center;
+                    overflow-wrap: anywhere;
+                }
+
+                .bestcf-credit a {
+                    color: var(--blue);
+                    text-decoration: none;
+                }
+
+                .bestcf-credit a:hover {
+                    text-decoration: underline;
                 }
 
                 .selection-status {
@@ -10502,7 +10495,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                                 <div class="shade-line"></div>
                                             </div>
                                             <textarea id="ipInput" spellcheck="false"
-                                                placeholder="1.0.0.0:443&#10;[2606:4700::0]:443&#10;103.22.200.0/22"></textarea>
+                                                placeholder="IP格式:&#10;1.0.0.0:443&#10;[2606:4700::0]:443&#10;&#10;CIDR格式:&#10;103.22.200.0/22&#10;2606:4700::/32&#10;&#10;IP区间:&#10;162.159.152.0-162.159.153.255&#10;2606:4700::1-2606:4700::9999"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -10575,6 +10568,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         </section>
                     </div>
                 </div>
+
+                <p class="bestcf-credit">
+                    在线优选得以实现，离不开巨人的肩膀。感谢 @ktff、@Lfreea、<a href="https://hidoha.net"
+                        target="_blank" rel="noopener noreferrer">HiDNS</a> 的探索与贡献。
+                </p>
             </main>
 
             <div class="network-warning-overlay" id="networkWarningOverlay" role="dialog" aria-modal="true"
@@ -10647,6 +10645,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     { label: "AS209242列表v6", family: "ipv6", url: "https://raw.githubusercontent.com/ipverse/asn-ip/master/as/209242/ipv6-aggregated.txt" }
                 ];
                 const LIBRARY_SELECTION_CACHE_KEY = "bestcf:selected-ip-library";
+                const SAVE_EASTER_SHAKE_DELAY_MS = 618;
+                const SAVE_EASTER_EXPORT_DELAY_MS = 1000;
 
                 const state = {
                     ipv4: null,
@@ -10664,6 +10664,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     sort: { key: "latency", dir: "asc" },
                     resultSelectionDrag: null,
                     suppressResultClick: false,
+                    saveEasterHold: null,
+                    suppressNextSaveClick: false,
                     preferredLibraryKey: ""
                 };
 
@@ -10807,7 +10809,18 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     els.selectAllBtn.addEventListener("click", selectAllResults);
                     els.invertSelectBtn.addEventListener("click", invertSelectedResults);
                     els.clearSelectBtn.addEventListener("click", clearSelectedResults);
-                    els.saveSelectedBtn.addEventListener("click", saveSelectedResults);
+                    els.saveSelectedBtn.addEventListener("pointerdown", startSaveSelectedLongPress);
+                    els.saveSelectedBtn.addEventListener("pointerup", finishSaveSelectedLongPress);
+                    els.saveSelectedBtn.addEventListener("pointercancel", finishSaveSelectedLongPress);
+                    els.saveSelectedBtn.addEventListener("lostpointercapture", finishSaveSelectedLongPress);
+                    els.saveSelectedBtn.addEventListener("click", (event) => {
+                        if (state.suppressNextSaveClick) {
+                            state.suppressNextSaveClick = false;
+                            event.preventDefault();
+                            return;
+                        }
+                        saveSelectedResults();
+                    });
                     els.closeBestCFBtn.addEventListener("click", closeBestCFModule);
                     els.networkWarningConfirmBtn.addEventListener("click", confirmNetworkWarning);
                     document.querySelectorAll("[data-sort]").forEach((button) => {
@@ -11663,13 +11676,20 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     const total = state.results.length;
                     const selected = state.selectedIds.size;
                     els.selectionStatus.textContent = `已选 ${selected} 个`;
-                    els.saveSelectedBtn.disabled = selected === 0;
+                    const saveLocked = total > 0 && selected === 0;
+                    els.saveSelectedBtn.disabled = total === 0;
+                    els.saveSelectedBtn.classList.toggle("is-save-locked", saveLocked);
+                    els.saveSelectedBtn.setAttribute("aria-disabled", (total === 0 || saveLocked) ? "true" : "false");
                     els.selectAllBtn.disabled = total === 0;
                     els.invertSelectBtn.disabled = total === 0;
                     els.clearSelectBtn.disabled = selected === 0;
                     els.selectAllHeader.disabled = total === 0;
                     els.selectAllHeader.checked = total > 0 && selected === total;
                     els.selectAllHeader.indeterminate = selected > 0 && selected < total;
+                    if (total === 0) finishSaveSelectedLongPress();
+                    if (state.saveEasterHold && state.saveEasterHold.shaking && !state.saveEasterHold.exported) {
+                        els.selectionStatus.textContent = "继续按住可导出 CSV";
+                    }
                 }
 
                 function startResultSelectionDrag(event) {
@@ -11808,6 +11828,135 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                     if (sendSelectedResultsToParent(lines)) return;
                     copySelectedResults(lines);
+                }
+
+                function startSaveSelectedLongPress(event) {
+                    if (event.button !== undefined && event.button !== 0) return;
+                    if (els.saveSelectedBtn.disabled || !state.results.length) return;
+
+                    finishSaveSelectedLongPress({ restoreStatus: false });
+
+                    const hold = {
+                        exported: false,
+                        shaking: false,
+                        shakeTimer: 0,
+                        exportTimer: 0
+                    };
+                    state.saveEasterHold = hold;
+
+                    try {
+                        if (event.pointerId !== undefined && els.saveSelectedBtn.setPointerCapture) {
+                            els.saveSelectedBtn.setPointerCapture(event.pointerId);
+                        }
+                    } catch (error) {
+                        // Pointer capture is only a convenience for touch/mouse movement during the hold.
+                    }
+
+                    hold.shakeTimer = window.setTimeout(() => {
+                        if (state.saveEasterHold !== hold) return;
+                        hold.shaking = true;
+                        state.suppressNextSaveClick = true;
+                        els.saveSelectedBtn.classList.add("is-save-easter-shaking");
+                        els.selectionStatus.textContent = "继续按住可导出 CSV";
+                    }, SAVE_EASTER_SHAKE_DELAY_MS);
+
+                    hold.exportTimer = window.setTimeout(() => {
+                        if (state.saveEasterHold !== hold) return;
+                        hold.exported = true;
+                        state.suppressNextSaveClick = true;
+                        exportOptimizeResultsCsv();
+                        window.clearTimeout(hold.shakeTimer);
+                        window.clearTimeout(hold.exportTimer);
+                        els.saveSelectedBtn.classList.remove("is-save-easter-shaking");
+                    }, SAVE_EASTER_EXPORT_DELAY_MS);
+                }
+
+                function finishSaveSelectedLongPress(options = {}) {
+                    const hold = state.saveEasterHold;
+                    if (!hold) return;
+
+                    window.clearTimeout(hold.shakeTimer);
+                    window.clearTimeout(hold.exportTimer);
+                    els.saveSelectedBtn.classList.remove("is-save-easter-shaking");
+                    state.saveEasterHold = null;
+
+                    if (hold.shaking) state.suppressNextSaveClick = true;
+                    if (hold.shaking) {
+                        window.setTimeout(() => {
+                            state.suppressNextSaveClick = false;
+                        }, 1000);
+                    }
+                    if (hold.shaking && !hold.exported && options.restoreStatus !== false) {
+                        updateSelectionState();
+                    }
+                }
+
+                function exportOptimizeResultsCsv() {
+                    const rows = getSortedResults().map(({ item }) => item);
+                    if (!rows.length) {
+                        els.selectionStatus.textContent = "暂无可导出的结果";
+                        return false;
+                    }
+
+                    const header = ["优选IP", "IP类型", "优选类型", "国家/地区", "数据中心", "延迟(ms)", "速度(Mbps)"];
+                    const csvRows = rows.map((item) => [
+                        item.address || "",
+                        item.ipType || "未知",
+                        item.type || "",
+                        item.country || "未知",
+                        item.colo || "未知",
+                        Number.isFinite(item.latency) ? item.latency : "",
+                        formatSpeedForCsv(item)
+                    ]);
+                    const csv = [header, ...csvRows].map(formatCsvRow).join("\r\n");
+                    downloadTextFile(`bestcf-results-${timestampForFilename()}.csv`, `\uFEFF${csv}`, "text/csv;charset=utf-8");
+                    els.selectionStatus.textContent = `已导出 ${rows.length} 个`;
+                    return true;
+                }
+
+                function formatSpeedForCsv(item) {
+                    if (item.speedState === "done") return `${formatSpeedMbps(item.speedMbps)}`;
+                    if (item.speedState === "testing") return "测速中";
+                    if (item.speedState === "failed") return "失败";
+                    if (item.speedState === "stopped") return "测速已停止";
+                    return "待测试";
+                }
+
+                function formatCsvRow(row) {
+                    return row.map(formatCsvCell).join(",");
+                }
+
+                function formatCsvCell(value) {
+                    const text = String(value === null || value === undefined ? "" : value);
+                    const safeText = /^[=+\-@]/.test(text) ? `'${text}` : text;
+                    return /[",\r\n]/.test(safeText) ? `"${safeText.replace(/"/g, '""')}"` : safeText;
+                }
+
+                function timestampForFilename() {
+                    const date = new Date();
+                    const pad = (value) => String(value).padStart(2, "0");
+                    return [
+                        date.getFullYear(),
+                        pad(date.getMonth() + 1),
+                        pad(date.getDate())
+                    ].join("") + "-" + [
+                        pad(date.getHours()),
+                        pad(date.getMinutes()),
+                        pad(date.getSeconds())
+                    ].join("");
+                }
+
+                function downloadTextFile(filename, content, mimeType) {
+                    const blob = new Blob([content], { type: mimeType });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.download = filename;
+                    link.style.display = "none";
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    window.setTimeout(() => URL.revokeObjectURL(url), 0);
                 }
 
                 function formatResultForAdmin(item) {
@@ -11992,10 +12141,16 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                     const fixed = [];
                     const cidrs = [];
+                    const ranges = [];
                     for (const line of lines) {
                         if (line.includes("/")) {
                             const cidr = parseCidr(line);
                             if (cidr) cidrs.push(cidr);
+                            continue;
+                        }
+                        const range = parseIpRange(line);
+                        if (range) {
+                            ranges.push(range);
                             continue;
                         }
                         const normalized = normalizeAddress(line, preferredPort);
@@ -12019,6 +12174,16 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         while (candidates.length < limit && attempts < maxAttempts) {
                             const cidr = cidrs[attempts % cidrs.length];
                             addCandidate(randomAddressFromCidr(cidr, preferredPort));
+                            attempts += 1;
+                        }
+                    }
+
+                    if (ranges.length && candidates.length < limit) {
+                        let attempts = 0;
+                        const maxAttempts = Math.max(limit * 12, ranges.length * 8);
+                        while (candidates.length < limit && attempts < maxAttempts) {
+                            const range = ranges[attempts % ranges.length];
+                            addCandidate(randomAddressFromRange(range, preferredPort));
                             attempts += 1;
                         }
                     }
@@ -12067,6 +12232,35 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     return null;
                 }
 
+                function parseIpRange(line) {
+                    const separator = line.indexOf("-");
+                    if (separator <= 0 || separator !== line.lastIndexOf("-")) return null;
+
+                    const startText = unwrapRangeIp(line.slice(0, separator));
+                    const endText = unwrapRangeIp(line.slice(separator + 1));
+
+                    const startIpv4 = ipv4ToBigInt(startText);
+                    const endIpv4 = ipv4ToBigInt(endText);
+                    if (startIpv4 !== null && endIpv4 !== null) {
+                        if (startIpv4 > endIpv4) return null;
+                        return { family: "ipv4", start: startIpv4, size: endIpv4 - startIpv4 + 1n };
+                    }
+
+                    const startIpv6 = ipv6ToBigInt(startText);
+                    const endIpv6 = ipv6ToBigInt(endText);
+                    if (startIpv6 !== null && endIpv6 !== null) {
+                        if (startIpv6 > endIpv6) return null;
+                        return { family: "ipv6", start: startIpv6, size: endIpv6 - startIpv6 + 1n };
+                    }
+
+                    return null;
+                }
+
+                function unwrapRangeIp(value) {
+                    const bracketed = value.match(/^\[([0-9a-fA-F:.]+)]$/);
+                    return bracketed ? bracketed[1] : value;
+                }
+
                 function parseCidr(line) {
                     const parts = line.split("/");
                     if (parts.length !== 2) return null;
@@ -12092,6 +12286,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     const value = cidr.network + randomBigIntBelow(cidr.size);
                     const port = choosePort(preferredPort);
                     if (cidr.family === "ipv4") return `${bigIntToIpv4(value)}:${port}`;
+                    return `[${bigIntToIpv6(value)}]:${port}`;
+                }
+
+                function randomAddressFromRange(range, preferredPort) {
+                    const value = range.start + randomBigIntBelow(range.size);
+                    const port = choosePort(preferredPort);
+                    if (range.family === "ipv4") return `${bigIntToIpv4(value)}:${port}`;
                     return `[${bigIntToIpv6(value)}]:${port}`;
                 }
 
@@ -13498,21 +13699,6 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             console.info(`[perf] Low performance mode enabled: ${reason}`);
         }
 
-        function initBackgroundIframe() {
-            const iframe = document.getElementById('background-iframe');
-            if (!iframe) return;
-
-            if (isLowPerformanceMode) {
-                iframe.setAttribute('src', 'about:blank');
-                return;
-            }
-
-            const targetSrc = iframe.getAttribute('data-src') || '/';
-            if (iframe.getAttribute('src') !== targetSrc) {
-                iframe.setAttribute('src', targetSrc);
-            }
-        }
-
         function measureAverageFrameTime(sampleCount = 18, timeoutMs = 1500) {
             return new Promise((resolve) => {
                 if (!window.requestAnimationFrame) {
@@ -13607,7 +13793,6 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 if (avgFrameTime > 20) {
                     enableLowPerformanceMode(`post-load-frame-time=${avgFrameTime.toFixed(1)}ms`);
                 }
-                initBackgroundIframe();
             };
 
             const launch = () => {
@@ -13629,7 +13814,6 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 if (forcedMode) {
                     enableLowPerformanceMode('manual');
                 }
-                initBackgroundIframe();
                 return;
             }
 
@@ -13640,13 +13824,11 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
             if (prefersReducedMotion || (cpuCores > 0 && cpuCores <= 4) || (memoryGB > 0 && memoryGB <= 4)) {
                 enableLowPerformanceMode('device-hints');
-                initBackgroundIframe();
                 return;
             }
 
             if (rendererProbe.isSoftware) {
                 enableLowPerformanceMode(rendererProbe.reason);
-                initBackgroundIframe();
                 return;
             }
 
@@ -13655,7 +13837,6 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 enableLowPerformanceMode(`startup-frame-time=${avgFrameTime.toFixed(1)}ms`);
             }
 
-            initBackgroundIframe();
             schedulePerformanceRecheck();
         }
 

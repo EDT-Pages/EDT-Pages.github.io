@@ -14,7 +14,7 @@
         rel="stylesheet">
     <!-- Leaflet Map Resources -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script data-cfasync="false" src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         /* 基础重置 */
         * {
@@ -2974,17 +2974,17 @@
         }
 
         html.dark-mode .module-title:not(.non-collapsible):hover .collapse-icon {
-            background: rgba(124, 58, 237, 0.1);
-            border-color: rgba(167, 139, 250, 0.24);
-            fill: #c4b5fd;
+            background: rgba(148, 144, 165, 0.11);
+            border-color: rgba(184, 180, 199, 0.22);
+            fill: #b8b4c7;
         }
 
         html.dark-mode .module.collapsed .collapse-icon,
         html.dark-mode .module.network-detail-collapsed .collapse-icon {
-            background: rgba(124, 58, 237, 0.14);
-            border-color: rgba(167, 139, 250, 0.3);
-            fill: #c4b5fd;
-            box-shadow: 0 2px 6px -4px rgba(124, 58, 237, 0.8);
+            background: rgba(148, 144, 165, 0.14);
+            border-color: rgba(184, 180, 199, 0.26);
+            fill: #b8b4c7;
+            box-shadow: 0 2px 6px -4px rgba(117, 111, 135, 0.58);
         }
 
         html.dark-mode .footer-hint {
@@ -3610,6 +3610,638 @@
         .btn-mode-toggle:active {
             transform: translateY(0);
             box-shadow: 0 2px 10px rgba(31, 41, 55, 0.4);
+        }
+
+        .mode-transition-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9000000010;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: #fff;
+            pointer-events: auto;
+            opacity: 0;
+            overflow: hidden;
+            transform: scale(1.04);
+            transition: opacity 0.28s ease, transform 0.52s cubic-bezier(0.2, 0.9, 0.2, 1);
+        }
+
+        .mode-transition-overlay.is-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .mode-transition-overlay.is-exiting {
+            opacity: 0;
+            transform: scale(0.98);
+            transition-duration: 0.24s;
+        }
+
+        .mode-transition-overlay::before,
+        .mode-transition-overlay::after {
+            content: "";
+            position: absolute;
+            inset: -15%;
+        }
+
+        .mode-transition-overlay::before {
+            background: var(--mode-transition-bg);
+        }
+
+        .mode-transition-overlay::after {
+            background:
+                radial-gradient(circle at 25% 30%, rgba(255, 255, 255, 0.3), transparent 18%),
+                radial-gradient(circle at 72% 68%, rgba(255, 255, 255, 0.22), transparent 16%),
+                repeating-linear-gradient(120deg, rgba(255, 255, 255, 0.12) 0 2px, transparent 2px 24px);
+            opacity: 0.72;
+            transform: translate3d(-3%, 0, 0) rotate(0.001deg);
+            animation: modeTransitionFlow 1.18s ease-in-out forwards;
+        }
+
+        .mode-transition-overlay[data-mode="simple"] {
+            --mode-transition-bg: linear-gradient(135deg, #0f766e 0%, #14b8a6 42%, #f59e0b 100%);
+            --mode-transition-accent: #fde68a;
+            --mode-transition-glow: rgba(253, 230, 138, 0.55);
+        }
+
+        .mode-transition-overlay[data-mode="expert"] {
+            --mode-transition-bg:
+                radial-gradient(circle at 50% 44%, rgba(34, 197, 94, 0.28), transparent 22%),
+                radial-gradient(circle at 78% 18%, rgba(34, 211, 238, 0.18), transparent 21%),
+                radial-gradient(circle at 22% 82%, rgba(16, 185, 129, 0.14), transparent 24%),
+                linear-gradient(135deg, #020617 0%, #03120d 42%, #001b17 100%);
+            --mode-transition-accent: #86efac;
+            --mode-transition-glow: rgba(34, 197, 94, 0.48);
+        }
+
+        .mode-transition-overlay[data-mode="expert"]::before {
+            background:
+                linear-gradient(rgba(134, 239, 172, 0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34, 211, 238, 0.045) 1px, transparent 1px),
+                repeating-linear-gradient(135deg, rgba(134, 239, 172, 0.035) 0 1px, transparent 1px 18px),
+                radial-gradient(circle at 50% 44%, rgba(34, 197, 94, 0.28), transparent 22%),
+                radial-gradient(circle at 78% 18%, rgba(34, 211, 238, 0.18), transparent 21%),
+                radial-gradient(circle at 22% 82%, rgba(16, 185, 129, 0.14), transparent 24%),
+                linear-gradient(135deg, #020617 0%, #03120d 42%, #001b17 100%);
+            background-size: 46px 46px, 46px 46px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+            animation: expertGridDrift 1.45s linear forwards;
+        }
+
+        .mode-transition-overlay[data-mode="expert"]::after {
+            background:
+                linear-gradient(90deg, transparent, rgba(134, 239, 172, 0.28), transparent),
+                repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.055) 0 1px, transparent 1px 7px),
+                radial-gradient(circle at 50% 50%, transparent 0 42%, rgba(0, 0, 0, 0.48) 100%);
+            opacity: 0.82;
+            transform: translateX(-62%);
+            mix-blend-mode: screen;
+            animation: expertScanSweep 1.18s cubic-bezier(0.2, 0.85, 0.25, 1) forwards;
+        }
+
+        .mode-transition-expert-frame,
+        .mode-transition-code-rain {
+            position: absolute;
+            inset: -12% 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .mode-transition-code-rain {
+            display: none;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        .mode-transition-overlay[data-mode="expert"] .mode-transition-code-rain {
+            display: block;
+            animation: expertCodeRainReveal 0.32s ease forwards;
+        }
+
+        .mode-transition-code-stream {
+            position: absolute;
+            display: block;
+            top: -120%;
+            left: var(--stream-x);
+            opacity: var(--stream-opacity);
+            color: rgba(134, 239, 172, 0.68);
+            font-family: Consolas, "SFMono-Regular", "Liberation Mono", Menlo, monospace;
+            font-size: var(--stream-size);
+            font-weight: 700;
+            line-height: 1.15;
+            white-space: pre-line;
+            text-shadow: 0 0 10px rgba(34, 197, 94, 0.82);
+            transform: translateY(-20%) translateZ(0);
+            animation: expertCodeRainFall var(--stream-duration) linear var(--stream-delay) forwards;
+        }
+
+        .mode-transition-code-stream::first-line {
+            color: #ecfdf5;
+            text-shadow: 0 0 16px rgba(236, 253, 245, 0.9);
+        }
+
+        .mode-transition-expert-frame {
+            inset: clamp(18px, 4vw, 48px);
+            z-index: 2;
+            display: none;
+            border: 1px solid rgba(134, 239, 172, 0.26);
+            box-shadow: inset 0 0 44px rgba(34, 197, 94, 0.12), 0 0 36px rgba(34, 197, 94, 0.16);
+            opacity: 0;
+        }
+
+        .mode-transition-overlay[data-mode="expert"] .mode-transition-expert-frame {
+            display: block;
+            animation: expertFrameBoot 0.68s cubic-bezier(0.2, 0.85, 0.25, 1) forwards;
+        }
+
+        .mode-transition-expert-frame::before,
+        .mode-transition-expert-frame::after {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            background:
+                linear-gradient(#86efac, #86efac) left top / 76px 2px no-repeat,
+                linear-gradient(#86efac, #86efac) left top / 2px 76px no-repeat,
+                linear-gradient(#86efac, #86efac) right top / 76px 2px no-repeat,
+                linear-gradient(#86efac, #86efac) right top / 2px 76px no-repeat,
+                linear-gradient(#86efac, #86efac) left bottom / 76px 2px no-repeat,
+                linear-gradient(#86efac, #86efac) left bottom / 2px 76px no-repeat,
+                linear-gradient(#86efac, #86efac) right bottom / 76px 2px no-repeat,
+                linear-gradient(#86efac, #86efac) right bottom / 2px 76px no-repeat;
+            filter: drop-shadow(0 0 13px rgba(134, 239, 172, 0.72));
+        }
+
+        .mode-transition-expert-frame::after {
+            inset: 14%;
+            border: 1px solid rgba(34, 211, 238, 0.18);
+            transform: scaleX(0);
+            transform-origin: center;
+            animation: expertReticle 1.04s cubic-bezier(0.2, 0.85, 0.25, 1) 0.12s forwards;
+        }
+
+        .mode-transition-expert-burst {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .mode-transition-expert-particle {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: var(--particle-size);
+            height: var(--particle-size);
+            border-radius: 50%;
+            background: #bbf7d0;
+            box-shadow: 0 0 14px rgba(134, 239, 172, 0.92), 0 0 30px rgba(34, 197, 94, 0.48);
+            opacity: 0;
+            transform: rotate(var(--particle-angle)) translateX(0) scale(0.5);
+            animation: expertParticleBurst 0.82s cubic-bezier(0.18, 0.8, 0.28, 1) var(--particle-delay) forwards;
+        }
+
+        .mode-transition-content {
+            position: relative;
+            z-index: 3;
+            display: grid;
+            justify-items: center;
+            gap: 12px;
+            text-align: center;
+            transform: translateY(14px) scale(0.94);
+            animation: modeTransitionPop 0.78s cubic-bezier(0.2, 1.1, 0.2, 1) forwards;
+        }
+
+        .mode-transition-overlay[data-mode="expert"] .mode-transition-content {
+            gap: 9px;
+            min-width: min(680px, calc(100vw - 48px));
+            padding: clamp(20px, 4vw, 30px) clamp(20px, 5vw, 42px);
+            border: 1px solid rgba(134, 239, 172, 0.42);
+            background:
+                linear-gradient(90deg, rgba(134, 239, 172, 0.1), transparent 22% 78%, rgba(34, 211, 238, 0.1)),
+                rgba(2, 6, 23, 0.56);
+            box-shadow:
+                0 0 62px rgba(34, 197, 94, 0.32),
+                0 0 18px rgba(34, 211, 238, 0.18),
+                inset 0 0 36px rgba(134, 239, 172, 0.09);
+            -webkit-backdrop-filter: blur(11px);
+            backdrop-filter: blur(11px);
+            clip-path: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
+            animation: expertPanelBoot 0.82s cubic-bezier(0.2, 1.05, 0.2, 1) forwards, expertPanelPulse 1.18s ease-in-out 0.15s forwards;
+        }
+
+        .mode-transition-overlay[data-mode="expert"] .mode-transition-content::before,
+        .mode-transition-overlay[data-mode="expert"] .mode-transition-content::after {
+            content: "";
+            position: absolute;
+            inset: 10px;
+            pointer-events: none;
+            border-top: 1px solid rgba(134, 239, 172, 0.28);
+            border-bottom: 1px solid rgba(34, 211, 238, 0.2);
+            transform: scaleX(0);
+            animation: expertPanelLines 0.52s ease 0.16s forwards;
+        }
+
+        .mode-transition-overlay[data-mode="expert"] .mode-transition-content::after {
+            inset: -7px;
+            border: 1px solid rgba(134, 239, 172, 0.18);
+            filter: blur(4px);
+            opacity: 0.72;
+        }
+
+        .mode-transition-icon {
+            width: clamp(82px, 18vw, 132px);
+            height: clamp(82px, 18vw, 132px);
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.16);
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            box-shadow: 0 0 45px var(--mode-transition-glow), inset 0 0 26px rgba(255, 255, 255, 0.16);
+            font-size: clamp(46px, 10vw, 74px);
+            line-height: 1;
+            animation: modeTransitionIcon 1.18s ease-in-out forwards;
+        }
+
+        .mode-transition-overlay[data-mode="expert"] .mode-transition-icon {
+            width: clamp(76px, 15vw, 112px);
+            height: clamp(76px, 15vw, 112px);
+            border-radius: 0;
+            color: #bbf7d0;
+            background: rgba(0, 12, 8, 0.72);
+            border-color: rgba(134, 239, 172, 0.55);
+            box-shadow: 0 0 34px rgba(34, 197, 94, 0.34), inset 0 0 24px rgba(22, 163, 74, 0.2);
+            font-family: Consolas, "SFMono-Regular", "Liberation Mono", Menlo, monospace;
+            font-size: clamp(30px, 7vw, 52px);
+            text-shadow: 0 0 18px rgba(134, 239, 172, 0.88);
+            clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+            animation: expertIconGlitch 0.74s steps(2, end) forwards, expertIconPulse 1.18s ease-in-out forwards;
+        }
+
+        .mode-transition-title {
+            margin: 0;
+            font-size: clamp(28px, 7vw, 58px);
+            font-weight: 900;
+            letter-spacing: 0;
+            text-shadow: 0 8px 30px rgba(0, 0, 0, 0.28);
+        }
+
+        .mode-transition-overlay[data-mode="expert"] .mode-transition-title {
+            position: relative;
+            color: #ecfdf5;
+            font-family: Consolas, "SFMono-Regular", "Liberation Mono", Menlo, monospace;
+            font-size: clamp(25px, 6vw, 48px);
+            text-shadow: 0 0 22px rgba(34, 197, 94, 0.72);
+            animation: expertTitleFlicker 0.84s steps(2, end) forwards;
+        }
+
+        .mode-transition-overlay[data-mode="expert"] .mode-transition-title::before,
+        .mode-transition-overlay[data-mode="expert"] .mode-transition-title::after {
+            content: attr(data-text);
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .mode-transition-overlay[data-mode="expert"] .mode-transition-title::before {
+            color: #22d3ee;
+            transform: translateX(-2px);
+            clip-path: inset(0 0 46% 0);
+            animation: expertGlitchTop 0.62s steps(2, end) 0.18s forwards;
+        }
+
+        .mode-transition-overlay[data-mode="expert"] .mode-transition-title::after {
+            color: #86efac;
+            transform: translateX(2px);
+            clip-path: inset(54% 0 0 0);
+            animation: expertGlitchBottom 0.62s steps(2, end) 0.18s forwards;
+        }
+
+        .mode-transition-subtitle {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: clamp(14px, 3.5vw, 18px);
+            font-weight: 700;
+        }
+
+        .mode-transition-overlay[data-mode="expert"] .mode-transition-subtitle {
+            color: rgba(187, 247, 208, 0.9);
+            font-family: Consolas, "SFMono-Regular", "Liberation Mono", Menlo, monospace;
+            font-size: clamp(13px, 3vw, 16px);
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(34, 197, 94, 0.46);
+        }
+
+        .mode-transition-boot-log {
+            display: none;
+        }
+
+        .mode-transition-overlay[data-mode="expert"] .mode-transition-boot-log {
+            width: min(520px, 72vw);
+            display: grid;
+            gap: 4px;
+            margin-top: 8px;
+            color: rgba(187, 247, 208, 0.82);
+            font-family: Consolas, "SFMono-Regular", "Liberation Mono", Menlo, monospace;
+            font-size: clamp(11px, 2.6vw, 13px);
+            text-align: left;
+        }
+
+        .mode-transition-boot-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 18px;
+            opacity: 0;
+            transform: translateY(4px);
+            animation: expertBootLine 0.26s ease var(--boot-delay) forwards;
+        }
+
+        .mode-transition-boot-line span:first-child {
+            color: rgba(134, 239, 172, 0.96);
+        }
+
+        .mode-transition-boot-line span:last-child {
+            color: #67e8f9;
+        }
+
+        .mode-transition-pulse {
+            width: min(420px, 72vw);
+            height: 4px;
+            margin-top: 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.22);
+            overflow: hidden;
+        }
+
+        .mode-transition-pulse::before {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, transparent, var(--mode-transition-accent), transparent);
+            transform: translateX(-100%);
+            animation: modeTransitionPulse 1.06s ease-in-out forwards;
+        }
+
+        .mode-transition-overlay[data-mode="expert"] .mode-transition-pulse {
+            width: min(480px, 76vw);
+            height: 2px;
+            background: rgba(134, 239, 172, 0.17);
+            box-shadow: 0 0 18px rgba(34, 197, 94, 0.28);
+        }
+
+        .mode-transition-overlay[data-mode="expert"] .mode-transition-pulse::before {
+            background: linear-gradient(90deg, transparent, #ecfdf5, #22c55e, transparent);
+        }
+
+        @keyframes modeTransitionFlow {
+            0% {
+                transform: translate3d(-6%, 2%, 0) scale(1.04);
+                opacity: 0;
+            }
+
+            35% {
+                opacity: 0.82;
+            }
+
+            100% {
+                transform: translate3d(5%, -2%, 0) scale(1);
+                opacity: 0.58;
+            }
+        }
+
+        @keyframes modeTransitionPop {
+            to {
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes modeTransitionIcon {
+            0% {
+                transform: scale(0.68) rotate(-12deg);
+            }
+
+            50% {
+                transform: scale(1.12) rotate(7deg);
+            }
+
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes modeTransitionPulse {
+            to {
+                transform: translateX(100%);
+            }
+        }
+
+        @keyframes expertGridDrift {
+            to {
+                background-position: 18px 18px, -14px 16px, 0 0, 0 0, 0 0, 0 0, 0 0;
+            }
+        }
+
+        @keyframes expertScanSweep {
+            0% {
+                transform: translateX(-62%);
+                opacity: 0;
+            }
+
+            28% {
+                opacity: 0.9;
+            }
+
+            100% {
+                transform: translateX(62%);
+                opacity: 0.72;
+            }
+        }
+
+        @keyframes expertCodeRainReveal {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes expertCodeRainFall {
+            to {
+                transform: translateY(190%) translateZ(0);
+            }
+        }
+
+        @keyframes expertFrameBoot {
+            0% {
+                opacity: 0;
+                transform: scale(0.92);
+                clip-path: inset(48% 48% 48% 48%);
+            }
+
+            42% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                clip-path: inset(0);
+            }
+        }
+
+        @keyframes expertReticle {
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        @keyframes expertParticleBurst {
+            0% {
+                opacity: 0;
+                transform: rotate(var(--particle-angle)) translateX(0) scale(0.5);
+            }
+
+            18% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                transform: rotate(var(--particle-angle)) translateX(var(--particle-distance)) scale(0.08);
+            }
+        }
+
+        @keyframes expertPanelBoot {
+            0% {
+                opacity: 0;
+                transform: translateY(14px) scaleX(0.74) scaleY(0.82);
+                filter: brightness(1.7);
+            }
+
+            58% {
+                opacity: 1;
+                transform: translateY(0) scaleX(1.04) scaleY(1);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: brightness(1);
+            }
+        }
+
+        @keyframes expertPanelPulse {
+            50% {
+                box-shadow:
+                    0 0 90px rgba(34, 197, 94, 0.44),
+                    0 0 28px rgba(34, 211, 238, 0.3),
+                    inset 0 0 48px rgba(134, 239, 172, 0.14);
+            }
+        }
+
+        @keyframes expertPanelLines {
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        @keyframes expertIconGlitch {
+            0%, 18%, 38%, 72% {
+                transform: translate(0, 0) skewX(0deg);
+            }
+
+            20% {
+                transform: translate(-5px, 2px) skewX(8deg);
+            }
+
+            40% {
+                transform: translate(4px, -2px) skewX(-7deg);
+            }
+
+            74% {
+                transform: translate(2px, 1px) skewX(4deg);
+            }
+        }
+
+        @keyframes expertIconPulse {
+            50% {
+                box-shadow: 0 0 56px rgba(34, 197, 94, 0.52), inset 0 0 30px rgba(22, 163, 74, 0.3);
+            }
+        }
+
+        @keyframes expertTitleFlicker {
+            0%, 12%, 22%, 36% {
+                opacity: 0.42;
+            }
+
+            14%, 24%, 100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes expertGlitchTop {
+            0%, 18%, 42%, 100% {
+                opacity: 0;
+                transform: translateX(0);
+            }
+
+            20%, 40% {
+                opacity: 0.78;
+                transform: translateX(-6px);
+            }
+        }
+
+        @keyframes expertGlitchBottom {
+            0%, 16%, 46%, 100% {
+                opacity: 0;
+                transform: translateX(0);
+            }
+
+            18%, 44% {
+                opacity: 0.72;
+                transform: translateX(7px);
+            }
+        }
+
+        @keyframes expertBootLine {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .mode-transition-overlay,
+            .mode-transition-overlay::after,
+            .mode-transition-content,
+            .mode-transition-icon,
+            .mode-transition-pulse::before,
+            .mode-transition-code-rain,
+            .mode-transition-code-stream,
+            .mode-transition-expert-frame,
+            .mode-transition-expert-frame::after,
+            .mode-transition-expert-particle,
+            .mode-transition-boot-line {
+                animation: none !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .mode-transition-overlay[data-mode="expert"] .mode-transition-code-rain {
+                opacity: 0.32;
+            }
+
+            .mode-transition-overlay[data-mode="expert"] .mode-transition-expert-frame,
+            .mode-transition-overlay[data-mode="expert"] .mode-transition-boot-line {
+                opacity: 1;
+                transform: none;
+            }
+
+            .mode-transition-overlay[data-mode="expert"] .mode-transition-expert-frame::after,
+            .mode-transition-overlay[data-mode="expert"] .mode-transition-content::before,
+            .mode-transition-overlay[data-mode="expert"] .mode-transition-content::after {
+                transform: scaleX(1);
+            }
         }
 
         .btn-reset {
@@ -4606,7 +5238,7 @@
             }
 
             .proxyip-route-node {
-                min-height: auto;
+                min-height: unset;
                 text-align: left;
             }
 
@@ -7373,9 +8005,8 @@
 
         /* 增强型文本编辑器样式 */
         .line-editor {
-            display: flex;
-            gap: 0;
-            align-items: stretch;
+            display: grid;
+            grid-template-columns: 58px minmax(0, 1fr);
             border: 2px solid #e5e7eb;
             border-radius: 12px;
             overflow: hidden;
@@ -7392,112 +8023,58 @@
         }
 
         .line-editor .gutter {
-            display: none;
-            /* 移除旧的独立 gutter */
+            position: relative;
+            overflow: hidden;
+            border-right: 1px solid #e5e7eb;
+            background: #f9fafb;
+            color: #9ca3af;
+            font-family: 'Monaco', 'Courier New', monospace !important;
+            font-size: 13px;
+            line-height: 24px;
+            text-align: right;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .line-editor .gutter pre {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            margin: 0;
+            padding: 12px 10px 12px 4px;
+            font: inherit;
+            line-height: inherit;
+            white-space: pre;
+            will-change: transform;
         }
 
         .line-editor .editor-area {
             position: relative;
-            flex-grow: 1;
+            min-width: 0;
             background: transparent;
             min-height: 300px;
-            z-index: 1;
         }
 
-        /* 模拟左侧 gutter 背景 - 固定位置 */
-        .line-editor .editor-area::before {
-            content: "";
+        .line-editor .line-shades {
             position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 48px;
-            background: #f9fafb;
-            border-right: 1px solid #e5e7eb;
+            inset: 0;
+            padding: 12px 0;
+            pointer-events: none;
+            will-change: transform;
             z-index: 0;
-            pointer-events: none;
         }
 
-        .line-editor .mirror {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding: 12px 12px 12px 60px !important;
-            /* 左侧预留给行号 */
-            margin: 0 !important;
-            white-space: pre-wrap !important;
-            word-break: break-all !important;
-            pointer-events: none;
-            font-family: 'Monaco', 'Courier New', monospace !important;
-            font-size: 14px !important;
-            line-height: 24px !important;
-            color: transparent;
-            overflow-y: scroll;
-            overflow-x: hidden;
-            box-sizing: border-box !important;
-            border: none !important;
-            scrollbar-width: none;
-            z-index: 2;
-            width: 100%;
-            /* 初始宽度，后续由 JS 动态调整 */
-            /* 确保在最上层，包括在 textarea 背景之上 */
-        }
-
-        .line-editor .mirror::-webkit-scrollbar {
-            display: none;
-        }
-
-        .line-editor .mirror .logical-line {
-            display: block;
-            margin: 0 !important;
-            padding: 0 !important;
-            position: relative;
-            color: transparent;
-            word-wrap: break-word;
-            min-height: 24px;
-            box-sizing: border-box;
-        }
-
-        .line-editor .mirror .logical-line:nth-child(even) {
-            background: rgba(59, 130, 246, 0.06);
-        }
-
-        html.dark-mode .line-editor .mirror .logical-line:nth-child(even) {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .line-editor .mirror .logical-line::before {
-            content: attr(data-line-number);
-            position: absolute;
-            left: -60px;
-            /* 相对于 mirror 的 padding-left */
-            top: 0;
-            width: 48px;
+        .line-editor .shade-line {
             height: 24px;
-            line-height: 24px;
-            text-align: right;
-            padding-right: 12px;
-            color: #9ca3af;
-            font-size: 13px;
-            box-sizing: border-box;
-            z-index: 1;
         }
 
-        html.dark-mode .line-editor .mirror .logical-line::before {
-            color: #6b7280;
+        .line-editor .shade-line:nth-child(odd) {
+            background: transparent !important;
         }
 
-        /* 在真实换行处显示一个微小的符号 */
-        .line-editor .mirror .logical-line::after {
-            content: "↵";
-            position: absolute;
-            right: -4px;
-            bottom: 0;
-            color: rgba(59, 130, 246, 0.3);
-            font-size: 12px;
-            display: none;
+        .line-editor .shade-line:nth-child(even) {
+            background: rgba(31, 41, 55, 0.075) !important;
         }
 
         .line-editor textarea {
@@ -7505,8 +8082,7 @@
             min-height: 300px;
             border: none !important;
             background: transparent !important;
-            padding: 12px 12px 12px 60px !important;
-            /* 对齐 mirror */
+            padding: 12px !important;
             margin: 0 !important;
             font-family: 'Monaco', 'Courier New', monospace !important;
             font-size: 14px !important;
@@ -7516,12 +8092,48 @@
             outline: none !important;
             box-sizing: border-box !important;
             display: block;
-            white-space: pre-wrap !important;
-            word-break: break-all !important;
+            white-space: pre !important;
+            word-break: normal !important;
             scrollbar-width: thin;
             position: relative;
             z-index: 1;
-            overflow-y: scroll;
+            overflow: auto;
+        }
+
+        .line-editor.line-editor-wrap textarea {
+            white-space: pre-wrap !important;
+            word-break: break-all !important;
+            overflow-wrap: anywhere;
+            overflow-x: hidden;
+        }
+
+        .line-editor .wrap-measure {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 12px !important;
+            margin: 0 !important;
+            border: none !important;
+            box-sizing: border-box !important;
+            color: transparent;
+            font-family: 'Monaco', 'Courier New', monospace !important;
+            font-size: 14px !important;
+            line-height: 24px !important;
+            overflow: hidden;
+            pointer-events: none;
+            visibility: hidden;
+            white-space: pre-wrap !important;
+            word-break: break-all !important;
+            overflow-wrap: anywhere;
+            z-index: 0;
+        }
+
+        .line-editor .wrap-measure-line,
+        .line-editor .gutter-line {
+            display: block;
+            min-height: 24px;
+            line-height: 24px;
         }
 
         html.dark-mode .line-editor {
@@ -7536,16 +8148,16 @@
         }
 
         html.dark-mode .line-editor textarea {
+            background: transparent !important;
             color: var(--text-primary);
         }
 
-        html.dark-mode .line-editor .mirror .logical-line:nth-child(even) {
-            background: rgba(255, 255, 255, 0.02);
+        html.dark-mode .line-editor .shade-line:nth-child(odd) {
+            background: rgba(255, 255, 255, 0.015) !important;
         }
 
-        html.dark-mode .line-editor .editor-area::before {
-            background: rgba(255, 255, 255, 0.03);
-            border-right-color: var(--border-color);
+        html.dark-mode .line-editor .shade-line:nth-child(even) {
+            background: rgba(255, 255, 255, 0.075) !important;
         }
 
         /* 低性能模式（自动触发）：禁用高开销视觉效果，优化无硬件加速场景 */
@@ -7675,7 +8287,7 @@
             </div>
 
             <!-- 网络信息模块 -->
-            <div class="module advanced-module network-detail-collapsed">
+            <div class="module network-detail-collapsed">
                 <div class="module-title" onclick="toggleNetworkModule(this)">
                     🌍 当前网络信息
                     <svg class="collapse-icon" viewBox="0 0 24 24" style="transform: rotate(90deg);">
@@ -7877,11 +8489,15 @@
 
                     <div id="customIPSection" class="form-group hidden-section">
                         <label for="customIPs">自定义优选地址</label>
-                        <div class="line-editor" id="subCustomEditor">
-                            <div class="gutter" aria-hidden="true"></div>
+                        <div class="line-editor line-editor-wrap" id="subCustomEditor">
+                            <div class="gutter" aria-hidden="true">
+                                <pre>1</pre>
+                            </div>
                             <div class="editor-area">
-                                <pre class="mirror" aria-hidden="true"></pre>
-                                <textarea id="customIPs" title="自定义优选地址"
+                                <div class="line-shades" aria-hidden="true">
+                                    <div class="shade-line"></div>
+                                </div>
+                                <textarea id="customIPs" title="自定义优选地址" wrap="soft"
                                     placeholder="注意：
 每行一个地址，如：地址:端口#备注
 IPv6地址需要用中括号括起来，如：[2606:4700::]:2053
@@ -9770,6 +10386,32 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     white-space: nowrap;
                 }
 
+                .optimize-toast {
+                    position: fixed;
+                    top: 18px;
+                    right: 18px;
+                    z-index: 80;
+                    width: min(360px, calc(100vw - 36px));
+                    padding: 12px 14px;
+                    border: 1px solid #fecaca;
+                    border-radius: var(--radius);
+                    background: #fff5f5;
+                    box-shadow: 0 18px 40px rgba(127, 29, 29, 0.16);
+                    color: #7f1d1d;
+                    font-size: 13px;
+                    font-weight: 720;
+                    line-height: 1.55;
+                    opacity: 0;
+                    pointer-events: none;
+                    transform: translate3d(0, -8px, 0);
+                    transition: opacity 0.18s ease, transform 0.18s ease;
+                }
+
+                .optimize-toast.is-visible {
+                    opacity: 1;
+                    transform: translate3d(0, 0, 0);
+                }
+
                 @keyframes copyAddressTip {
                     0% {
                         opacity: 0;
@@ -10167,6 +10809,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                 html.dark-mode .textarea-wrap textarea {
                     background: transparent;
+                }
+
+                html.dark-mode .optimize-toast {
+                    border-color: rgba(248, 113, 113, 0.38);
+                    background: #2a1216;
+                    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.34);
+                    color: #fecaca;
                 }
 
                 html.dark-mode .tag.ok {
@@ -10570,7 +11219,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 </div>
 
                 <p class="bestcf-credit">
-                    在线优选得以实现，离不开巨人的肩膀。感谢 @ktff、@Lfreea、<a href="https://hidoha.net"
+                    © BestCF · 在线优选得以实现，离不开巨人的肩膀。感谢 @ktff、@Lfreea、<a href="https://hidoha.net"
                         target="_blank" rel="noopener noreferrer">HiDNS</a> 的探索与贡献。
                 </p>
             </main>
@@ -10647,6 +11296,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 const LIBRARY_SELECTION_CACHE_KEY = "bestcf:selected-ip-library";
                 const SAVE_EASTER_SHAKE_DELAY_MS = 618;
                 const SAVE_EASTER_EXPORT_DELAY_MS = 1000;
+                const CANDIDATE_INPUT_ERROR_MESSAGE = "待选列表为空或格式不符合要求，请输入有效的 IP、CIDR 或 IP 区间，或导入 IP 库后再进行优选。";
 
                 const state = {
                     ipv4: null,
@@ -11275,8 +11925,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     try {
                         candidates = prepareCandidates(els.ipInput.value, settings.limit, settings.port);
                     } catch (error) {
-                        els.latencyStatus.textContent = friendlyError(error);
+                        const message = friendlyError(error);
+                        els.latencyStatus.textContent = message;
                         els.latencyBtn.innerHTML = `${svgPulseIcon()}优选延迟`;
+                        showOptimizeToast(message);
                         return;
                     }
 
@@ -12036,6 +12688,25 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     window.setTimeout(() => tip.remove(), 1500);
                 }
 
+                let optimizeToastTimer = 0;
+                function showOptimizeToast(message) {
+                    let toast = document.querySelector(".optimize-toast");
+                    if (!toast) {
+                        toast = document.createElement("div");
+                        toast.className = "optimize-toast";
+                        toast.setAttribute("role", "status");
+                        toast.setAttribute("aria-live", "polite");
+                        document.body.appendChild(toast);
+                    }
+
+                    toast.textContent = message;
+                    window.clearTimeout(optimizeToastTimer);
+                    requestAnimationFrame(() => toast.classList.add("is-visible"));
+                    optimizeToastTimer = window.setTimeout(() => {
+                        toast.classList.remove("is-visible");
+                    }, 3600);
+                }
+
                 function closeBestCFModule() {
                     if (window.parent && window.parent !== window) {
                         try {
@@ -12137,7 +12808,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         .map(cleanInputLine)
                         .filter(Boolean);
 
-                    if (!lines.length) throw new Error("请先填写待优选IP列表");
+                    if (!lines.length) throw new Error(CANDIDATE_INPUT_ERROR_MESSAGE);
 
                     const fixed = [];
                     const cidrs = [];
@@ -12188,7 +12859,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         }
                     }
 
-                    if (!candidates.length) throw new Error("没有可用的IP地址");
+                    if (!candidates.length) throw new Error(CANDIDATE_INPUT_ERROR_MESSAGE);
                     return candidates.slice(0, limit);
                 }
 
@@ -12628,9 +13299,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             <div class="api-results-container">
                 <label class="api-results-label">接口结果:</label>
                 <div class="line-editor" id="apiResultsEditor">
-                    <div class="gutter" aria-hidden="true"></div>
+                    <div class="gutter" aria-hidden="true">
+                        <pre>1</pre>
+                    </div>
                     <div class="editor-area">
-                        <pre class="mirror" aria-hidden="true"></pre>
+                        <div class="line-shades" aria-hidden="true">
+                            <div class="shade-line"></div>
+                        </div>
                         <textarea id="apiOptimizeResults" title="API接口结果" placeholder="接口返回结果将显示在这里，每行一个地址"
                             readonly></textarea>
                     </div>
@@ -15084,54 +15759,130 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             if (!ta) return;
             const container = ta.closest('.line-editor');
             if (!container) return;
-            const mirror = container.querySelector('.mirror');
+            const lineNumbers = container.querySelector('.gutter pre');
+            const lineShades = container.querySelector('.line-shades');
+            if (!lineNumbers || !lineShades) return;
+            const lineHeight = Number.parseFloat(getComputedStyle(ta).lineHeight) || 24;
+            const isWrapping = container.classList.contains('line-editor-wrap');
+            const editorArea = container.querySelector('.editor-area');
+            const wrapMeasure = isWrapping && editorArea ? document.createElement('div') : null;
+            let renderedLineCount = -1;
+            let renderedShadeCount = -1;
+            let renderedValue = null;
+            let renderedWidth = -1;
+            let wrappedLineHeights = [];
+            let wrappedContentHeight = 0;
+            let renderFrame = 0;
+
+            if (wrapMeasure) {
+                wrapMeasure.className = 'wrap-measure';
+                wrapMeasure.setAttribute('aria-hidden', 'true');
+                editorArea.appendChild(wrapMeasure);
+            }
+
+            function countLines(value) {
+                if (!value) return 0;
+                const breaks = value.match(/\r\n|\r|\n/g);
+                return breaks ? breaks.length + 1 : 1;
+            }
 
             function escapeHtml(str) {
                 return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             }
 
-            function render() {
+            function renderStraightMeta() {
                 const value = ta.value || '';
-                const lines = value.split(/\r\n|\r|\n/);
+                const lineCount = countLines(value);
+                const displayLines = Math.max(1, lineCount);
 
-                mirror.style.width = ta.clientWidth + 'px';
+                if (displayLines !== renderedLineCount) {
+                    renderedLineCount = displayLines;
+                    lineNumbers.textContent = Array.from({ length: displayLines }, (_, index) => index + 1).join('\n');
+                }
 
-                mirror.innerHTML = lines.map((l, i) => `<div class="logical-line" data-line-number="${i + 1}">${escapeHtml(l) || ' '}</div>`).join('');
+                const visibleLines = Math.ceil((ta.clientHeight || 300) / lineHeight) + 2;
+                const shadeCount = Math.max(displayLines, visibleLines);
+                if (shadeCount !== renderedShadeCount) {
+                    renderedShadeCount = shadeCount;
+                    lineShades.innerHTML = Array.from({ length: shadeCount }, () => '<div class="shade-line"></div>').join('');
+                }
+            }
 
+            function renderWrappedMeta() {
+                if (!wrapMeasure) {
+                    renderStraightMeta();
+                    return;
+                }
+
+                const value = ta.value || '';
+                const width = ta.clientWidth || ta.offsetWidth || 0;
+                if (value !== renderedValue || width !== renderedWidth) {
+                    const lines = value.split(/\r\n|\r|\n/);
+                    const displayLines = lines.length ? lines : [''];
+                    renderedValue = value;
+                    renderedWidth = width;
+                    renderedLineCount = displayLines.length;
+
+                    wrapMeasure.style.width = width ? `${width}px` : '100%';
+                    wrapMeasure.innerHTML = displayLines.map((line) => `<div class="wrap-measure-line">${escapeHtml(line) || ' '}</div>`).join('');
+                    wrappedLineHeights = Array.from(wrapMeasure.children).map((line) => Math.max(lineHeight, line.offsetHeight));
+                    wrappedContentHeight = wrappedLineHeights.reduce((sum, height) => sum + height, 0);
+                    lineNumbers.innerHTML = wrappedLineHeights.map((height, index) => `<span class="gutter-line" style="height:${height}px">${index + 1}</span>`).join('');
+                    renderedShadeCount = -1;
+                }
+
+                const visibleHeight = Math.max(0, (ta.clientHeight || 300) - lineHeight);
+                const fillerLines = Math.max(0, Math.ceil((visibleHeight - wrappedContentHeight) / lineHeight) + 1);
+                const shadeCount = wrappedLineHeights.length + fillerLines;
+                if (shadeCount !== renderedShadeCount) {
+                    renderedShadeCount = shadeCount;
+                    const contentShades = wrappedLineHeights.map((height) => `<div class="shade-line" style="height:${height}px"></div>`).join('');
+                    const fillerShades = Array.from({ length: fillerLines }, () => '<div class="shade-line"></div>').join('');
+                    lineShades.innerHTML = contentShades + fillerShades;
+                }
+            }
+
+            function renderMeta() {
+                if (isWrapping) {
+                    renderWrappedMeta();
+                } else {
+                    renderStraightMeta();
+                }
                 syncScroll();
             }
 
-            function syncScroll() {
-                mirror.scrollTop = ta.scrollTop;
+            function scheduleRender() {
+                cancelAnimationFrame(renderFrame);
+                renderFrame = requestAnimationFrame(() => {
+                    renderFrame = 0;
+                    renderMeta();
+                });
             }
 
-            let throttleTimeout;
-            const debouncedRender = () => {
-                cancelAnimationFrame(throttleTimeout);
-                throttleTimeout = requestAnimationFrame(render);
-            };
+            function syncScroll() {
+                const offset = `translate3d(0, ${-ta.scrollTop}px, 0)`;
+                lineNumbers.style.transform = offset;
+                lineShades.style.transform = offset;
+            }
 
             // 监听输入、滚动
-            ta.addEventListener('input', debouncedRender);
+            ta.addEventListener('input', scheduleRender);
             ta.addEventListener('scroll', syncScroll);
 
             // 监听高度变化（ResizeObserver），解决拖拽角标后的同步问题
             if (window.ResizeObserver) {
-                const ro = new ResizeObserver(() => {
-                    // 当 textarea 高度或宽度变化时，重新渲染以确保宽度同步
-                    render();
-                });
+                const ro = new ResizeObserver(scheduleRender);
                 ro.observe(ta);
             }
 
             // 窗口缩放时也刷新一下
-            window.addEventListener('resize', debouncedRender);
+            window.addEventListener('resize', scheduleRender);
 
             // 暴露渲染函数
-            ta._refreshLineEditor = render;
+            ta._refreshLineEditor = renderMeta;
 
             // 初始渲染
-            render();
+            renderMeta();
         }
 
         function refreshLineEditor(textarea) {
@@ -15474,6 +16225,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     }
                 }
             });
+
+            if (mode === 'custom') {
+                requestAnimationFrame(() => refreshLineEditor(document.getElementById('customIPs')));
+            }
 
             // 显示或隐藏指定端口
             const portSection = document.getElementById('portSection');
@@ -17269,23 +18024,210 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             window.location.href = '/logout';
         }
 
-        // 切换用户模式（小白模式 / 高手模式）
-        function toggleUserMode() {
+        const USER_MODE_TRANSITION_DURATION = 1450;
+        let userModeTransitioning = false;
+
+        function getUserModeTransitionCopy(userMode) {
+            if (userMode === 'simple') {
+                return {
+                    icon: '🐣',
+                    title: '进入小白模式',
+                    subtitle: '常用设置已经为你收好'
+                };
+            }
+
+            return {
+                icon: '>_',
+                title: 'ENTER THE MATRIX',
+                subtitle: 'ROOT ACCESS // ADVANCED CONFIG ONLINE'
+            };
+        }
+
+        function createExpertModeCodeRain() {
+            const rain = document.createElement('div');
+            rain.className = 'mode-transition-code-rain';
+            rain.setAttribute('aria-hidden', 'true');
+
+            const glyphs = [
+                'ACCESS\n0x7F\n1011\nROOT\nTLS\nECHO\n443\nPATH',
+                'CONFIG\nHOST\nUUID\nVLESS\nREALITY\nHY2\nSNI\nOK',
+                'ROUTE\nPROXY\nSOCKS\nHTTP\nECH\nDNS\nALPN\nRUN',
+                '0101\n1110\nAUTH\nTOKEN\nTRACE\nEDGE\nWORKER\nCF',
+                'PATCH\nMERGE\nDEBUG\nCHAIN\nAPI\nPORT\nLOG\nUP',
+                'SYSTEM\nONLINE\nVERIFY\nNODE\nRULE\nBYPASS\nLINK\nGO'
+            ];
+
+            const streamCount = Math.min(44, Math.max(24, Math.ceil(window.innerWidth / 34)));
+
+            for (let index = 0; index < streamCount; index += 1) {
+                const stream = document.createElement('span');
+                stream.className = 'mode-transition-code-stream';
+                stream.textContent = glyphs[index % glyphs.length];
+                stream.style.setProperty('--stream-x', `${((index + 0.3) / streamCount) * 100}%`);
+                stream.style.setProperty('--stream-delay', `${-(index % 9) * 0.13}s`);
+                stream.style.setProperty('--stream-duration', `${0.95 + (index % 7) * 0.1}s`);
+                stream.style.setProperty('--stream-opacity', `${0.36 + (index % 5) * 0.11}`);
+                stream.style.setProperty('--stream-size', `clamp(10px, ${1.1 + (index % 4) * 0.22}vw, 17px)`);
+                rain.appendChild(stream);
+            }
+
+            return rain;
+        }
+
+        function createExpertModeFrame() {
+            const frame = document.createElement('div');
+            frame.className = 'mode-transition-expert-frame';
+            frame.setAttribute('aria-hidden', 'true');
+            return frame;
+        }
+
+        function createExpertModeBurst() {
+            const burst = document.createElement('div');
+            burst.className = 'mode-transition-expert-burst';
+            burst.setAttribute('aria-hidden', 'true');
+
+            for (let index = 0; index < 34; index += 1) {
+                const particle = document.createElement('span');
+                particle.className = 'mode-transition-expert-particle';
+                particle.style.setProperty('--particle-angle', `${(360 / 34) * index}deg`);
+                particle.style.setProperty('--particle-distance', `min(${190 + (index % 9) * 24}px, 47vw)`);
+                particle.style.setProperty('--particle-delay', `${(index % 6) * 0.018}s`);
+                particle.style.setProperty('--particle-size', `${2 + (index % 4)}px`);
+                burst.appendChild(particle);
+            }
+
+            return burst;
+        }
+
+        function createExpertModeBootLog() {
+            const log = document.createElement('div');
+            log.className = 'mode-transition-boot-log';
+            log.setAttribute('aria-hidden', 'true');
+
+            [
+                ['INIT ROOT SHELL', 'OK'],
+                ['DECRYPT CONFIG GRAPH', 'OK'],
+                ['MOUNT ADVANCED MODULES', 'ONLINE']
+            ].forEach(([label, state], index) => {
+                const line = document.createElement('div');
+                line.className = 'mode-transition-boot-line';
+                line.style.setProperty('--boot-delay', `${0.28 + index * 0.16}s`);
+
+                const labelNode = document.createElement('span');
+                labelNode.textContent = label;
+
+                const stateNode = document.createElement('span');
+                stateNode.textContent = state;
+
+                line.appendChild(labelNode);
+                line.appendChild(stateNode);
+                log.appendChild(line);
+            });
+
+            return log;
+        }
+
+        function playUserModeTransition(userMode, onCovered, onDone) {
+            const copy = getUserModeTransitionCopy(userMode);
+            const btn = document.getElementById('modeToggleBtn');
+            const prefersReducedMotion = window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            const overlay = document.createElement('div');
+            overlay.className = 'mode-transition-overlay';
+            overlay.dataset.mode = userMode;
+            overlay.setAttribute('role', 'status');
+            overlay.setAttribute('aria-live', 'polite');
+
+            const content = document.createElement('div');
+            content.className = 'mode-transition-content';
+
+            const icon = document.createElement('div');
+            icon.className = 'mode-transition-icon';
+            icon.textContent = copy.icon;
+
+            const title = document.createElement('h2');
+            title.className = 'mode-transition-title';
+            title.textContent = copy.title;
+            title.dataset.text = copy.title;
+
+            const subtitle = document.createElement('p');
+            subtitle.className = 'mode-transition-subtitle';
+            subtitle.textContent = copy.subtitle;
+
+            const pulse = document.createElement('div');
+            pulse.className = 'mode-transition-pulse';
+
+            if (userMode === 'expert') {
+                overlay.appendChild(createExpertModeCodeRain());
+                overlay.appendChild(createExpertModeFrame());
+                overlay.appendChild(createExpertModeBurst());
+            }
+
+            content.appendChild(icon);
+            content.appendChild(title);
+            content.appendChild(subtitle);
+            if (userMode === 'expert') {
+                content.appendChild(createExpertModeBootLog());
+            }
+            content.appendChild(pulse);
+            overlay.appendChild(content);
+            document.body.appendChild(overlay);
+
+            userModeTransitioning = true;
+            if (btn) {
+                btn.disabled = true;
+            }
+
+            requestAnimationFrame(() => {
+                overlay.classList.add('is-visible');
+            });
+
+            const visibleDelay = prefersReducedMotion ? 220 : USER_MODE_TRANSITION_DURATION;
+            const exitDelay = prefersReducedMotion ? 80 : 260;
+
+            setTimeout(() => {
+                try {
+                    if (typeof onCovered === 'function') {
+                        onCovered();
+                    }
+                } catch (error) {
+                    console.warn('User mode transition failed:', error);
+                }
+
+                overlay.classList.add('is-exiting');
+
+                setTimeout(() => {
+                    overlay.remove();
+                    if (btn) {
+                        btn.disabled = false;
+                    }
+                    userModeTransitioning = false;
+
+                    if (typeof onDone === 'function') {
+                        onDone();
+                    }
+                }, exitDelay);
+            }, visibleDelay);
+        }
+
+        function applyUserMode(userMode) {
             const cardContainer = document.querySelector('.card-container');
             const btn = document.getElementById('modeToggleBtn');
+            const isSimpleMode = userMode === 'simple';
 
-            if (cardContainer.classList.contains('simple-mode')) {
-                // 切换到高手模式
-                cardContainer.classList.remove('simple-mode');
-                btn.textContent = '🐣 我是小白！我想简单点！';
-                localStorage.setItem('userMode', 'expert');
-                showToast('🚀 已切换到高手模式，显示所有功能', 'success');
-            } else {
-                // 切换到小白模式
+            if (!cardContainer || !btn) {
+                return;
+            }
+
+            if (isSimpleMode) {
                 cardContainer.classList.add('simple-mode');
                 btn.textContent = '🚀 我是高手！我就要折腾！';
                 localStorage.setItem('userMode', 'simple');
-                showToast('🐣 已切换到小白模式，只显示常用功能', 'success');
+            } else {
+                cardContainer.classList.remove('simple-mode');
+                btn.textContent = '🐣 我是小白！我想简单点！';
+                localStorage.setItem('userMode', 'expert');
             }
 
             // 使用 requestAnimationFrame 确保动画流畅
@@ -17294,19 +18236,26 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
             });
         }
 
+        // 切换用户模式（小白模式 / 高手模式）
+        function toggleUserMode() {
+            const cardContainer = document.querySelector('.card-container');
+
+            if (!cardContainer || userModeTransitioning) {
+                return;
+            }
+
+            const targetMode = cardContainer.classList.contains('simple-mode') ? 'expert' : 'simple';
+
+            playUserModeTransition(
+                targetMode,
+                () => applyUserMode(targetMode)
+            );
+        }
+
         // 初始化用户模式
         function initUserMode() {
             const userMode = localStorage.getItem('userMode') || 'simple'; // 默认为小白模式
-            const cardContainer = document.querySelector('.card-container');
-            const btn = document.getElementById('modeToggleBtn');
-
-            if (userMode === 'simple') {
-                cardContainer.classList.add('simple-mode');
-                btn.textContent = '🚀 我是高手！我就要折腾！';
-            } else {
-                cardContainer.classList.remove('simple-mode');
-                btn.textContent = '🐣 我是小白！我想简单点！';
-            }
+            applyUserMode(userMode);
         }
 
         function showToast(message, type = 'info') {

@@ -10345,6 +10345,127 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     line-height: 1;
                 }
 
+                .filterable-header {
+                    position: sticky;
+                }
+
+                .filter-header-label {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 4px;
+                    min-width: 0;
+                    padding: 2px 0;
+                    border: 0;
+                    background: transparent;
+                    color: inherit;
+                    cursor: pointer;
+                    font: inherit;
+                    font-weight: inherit;
+                    text-align: left;
+                }
+
+                .filter-header-label:hover,
+                .filter-header-label.is-active {
+                    color: var(--blue);
+                }
+
+                .filter-header-label.is-filtered::after {
+                    color: var(--green);
+                    content: "●";
+                    font-size: 8px;
+                    line-height: 1;
+                }
+
+                .result-filter-menu {
+                    position: fixed;
+                    z-index: 70;
+                    width: min(260px, calc(100vw - 24px));
+                    max-height: min(360px, calc(100vh - 32px));
+                    display: grid;
+                    grid-template-rows: auto minmax(0, 1fr);
+                    border: 1px solid var(--line);
+                    border-radius: var(--radius);
+                    background: #ffffff;
+                    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.18);
+                    color: var(--text);
+                    overflow: hidden;
+                }
+
+                .result-filter-actions {
+                    display: flex;
+                    gap: 8px;
+                    padding: 10px;
+                    border-bottom: 1px solid var(--line);
+                    background: #f8fafc;
+                }
+
+                .result-filter-action {
+                    flex: 1;
+                    min-width: 0;
+                    padding: 6px 8px;
+                    border: 1px solid var(--line);
+                    border-radius: 6px;
+                    background: #ffffff;
+                    color: #344054;
+                    cursor: pointer;
+                    font-size: 12px;
+                    font-weight: 760;
+                }
+
+                .result-filter-action:hover {
+                    border-color: var(--blue);
+                    color: var(--blue);
+                }
+
+                .result-filter-options {
+                    overflow: auto;
+                    padding: 6px;
+                }
+
+                .result-filter-option {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    min-height: 30px;
+                    padding: 6px 7px;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 13px;
+                    line-height: 1.35;
+                }
+
+                .result-filter-option:hover {
+                    background: #f3f8f6;
+                }
+
+                .result-filter-option input {
+                    width: 15px;
+                    height: 15px;
+                    flex: 0 0 auto;
+                    margin: 0;
+                    accent-color: var(--green);
+                }
+
+                .result-filter-option-text {
+                    min-width: 0;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                .result-filter-option-count {
+                    flex: 0 0 auto;
+                    margin-left: auto;
+                    color: var(--muted);
+                    font-size: 12px;
+                    font-weight: 700;
+                    white-space: nowrap;
+                }
+
+                .result-filter-option .country-cell {
+                    min-width: 0;
+                }
+
                 td.ip-cell {
                     font-family: var(--mono);
                 }
@@ -10910,6 +11031,33 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.36);
                 }
 
+                html.dark-mode .result-filter-menu {
+                    border-color: var(--line-strong);
+                    background: var(--panel);
+                    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.38);
+                    color: var(--text);
+                }
+
+                html.dark-mode .result-filter-actions {
+                    border-color: var(--line-strong);
+                    background: var(--panel-soft);
+                }
+
+                html.dark-mode .result-filter-action {
+                    border-color: var(--line-strong);
+                    background: #0b1220;
+                    color: #d1d5db;
+                }
+
+                html.dark-mode .result-filter-action:hover {
+                    border-color: var(--blue);
+                    color: var(--blue);
+                }
+
+                html.dark-mode .result-filter-option:hover {
+                    background: rgba(52, 211, 153, 0.10);
+                }
+
                 html.dark-mode .link-btn:hover:not(:disabled) {
                     color: #bfdbfe;
                 }
@@ -11175,18 +11323,22 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                             <th style="width: 24%"><button class="sort-header" type="button"
                                                     data-sort="address">优选IP <span class="sort-mark"
                                                         data-sort-mark="address"></span></button></th>
-                                            <th style="width: 11%"><button class="sort-header" type="button"
-                                                    data-sort="ipType">IP类型 <span class="sort-mark"
-                                                        data-sort-mark="ipType"></span></button></th>
-                                            <th style="width: 14%"><button class="sort-header" type="button"
-                                                    data-sort="type">优选类型 <span class="sort-mark"
-                                                        data-sort-mark="type"></span></button></th>
-                                            <th style="width: 13%"><button class="sort-header" type="button"
-                                                    data-sort="country">国家/地区 <span class="sort-mark"
-                                                        data-sort-mark="country"></span></button></th>
-                                            <th style="width: 10%"><button class="sort-header" type="button"
-                                                    data-sort="colo">数据中心 <span class="sort-mark"
-                                                        data-sort-mark="colo"></span></button></th>
+                                            <th class="filterable-header" style="width: 11%"><button class="sort-header"
+                                                    type="button" data-sort="ipType"><span class="filter-header-label"
+                                                        role="button" tabindex="0" data-filter-key="ipType">IP类型</span>
+                                                    <span class="sort-mark" data-sort-mark="ipType"></span></button></th>
+                                            <th class="filterable-header" style="width: 14%"><button class="sort-header"
+                                                    type="button" data-sort="type"><span class="filter-header-label"
+                                                        role="button" tabindex="0" data-filter-key="type">优选类型</span>
+                                                    <span class="sort-mark" data-sort-mark="type"></span></button></th>
+                                            <th class="filterable-header" style="width: 13%"><button class="sort-header"
+                                                    type="button" data-sort="country"><span class="filter-header-label"
+                                                        role="button" tabindex="0" data-filter-key="country">国家/地区</span>
+                                                    <span class="sort-mark" data-sort-mark="country"></span></button></th>
+                                            <th class="filterable-header" style="width: 10%"><button class="sort-header"
+                                                    type="button" data-sort="colo"><span class="filter-header-label"
+                                                        role="button" tabindex="0" data-filter-key="colo">数据中心</span>
+                                                    <span class="sort-mark" data-sort-mark="colo"></span></button></th>
                                             <th style="width: 13%"><button class="sort-header" type="button"
                                                     data-sort="latency">延迟(ms) <span class="sort-mark"
                                                         data-sort-mark="latency"></span></button></th>
@@ -11197,16 +11349,15 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                                     </thead>
                                     <tbody id="resultBody">
                                         <tr>
-                                            <td class="empty" colspan="7">暂无结果</td>
+                                            <td class="empty" colspan="8">暂无结果</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="result-actions">
                                 <div class="result-actions-group">
-                                    <button class="btn secondary" id="selectAllBtn" type="button">全选</button>
                                     <button class="btn secondary" id="invertSelectBtn" type="button">反选</button>
-                                    <button class="btn secondary" id="clearSelectBtn" type="button">取消选择</button>
+                                    <button class="btn secondary" id="clearSelectBtn" type="button">重置</button>
                                 </div>
                                 <div class="result-actions-group">
                                     <span class="tiny muted selection-status" id="selectionStatus">已选 0 个</span>
@@ -11297,6 +11448,13 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 const SAVE_EASTER_SHAKE_DELAY_MS = 618;
                 const SAVE_EASTER_EXPORT_DELAY_MS = 1000;
                 const CANDIDATE_INPUT_ERROR_MESSAGE = "待选列表为空或格式不符合要求，请输入有效的 IP、CIDR 或 IP 区间，或导入 IP 库后再进行优选。";
+                const RESULT_FILTER_KEYS = ["ipType", "type", "country", "colo"];
+                const RESULT_FILTER_LABELS = {
+                    ipType: "IP类型",
+                    type: "优选类型",
+                    country: "国家/地区",
+                    colo: "数据中心"
+                };
 
                 const state = {
                     ipv4: null,
@@ -11316,7 +11474,9 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     suppressResultClick: false,
                     saveEasterHold: null,
                     suppressNextSaveClick: false,
-                    preferredLibraryKey: ""
+                    preferredLibraryKey: "",
+                    resultFilters: {},
+                    openResultFilterKey: ""
                 };
 
                 const $ = (selector) => document.querySelector(selector);
@@ -11348,7 +11508,6 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     speedStatus: $("#speedStatus"),
                     speedAllBtn: $("#speedAllBtn"),
                     selectAllHeader: $("#selectAllHeader"),
-                    selectAllBtn: $("#selectAllBtn"),
                     invertSelectBtn: $("#invertSelectBtn"),
                     clearSelectBtn: $("#clearSelectBtn"),
                     saveSelectedBtn: $("#saveSelectedBtn"),
@@ -11456,9 +11615,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             clearSelectedResults();
                         }
                     });
-                    els.selectAllBtn.addEventListener("click", selectAllResults);
                     els.invertSelectBtn.addEventListener("click", invertSelectedResults);
-                    els.clearSelectBtn.addEventListener("click", clearSelectedResults);
+                    els.clearSelectBtn.addEventListener("click", resetResultSelection);
                     els.saveSelectedBtn.addEventListener("pointerdown", startSaveSelectedLongPress);
                     els.saveSelectedBtn.addEventListener("pointerup", finishSaveSelectedLongPress);
                     els.saveSelectedBtn.addEventListener("pointercancel", finishSaveSelectedLongPress);
@@ -11476,6 +11634,26 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     document.querySelectorAll("[data-sort]").forEach((button) => {
                         button.addEventListener("click", () => setResultSort(button.dataset.sort));
                     });
+                    document.querySelectorAll("[data-filter-key]").forEach((label) => {
+                        label.addEventListener("click", (event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            toggleResultFilterMenu(label.dataset.filterKey, label);
+                        });
+                        label.addEventListener("keydown", (event) => {
+                            if (event.key !== "Enter" && event.key !== " ") return;
+                            event.preventDefault();
+                            event.stopPropagation();
+                            toggleResultFilterMenu(label.dataset.filterKey, label);
+                        });
+                    });
+                    document.addEventListener("click", (event) => {
+                        const menu = event.target.closest(".result-filter-menu");
+                        const label = event.target.closest("[data-filter-key]");
+                        if (!menu && !label) closeResultFilterMenu();
+                    });
+                    window.addEventListener("resize", closeResultFilterMenu);
+                    window.addEventListener("scroll", closeResultFilterMenu, true);
                 }
 
                 function svgStopIcon() {
@@ -11527,6 +11705,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                         state.results = [];
                         state.selectedIds.clear();
                         state.nextResultId = 1;
+                        resetResultFilters();
                         renderResults();
                         setProgress(0, 0);
                     }
@@ -11938,6 +12117,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                     state.selectedIds.clear();
                     state.nextResultId = 1;
                     state.sort = { key: "latency", dir: "asc" };
+                    resetResultFilters();
                     renderResults();
 
                     const run = {
@@ -12284,17 +12464,23 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 }
 
                 function renderResults() {
-                    els.resultCount.textContent = `${state.results.length} 个可用`;
+                    const rows = getVisibleSortedResults();
+                    const hasActiveFilter = hasActiveResultFilters();
+                    els.resultCount.textContent = hasActiveFilter
+                        ? `${rows.length} / ${state.results.length} 个可用`
+                        : `${state.results.length} 个可用`;
                     renderSortMarks();
+                    renderFilterHeaderState();
+                    syncOpenResultFilterMenu();
                     syncSelectionWithResults();
-                    if (!state.results.length) {
-                        els.resultBody.innerHTML = '<tr><td class="empty" colspan="8">暂无结果</td></tr>';
+                    if (!state.results.length || !rows.length) {
+                        els.resultBody.innerHTML = `<tr><td class="empty" colspan="8">${state.results.length ? "筛选后暂无结果" : "暂无结果"}</td></tr>`;
                         updateSelectionState();
                         updateActionAvailability();
                         return;
                     }
 
-                    els.resultBody.innerHTML = getSortedResults().map(({ item, index }) => {
+                    els.resultBody.innerHTML = rows.map(({ item, index }) => {
                         const id = String(item.id);
                         const selected = state.selectedIds.has(id);
                         const safeAddress = escapeHtml(item.address);
@@ -12325,20 +12511,21 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 }
 
                 function updateSelectionState() {
-                    const total = state.results.length;
+                    const visibleIds = visibleResultIds();
+                    const total = visibleIds.length;
                     const selected = state.selectedIds.size;
+                    const visibleSelected = visibleIds.filter((id) => state.selectedIds.has(id)).length;
                     els.selectionStatus.textContent = `已选 ${selected} 个`;
-                    const saveLocked = total > 0 && selected === 0;
-                    els.saveSelectedBtn.disabled = total === 0;
+                    const saveLocked = state.results.length > 0 && selected === 0;
+                    els.saveSelectedBtn.disabled = state.results.length === 0;
                     els.saveSelectedBtn.classList.toggle("is-save-locked", saveLocked);
-                    els.saveSelectedBtn.setAttribute("aria-disabled", (total === 0 || saveLocked) ? "true" : "false");
-                    els.selectAllBtn.disabled = total === 0;
+                    els.saveSelectedBtn.setAttribute("aria-disabled", (state.results.length === 0 || saveLocked) ? "true" : "false");
                     els.invertSelectBtn.disabled = total === 0;
-                    els.clearSelectBtn.disabled = selected === 0;
+                    els.clearSelectBtn.disabled = selected === 0 && !hasActiveResultFilters();
                     els.selectAllHeader.disabled = total === 0;
-                    els.selectAllHeader.checked = total > 0 && selected === total;
-                    els.selectAllHeader.indeterminate = selected > 0 && selected < total;
-                    if (total === 0) finishSaveSelectedLongPress();
+                    els.selectAllHeader.checked = total > 0 && visibleSelected === total;
+                    els.selectAllHeader.indeterminate = visibleSelected > 0 && visibleSelected < total;
+                    if (state.results.length === 0) finishSaveSelectedLongPress();
                     if (state.saveEasterHold && state.saveEasterHold.shaking && !state.saveEasterHold.exported) {
                         els.selectionStatus.textContent = "继续按住可导出 CSV";
                     }
@@ -12446,12 +12633,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                 }
 
                 function selectAllResults() {
-                    state.results.forEach((item) => state.selectedIds.add(String(item.id)));
+                    getVisibleSortedResults().forEach(({ item }) => state.selectedIds.add(String(item.id)));
                     renderResults();
                 }
 
                 function invertSelectedResults() {
-                    state.results.forEach((item) => {
+                    getVisibleSortedResults().forEach(({ item }) => {
                         const id = String(item.id);
                         if (state.selectedIds.has(id)) {
                             state.selectedIds.delete(id);
@@ -12464,6 +12651,12 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
 
                 function clearSelectedResults() {
                     state.selectedIds.clear();
+                    renderResults();
+                }
+
+                function resetResultSelection() {
+                    state.selectedIds.clear();
+                    resetResultFilters();
                     renderResults();
                 }
 
@@ -12744,6 +12937,185 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tl
                             ? (state.sort.dir === "asc" ? "▲" : "▼")
                             : "";
                     });
+                }
+
+                function renderFilterHeaderState() {
+                    document.querySelectorAll("[data-filter-key]").forEach((label) => {
+                        const key = label.dataset.filterKey;
+                        label.classList.toggle("is-filtered", isResultFilterActive(key));
+                        label.classList.toggle("is-active", state.openResultFilterKey === key);
+                        label.title = isResultFilterActive(key)
+                            ? `${RESULT_FILTER_LABELS[key] || "字段"} 已筛选`
+                            : `筛选 ${RESULT_FILTER_LABELS[key] || "字段"}`;
+                    });
+                }
+
+                function toggleResultFilterMenu(key, anchor) {
+                    if (!RESULT_FILTER_KEYS.includes(key)) return;
+                    const currentMenu = document.querySelector(".result-filter-menu");
+                    if (state.openResultFilterKey === key && currentMenu) {
+                        closeResultFilterMenu();
+                        return;
+                    }
+                    openResultFilterMenu(key, anchor);
+                }
+
+                function openResultFilterMenu(key, anchor) {
+                    closeResultFilterMenu({ keepKey: true });
+                    state.openResultFilterKey = key;
+                    const options = resultFilterOptions(key);
+                    const values = options.map((option) => option.value);
+                    const selectedValues = selectedResultFilterValues(key, values);
+                    const menu = document.createElement("div");
+                    menu.className = "result-filter-menu";
+                    menu.dataset.filterMenuKey = key;
+                    menu.innerHTML = `
+                        <div class="result-filter-actions">
+                            <button class="result-filter-action" type="button" data-filter-action="all">全选</button>
+                            <button class="result-filter-action" type="button" data-filter-action="invert">反选</button>
+                        </div>
+                        <div class="result-filter-options">
+                            ${options.map((option) => {
+                                const safeValue = escapeHtml(option.value);
+                                return `<label class="result-filter-option" title="${safeValue}">
+                                    <input type="checkbox" data-filter-value="${safeValue}" ${selectedValues.has(option.value) ? "checked" : ""}>
+                                    ${renderResultFilterOptionText(key, option.value)}
+                                    <span class="result-filter-option-count">(${option.count})</span>
+                                </label>`;
+                            }).join("") || '<div class="empty">暂无可筛选内容</div>'}
+                        </div>`;
+                    document.body.appendChild(menu);
+                    positionResultFilterMenu(menu, anchor);
+
+                    menu.addEventListener("click", (event) => event.stopPropagation());
+                    menu.querySelectorAll("[data-filter-action]").forEach((button) => {
+                        button.addEventListener("click", () => {
+                            const checkboxes = Array.from(menu.querySelectorAll("[data-filter-value]"));
+                            if (button.dataset.filterAction === "all") {
+                                checkboxes.forEach((checkbox) => { checkbox.checked = true; });
+                            } else {
+                                checkboxes.forEach((checkbox) => { checkbox.checked = !checkbox.checked; });
+                            }
+                            applyResultFilterMenuSelection(key, menu);
+                        });
+                    });
+                    menu.querySelectorAll("[data-filter-value]").forEach((checkbox) => {
+                        checkbox.addEventListener("change", () => applyResultFilterMenuSelection(key, menu));
+                    });
+                    renderFilterHeaderState();
+                }
+
+                function closeResultFilterMenu(options = {}) {
+                    document.querySelectorAll(".result-filter-menu").forEach((menu) => menu.remove());
+                    if (!options.keepKey) state.openResultFilterKey = "";
+                    renderFilterHeaderState();
+                }
+
+                function resetResultFilters() {
+                    state.resultFilters = {};
+                    closeResultFilterMenu();
+                }
+
+                function syncOpenResultFilterMenu() {
+                    if (!state.openResultFilterKey) return;
+                    const anchor = document.querySelector(`[data-filter-key="${cssEscape(state.openResultFilterKey)}"]`);
+                    if (!anchor) {
+                        closeResultFilterMenu();
+                        return;
+                    }
+                    openResultFilterMenu(state.openResultFilterKey, anchor);
+                }
+
+                function positionResultFilterMenu(menu, anchor) {
+                    const rect = anchor.getBoundingClientRect();
+                    const padding = 12;
+                    const width = menu.offsetWidth || 260;
+                    const height = menu.offsetHeight || 260;
+                    let left = rect.left;
+                    let top = rect.bottom + 6;
+                    if (left + width > window.innerWidth - padding) left = window.innerWidth - width - padding;
+                    if (top + height > window.innerHeight - padding) top = Math.max(padding, rect.top - height - 6);
+                    menu.style.left = `${Math.max(padding, left)}px`;
+                    menu.style.top = `${Math.max(padding, top)}px`;
+                }
+
+                function applyResultFilterMenuSelection(key, menu) {
+                    const values = resultFilterValues(key);
+                    const checkedValues = Array.from(menu.querySelectorAll("[data-filter-value]:checked"))
+                        .map((checkbox) => checkbox.dataset.filterValue);
+                    if (!checkedValues.length) {
+                        state.resultFilters[key] = new Set();
+                    } else if (checkedValues.length === values.length) {
+                        delete state.resultFilters[key];
+                    } else {
+                        state.resultFilters[key] = new Set(checkedValues);
+                    }
+                    renderResults();
+                }
+
+                function resultFilterValues(key) {
+                    return resultFilterOptions(key).map((option) => option.value);
+                }
+
+                function resultFilterOptions(key) {
+                    const countMap = new Map();
+                    state.results.forEach((item) => {
+                        const value = resultFilterValue(item, key);
+                        countMap.set(value, (countMap.get(value) || 0) + 1);
+                    });
+                    return Array.from(countMap.keys())
+                        .sort((a, b) => compareResultValue(a, b))
+                        .map((value) => ({ value, count: countMap.get(value) || 0 }));
+                }
+
+                function renderResultFilterOptionText(key, value) {
+                    if (key === "country") return renderCountryCell(value);
+                    return `<span class="result-filter-option-text">${escapeHtml(value)}</span>`;
+                }
+
+                function selectedResultFilterValues(key, values) {
+                    const filter = state.resultFilters[key];
+                    if (!filter) return new Set(values);
+                    return new Set(values.filter((value) => filter.has(value)));
+                }
+
+                function isResultFilterActive(key) {
+                    const values = resultFilterValues(key);
+                    const filter = state.resultFilters[key];
+                    return Boolean(filter && filter.size !== values.length);
+                }
+
+                function hasActiveResultFilters() {
+                    return RESULT_FILTER_KEYS.some(isResultFilterActive);
+                }
+
+                function resultMatchesFilters(item) {
+                    return RESULT_FILTER_KEYS.every((key) => {
+                        const filter = state.resultFilters[key];
+                        if (!filter) return true;
+                        return filter.has(resultFilterValue(item, key));
+                    });
+                }
+
+                function resultFilterValue(item, key) {
+                    if (key === "ipType") return String(item.ipType || "未知");
+                    if (key === "type") return String(item.type || "未知");
+                    if (key === "country") return String(item.country || "未知");
+                    if (key === "colo") return String(item.colo || "未知");
+                    return String(item[key] || "未知");
+                }
+
+                function getVisibleSortedResults() {
+                    return getSortedResults().filter(({ item }) => resultMatchesFilters(item));
+                }
+
+                function visibleResultIds() {
+                    return getVisibleSortedResults().map(({ item }) => String(item.id));
+                }
+
+                function cssEscape(value) {
+                    if (window.CSS && typeof window.CSS.escape === "function") return window.CSS.escape(value);
+                    return String(value).replace(/["\\]/g, "\\$&");
                 }
 
                 function getSortedResults() {

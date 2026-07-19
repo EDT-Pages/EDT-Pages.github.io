@@ -8673,6 +8673,708 @@
 		html.low-performance-mode .cf-percentage-center {
 			text-shadow: none !important;
 		}
+
+		/* 集中的小屏幕适配：保持桌面布局不变，仅降低平板和手机端的信息密度 */
+		@media (max-width: 768px) {
+			html,
+			body {
+				max-width: 100%;
+				overflow-x: hidden;
+			}
+
+			.page-wrapper {
+				width: 100%;
+				padding: 12px;
+				align-items: flex-start;
+			}
+
+			.card-container {
+				width: 100%;
+				min-width: 0;
+				padding: 0;
+				margin: 0 auto;
+			}
+
+			.header {
+				align-items: stretch;
+				gap: 12px;
+				padding: 16px;
+				margin-bottom: 14px;
+				border-radius: 12px;
+			}
+
+			.header-title,
+			.header-buttons,
+			.module,
+			.module-content,
+			.module .form-group,
+			.module .input-wrapper,
+			.module-footer,
+			.modal,
+			.modal-content-side {
+				min-width: 0;
+			}
+
+			.header-title h1 {
+				font-size: 23px;
+				line-height: 1.25;
+				text-align: center;
+			}
+
+			.header-buttons {
+				gap: 8px;
+			}
+
+			.header .btn,
+			.btn {
+				min-width: 0;
+				min-height: 36px;
+				padding: 8px 12px;
+				border-radius: 8px;
+				font-size: 13px;
+				line-height: 1.3;
+				letter-spacing: 0;
+				white-space: normal;
+			}
+
+			.module {
+				padding: 16px;
+				margin-bottom: 14px;
+				border-radius: 12px;
+			}
+
+			.module-title {
+				margin-bottom: 14px;
+				font-size: 17px;
+				line-height: 1.35;
+			}
+
+			.module .form-group,
+			#portSection {
+				gap: 7px;
+				margin-bottom: 14px;
+			}
+
+			.label-with-hint {
+				gap: 6px;
+				margin-bottom: 0;
+			}
+
+			.module .form-group label,
+			.form-group label,
+			.checkbox-label {
+				font-size: 12px;
+				line-height: 1.4;
+			}
+
+			.module .form-group input,
+			.module .form-group select,
+			.module .form-group textarea,
+			.form-group input,
+			.form-group select,
+			.form-group textarea {
+				min-width: 0;
+				padding: 9px 10px;
+				border-radius: 8px;
+				font-size: 14px;
+				line-height: 1.35;
+			}
+
+			.form-group textarea {
+				min-height: 220px;
+			}
+
+			.line-editor,
+			.line-editor .editor-area,
+			.line-editor textarea {
+				min-height: 220px;
+			}
+
+			.line-editor {
+				grid-template-columns: 46px minmax(0, 1fr);
+				border-radius: 8px;
+			}
+
+			.line-editor textarea,
+			.line-editor .wrap-measure {
+				padding: 10px !important;
+				font-size: 12px !important;
+			}
+
+			.line-editor .gutter pre {
+				padding: 10px 7px 10px 3px;
+			}
+
+			.module-footer {
+				gap: 8px;
+				margin-top: 16px;
+				padding-top: 14px;
+			}
+
+			.module-footer .btn-group,
+			.subscription-link-wrapper .btn-container,
+			.api-buttons,
+			.subapi-buttons,
+			.reset-modal-buttons,
+			.skipverify-buttons,
+			.hosts-edit-buttons {
+				gap: 8px !important;
+			}
+
+			.checkbox-row {
+				gap: 8px;
+			}
+
+			.mobile-compact-grid,
+			.compact-checkbox-grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				grid-auto-flow: row dense;
+				gap: 8px 10px;
+				align-items: start;
+			}
+
+			.mobile-compact-grid>.form-group {
+				grid-column: 1 / -1;
+				margin-bottom: 0;
+			}
+
+			.mobile-compact-grid>.form-group.mobile-half {
+				grid-column: auto;
+			}
+
+			.compact-checkbox-grid {
+				align-items: center;
+			}
+
+			.compact-checkbox-grid .form-group {
+				width: 100%;
+			}
+
+			.network-cards-container,
+			.latency-cards {
+				gap: 10px;
+				margin-top: 10px;
+			}
+
+			.network-card,
+			.latency-card {
+				padding: 12px;
+				border-radius: 10px;
+			}
+
+			.network-card-title {
+				gap: 7px;
+				margin-bottom: 8px;
+				font-size: 14px;
+			}
+
+			.network-info-content {
+				min-width: 0;
+				padding-left: 0;
+			}
+
+			.ip-text {
+				font-size: 14px;
+			}
+
+			.location-text,
+			.network-tip {
+				font-size: 11px;
+			}
+
+			.cf-usage-wrapper {
+				padding: 14px 0 0;
+			}
+
+			.cf-stats-card {
+				padding: 14px;
+				margin-bottom: 14px;
+			}
+
+			.cf-stats-grid {
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+				gap: 8px;
+			}
+
+			.cf-stat-label {
+				margin-bottom: 5px;
+				font-size: 10px;
+			}
+
+			.cf-stat-value {
+				font-size: 19px;
+			}
+
+			.cf-progress-bar {
+				height: 22px;
+			}
+
+			.cf-info-box {
+				gap: 8px;
+				padding: 10px;
+			}
+
+			.cf-info-text {
+				min-width: 0;
+				font-size: 11px;
+				line-height: 1.5;
+				white-space: normal;
+				word-break: break-word;
+				overflow-wrap: anywhere;
+			}
+
+			.social-links {
+				flex-wrap: wrap;
+				gap: 8px;
+				padding: 14px 0;
+			}
+
+			.social-link {
+				width: 38px;
+				height: 38px;
+				border-radius: 9px;
+			}
+
+			.social-link svg,
+			.theme-icon {
+				width: 18px;
+				height: 18px;
+			}
+
+			.social-link.social-version {
+				min-width: 96px;
+				padding: 0 8px;
+				font-size: 10px;
+			}
+
+			.modal-overlay {
+				padding: 12px;
+				overflow-y: auto;
+			}
+
+			.modal {
+				width: 100%;
+				min-width: 0 !important;
+				max-width: calc(100vw - 24px);
+				max-height: calc(100vh - 24px);
+				max-height: calc(100dvh - 24px);
+				padding: 18px;
+				border-radius: 12px;
+				overflow-y: auto;
+			}
+
+			.modal h2,
+			.api-optimize-modal-title,
+			.subapi-modal-title,
+			.logs-modal-title,
+			.path-template-modal-title {
+				margin-bottom: 14px !important;
+				font-size: 18px !important;
+				line-height: 1.35;
+				overflow-wrap: anywhere;
+			}
+
+			.modal p,
+			.modal li,
+			.modal small {
+				font-size: 12px;
+				word-break: break-word;
+				overflow-wrap: anywhere;
+			}
+
+			.modal-close {
+				top: 8px;
+				right: 8px;
+				width: 32px;
+				height: 32px;
+				font-size: 20px;
+			}
+
+			#getMoreProxyIPModal .modal,
+			#exploreSocks5Modal .modal,
+			#exploreHTTPModal .modal,
+			#exploreHTTPSModal .modal {
+				width: 100%;
+				height: calc(100vh - 24px);
+				height: calc(100dvh - 24px);
+				max-height: calc(100vh - 24px);
+				max-height: calc(100dvh - 24px);
+			}
+
+			.modal-content-side {
+				padding: 14px;
+			}
+
+			.api-form-group,
+			.api-results-container,
+			.hosts-edit-container {
+				margin-bottom: 14px;
+			}
+
+			.api-form-row,
+			.api-form-row-item,
+			.chain-proxy-modal .api-form-row-item {
+				min-width: 0;
+				gap: 6px;
+			}
+
+			.api-form-row label,
+			.api-form-row-item label {
+				font-size: 12px;
+			}
+
+			.api-form-row input,
+			.api-form-row-item input[type="number"],
+			.api-form-row-item input[type="text"],
+			.chain-proxy-preferred-wrapper input,
+			.chain-proxy-input-wrapper select,
+			.chain-proxy-input-wrapper input {
+				min-width: 0;
+				padding: 8px;
+				font-size: 13px;
+			}
+
+			.api-results-textarea,
+			.hosts-edit-textarea {
+				height: 160px;
+				padding: 9px;
+				font-size: 12px;
+			}
+
+			.ip-detail-modal {
+				padding: 8px;
+			}
+
+			.ip-detail-content {
+				width: 100%;
+				max-width: 100%;
+				padding: 0;
+				border-radius: 14px 14px 0 0;
+			}
+
+			.ip-detail-header,
+			.ip-detail-grid-container {
+				padding: 14px;
+			}
+
+			.ip-detail-map-container {
+				height: 180px;
+			}
+
+			.ip-detail-card {
+				padding: 14px;
+				border-radius: 10px;
+			}
+
+			.score-tooltip {
+				width: calc(100vw - 24px);
+				min-width: 0;
+				max-width: calc(100vw - 24px);
+				padding: 12px;
+			}
+
+			.toast {
+				left: 12px;
+				right: 12px;
+				top: 12px;
+				max-width: none;
+				padding: 10px 12px;
+				font-size: 12px;
+			}
+
+			.qrcode-container {
+				min-height: 260px;
+				margin: 18px 0;
+			}
+
+			.qrcode-container img,
+			.qrcode-container canvas {
+				max-width: 100%;
+				height: auto !important;
+			}
+
+			.logs-all-container,
+			.logs-container {
+				max-width: 100%;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.page-wrapper {
+				padding: 6px;
+			}
+
+			.header {
+				gap: 10px;
+				padding: 12px;
+				margin-bottom: 10px;
+				border-radius: 10px;
+			}
+
+			.header-title h1 {
+				font-size: 20px;
+			}
+
+			.header-buttons {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 6px;
+			}
+
+			.header .btn,
+			.btn {
+				min-height: 34px;
+				padding: 7px 9px;
+				font-size: 11.5px;
+			}
+
+			.module {
+				padding: 12px;
+				margin-bottom: 10px;
+				border-radius: 10px;
+			}
+
+			.module-title {
+				gap: 6px;
+				margin-bottom: 11px;
+				font-size: 15px;
+			}
+
+			.module-title .collapse-icon {
+				width: 16px;
+				height: 16px;
+				padding: 3px;
+			}
+
+			.module .form-group,
+			#portSection {
+				gap: 5px;
+				margin-bottom: 11px;
+			}
+
+			.module .form-group input,
+			.module .form-group select,
+			.module .form-group textarea,
+			.form-group input,
+			.form-group select,
+			.form-group textarea {
+				padding: 8px;
+				font-size: 13px;
+			}
+
+			.form-group textarea,
+			.line-editor,
+			.line-editor .editor-area,
+			.line-editor textarea {
+				min-height: 180px;
+			}
+
+			.line-editor {
+				grid-template-columns: 38px minmax(0, 1fr);
+			}
+
+			.module-footer {
+				gap: 6px;
+				margin-top: 12px;
+				padding-top: 11px;
+			}
+
+			.module-footer .btn-group,
+			.subscription-link-wrapper .btn-container {
+				gap: 6px !important;
+			}
+
+			.module-footer .btn-online-optimize:not(.hidden-section),
+			.module-footer .btn-api-optimize:not(.hidden-section),
+			.module-footer .btn-chain-proxy:not(.hidden-section) {
+				min-width: calc(50% - 3px);
+			}
+
+			.proxy-protocol-wrapper select {
+				flex-basis: 72px;
+				width: 72px;
+				min-width: 72px;
+			}
+
+			.grpc-ua-wrapper input {
+				padding-right: 76px !important;
+			}
+
+			.grpc-ua-action {
+				right: 7px;
+				font-size: 10px;
+			}
+
+			.network-card,
+			.latency-card {
+				padding: 10px;
+			}
+
+			.cf-stats-card {
+				padding: 10px;
+				border-left-width: 3px;
+			}
+
+			.cf-stats-grid {
+				gap: 5px;
+			}
+
+			.cf-stat-label {
+				font-size: 9px;
+				text-transform: none;
+			}
+
+			.cf-stat-value {
+				font-size: 16px;
+			}
+
+			.social-links {
+				gap: 6px;
+				padding: 10px 0;
+			}
+
+			.social-link {
+				width: 34px;
+				height: 34px;
+			}
+
+			.social-link.social-version {
+				min-width: 88px;
+				font-size: 9px;
+			}
+
+			.modal-overlay {
+				padding: 6px;
+			}
+
+			.modal {
+				max-width: calc(100vw - 12px);
+				max-height: calc(100vh - 12px);
+				max-height: calc(100dvh - 12px);
+				padding: 14px;
+				border-radius: 10px;
+			}
+
+			.modal h2,
+			.api-optimize-modal-title,
+			.subapi-modal-title,
+			.logs-modal-title,
+			.path-template-modal-title {
+				padding-right: 20px;
+				font-size: 16px !important;
+			}
+
+			.api-form-row,
+			.api-form-row-item,
+			.chain-proxy-modal .api-form-row-item {
+				grid-template-columns: minmax(0, 1fr) !important;
+				align-items: stretch;
+			}
+
+			.api-form-row-dual {
+				grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+				gap: 8px;
+			}
+
+			.api-form-row label,
+			.api-form-row-item label {
+				white-space: normal;
+			}
+
+			.chain-proxy-preferred-wrapper,
+			.chain-proxy-input-wrapper {
+				grid-template-columns: minmax(0, 1fr) auto minmax(64px, 0.55fr);
+			}
+
+			.chain-route-node {
+				padding: 8px;
+			}
+
+			.api-buttons,
+			.subapi-buttons {
+				gap: 6px !important;
+			}
+
+			.reset-modal-buttons,
+			.skipverify-buttons,
+			.hosts-edit-footer {
+				flex-wrap: wrap;
+				gap: 6px;
+			}
+
+			.reset-modal-buttons .btn,
+			.skipverify-buttons .btn,
+			.hosts-edit-buttons,
+			.hosts-edit-buttons .btn {
+				flex: 1 1 100%;
+				width: 100%;
+			}
+
+			.ip-detail-header,
+			.ip-detail-grid-container,
+			.ip-detail-card {
+				padding: 10px;
+			}
+
+			.ip-detail-title {
+				font-size: 16px;
+			}
+
+			.ip-detail-security-grid {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 0 8px;
+			}
+
+			.ip-detail-security-grid .ip-detail-item {
+				min-width: 0;
+				gap: 4px;
+				padding: 7px 0;
+			}
+
+			.ip-detail-security-grid .ip-detail-label,
+			.ip-detail-security-grid .ip-detail-value {
+				font-size: 11px;
+			}
+
+			.ip-detail-map-container {
+				height: 150px;
+			}
+
+			.score-tooltip {
+				width: calc(100vw - 12px);
+				max-width: calc(100vw - 12px);
+			}
+
+			.logs-modal {
+				width: 100%;
+			}
+
+			.logs-all-container table,
+			.logs-container table {
+				width: 100% !important;
+				table-layout: fixed !important;
+				font-size: 9px !important;
+			}
+
+			.logs-all-container th,
+			.logs-all-container td,
+			.logs-container th,
+			.logs-container td {
+				width: auto !important;
+				min-width: 0 !important;
+				padding: 4px 2px !important;
+				font-size: 8px !important;
+				white-space: normal !important;
+				word-break: break-all !important;
+			}
+		}
+
+		@media (min-width: 481px) and (max-width: 768px) {
+			.network-cards-container,
+			.latency-cards {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+		}
 	</style>
 
 </head>
@@ -9032,78 +9734,80 @@
 						<input type="text" id="nodePATH" title="节点的伪装路径 仅可通过 'PATH'环境变量 进行修改">
 					</div>
 
-					<div class="form-group">
-						<label for="protocol">节点协议</label>
-						<select id="protocol" title="节点协议" onchange="updateProtocol(); markModified('config')">
-							<option value="vless">VLESS</option>
-							<option value="trojan">Trojan</option>
-						</select>
-					</div>
+					<div class="mobile-compact-grid">
+						<div class="form-group mobile-half" id="protocolGroup">
+							<label for="protocol">节点协议</label>
+							<select id="protocol" title="节点协议" onchange="updateProtocol(); markModified('config')">
+								<option value="vless">VLESS</option>
+								<option value="trojan">Trojan</option>
+							</select>
+						</div>
 
-					<div class="form-group" id="ssMethodGroup" style="display: none;"
-						title="Shadowsocks 的加密方式，推荐使用 aes-128-gcm 以获得更好的性能和兼容性。">
-						<label for="ssMethod">加密方式</label>
-						<select id="ssMethod" onchange="markModified('config')">
-							<option value="aes-128-gcm">aes-128-gcm（CPU消耗少速度快）</option>
-							<option value="aes-256-gcm">aes-256-gcm（在性能不佳的老设备上，加解密速度会变慢）</option>
-						</select>
-					</div>
+						<div class="form-group" id="ssMethodGroup" style="display: none;"
+							title="Shadowsocks 的加密方式，推荐使用 aes-128-gcm 以获得更好的性能和兼容性。">
+							<label for="ssMethod">加密方式</label>
+							<select id="ssMethod" onchange="markModified('config')">
+								<option value="aes-128-gcm">aes-128-gcm（CPU消耗少速度快）</option>
+								<option value="aes-256-gcm">aes-256-gcm（在性能不佳的老设备上，加解密速度会变慢）</option>
+							</select>
+						</div>
 
-					<div class="form-group" id="ssTLSGroup" style="display: none;" title="传输层TLS加密">
-						<label for="ssTLS">TLS</label>
-						<select id="ssTLS" onchange="handleSSTLSChange(event)">
-							<option value="true">启用（开启TLS，速度不会比VLESS/Trojan更快，因为Shadowsocks自带AEAD加密）</option>
-							<option value="false">关闭</option>
-						</select>
-					</div>
+						<div class="form-group" id="ssTLSGroup" style="display: none;" title="传输层TLS加密">
+							<label for="ssTLS">TLS</label>
+							<select id="ssTLS" onchange="handleSSTLSChange(event)">
+								<option value="true">启用（开启TLS，速度不会比VLESS/Trojan更快，因为Shadowsocks自带AEAD加密）</option>
+								<option value="false">关闭</option>
+							</select>
+						</div>
 
-					<div class="form-group" id="transportGroup" style="display: none;">
-						<label>传输协议</label>
-						<select id="transport" title="传输协议" onchange="handleTransportChange()">
-							<option value="ws">WebSocket 稳！</option>
-							<option value="xhttp">XHTTP 大量消耗请求数！</option>
-							<option value="grpc">gRPC 花里胡笑！</option>
-						</select>
-					</div>
+						<div class="form-group mobile-half" id="transportGroup" style="display: none;">
+							<label>传输协议</label>
+							<select id="transport" title="传输协议" onchange="handleTransportChange()">
+								<option value="ws">WebSocket 稳！</option>
+								<option value="xhttp">XHTTP 大量消耗请求数！</option>
+								<option value="grpc">gRPC 花里胡笑！</option>
+							</select>
+						</div>
 
-					<div class="form-group" id="grpcModeGroup" style="display: none;">
-						<label for="grpcMode">gRPC模式</label>
-						<select id="grpcMode" title="gRPC模式" onchange="markModified('config')">
-							<option value="gun">gun 普通模式</option>
-							<option value="multi">multi 并发模式</option>
-						</select>
-					</div>
+						<div class="form-group mobile-half" id="grpcModeGroup" style="display: none;">
+							<label for="grpcMode">gRPC模式</label>
+							<select id="grpcMode" title="gRPC模式" onchange="markModified('config')">
+								<option value="gun">gun 普通模式</option>
+								<option value="multi">multi 并发模式</option>
+							</select>
+						</div>
 
-					<div class="form-group" id="grpcUserAgentGroup" style="display: none;">
-						<label for="grpcUserAgent"
-							title="用于客户端发起 gRPC 请求时的 User-Agent。&#10;Clash/Mihomo 内核使用默认 UA 时，可能被 Cloudflare 误判为 DDoS 异常流量并拦截。&#10;若客户端为 Clash/Mihomo，请务必设置此项。">gRPC
-							UA</label>
-						<div class="input-wrapper grpc-ua-wrapper">
-							<input type="text" id="grpcUserAgent"
-								title="用于客户端发起 gRPC 请求时的 User-Agent。&#10;Clash/Mihomo 内核使用默认 UA 时，可能被 Cloudflare 误判为 DDoS 异常流量并拦截。&#10;若客户端为 Clash/Mihomo，请务必设置此项。"
-								onchange="markModified('config')">
-							<button type="button" class="grpc-ua-action" onclick="fillCurrentGrpcUA()">获取当前UA</button>
+						<div class="form-group" id="grpcUserAgentGroup" style="display: none;">
+							<label for="grpcUserAgent"
+								title="用于客户端发起 gRPC 请求时的 User-Agent。&#10;Clash/Mihomo 内核使用默认 UA 时，可能被 Cloudflare 误判为 DDoS 异常流量并拦截。&#10;若客户端为 Clash/Mihomo，请务必设置此项。">gRPC
+								UA</label>
+							<div class="input-wrapper grpc-ua-wrapper">
+								<input type="text" id="grpcUserAgent"
+									title="用于客户端发起 gRPC 请求时的 User-Agent。&#10;Clash/Mihomo 内核使用默认 UA 时，可能被 Cloudflare 误判为 DDoS 异常流量并拦截。&#10;若客户端为 Clash/Mihomo，请务必设置此项。"
+									onchange="markModified('config')">
+								<button type="button" class="grpc-ua-action" onclick="fillCurrentGrpcUA()">获取当前UA</button>
+							</div>
+						</div>
+
+						<div class="form-group mobile-half" id="fingerprintGroup">
+							<label for="fingerprint">指纹伪装</label>
+							<select id="fingerprint" title="浏览器指纹"
+								onchange="handleFingerprintChange(); markModified('config')">
+								<option value="chrome">chrome（支持ECH）</option>
+								<option value="firefox">firefox（支持ECH）</option>
+								<option value="safari">safari</option>
+								<option value="ios">ios</option>
+								<option value="android">android</option>
+								<option value="edge">edge</option>
+								<option value="360">360</option>
+								<option value="qq">qq</option>
+								<option value="random">random</option>
+								<option value="randomized">randomized</option>
+							</select>
 						</div>
 					</div>
 
-					<div class="form-group" id="fingerprintGroup">
-						<label for="fingerprint">指纹伪装</label>
-						<select id="fingerprint" title="浏览器指纹"
-							onchange="handleFingerprintChange(); markModified('config')">
-							<option value="chrome">chrome（支持ECH）</option>
-							<option value="firefox">firefox（支持ECH）</option>
-							<option value="safari">safari</option>
-							<option value="ios">ios</option>
-							<option value="android">android</option>
-							<option value="edge">edge</option>
-							<option value="360">360</option>
-							<option value="qq">qq</option>
-							<option value="random">random</option>
-							<option value="randomized">randomized</option>
-						</select>
-					</div>
-
-					<div class="checkbox-row">
+					<div class="checkbox-row compact-checkbox-grid">
 						<div class="form-group" id="skipVerifyGroup" style="display: none;">
 							<div class="input-wrapper">
 								<div class="checkbox-group">
@@ -9471,7 +10175,7 @@
 						</div>
 					</div>
 
-					<div class="checkbox-row">
+					<div class="checkbox-row compact-checkbox-grid">
 						<div class="form-group" id="emojiGroup">
 							<div class="input-wrapper">
 								<div class="checkbox-group">

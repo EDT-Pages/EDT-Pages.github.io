@@ -11636,6 +11636,7 @@
 
 				.result-filter-options {
 					overflow: auto;
+					overscroll-behavior: contain;
 					padding: 6px;
 				}
 
@@ -12960,7 +12961,13 @@
 						if (!menu && !label) closeResultFilterMenu();
 					});
 					window.addEventListener("resize", closeResultFilterMenu);
-					window.addEventListener("scroll", closeResultFilterMenu, true);
+					window.addEventListener("scroll", handleResultFilterScroll, true);
+				}
+
+				function handleResultFilterScroll(event) {
+					const menu = document.querySelector(".result-filter-menu");
+					if (menu && event.target instanceof Node && menu.contains(event.target)) return;
+					closeResultFilterMenu();
 				}
 
 				function svgStopIcon() {

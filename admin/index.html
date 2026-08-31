@@ -6777,6 +6777,25 @@
 			border-radius: 999px;
 		}
 
+		.local-tool-stars {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			margin-left: auto;
+			font-size: 12px;
+			font-weight: 600;
+			line-height: 1.5;
+			padding: 2px 9px;
+			border-radius: 999px;
+			background: #fffbeb;
+			color: #b45309;
+		}
+
+		.local-tool-stars svg {
+			flex: 0 0 auto;
+			color: #f59e0b;
+		}
+
 		.local-tool-ui {
 			display: inline-flex;
 			align-items: center;
@@ -6930,6 +6949,15 @@
 		html.dark-mode .local-tool-author {
 			color: #a5b4fc;
 			background: rgba(99, 102, 241, .18);
+		}
+
+		html.dark-mode .local-tool-stars {
+			background: rgba(245, 158, 11, .15);
+			color: #fcd34d;
+		}
+
+		html.dark-mode .local-tool-stars svg {
+			color: #fbbf24;
 		}
 
 		html.dark-mode .local-tool-ui {
@@ -24710,6 +24738,9 @@
 		let localOptimizeProjects = [];
 		let localUiFilter = 'all';
 
+		// GitHub Star 图标（octicon star）
+		const STAR_SVG = '<svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" aria-hidden="true" focusable="false"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"></path></svg>';
+
 		// 打开"开始优选"方式选择弹窗
 		function openOptimizeStartModal() {
 			const modal = document.getElementById('optimizeStartModal');
@@ -24788,16 +24819,19 @@
 				cli: { emoji: '⌨️', label: '命令行CLI' }
 			};
 
-			// 按类型筛选，保留原始索引（openLocalToolGitHub 依赖 localOptimizeProjects 索引）
-			const filtered = projects
+			// 按 stars 数由高到低排序，携带原始索引（openLocalToolGitHub 依赖 localOptimizeProjects 索引）
+			const ranked = projects
 				.map((project, index) => ({ project, index }))
-				.filter(({ project }) => {
-					if (localUiFilter === 'all') return true;
-					const uiValues = Array.isArray(project.ui)
-						? project.ui.map(u => String(u).trim().toLowerCase())
-						: [];
-					return uiValues.includes(localUiFilter);
-				});
+				.sort((a, b) => (Number(b.project.stars) || 0) - (Number(a.project.stars) || 0));
+
+			// 按类型筛选
+			const filtered = ranked.filter(({ project }) => {
+				if (localUiFilter === 'all') return true;
+				const uiValues = Array.isArray(project.ui)
+					? project.ui.map(u => String(u).trim().toLowerCase())
+					: [];
+				return uiValues.includes(localUiFilter);
+			});
 
 			if (!filtered.length) {
 				const currentLabel = (uiLabels[localUiFilter] && uiLabels[localUiFilter].label) || '该';
@@ -24826,11 +24860,18 @@
 					})
 					.join('');
 
+				// GitHub Stars 徽章（无有效数据时不显示）
+				const starsNum = Number(project.stars);
+				const starsBadge = Number.isFinite(starsNum) && starsNum > 0
+					? `<span class="local-tool-stars" title="GitHub Stars">${STAR_SVG}${starsNum.toLocaleString('en-US')}</span>`
+					: '';
+
 				return `
 					<div class="local-tool-card" style="animation-delay: ${Math.min(i, 8) * 40}ms">
 						<div class="local-tool-head">
 							<span class="local-tool-name">${name}</span>
 							${author ? `<span class="local-tool-author">@${author}</span>` : ''}
+							${starsBadge}
 						</div>
 						<div class="local-tool-desc">${description}</div>
 						${(uiBadges || platformBadges) ? `<div class="local-tool-platforms">${uiBadges}${platformBadges}</div>` : ''}

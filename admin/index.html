@@ -6238,6 +6238,78 @@
 			color: #ff6b6b;
 		}
 
+		/* ECH×指纹冲突弹窗 */
+		.ech-conflict-modal {
+			min-width: 480px;
+		}
+
+		.ech-header {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			margin-bottom: 20px;
+			padding-bottom: 15px;
+			border-bottom: 2px solid var(--border-color);
+		}
+
+		.ech-icon {
+			font-size: 28px;
+			line-height: 1;
+		}
+
+		.ech-title {
+			margin: 0;
+			font-size: 18px;
+			font-weight: 600;
+			color: #ef4444;
+		}
+
+		.ech-content {
+			margin-bottom: 24px;
+		}
+
+		.ech-text {
+			margin: 0 0 12px 0;
+			line-height: 1.6;
+			font-size: 14px;
+			color: var(--text-primary);
+		}
+
+		.ech-text:last-child {
+			margin-bottom: 0;
+		}
+
+		.ech-buttons {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+		}
+
+		.btn-ech-option {
+			width: 100%;
+			font-size: 14px;
+		}
+
+		.btn-ech-chrome {
+			background: linear-gradient(135deg, #10b981 0, #059669 100%);
+			color: #fff;
+		}
+
+		.btn-ech-firefox {
+			background: linear-gradient(135deg, #f59e0b 0, #d97706 100%);
+			color: #fff;
+		}
+
+		.btn-ech-disable {
+			background: linear-gradient(135deg, #ef4444 0, #dc2626 100%);
+			color: #fff;
+		}
+
+		/* 暗模式 - ECH×指纹冲突弹窗 */
+		html.dark-mode .ech-title {
+			color: #ff6b6b;
+		}
+
 		/* 日志容器 */
 		.logs-container {
 			margin-bottom: 20px;
@@ -9588,6 +9660,7 @@
 			.reset-modal-buttons,
 			.skipverify-buttons,
 			.alpn-buttons,
+			.ech-buttons,
 			.hosts-edit-buttons {
 				gap: 8px !important;
 			}
@@ -10069,6 +10142,7 @@
 			.reset-modal-buttons,
 			.skipverify-buttons,
 			.alpn-buttons,
+			.ech-buttons,
 			.hosts-edit-footer {
 				flex-wrap: wrap;
 				gap: 6px;
@@ -10077,6 +10151,7 @@
 			.reset-modal-buttons .btn,
 			.skipverify-buttons .btn,
 			.alpn-buttons .btn,
+			.ech-buttons .btn,
 			.hosts-edit-buttons,
 			.hosts-edit-buttons .btn {
 				flex: 1 1 100%;
@@ -11258,6 +11333,26 @@
 				<button type="button" class="btn btn-confirm-alpn btn-confirm-reset"
 					onclick="confirmALPNSelection()">我知道风险，继续使用</button>
 				<button type="button" class="btn btn-alpn-safe" onclick="keepAutoALPN()">使用「客户端自动协商」</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- ECH×指纹冲突弹窗 -->
+	<div class="modal-overlay" id="echConflictModal" onclick="closeECHConflictModal(event)">
+		<div class="modal ech-conflict-modal" onclick="event.stopPropagation()">
+			<button type="button" class="modal-close" onclick="closeECHConflictModal()">×</button>
+			<div class="ech-header">
+				<div class="ech-icon">⚠️</div>
+				<h2 class="ech-title">ECH 与浏览器指纹冲突</h2>
+			</div>
+			<div class="ech-content" style="text-align: left;">
+				<p class="ech-text">您已开启 ECH，但当前选择的浏览器指纹「<span id="echConflictFingerprint"></span>」不支持 ECH。</p>
+				<p class="ech-text">ECH（Encrypted ClientHello）仅在 <strong>chrome / firefox</strong> 指纹下生效。请选择处理方式：切换到支持的浏览器指纹以保留 ECH，或关闭 ECH。</p>
+			</div>
+			<div class="ech-buttons">
+				<button type="button" class="btn btn-ech-option btn-ech-chrome" onclick="resolveECHConflict('chrome')">使用 chrome 指纹并开启 ECH</button>
+				<button type="button" class="btn btn-ech-option btn-ech-firefox" onclick="resolveECHConflict('firefox')">使用 firefox 指纹并开启 ECH</button>
+				<button type="button" class="btn btn-ech-option btn-ech-disable" onclick="resolveECHConflict('disable')">关闭 ECH</button>
 			</div>
 		</div>
 	</div>
@@ -17264,6 +17359,7 @@
 		const CHAIN_PROXY_MIN_VERSION = 20260506175102;
 		const SKIP_VERIFY_WARNING_BYPASS_MIN_VERSION = 20260601154939;
 		const ALPN_FEATURE_MIN_VERSION = 20260904162413;
+		const ECH_SUPPORTED_FINGERPRINTS = ['chrome', 'firefox'];
 		let cachedWorkerVersionRawText = '';
 		let cachedLatestOnlineVersion = 0;
 		let cachedCurrentVersionNumber = 0;
@@ -19195,32 +19291,10 @@
 			}
 
 			// 检查Fingerprint字段是否存在
-			const fingerprintGroup = document.getElementById('fingerprintGroup');
-			const fingerprintSelect = document.getElementById('fingerprint');
-			if (currentConfig['Fingerprint'] == undefined) {
-				fingerprintGroup.style.setProperty('display', 'none', 'important');
-			} else {
-				fingerprintSelect.value = currentConfig['Fingerprint'] || 'chrome';
-			}
+			syncFingerprintSelectFromConfig();
 
 			// 检查ALPN字段是否存在并回显
-			const alpnSelect = document.getElementById('alpn');
-			if (currentConfig['ALPN'] !== undefined) {
-				const alpnValue = String(currentConfig['ALPN'] || '');
-				// 非预设值时动态追加option，避免丢失用户已有配置（遍历比对，避免特殊字符导致选择器异常）
-				const hasOption = Array.from(alpnSelect.options).some(opt => opt.value === alpnValue);
-				if (alpnValue && !hasOption) {
-					const customOption = document.createElement('option');
-					customOption.value = alpnValue;
-					customOption.textContent = `${alpnValue}（当前配置）`;
-					alpnSelect.appendChild(customOption);
-				}
-				alpnSelect.value = alpnValue;
-			} else {
-				alpnSelect.value = '';
-			}
-			loadedALPNValue = alpnSelect.value;
-			updateALPNGroupVisibility();
+			syncALPNSelectFromConfig();
 
 			// 检查随机路径字段是否存在
 			const randomPathGroup = document.getElementById('randomPathGroup');
@@ -19833,6 +19907,15 @@
 		// 处理浏览器指纹变化，联动ECH选项
 		function handleFingerprintChange() {
 			updateECHOptionState();
+
+			const enableECHCheckbox = document.getElementById('enableECH');
+			const fingerprintSelect = document.getElementById('fingerprint');
+			const currentFingerprint = fingerprintSelect?.value;
+
+			// 路径A：已开启ECH，但新指纹不支持ECH → 弹窗由用户决定处理方式
+			if (enableECHCheckbox?.checked && currentFingerprint && !ECH_SUPPORTED_FINGERPRINTS.includes(currentFingerprint)) {
+				openECHConflictModal(currentFingerprint);
+			}
 		}
 
 		// 处理ECH启用状态变化
@@ -19840,44 +19923,80 @@
 			const enableECHCheckbox = document.getElementById('enableECH');
 			const fingerprintSelect = document.getElementById('fingerprint');
 
-			// 支持ECH的指纹类型
-			const supportECH = ['chrome', 'firefox'];
-
-			// 如果用户开启ECH，但当前指纹不支持ECH，自动切换到chrome
+			// 路径B：用户开启ECH，但当前指纹不支持ECH → 先回退勾选，弹窗由用户决定处理方式
 			if (enableECHCheckbox && enableECHCheckbox.checked) {
 				const currentFingerprint = fingerprintSelect?.value;
-				if (currentFingerprint && !supportECH.includes(currentFingerprint)) {
-					fingerprintSelect.value = 'chrome';
-					// 同时标记详细配置模块为已修改
-					markModified('config');
+				if (currentFingerprint && !ECH_SUPPORTED_FINGERPRINTS.includes(currentFingerprint)) {
+					enableECHCheckbox.checked = false;
+					openECHConflictModal(currentFingerprint);
+					return;
 				}
 			}
 
 			markModified('ech');
 		}
 
-		// 更新ECH选项的状态（禁用/启用）
-		function updateECHOptionState() {
-			const fingerprint = document.getElementById('fingerprint')?.value;
+		// 隐藏 ECH×指纹 冲突弹窗（仅负责收起弹窗，不触发任何业务逻辑）
+		function hideECHConflictModal() {
+			document.getElementById('echConflictModal').classList.remove('show');
+		}
+
+		// 打开 ECH×指纹 冲突弹窗（路径A/B共用）
+		function openECHConflictModal(unsupportedFingerprint) {
+			const labelEl = document.getElementById('echConflictFingerprint');
+			if (labelEl) labelEl.textContent = unsupportedFingerprint || '';
+			document.getElementById('echConflictModal').classList.add('show');
+		}
+
+		// 三选一解决冲突（action: 'chrome' | 'firefox' | 'disable'）
+		function resolveECHConflict(action) {
 			const enableECHCheckbox = document.getElementById('enableECH');
+			const fingerprintSelect = document.getElementById('fingerprint');
+
+			if (action === 'chrome' || action === 'firefox') {
+				fingerprintSelect.value = action;
+				enableECHCheckbox.checked = true;
+			} else {
+				// 关闭ECH：保留用户当前所选（不支持ECH的）指纹
+				enableECHCheckbox.checked = false;
+			}
+
+			// 联动变更同时涉及两个模块：按与 currentConfig 的差异精确标记
+			if (fingerprintSelect.value !== currentConfig['Fingerprint']) {
+				markModified('config');
+			}
+			if (enableECHCheckbox.checked !== (currentConfig['ECH'] || false)) {
+				markModified('ech');
+			}
+
+			hideECHConflictModal();
+		}
+
+		// 关闭弹窗入口：未通过按钮确认前关闭（×/遮罩）视为选择「关闭ECH」
+		function closeECHConflictModal(event) {
+			if (!event || event.target.id === 'echConflictModal') {
+				hideECHConflictModal();
+				resolveECHConflict('disable');
+			}
+		}
+
+		// 更新ECH选项的状态（禁用/启用）——仅 SS+TLS关闭 时禁用；与指纹的冲突改由弹窗解决
+		function updateECHOptionState() {
 			const protocol = document.getElementById('protocol')?.value;
 			const ssTLS = document.getElementById('ssTLS')?.value;
+			const enableECHCheckbox = document.getElementById('enableECH');
 
-			// 支持ECH的指纹类型
-			const supportECH = ['chrome', 'firefox'];
-			const isFingerprintSupported = supportECH.includes(fingerprint);
 			const isSSWithoutTLS = protocol === 'ss' && ssTLS === 'false';
-			const shouldDisableECH = !isFingerprintSupported || isSSWithoutTLS;
 
 			if (enableECHCheckbox) {
-				// 当不满足条件时，自动取消勾选
-				if (shouldDisableECH && enableECHCheckbox.checked) {
+				// SS + TLS关闭时不满足条件，自动取消勾选
+				if (isSSWithoutTLS && enableECHCheckbox.checked) {
 					enableECHCheckbox.checked = false;
 					markModified('ech');
 				}
 
-				// SS + TLS关闭 或 指纹不支持时，ECH启用不可编辑
-				enableECHCheckbox.disabled = shouldDisableECH;
+				// SS + TLS关闭时，ECH启用不可编辑
+				enableECHCheckbox.disabled = isSSWithoutTLS;
 			}
 		}
 
@@ -20634,6 +20753,40 @@
 			alpnGroup.style.setProperty('display', (alpnFeatureEnabled && hasField) ? '' : 'none', 'important');
 		}
 
+		// 从 currentConfig 同步指纹伪装下拉框回显（renderUI 与 cancelEdit 共用）
+		function syncFingerprintSelectFromConfig() {
+			const fingerprintGroup = document.getElementById('fingerprintGroup');
+			const fingerprintSelect = document.getElementById('fingerprint');
+			if (currentConfig['Fingerprint'] == undefined) {
+				fingerprintGroup.style.setProperty('display', 'none', 'important');
+			} else {
+				fingerprintSelect.value = currentConfig['Fingerprint'] || 'chrome';
+			}
+		}
+
+		// 从 currentConfig 同步 ALPN 下拉框回显（renderUI 与 cancelEdit 共用）
+		function syncALPNSelectFromConfig() {
+			// 检查ALPN字段是否存在并回显
+			const alpnSelect = document.getElementById('alpn');
+			if (currentConfig['ALPN'] !== undefined) {
+				const alpnValue = String(currentConfig['ALPN'] || '');
+				// 非预设值时动态追加option，避免丢失用户已有配置（遍历比对，避免特殊字符导致选择器异常）
+				const hasOption = Array.from(alpnSelect.options).some(opt => opt.value === alpnValue);
+				if (alpnValue && !hasOption) {
+					const customOption = document.createElement('option');
+					customOption.value = alpnValue;
+					customOption.textContent = `${alpnValue}（当前配置）`;
+					alpnSelect.appendChild(customOption);
+				}
+				alpnSelect.value = alpnValue;
+			} else {
+				alpnSelect.value = '';
+			}
+			loadedALPNValue = alpnSelect.value;
+			pendingALPNValue = ''; // 同步后未决的弹窗选择视为过期，避免状态悬挂
+			updateALPNGroupVisibility();
+		}
+
 		// HOSTS 编辑模态框相关函数
 		function openHostsEditModal(event) {
 			if (event) event.stopPropagation();
@@ -20798,6 +20951,23 @@
 				currentConfig['Fingerprint'] = document.getElementById('fingerprint').value;
 			}
 
+			// 联动保存ECH（指纹与ECH联动，保存任一模块时同时保存两者的变更）
+			if (currentConfig['ECH'] !== undefined) {
+				currentConfig['ECH'] = document.getElementById('enableECH').checked;
+
+				if (currentConfig.ECHConfig?.DNS !== undefined) {
+					const dnsValue = document.getElementById('echDNSValue').value;
+					if (dnsValue) {
+						currentConfig.ECHConfig.DNS = dnsValue;
+					}
+				}
+
+				if (currentConfig.ECHConfig?.SNI !== undefined) {
+					const sniValue = document.getElementById('echSNIValue').value;
+					currentConfig.ECHConfig.SNI = sniValue === '' ? null : sniValue;
+				}
+			}
+
 			// 保存ALPN（仅当版本支持且字段存在时写入，避免低版本后端覆盖已有值）
 			if (currentConfig['ALPN'] !== undefined && alpnFeatureEnabled) {
 				currentConfig['ALPN'] = document.getElementById('alpn').value || '';
@@ -20833,6 +21003,11 @@
 		}
 
 		async function saveEch() {
+			// 联动保存指纹（指纹与ECH联动，保存任一模块时同时保存两者的变更）
+			if (currentConfig['Fingerprint'] !== undefined) {
+				currentConfig['Fingerprint'] = document.getElementById('fingerprint').value;
+			}
+
 			// 保存ECH（如果字段存在）
 			if (currentConfig['ECH'] !== undefined) {
 				currentConfig['ECH'] = document.getElementById('enableECH').checked;
@@ -24814,6 +24989,8 @@
 					syncTransportSettingsFromConfig();
 					document.getElementById('skipVerify').checked = currentConfig.跳过证书验证 || false;
 					updateProtocol();
+					syncFingerprintSelectFromConfig();
+					syncALPNSelectFromConfig();
 				} else if (section === 'proxy') {
 					applyProxyConfigToForm();
 				} else if (section === 'convert') {

@@ -6176,6 +6176,68 @@
 			color: #42a5f5;
 		}
 
+		/* ALPN 协议协商警告弹窗 */
+		.alpn-warning-modal {
+			min-width: 400px;
+		}
+
+		.alpn-header {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			margin-bottom: 20px;
+			padding-bottom: 15px;
+			border-bottom: 2px solid var(--border-color);
+		}
+
+		.alpn-icon {
+			font-size: 28px;
+			line-height: 1;
+		}
+
+		.alpn-title {
+			margin: 0;
+			font-size: 18px;
+			font-weight: 600;
+			color: #ef4444;
+		}
+
+		.alpn-content {
+			margin-bottom: 24px;
+		}
+
+		.alpn-text {
+			margin: 0 0 12px 0;
+			line-height: 1.6;
+			font-size: 14px;
+			color: var(--text-primary);
+		}
+
+		.alpn-text:last-child {
+			margin-bottom: 0;
+		}
+
+		.alpn-buttons {
+			display: flex;
+			gap: 12px;
+			justify-content: space-between;
+		}
+
+		.btn-confirm-alpn {
+			flex: 1;
+		}
+
+		.btn-alpn-safe {
+			flex: 1;
+			background: linear-gradient(135deg, #10b981 0, #059669 100%);
+			color: #fff;
+		}
+
+		/* 暗模式 - ALPN 协议协商警告弹窗 */
+		html.dark-mode .alpn-title {
+			color: #ff6b6b;
+		}
+
 		/* 日志容器 */
 		.logs-container {
 			margin-bottom: 20px;
@@ -9525,6 +9587,7 @@
 			.subapi-buttons,
 			.reset-modal-buttons,
 			.skipverify-buttons,
+			.alpn-buttons,
 			.hosts-edit-buttons {
 				gap: 8px !important;
 			}
@@ -10005,6 +10068,7 @@
 
 			.reset-modal-buttons,
 			.skipverify-buttons,
+			.alpn-buttons,
 			.hosts-edit-footer {
 				flex-wrap: wrap;
 				gap: 6px;
@@ -10012,6 +10076,7 @@
 
 			.reset-modal-buttons .btn,
 			.skipverify-buttons .btn,
+			.alpn-buttons .btn,
 			.hosts-edit-buttons,
 			.hosts-edit-buttons .btn {
 				flex: 1 1 100%;
@@ -10511,6 +10576,22 @@
 								<option value="qq">qq</option>
 								<option value="random">random</option>
 								<option value="randomized">randomized</option>
+							</select>
+						</div>
+
+						<div class="form-group mobile-half" id="alpnGroup" style="display: none;">
+							<label for="alpn"
+								title="ALPN（Application-Layer Protocol Negotiation）应用层协议协商。&#10;默认「客户端自动协商」由客户端自行决定协议，兼容性最佳。&#10;手动指定后节点将固定使用所选协议集，若与客户端或网络环境不兼容，最坏情况会导致节点无法连接。">ALPN</label>
+							<select id="alpn"
+								title="ALPN（Application-Layer Protocol Negotiation）应用层协议协商。&#10;默认「客户端自动协商」由客户端自行决定协议，兼容性最佳。&#10;手动指定后节点将固定使用所选协议集，若与客户端或网络环境不兼容，最坏情况会导致节点无法连接。"
+								onchange="handleALPNChange(event)">
+								<option value="">客户端自动协商</option>
+								<option value="h3">h3</option>
+								<option value="h2">h2</option>
+								<option value="http/1.1">http/1.1</option>
+								<option value="h3,h2">h3,h2</option>
+								<option value="h2,http/1.1">h2,http/1.1</option>
+								<option value="h3,h2,http/1.1">h3,h2,http/1.1</option>
 							</select>
 						</div>
 					</div>
@@ -11156,6 +11237,27 @@
 				<button type="button" class="btn btn-confirm-skip-verify btn-confirm-reset"
 					onclick="confirmSkipVerify()">确认开启</button>
 				<button type="button" class="btn btn-secondary" onclick="closeSkipVerifyWarning()">关闭</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- ALPN 协议协商警告弹窗 -->
+	<div class="modal-overlay" id="alpnWarningModal" onclick="closeALPNWarningModal(event)">
+		<div class="modal alpn-warning-modal" onclick="event.stopPropagation()">
+			<button type="button" class="modal-close" onclick="closeALPNWarningModal()">×</button>
+			<div class="alpn-header">
+				<div class="alpn-icon">⚠️</div>
+				<h2 class="alpn-title">关于 ALPN 协议协商</h2>
+			</div>
+			<div class="alpn-content" style="text-align: left;">
+				<p class="alpn-text">您当前选择的 ALPN 选项为「<span id="alpnPendingLabel"></span>」。ALPN
+					用于显式指定节点所使用的应用层协议优先级，属于<strong>高级配置项</strong>。</p>
+				<p class="alpn-text">设置不当可能导致节点与您的客户端或网络环境不兼容，<strong>最坏情况下节点将无法建立连接</strong>。如果您不确定该选项的含义与影响，建议保持默认的「客户端自动协商」，由客户端自行完成协议协商。</p>
+			</div>
+			<div class="alpn-buttons">
+				<button type="button" class="btn btn-confirm-alpn btn-confirm-reset"
+					onclick="confirmALPNSelection()">我知道</button>
+				<button type="button" class="btn btn-alpn-safe" onclick="keepAutoALPN()">使用「客户端自动协商」</button>
 			</div>
 		</div>
 	</div>
@@ -17161,6 +17263,7 @@
 		const TURN_SSTP_PROXY_MIN_VERSION = 20260504172138;
 		const CHAIN_PROXY_MIN_VERSION = 20260506175102;
 		const SKIP_VERIFY_WARNING_BYPASS_MIN_VERSION = 20260601154939;
+		const ALPN_FEATURE_MIN_VERSION = 20260904162413;
 		let cachedWorkerVersionRawText = '';
 		let cachedLatestOnlineVersion = 0;
 		let cachedCurrentVersionNumber = 0;
@@ -17171,6 +17274,7 @@
 		let httpsProxyFeatureEnabled = false;
 		let turnSstpProxyFeatureEnabled = false;
 		let chainProxyFeatureEnabled = false;
+		let alpnFeatureEnabled = false;
 		let proxyFeatureAvailabilityInitialized = false;
 		const PROXY_PROTOCOLS = ['socks5', 'http', 'https', 'turn', 'sstp'];
 
@@ -17907,7 +18011,9 @@
 			httpsProxyFeatureEnabled = versionNumber >= HTTPS_PROXY_MIN_VERSION;
 			turnSstpProxyFeatureEnabled = versionNumber >= TURN_SSTP_PROXY_MIN_VERSION;
 			chainProxyFeatureEnabled = versionNumber >= CHAIN_PROXY_MIN_VERSION;
+			alpnFeatureEnabled = versionNumber >= ALPN_FEATURE_MIN_VERSION;
 			updateChainProxyButtonVisibility();
+			updateALPNGroupVisibility();
 
 			const httpsOption = document.getElementById('httpsProxyOption');
 			if (httpsOption) {
@@ -19096,6 +19202,25 @@
 			} else {
 				fingerprintSelect.value = currentConfig['Fingerprint'] || 'chrome';
 			}
+
+			// 检查ALPN字段是否存在并回显
+			const alpnSelect = document.getElementById('alpn');
+			if (currentConfig['ALPN'] !== undefined) {
+				const alpnValue = String(currentConfig['ALPN'] || '');
+				// 非预设值时动态追加option，避免丢失用户已有配置（遍历比对，避免特殊字符导致选择器异常）
+				const hasOption = Array.from(alpnSelect.options).some(opt => opt.value === alpnValue);
+				if (alpnValue && !hasOption) {
+					const customOption = document.createElement('option');
+					customOption.value = alpnValue;
+					customOption.textContent = `${alpnValue}（当前配置）`;
+					alpnSelect.appendChild(customOption);
+				}
+				alpnSelect.value = alpnValue;
+			} else {
+				alpnSelect.value = '';
+			}
+			loadedALPNValue = alpnSelect.value;
+			updateALPNGroupVisibility();
 
 			// 检查随机路径字段是否存在
 			const randomPathGroup = document.getElementById('randomPathGroup');
@@ -20454,6 +20579,61 @@
 			closeSkipVerifyWarning();
 		}
 
+		// ALPN 下拉框与警告弹窗相关状态及处理函数
+		let loadedALPNValue = '';
+		let pendingALPNValue = '';
+
+		function handleALPNChange(event) {
+			const select = event.target;
+			const newValue = select.value;
+			if (!newValue) {
+				// 手动切回客户端自动协商：不弹窗
+				if (loadedALPNValue !== '') markModified('config');
+				return;
+			}
+			// 暂存所选值，先回退为自动协商，待用户确认后再应用
+			pendingALPNValue = newValue;
+			select.value = '';
+			document.getElementById('alpnPendingLabel').textContent = pendingALPNValue;
+			document.getElementById('alpnWarningModal').classList.add('show');
+		}
+
+		function confirmALPNSelection() {
+			const select = document.getElementById('alpn');
+			if (pendingALPNValue) select.value = pendingALPNValue;
+			pendingALPNValue = '';
+			if (select.value !== loadedALPNValue) markModified('config');
+			closeALPNWarningModal();
+		}
+
+		function keepAutoALPN() {
+			pendingALPNValue = '';
+			const select = document.getElementById('alpn');
+			select.value = '';
+			if (loadedALPNValue !== '') markModified('config');
+			closeALPNWarningModal();
+		}
+
+		function closeALPNWarningModal(event) {
+			if (!event || event.target.id === 'alpnWarningModal') {
+				document.getElementById('alpnWarningModal').classList.remove('show');
+				// 未确认前关闭（×/遮罩）视为放弃高危选择，回退为自动协商
+				if (pendingALPNValue) {
+					pendingALPNValue = '';
+					const select = document.getElementById('alpn');
+					select.value = '';
+					if (loadedALPNValue !== '') markModified('config');
+				}
+			}
+		}
+
+		function updateALPNGroupVisibility() {
+			const alpnGroup = document.getElementById('alpnGroup');
+			if (!alpnGroup) return;
+			const hasField = typeof currentConfig === 'object' && currentConfig !== null && currentConfig['ALPN'] !== undefined;
+			alpnGroup.style.setProperty('display', (alpnFeatureEnabled && hasField) ? '' : 'none', 'important');
+		}
+
 		// HOSTS 编辑模态框相关函数
 		function openHostsEditModal(event) {
 			if (event) event.stopPropagation();
@@ -20616,6 +20796,11 @@
 			// 保存Fingerprint（如果字段存在）
 			if (currentConfig['Fingerprint'] !== undefined) {
 				currentConfig['Fingerprint'] = document.getElementById('fingerprint').value;
+			}
+
+			// 保存ALPN（仅当版本支持且字段存在时写入，避免低版本后端覆盖已有值）
+			if (currentConfig['ALPN'] !== undefined && alpnFeatureEnabled) {
+				currentConfig['ALPN'] = document.getElementById('alpn').value || '';
 			}
 
 			// 保存随机路径（如果字段存在）

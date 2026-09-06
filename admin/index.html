@@ -11102,6 +11102,14 @@
 								</div>
 							</div>
 						</div>
+						<div class="form-group" id="expandGroup" style="display: none;">
+							<div class="input-wrapper">
+								<div class="checkbox-group">
+									<input type="checkbox" id="expand" title="展开规则全文，输出完整分流规则列表" onchange="markModified('convert')">
+									<label for="expand" class="checkbox-label" title="展开规则全文，输出完整分流规则列表">展开规则全文</label>
+								</div>
+							</div>
+						</div>
 					</div>
 
 					<div class="module-footer">
@@ -21260,6 +21268,13 @@
 			document.getElementById('sort').checked = hasSORT
 				? currentConfig.订阅转换配置?.SORT || false
 				: false;
+
+			const expandGroup = document.getElementById('expandGroup');
+			const hasEXPAND = currentConfig.订阅转换配置?.EXPAND !== undefined;
+			expandGroup.style.display = hasEXPAND ? '' : 'none';
+			document.getElementById('expand').checked = hasEXPAND
+				? currentConfig.订阅转换配置?.EXPAND || false
+				: false;
 		}
 
 		// UDP/XUDP 联动：XUDP 依赖 UDP，勾选 XUDP 自动勾选 UDP，取消 UDP 自动取消 XUDP
@@ -21281,6 +21296,7 @@
 			const hasTLS13 = currentConfig.订阅转换配置?.TLS13 !== undefined;
 			const hasAppendType = currentConfig.订阅转换配置?.APPEND_TYPE !== undefined;
 			const hasSORT = currentConfig.订阅转换配置?.SORT !== undefined;
+			const hasEXPAND = currentConfig.订阅转换配置?.EXPAND !== undefined;
 			currentConfig.订阅转换配置 = {
 				SUBAPI: document.getElementById('subAPI').value,
 				SUBCONFIG: document.getElementById('subConfig').value,
@@ -21303,6 +21319,9 @@
 			}
 			if (hasSORT) {
 				currentConfig.订阅转换配置.SORT = document.getElementById('sort').checked;
+			}
+			if (hasEXPAND) {
+				currentConfig.订阅转换配置.EXPAND = document.getElementById('expand').checked;
 			}
 
 			await saveConfigToServer('convert');

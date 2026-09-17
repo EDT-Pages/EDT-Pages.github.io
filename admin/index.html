@@ -26264,6 +26264,37 @@
 				};
 			}
 
+			if (sourceConfig.type === 'trace') {
+				const controller = new AbortController();
+				return {
+					cancel: () => controller.abort(),
+					promise: (async () => {
+						const url = `${sourceConfig.url}${sourceConfig.url.includes('?') ? '&' : '?'}_t=${Date.now()}`;
+						const response = await fetchWithTimeout(url, {
+							cache: 'no-store',
+							signal: controller.signal
+						});
+
+						if (!response.ok) {
+							throw new Error(`${sourceConfig.url} HTTP ${response.status}`);
+						}
+
+						const text = await response.text();
+						const ipMatch = text.match(/^ip=(.+)$/m);
+						const requestIp = ipMatch ? ipMatch[1].trim() : '';
+						if (!requestIp) {
+							throw new Error(`${sourceConfig.url} missing ip field`);
+						}
+
+						return {
+							source: sourceConfig.url,
+							requestIp,
+							providerName: sourceConfig.name
+						};
+					})()
+				};
+			}
+
 			const controller = new AbortController();
 			return {
 				cancel: () => controller.abort(),
@@ -26314,6 +26345,7 @@
 			const statusElement = document.querySelector('#status-ipip');
 			const titleElement = statusElement ? statusElement.parentElement : null;
 			const testSources = [
+				/*
 				{
 					type: 'head',
 					name: '字节跳动',
@@ -26352,9 +26384,15 @@
 					url: `https://${Date.now()}.dns-detect.alicdn.com/api/detect/DescribeDNSLookup`,
 					callbackParam: 'cb',
 					extractIp: payload => payload?.content?.localIp
+				},
+				*/
+				{
+					type: 'trace',
+					name: '科赋锐科技',
+					url: 'https://www.cloudflare-cn.com/cdn-cgi/trace'
 				}
 			];
-			const headSources = testSources.filter(sourceConfig => sourceConfig.type === 'head');
+			const headSources = testSources.filter(sourceConfig => sourceConfig.type === 'head' || sourceConfig.type === 'trace');
 			const jsonpSources = testSources.filter(sourceConfig => sourceConfig.type === 'jsonp');
 			let fastestSuccess;
 			try {
@@ -26362,6 +26400,9 @@
 					fastestSuccess = await raceIpProbeSources(headSources, '国内测试 HEAD');
 				} catch (headError) {
 					console.warn('[国内测试] HEAD 测试源不可用，后台切换到 JSONP 兜底:', headError);
+					if (!jsonpSources.length) {
+						throw headError;
+					}
 					fastestSuccess = await raceIpProbeSources(jsonpSources, '国内测试 JSONP');
 				}
 			} catch (error) {

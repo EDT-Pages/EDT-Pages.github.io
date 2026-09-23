@@ -6048,7 +6048,7 @@
 			opacity: 1;
 		}
 
-		.simple-mode .advanced-module {
+		.simple-mode .advanced-module:not(.mode-always-visible) {
 			overflow: hidden;
 			opacity: 0;
 			max-height: 0;
@@ -10549,7 +10549,7 @@
 			</div>
 
 			<!-- 模块3: 详细配置信息 -->
-			<div class="module collapsed advanced-module">
+			<div class="module collapsed advanced-module mode-always-visible">
 				<div class="module-title" onclick="toggleModule(this)">
 					⚙️ 详细配置信息
 					<svg class="collapse-icon" viewBox="0 0 24 24">
@@ -10740,7 +10740,7 @@
 			</div>
 
 			<!-- 模块3.5: ECH 设置(实验性质) -->
-			<div class="module collapsed advanced-module" id="echModule" style="display: none;">
+			<div class="module collapsed advanced-module mode-always-visible" id="echModule" style="display: none;">
 				<div class="module-title" onclick="toggleModule(this)">
 					🔐 Encrypted Client Hello
 					<svg class="collapse-icon" viewBox="0 0 24 24">
@@ -17338,7 +17338,7 @@
 					style="margin: 0 0 16px 0; padding: 12px; background-color: transparent; border-radius: 0; text-align: left; font-size: 13px; max-height: 120px; overflow-y: auto; word-break: break-all; display: flex; flex-wrap: wrap; gap: 8px; align-content: flex-start;">
 				</div>
 				<p style="margin: 0 0 16px 0; font-size: 13px; line-height: 1.6; text-align: left;">
-					<strong>如何修改？</strong>请在高手模式下的"⚙️ 详细配置信息"，在"HOST"里添加您的域名"<strong id="hostToAdd"
+					<strong>如何修改？</strong>请在"⚙️ 详细配置信息"（小白模式 / 高手模式均可查看），在"HOST"里添加您的域名"<strong id="hostToAdd"
 						style="color: #2196F3;"></strong>"，保存配置后即可生效。
 				</p>
 			</div>

@@ -12920,6 +12920,75 @@
 					text-align: right;
 				}
 
+				/* ==================== 开屏加载动画 ==================== */
+				.boot-loading {
+					position: fixed;
+					inset: 0;
+					z-index: 90;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					padding: 18px;
+					background: var(--bg);
+					transition: opacity 0.5s ease 0.08s, visibility 0.5s ease 0.08s;
+				}
+
+				.boot-loading.is-hidden {
+					opacity: 0;
+					visibility: hidden;
+					pointer-events: none;
+				}
+
+				.boot-loading.is-hidden .boot-loading-card {
+					opacity: 0;
+					transform: translateY(-10px) scale(0.98);
+				}
+
+				.boot-loading-card {
+					display: grid;
+					justify-items: center;
+					gap: 14px;
+					padding: 30px 36px;
+					border: 1px solid var(--line);
+					border-radius: var(--radius);
+					background: var(--panel);
+					box-shadow: var(--shadow);
+					transition: opacity 0.4s ease, transform 0.4s ease;
+				}
+
+				.boot-loading-brand {
+					color: var(--text);
+					font-size: 24px;
+					font-weight: 800;
+					letter-spacing: 0.5px;
+				}
+
+				.boot-loading-status {
+					color: var(--muted);
+					font-size: 13px;
+					font-weight: 650;
+				}
+
+				.boot-loading-track {
+					width: min(260px, 70vw);
+					height: 8px;
+					overflow: hidden;
+					border-radius: 999px;
+					background: var(--ink-soft);
+				}
+
+				.boot-loading-bar {
+					width: 0;
+					height: 100%;
+					border-radius: inherit;
+					background: linear-gradient(90deg, var(--blue), var(--green));
+					transition: width 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+				}
+
+				.boot-loading-bar.is-crawling {
+					transition-duration: 5s;
+				}
+
 				.network-warning-overlay {
 					position: fixed;
 					inset: 0;
@@ -13460,6 +13529,16 @@
 		</head>
 
 		<body>
+			<div class="boot-loading" id="bootLoading" role="status" aria-live="polite">
+				<div class="boot-loading-card">
+					<div class="boot-loading-brand">BestCF</div>
+					<div class="boot-loading-status" id="bootLoadingStatus">正在检测网络环境…</div>
+					<div class="boot-loading-track" aria-hidden="true">
+						<div class="boot-loading-bar" id="bootLoadingBar"></div>
+					</div>
+				</div>
+			</div>
+
 			<main class="shell">
 				<header class="topbar">
 					<div class="brand">
@@ -13893,6 +13972,7 @@
 				document.addEventListener("DOMContentLoaded", () => {
 					bindEvents();
 					updateEditorMeta();
+					scheduleBootLoadingProgress();
 					detectNetwork();
 					if ("ResizeObserver" in window) {
 						state.editorResizeObserver = new ResizeObserver(updateEditorMeta);
@@ -14049,6 +14129,54 @@
 					return '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="16.5" cy="5.5" r="1.5"></circle><path d="M10 8.5 13 9l1.5 2.5 3 1"></path><path d="M7 20l2.2-4.7 2.6-1.1 1.4 2.3 3 1"></path><path d="M6 11l3-2.2 2.8.8 2 2"></path><path d="M5 19h3.5"></path></svg>';
 				}
 
+				// ==================== 开屏加载动画 ====================
+
+				const BOOT_LOADING_MIN_VISIBLE = 800;
+				const bootLoading = {
+					active: true,
+					startedAt: performance.now(),
+					timers: []
+				};
+
+				function scheduleBootLoadingProgress() {
+					const bar = document.getElementById("bootLoadingBar");
+					if (!bar) return;
+					[
+						{ delay: 60, width: "30%" },
+						{ delay: 700, width: "60%" },
+						{ delay: 1600, width: "80%" },
+						{ delay: 2600, width: "90%" },
+						{ delay: 3000, width: "98%", crawl: true }
+					].forEach(({ delay, width, crawl }) => {
+						bootLoading.timers.push(window.setTimeout(() => {
+							if (crawl) bar.classList.add("is-crawling");
+							bar.style.width = width;
+						}, delay));
+					});
+				}
+
+				function finishBootLoading() {
+					// 冲刺 100%（先退出慢速蠕动）→ 分层淡出（卡片先行、背景随后）→ resolve 后由调用方弹警告/放行
+					const overlay = document.getElementById("bootLoading");
+					const bar = document.getElementById("bootLoadingBar");
+					bootLoading.timers.forEach((timer) => window.clearTimeout(timer));
+					bootLoading.timers = [];
+					const wait = Math.max(0, BOOT_LOADING_MIN_VISIBLE - (performance.now() - bootLoading.startedAt));
+					return new Promise((resolve) => {
+						window.setTimeout(() => {
+							if (bar) {
+								bar.classList.remove("is-crawling");
+								bar.style.width = "100%";
+							}
+							window.setTimeout(() => {
+								if (overlay) overlay.classList.add("is-hidden");
+								bootLoading.active = false;
+								window.setTimeout(resolve, 580);
+							}, 320);
+						}, wait);
+					});
+				}
+
 				async function detectNetwork() {
 					return refreshCnNetwork({ resetResults: true, stopRuns: true });
 				}
@@ -14126,8 +14254,14 @@
 						updateServiceStatus();
 
 						const allowed = availableFamilies().length > 0;
+						if (bootLoading.active) {
+							await finishBootLoading();
+						}
 						if (!allowed) showNetworkWarning();
 						return allowed;
+					} catch (error) {
+						if (bootLoading.active) await finishBootLoading();
+						throw error;
 					} finally {
 						state.networkChecking = false;
 						updateActionAvailability();

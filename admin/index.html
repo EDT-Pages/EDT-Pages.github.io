@@ -6597,8 +6597,8 @@
 
 		/* ==================== 开始优选 - 方式选择弹窗 ==================== */
 		.optimize-start-modal {
-			max-width: 720px;
-			width: min(95vw, 720px);
+			max-width: 900px;
+			width: min(95vw, 900px);
 			padding: 34px 30px 30px;
 			text-align: center;
 		}
@@ -6618,7 +6618,7 @@
 
 		.optimize-start-cards {
 			display: grid;
-			grid-template-columns: 1fr 1fr;
+			grid-template-columns: 1fr 1fr 1fr;
 			gap: 16px;
 		}
 
@@ -6667,6 +6667,11 @@
 			white-space: nowrap;
 		}
 
+		/* 「稳定」徽章：橘黄色系，呼应 Cloudflare 品牌色 */
+		.optimize-card-badge-orange {
+			background: linear-gradient(135deg, #fbad41 0, #f6821f 100%);
+		}
+
 		.optimize-card-online:hover {
 			border-color: #10b981;
 			background: linear-gradient(180deg, #ecfdf5 0, #f8fafc 100%);
@@ -6675,6 +6680,12 @@
 		.optimize-card-local:hover {
 			border-color: #6366f1;
 			background: linear-gradient(180deg, #eef2ff 0, #f8fafc 100%);
+		}
+
+		/* 在线优选域名卡片：悬停天蓝色提示可跳转 */
+		.optimize-card-domain:hover {
+			border-color: #0ea5e9;
+			background: linear-gradient(180deg, #f0f9ff 0, #f8fafc 100%);
 		}
 
 		.optimize-card-icon {
@@ -6740,6 +6751,11 @@
 		html.dark-mode .optimize-card-local:hover {
 			border-color: #6366f1;
 			background: rgba(99, 102, 241, .16);
+		}
+
+		html.dark-mode .optimize-card-domain:hover {
+			border-color: #0ea5e9;
+			background: rgba(14, 165, 233, .16);
 		}
 
 		html.dark-mode .optimize-card-desc {
@@ -11552,14 +11568,21 @@
 			<div class="optimize-start-cards">
 				<button type="button" class="optimize-start-card optimize-card-online" onclick="chooseOnlineOptimize()">
 					<span class="optimize-card-icon">🌐</span>
-					<span class="optimize-card-title">在线优选<span class="optimize-card-badge">推荐</span></span>
+					<span class="optimize-card-title">在线优选IP<span class="optimize-card-badge">推荐</span></span>
 					<span class="optimize-card-desc">通过浏览器实时进行在线优选，兼容性高，有浏览器就能进行</span>
 					<span class="optimize-card-tag tag-pro">✅ 优点：无需安装，即开即用</span>
 					<span class="optimize-card-tag tag-con">⚠️ 缺点：易受运营商阻断，阻断时无法使用</span>
 				</button>
+				<button type="button" class="optimize-start-card optimize-card-domain" onclick="chooseOnlineDomainOptimize()">
+					<span class="optimize-card-icon">🛰️</span>
+					<span class="optimize-card-title">在线优选域名<span class="optimize-card-badge optimize-card-badge-orange">稳定</span></span>
+					<span class="optimize-card-desc">访问官方在线优选域名站点，直接使用现成的优选结果，无需自己操作</span>
+					<span class="optimize-card-tag tag-pro">✅ 优点：开箱即用，一劳永逸</span>
+					<span class="optimize-card-tag tag-con">⚠️ 缺点：更换网络运营商环境后需重新优选</span>
+				</button>
 				<button type="button" class="optimize-start-card optimize-card-local" onclick="chooseLocalOptimize()">
 					<span class="optimize-card-icon">💻</span>
-					<span class="optimize-card-title">本地优选</span>
+					<span class="optimize-card-title">本地优选IP</span>
 					<span class="optimize-card-desc">下载客户端在本地设备上运行，灵活多变，功能性更多</span>
 					<span class="optimize-card-tag tag-pro">✅ 优点：灵活多变，功能丰富</span>
 					<span class="optimize-card-tag tag-con">⚠️ 缺点：需下载客户端，在本地设备上运行</span>
@@ -25146,6 +25169,12 @@
 		function chooseLocalOptimize() {
 			closeOptimizeStartModal();
 			openLocalOptimizeModal();
+		}
+
+		// 选择"在线优选域名"：先关闭选择弹窗，再新标签页打开官方在线优选域名站点
+		function chooseOnlineDomainOptimize() {
+			closeOptimizeStartModal();
+			window.open('https://bestcf.fxxk.dedyn.io/', '_blank', 'noopener');
 		}
 
 		// ==================== 本地优选 - CF 优选工具目录 ====================

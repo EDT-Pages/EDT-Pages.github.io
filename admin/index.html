@@ -10520,6 +10520,18 @@
 						</select>
 					</div>
 
+					<div id="regionSection" class="form-group">
+						<div class="input-wrapper">
+							<div class="checkbox-group">
+								<input type="checkbox" id="showRegion"
+									title="节点名显示“国家-城市”（如 美国-洛杉矶）；地区由后台“开始优选”在你本地网络实测，需改用自定义订阅"
+									onchange="markModified('sub')">
+								<label for="showRegion" class="checkbox-label"
+									title="节点名显示“国家-城市”（如 美国-洛杉矶）；地区由后台“开始优选”在你本地网络实测，需改用自定义订阅">节点名显示地区（国家-城市）</label>
+							</div>
+						</div>
+					</div>
+
 					<div id="customIPSection" class="form-group hidden-section">
 						<div class="label-with-hint">
 							<label for="customIPs">自定义优选</label>
@@ -13646,6 +13658,19 @@
 												<input class="input" id="portInput" type="number" min="0" max="65535"
 													step="1" value="0">
 											</div>
+											<div class="field">
+												<div class="label-row">
+													<label for="regionLabelInput">节点名包含地区</label>
+													<span class="help-tip" tabindex="0" role="img" aria-label="地区说明"
+														data-tip="勾选后，保存的节点名前缀“国家-城市”（如：美国-洛杉矶），地区由你本地网络实测；取消则不标注。">!</span>
+												</div>
+												<div class="checkbox-group" style="margin-top:7px;">
+													<input type="checkbox" id="regionLabelInput" checked
+														title="保存的节点名包含国家-城市（由本地实测）">
+													<label for="regionLabelInput" class="checkbox-label"
+														title="保存的节点名包含国家-城市（由本地实测）">国家-城市</label>
+												</div>
+											</div>
 										</div>
 									</div>
 								</details>
@@ -13943,6 +13968,7 @@
 					timeoutInput: $("#timeoutInput"),
 					threadsInput: $("#threadsInput"),
 					portInput: $("#portInput"),
+					regionLabelInput: $("#regionLabelInput"),
 					latencyBtn: $("#latencyBtn"),
 					latencyStatus: $("#latencyStatus"),
 					latencyProgress: $("#latencyProgress"),
@@ -14827,6 +14853,58 @@
 					return match && match.cca2 ? match.cca2 : "未知";
 				}
 
+				// cca2 国家代码 -> 中文国家/地区名（覆盖 locations 中出现的全部国家/地区）
+				const COUNTRY_NAME_ZH = {
+					AE: "阿联酋", AL: "阿尔巴尼亚", AM: "亚美尼亚", AO: "安哥拉", AR: "阿根廷", AT: "奥地利",
+					AU: "澳大利亚", AZ: "阿塞拜疆", BB: "巴巴多斯", BD: "孟加拉国", BE: "比利时", BF: "布基纳法索",
+					BG: "保加利亚", BH: "巴林", BN: "文莱", BO: "玻利维亚", BR: "巴西", BT: "不丹", BW: "博茨瓦纳",
+					BY: "白俄罗斯", CA: "加拿大", CD: "刚果金", CH: "瑞士", CI: "科特迪瓦", CL: "智利",
+					CO: "哥伦比亚", CR: "哥斯达黎加", CY: "塞浦路斯", CZ: "捷克", DE: "德国", DJ: "吉布提",
+					DK: "丹麦", DO: "多米尼加", DZ: "阿尔及利亚", EC: "厄瓜多尔", EE: "爱沙尼亚", EG: "埃及",
+					ES: "西班牙", ET: "埃塞俄比亚", FI: "芬兰", FJ: "斐济", FR: "法国", GB: "英国",
+					GD: "格林纳达", GE: "格鲁吉亚", GH: "加纳", GR: "希腊", GT: "危地马拉", GU: "关岛",
+					GY: "圭亚那", HK: "中国香港", HN: "洪都拉斯", HR: "克罗地亚", HU: "匈牙利", ID: "印度尼西亚",
+					IE: "爱尔兰", IL: "以色列", IN: "印度", IQ: "伊拉克", IS: "冰岛", IT: "意大利",
+					JM: "牙买加", JO: "约旦", JP: "日本", KE: "肯尼亚", KG: "吉尔吉斯斯坦", KH: "柬埔寨",
+					KR: "韩国", KW: "科威特", KZ: "哈萨克斯坦", LA: "老挝", LB: "黎巴嫩", LK: "斯里兰卡",
+					LT: "立陶宛", LU: "卢森堡", LV: "拉脱维亚", MD: "摩尔多瓦", MG: "马达加斯加", MK: "北马其顿",
+					MN: "蒙古", MO: "中国澳门", MU: "毛里求斯", MV: "马尔代夫", MW: "马拉维", MX: "墨西哥",
+					MY: "马来西亚", MZ: "莫桑比克", NA: "纳米比亚", NC: "新喀里多尼亚", NG: "尼日利亚", NL: "荷兰",
+					NO: "挪威", NP: "尼泊尔", NZ: "新西兰", OM: "阿曼", PA: "巴拿马", PE: "秘鲁",
+					PF: "法属波利尼西亚", PH: "菲律宾", PK: "巴基斯坦", PL: "波兰", PR: "波多黎各", PS: "巴勒斯坦",
+					PT: "葡萄牙", PY: "巴拉圭", QA: "卡塔尔", RE: "留尼汪", RO: "罗马尼亚", RS: "塞尔维亚",
+					RU: "俄罗斯", RW: "卢旺达", SA: "沙特阿拉伯", SE: "瑞典", SG: "新加坡", SK: "斯洛伐克",
+					SN: "塞内加尔", SR: "苏里南", TH: "泰国", TN: "突尼斯", TR: "土耳其", TT: "特立尼达和多巴哥",
+					TW: "中国台湾", TZ: "坦桑尼亚", UA: "乌克兰", UG: "乌干达", US: "美国", VN: "越南",
+					ZA: "南非", ZM: "赞比亚", ZW: "津巴布韦"
+				};
+
+				// 由机房代码 colo 生成“国家-城市”前缀（城市取中文，缺失则回退）；城市级国家/地区只返回一个名称
+				function regionLabelFromColo(colo) {
+					if (!colo) return "";
+					const match = state.locationsByIata.get(String(colo).toUpperCase());
+					if (!match) return "";
+					const country = COUNTRY_NAME_ZH[match.cca2] || match.cca2 || "";
+					const city = String(match.city || "").replace(/\s+/g, "");
+					if (!country) return city;
+					if (!city) return country;
+					if (country === city || country.indexOf(city) !== -1 || city.indexOf(country) !== -1) return country;
+					return country + "-" + city;
+				}
+
+				function regionLabelForItem(item) {
+					const fromColo = regionLabelFromColo(item.colo);
+					if (fromColo) return fromColo;
+					// 极少数情况下 colo 缺失，回退到探测返回的国家/城市
+					const country = item.country && item.country !== "未知" ? (COUNTRY_NAME_ZH[item.country] || item.country) : "";
+					const city = item.raw && item.raw.city ? String(item.raw.city).replace(/\s+/g, "") : "";
+					if (country && city) {
+						if (country === city || country.indexOf(city) !== -1 || city.indexOf(country) !== -1) return country;
+						return country + "-" + city;
+					}
+					return country || city || "";
+				}
+
 				async function startSingleSpeedTest(index) {
 					const result = state.results[index];
 					if (!result || result.speedState === "testing") return;
@@ -15501,7 +15579,10 @@
 					if (item.speedState === "done" && Number.isFinite(item.speedMbps) && item.speedMbps > 0) {
 						details.push(`${formatSpeedMbps(item.speedMbps)}Mbps`);
 					}
-					return `${item.address}#${item.country} ${item.type}[${details.join(" ")}]`;
+					const includeRegion = els.regionLabelInput ? els.regionLabelInput.checked : false;
+					const region = includeRegion ? regionLabelForItem(item) : "";
+					const locationPrefix = region || item.country || "未知";
+					return `${item.address}#${locationPrefix} ${item.type}[${details.join(" ")}]`;
 				}
 
 				function sendSelectedResultsToParent(lines) {
@@ -19662,6 +19743,10 @@
 				}
 			}
 
+			// 同步“节点名显示地区”开关
+			const showRegionInput = document.getElementById('showRegion');
+			if (showRegionInput) showRegionInput.checked = currentConfig.优选订阅生成?.显示地区 ?? false;
+
 			// 显示或隐藏在线优选、订阅接口和链式代理按钮（仅在自定义优选模式下显示）
 			const onlineOptimizeBtn = document.getElementById('onlineOptimizeBtn');
 			const apiOptimizeBtn = document.getElementById('apiOptimizeBtn');
@@ -21053,6 +21138,7 @@
 
 			const updates = {
 				local: mode !== 'generator',
+				显示地区: document.getElementById('showRegion').checked,
 				本地IP库: { 随机IP: mode === 'random', 随机数量: parseInt(document.getElementById('randomCount').value) || 16 },
 				SUB: mode === 'generator' ? document.getElementById('generatorURL').value : null,
 				SUBNAME: currentConfig.优选订阅生成.SUBNAME,

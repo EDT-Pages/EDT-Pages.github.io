@@ -20289,6 +20289,89 @@
 		// 由 initLineEditor() 初始化时查询；未注册但容器内存在 .line-highlight 时回落为纯转义文本。
 		const LINE_RENDERERS = { customIPs: renderCustomIPsLine };
 
+		// ==================== 自定义优选 · 全角字符自动清洗 ====================
+		// 针对 #customIPs：用户误输入全角「＃」(U+FF03) 会导致备注语法失效，须自动换回半角「#」；
+		// 全角「：」(U+FF1A) 出现在半角#之前属于误输入，须自动换回半角「:」。
+		// 纯函数不触碰 DOM，便于单独测试；所有行各自独立判断，互不影响。
+		// 每行必须先处理完所有全角＃，再处理全角：：
+		// 冒号判据是「该：之前是否存在半角#」，若先处理冒号，a＃b：c 中分隔符＃尚未变成半角#，
+		// 备注里的「：」会被误替换（错误结果 a＃b:c）；先处理＃得到 a#b：c，冒号判据自然正确。
+		function sanitizeFullWidthChars(value) {
+			const source = typeof value === 'string' ? value : '';
+			let hashCount = 0;
+			let colonCount = 0;
+			// 按行处理；健壮处理粘贴内容中的 \r\n / \r，统一以 \n 回拼
+			const text = source.split(/\r\n|\r|\n/).map((line) => {
+				if (line.indexOf('＃') === -1 && line.indexOf('：') === -1) return line;
+				// 第一遍：全角＃ → 半角#（逻辑与原实现一致，原样保留）
+				let result = '';
+				let hasHalfWidthHash = false;
+				for (const ch of line) {
+					if (ch === '＃') {
+						// 判断基准：以「当前文本」为准 —— 该全角＃之前是否已存在半角#
+						// 之前没有半角# → 误输入，替换为半角#；
+						// 之前已有半角# → 已处于注释内容中，保留原样。
+						// 顺序处理保证替换首个＃后，同行后续＃自然落在注释态、不再替换。
+						if (!hasHalfWidthHash) {
+							result += '#';
+							hasHalfWidthHash = true;
+							hashCount++;
+							continue;
+						}
+					} else if (ch === '#') {
+						hasHalfWidthHash = true;
+					}
+					result += ch;
+				}
+				// 第二遍：全角： → 半角:（仅当该：之前无半角#时替换；在#之后属备注内容，保留）
+				if (result.indexOf('：') !== -1) {
+					let colonResult = '';
+					hasHalfWidthHash = false;
+					for (const ch of result) {
+						if (ch === '：') {
+							// 判断基准：以「当前文本」为准 —— 该全角：之前是否已存在半角#
+							// 冒号替换为半角:不会引入半角#，故位于#之前的多个全角：会全部替换（正确行为），
+							// 位于半角#之后的全部保留。
+							if (!hasHalfWidthHash) {
+								colonResult += ':';
+								colonCount++;
+								continue;
+							}
+						} else if (ch === '#') {
+							hasHalfWidthHash = true;
+						}
+						colonResult += ch;
+					}
+					result = colonResult;
+				}
+				return result;
+			}).join('\n');
+			return { text, hashCount, colonCount };
+		}
+
+		// 清洗 #customIPs 的统一入口：回写 value、刷新行编辑器（行号/高亮层需同步）、
+		// 标记修改（程序化回写不会触发 onchange，须显式调用 markModified）。
+		// 返回实际替换总数；showTip 控制是否弹出轻提示（计数为 0 的段不显示，两者均为 0 时完全静默）。
+		function applyFullWidthCharSanitize(showTip) {
+			const textarea = document.getElementById('customIPs');
+			if (!textarea) return 0;
+			const { text, hashCount, colonCount } = sanitizeFullWidthChars(textarea.value);
+			if (hashCount + colonCount <= 0) return 0;
+			textarea.value = text;
+			if (textarea._refreshLineEditor) {
+				textarea._refreshLineEditor();
+			}
+			markModified('sub');
+			if (showTip) {
+				// 文案按实际命中的类型动态拼接，避免冗长折行
+				const parts = [];
+				if (hashCount > 0) parts.push(`${hashCount} 处全角井号`);
+				if (colonCount > 0) parts.push(`${colonCount} 处全角冒号`);
+				showToast(`已自动修正 ${parts.join('、')}`, 'info');
+			}
+			return hashCount + colonCount;
+		}
+
 		async function loadConfig() {
 			try {
 				// 禁用 Rocket Loader 对该请求的影响
@@ -21997,6 +22080,8 @@
 					return;
 				}
 			} else if (mode === 'custom') {
+				// 保存前先清洗全角井号（＃→#）与全角冒号（：→:），确保提交到 /admin/ADD.txt 的是修正后的内容
+				applyFullWidthCharSanitize(true);
 				const customIPs = document.getElementById('customIPs').value.trim();
 				if (!customIPs) {
 					showToast('自定义优选地址不能为空', 'error');
@@ -27976,6 +28061,12 @@
 			initUserMode();
 			// 行编辑器（含 #customIPs 的语法高亮层）由 initLineEditor 单管线统一初始化
 			initLineEditor('customIPs');
+			// #customIPs 失焦时自动清洗全角井号（＃→#）。
+			// 仅挂 blur，不挂 input，避免干扰输入法与打字过程。
+			const customIPsEditor = document.getElementById('customIPs');
+			if (customIPsEditor) {
+				customIPsEditor.addEventListener('blur', () => applyFullWidthCharSanitize(true));
+			}
 			initNodeUUIDEasterEgg();
 			initVersionCopyEasterEgg();
 			// 按协议注册表生成公开库的协议胶囊（新增协议后无需改 HTML）

@@ -17,6 +17,7 @@
     "启用0RTT": true,
     "TLS分片": "Shadowrocket",
     "随机路径": false,
+    "ALPN": "h2",
     "连接复用": {
         "启用": false,
         "xmux": {

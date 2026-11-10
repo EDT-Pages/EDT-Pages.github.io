@@ -11458,6 +11458,310 @@
 				grid-template-columns: repeat(2, minmax(0, 1fr));
 			}
 		}
+
+		/* ===== 连接复用（XHTTP xmux 参数） ===== */
+		/* 复用模块原生 .form-group 网格（200px 标签列 + 1fr 内容列），让「启用」左沿与上下输入框对齐 */
+		.xmux-row-label {
+			white-space: nowrap;
+		}
+
+		.xmux-row-body {
+			align-items: center;
+			display: flex;
+			gap: 20px;
+			justify-content: space-between;
+			min-width: 0;
+		}
+
+		.xmux-row-body .checkbox-group {
+			align-items: center;
+			display: flex;
+			gap: 10px;
+			margin: 0;
+			white-space: nowrap;
+		}
+
+		.xmux-controls {
+			align-items: center;
+			display: flex;
+			flex-shrink: 0;
+			gap: 15px;
+			margin-left: auto;
+		}
+
+		.xmux-controls .btn {
+			flex-shrink: 0;
+			font-size: 14px;
+		}
+
+		/* 与「参数配置」同款的紫色主操作按钮 */
+		.btn-xmux-detail {
+			background: linear-gradient(135deg, #8b5cf6 0, #7c3aed 100%);
+			color: #fff;
+			box-shadow: 0 4px 15px rgba(139, 92, 246, .3);
+		}
+
+		.btn-xmux-detail::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: -100%;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .3), transparent);
+			transition: left .5s ease;
+		}
+
+		.btn-xmux-detail:hover::before {
+			left: 100%;
+		}
+
+		.btn-xmux-detail:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 6px 25px rgba(139, 92, 246, .5);
+		}
+
+		.btn-xmux-detail:active {
+			transform: translateY(0);
+			box-shadow: 0 2px 10px rgba(139, 92, 246, .3);
+		}
+
+		.xmux-modal {
+			--xmux-accent: #f6821f;
+			--xmux-accent-soft: rgba(246, 130, 31, 0.28);
+			--xmux-line: #e5e7eb;
+			--xmux-surface: #f8fafc;
+			--xmux-surface-raised: #ffffff;
+			--xmux-ink: #111827;
+			--xmux-ink-soft: #4b5563;
+			--xmux-ink-muted: #6b7280;
+			--xmux-warn-bg: #fffbeb;
+			--xmux-warn-line: #fbbf24;
+			--xmux-warn-ink: #92400e;
+			max-width: min(760px, calc(100vw - 24px));
+			width: min(720px, 95vw);
+			max-height: calc(100vh - 40px);
+			overflow-y: auto;
+			text-align: left;
+		}
+
+		html.dark-mode .xmux-modal {
+			--xmux-line: #34343a;
+			--xmux-surface: #1f1f23;
+			--xmux-surface-raised: #2a2a30;
+			--xmux-ink: #f4f4f5;
+			--xmux-ink-soft: #d4d4d8;
+			--xmux-ink-muted: #a1a1aa;
+			--xmux-warn-bg: #2c2213;
+			--xmux-warn-line: #7c5416;
+			--xmux-warn-ink: #fbbf24;
+		}
+
+		.xmux-modal-title {
+			margin: 0 0 6px;
+			color: var(--xmux-ink);
+			font-size: 19px;
+			font-weight: 700;
+		}
+
+		.xmux-modal-subtitle {
+			margin: 0 0 14px;
+			color: var(--xmux-ink-muted);
+			font-size: 12.5px;
+			line-height: 1.6;
+		}
+
+		.xmux-intro {
+			margin: 0 0 16px;
+			padding: 10px 12px;
+			border: 1px solid var(--xmux-warn-line);
+			border-radius: 10px;
+			background: var(--xmux-warn-bg);
+			color: var(--xmux-warn-ink);
+			font-size: 12px;
+			line-height: 1.7;
+		}
+
+		.xmux-intro a {
+			color: inherit;
+			font-weight: 600;
+			text-decoration: underline;
+			text-underline-offset: 2px;
+		}
+
+		.xmux-intro a:hover {
+			opacity: .78;
+		}
+
+		.xmux-intro strong {
+			font-weight: 700;
+		}
+
+		.xmux-grid {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 12px;
+		}
+
+		.xmux-field {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			padding: 12px 14px;
+			border: 1px solid var(--xmux-line);
+			border-radius: 12px;
+			background: var(--xmux-surface);
+			transition: border-color 0.2s ease, box-shadow 0.2s ease;
+		}
+
+		.xmux-field-head {
+			align-items: center;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+		}
+
+		.xmux-field-name {
+			color: var(--xmux-ink);
+			font-size: 13.5px;
+			font-weight: 700;
+			letter-spacing: .2px;
+		}
+
+		.xmux-field-key {
+			padding: 2px 7px;
+			border: 1px solid var(--xmux-line);
+			border-radius: 999px;
+			background: var(--xmux-surface-raised);
+			color: var(--xmux-ink-muted);
+			font-family: 'Fira Code', 'Monaco', monospace;
+			font-size: 10.5px;
+			font-weight: 600;
+			letter-spacing: 0;
+			white-space: nowrap;
+		}
+
+		.xmux-field input {
+			width: 100%;
+			padding: 9px 11px;
+			border: 1px solid var(--xmux-line);
+			border-radius: 8px;
+			background: var(--xmux-surface-raised);
+			color: var(--xmux-ink);
+			font-family: inherit;
+			font-size: 14px;
+			font-weight: 600;
+			box-sizing: border-box;
+			transition: border-color 0.2s ease, box-shadow 0.2s ease;
+		}
+
+		.xmux-field input:focus {
+			outline: 0;
+			border-color: var(--xmux-accent);
+			box-shadow: 0 0 0 3px rgba(250, 171, 65, 0.16);
+		}
+
+		.xmux-field input:disabled {
+			cursor: not-allowed;
+			opacity: 0.6;
+		}
+
+		.xmux-field-desc {
+			margin: 0;
+			color: var(--xmux-ink-muted);
+			font-size: 12px;
+			line-height: 1.55;
+		}
+
+		.xmux-field-error {
+			display: none;
+			margin: 0;
+			color: #dc2626;
+			font-size: 11.5px;
+			line-height: 1.5;
+		}
+
+		.xmux-field.is-invalid .xmux-field-error {
+			display: block;
+		}
+
+		.xmux-field.is-invalid input {
+			border-color: #ef4444;
+			box-shadow: 0 0 0 3px rgba(239, 68, 68, .14);
+		}
+
+		html.dark-mode .xmux-field-error {
+			color: #f87171;
+		}
+
+		.xmux-field.is-conflict {
+			border-color: var(--xmux-accent);
+			animation: xmuxConflictFlash 0.9s ease-out;
+		}
+
+		@keyframes xmuxConflictFlash {
+			0% {
+				box-shadow: 0 0 0 0 rgba(246, 130, 31, 0.65);
+			}
+
+			45% {
+				box-shadow: 0 0 0 4px var(--xmux-accent-soft);
+			}
+
+			100% {
+				box-shadow: 0 0 0 0 rgba(246, 130, 31, 0);
+			}
+		}
+
+		.xmux-buttons {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			justify-content: space-between;
+			margin-top: 20px;
+		}
+
+		.xmux-buttons .btn {
+			flex: 0 0 auto;
+			min-height: 38px;
+			padding: 0 16px;
+			font-size: 13.5px;
+			line-height: 1;
+		}
+
+		.xmux-btn-group {
+			display: flex;
+			gap: 10px;
+			margin-left: auto;
+		}
+
+		@media (max-width: 640px) {
+			.xmux-grid {
+				grid-template-columns: minmax(0, 1fr);
+			}
+
+			.xmux-modal {
+				padding: 22px 16px;
+			}
+
+			.xmux-buttons {
+				align-items: stretch;
+				flex-direction: column;
+			}
+
+			.xmux-buttons .btn {
+				width: 100%;
+			}
+
+			.xmux-btn-group {
+				margin-left: 0;
+			}
+
+			.xmux-btn-group .btn {
+				flex: 1;
+				width: auto;
+			}
+		}
 	</style>
 
 </head>
@@ -11864,6 +12168,23 @@
 							</select>
 						</div>
 
+						<div class="form-group xmux-row" id="xmuxRow" style="display: none;">
+							<label class="xmux-row-label" for="xmuxEnabled">连接复用</label>
+							<div class="xmux-row-body">
+								<div class="checkbox-group">
+									<input type="checkbox" id="xmuxEnabled"
+										title="XHTTP 传输协议下复用 HTTP 连接，减少连接建立与握手开销"
+										onchange="handleXmuxEnabledChange(event)">
+									<label for="xmuxEnabled" class="checkbox-label"
+										title="XHTTP 传输协议下复用 HTTP 连接，减少连接建立与握手开销">启用</label>
+								</div>
+								<div class="xmux-controls">
+									<button type="button" class="btn btn-xmux-detail xmux-detail-btn" id="xmuxDetailBtn"
+										onclick="openXmuxModal()">⚙️ 参数配置</button>
+								</div>
+							</div>
+						</div>
+
 						<div class="form-group mobile-half" id="grpcModeGroup" style="display: none;">
 							<label for="grpcMode">gRPC模式</label>
 							<select id="grpcMode" title="gRPC模式" onchange="markModified('config')">
@@ -11885,6 +12206,22 @@
 							</div>
 						</div>
 
+						<div class="form-group mobile-half" id="alpnGroup" style="display: none;">
+							<label for="alpn"
+								title="ALPN（Application-Layer Protocol Negotiation）应用层协议协商。&#10;默认「客户端自动协商」由客户端自行决定协议，兼容性最佳。&#10;手动指定后节点将固定使用所选协议集，若与客户端或网络环境不兼容，最坏情况会导致节点无法连接。">ALPN</label>
+							<select id="alpn"
+								title="ALPN（Application-Layer Protocol Negotiation）应用层协议协商。&#10;默认「客户端自动协商」由客户端自行决定协议，兼容性最佳。&#10;手动指定后节点将固定使用所选协议集，若与客户端或网络环境不兼容，最坏情况会导致节点无法连接。"
+								onchange="handleALPNChange(event)">
+								<option value="">客户端自动协商</option>
+								<option value="h3">h3</option>
+								<option value="h2">h2</option>
+								<option value="http/1.1">http/1.1</option>
+								<option value="h3,h2">h3,h2</option>
+								<option value="h2,http/1.1">h2,http/1.1</option>
+								<option value="h3,h2,http/1.1">h3,h2,http/1.1</option>
+							</select>
+						</div>
+
 						<div class="form-group mobile-half" id="fingerprintGroup">
 							<label for="fingerprint">指纹伪装</label>
 							<select id="fingerprint" title="浏览器指纹"
@@ -11899,22 +12236,6 @@
 								<option value="qq">qq</option>
 								<option value="random">random</option>
 								<option value="randomized">randomized</option>
-							</select>
-						</div>
-
-						<div class="form-group mobile-half" id="alpnGroup" style="display: none;">
-							<label for="alpn"
-								title="ALPN（Application-Layer Protocol Negotiation）应用层协议协商。&#10;默认「客户端自动协商」由客户端自行决定协议，兼容性最佳。&#10;手动指定后节点将固定使用所选协议集，若与客户端或网络环境不兼容，最坏情况会导致节点无法连接。">ALPN</label>
-							<select id="alpn"
-								title="ALPN（Application-Layer Protocol Negotiation）应用层协议协商。&#10;默认「客户端自动协商」由客户端自行决定协议，兼容性最佳。&#10;手动指定后节点将固定使用所选协议集，若与客户端或网络环境不兼容，最坏情况会导致节点无法连接。"
-								onchange="handleALPNChange(event)">
-								<option value="">客户端自动协商</option>
-								<option value="h3">h3</option>
-								<option value="h2">h2</option>
-								<option value="http/1.1">http/1.1</option>
-								<option value="h3,h2">h3,h2</option>
-								<option value="h2,http/1.1">h2,http/1.1</option>
-								<option value="h3,h2,http/1.1">h3,h2,http/1.1</option>
 							</select>
 						</div>
 					</div>
@@ -19001,6 +19322,112 @@
 		</div>
 	</div>
 
+	<!-- 连接复用（XHTTP xmux 参数）详细设置弹窗 -->
+	<div class="modal-overlay" id="xmuxModal" onclick="closeXmuxModal(event)">
+		<div class="modal xmux-modal" onclick="event.stopPropagation()">
+			<button type="button" class="modal-close" onclick="closeXmuxModal()">×</button>
+			<h2 class="subapi-modal-title xmux-modal-title">🔗 连接复用详细设置</h2>
+			<p class="xmux-modal-subtitle">仅 XHTTP 传输协议生效。除「保活心跳间隔」外，其余参数都支持整数或范围写法（如 16-32，客户端每次从中随机取值）。</p>
+
+			<div class="xmux-intro">
+				⚠️ <strong>6 项全部为 0</strong> 时，Xray 会套用内置默认值（并发 16-32、请求 600-900、可复用 1800-3000
+				秒，均随机）；一旦填写其中<strong>任意一项</strong>，其余项的 0 就表示「不限制」。<br>
+				范围写法形如 <strong>16-32</strong>，表示客户端每次从区间内随机取一个整数。<br>
+				官方文档：<a href="https://xtls.github.io/config/transports/xhttp.html" target="_blank"
+					rel="noopener">XHTTP 传输配置</a> · <a href="https://github.com/XTLS/Xray-core/discussions/4113"
+					target="_blank" rel="noopener">XHTTP: Beyond REALITY（XMUX 参数说明）</a>
+			</div>
+
+			<div class="xmux-grid">
+				<div class="xmux-field" id="xmuxFieldMaxConnections">
+					<div class="xmux-field-head">
+						<span class="xmux-field-name">最大连接数</span>
+						<span class="xmux-field-key">maxConnections</span>
+					</div>
+					<input type="text" id="xmuxMaxConnections" placeholder="0 或 2-4" autocomplete="off" spellcheck="false"
+						title="客户端最多同时维持的 HTTP 连接条数，可填整数或范围（如 2-4）；0 表示不限制。与「最大并发数」互斥。"
+						oninput="handleXmuxFieldInput(event, 'maxConnections')"
+						onchange="handleXmuxFieldCommit(event, 'maxConnections')">
+					<p class="xmux-field-desc">客户端最多同时维持的 HTTP 连接条数；0 表示不限制，也可填范围（如 2-4）。与「最大并发数」互斥，两者不能同时设置。</p>
+					<p class="xmux-field-error" id="xmuxErrMaxConnections"></p>
+				</div>
+
+				<div class="xmux-field" id="xmuxFieldMaxConcurrency">
+					<div class="xmux-field-head">
+						<span class="xmux-field-name">最大并发数</span>
+						<span class="xmux-field-key">maxConcurrency</span>
+					</div>
+					<input type="text" id="xmuxMaxConcurrency" placeholder="0 或 16-32" autocomplete="off" spellcheck="false"
+						title="单条 HTTP 连接上可同时承载的代理请求数，可填整数或范围（如 16-32）；0 表示不限制。与「最大连接数」互斥。"
+						oninput="handleXmuxFieldInput(event, 'maxConcurrency')"
+						onchange="handleXmuxFieldCommit(event, 'maxConcurrency')">
+					<p class="xmux-field-desc">单条 HTTP 连接上可同时承载的代理请求数，达到上限后会新建连接；0 表示不限制，可填范围（如 16-32）。与「最大连接数」互斥。</p>
+					<p class="xmux-field-error" id="xmuxErrMaxConcurrency"></p>
+				</div>
+
+				<div class="xmux-field" id="xmuxFieldCMaxReuseTimes">
+					<div class="xmux-field-head">
+						<span class="xmux-field-name">连接最大复用次数</span>
+						<span class="xmux-field-key">cMaxReuseTimes</span>
+					</div>
+					<input type="text" id="xmuxCMaxReuseTimes" placeholder="0 或 10-20" autocomplete="off" spellcheck="false"
+						title="一条连接最多被复用多少次，可填整数或范围；0 表示不限制。"
+						oninput="handleXmuxFieldInput(event, 'cMaxReuseTimes')"
+						onchange="handleXmuxFieldCommit(event, 'cMaxReuseTimes')">
+					<p class="xmux-field-desc">一条连接最多被复用多少次，达到后不再分配新请求，等最后一条请求结束后断开；0 表示不限制，可填范围。</p>
+					<p class="xmux-field-error" id="xmuxErrCMaxReuseTimes"></p>
+				</div>
+
+				<div class="xmux-field" id="xmuxFieldHMaxRequestTimes">
+					<div class="xmux-field-head">
+						<span class="xmux-field-name">连接最大请求数</span>
+						<span class="xmux-field-key">hMaxRequestTimes</span>
+					</div>
+					<input type="text" id="xmuxHMaxRequestTimes" placeholder="0 或 600-900" autocomplete="off" spellcheck="false"
+						title="一条连接最多承载多少个 HTTP 请求，可填整数或范围（如 600-900）；0 表示不限制。"
+						oninput="handleXmuxFieldInput(event, 'hMaxRequestTimes')"
+						onchange="handleXmuxFieldCommit(event, 'hMaxRequestTimes')">
+					<p class="xmux-field-desc">一条连接最多承载多少个 HTTP 请求，超过后不再复用该连接；0 表示不限制，可填范围（如 600-900）。</p>
+					<p class="xmux-field-error" id="xmuxErrHMaxRequestTimes"></p>
+				</div>
+
+				<div class="xmux-field" id="xmuxFieldHMaxReusableSecs">
+					<div class="xmux-field-head">
+						<span class="xmux-field-name">连接最长可复用秒数</span>
+						<span class="xmux-field-key">hMaxReusableSecs</span>
+					</div>
+					<input type="text" id="xmuxHMaxReusableSecs" placeholder="0 或 1800-3000" autocomplete="off" spellcheck="false"
+						title="一条连接自建立起最长可被复用的秒数，可填整数或范围（如 1800-3000）；0 表示不限制。"
+						oninput="handleXmuxFieldInput(event, 'hMaxReusableSecs')"
+						onchange="handleXmuxFieldCommit(event, 'hMaxReusableSecs')">
+					<p class="xmux-field-desc">一条连接自建立起最长可被复用的秒数，超时后不再复用；0 表示不限制，可填范围（如 1800-3000）。</p>
+					<p class="xmux-field-error" id="xmuxErrHMaxReusableSecs"></p>
+				</div>
+
+				<div class="xmux-field" id="xmuxFieldHKeepAlivePeriod">
+					<div class="xmux-field-head">
+						<span class="xmux-field-name">保活心跳间隔（秒）</span>
+						<span class="xmux-field-key">hKeepAlivePeriod</span>
+					</div>
+					<input type="text" id="xmuxHKeepAlivePeriod" placeholder="0" autocomplete="off" spellcheck="false"
+						title="H2/H3 连接的保活心跳间隔（秒），只支持整数；0 表示使用内核默认，负数表示关闭保活。"
+						oninput="handleXmuxFieldInput(event, 'hKeepAlivePeriod')"
+						onchange="handleXmuxFieldCommit(event, 'hKeepAlivePeriod')">
+					<p class="xmux-field-desc">H2/H3 连接的保活心跳间隔（秒），只支持整数；0 表示使用内核默认，负数表示关闭保活。</p>
+					<p class="xmux-field-error" id="xmuxErrHKeepAlivePeriod"></p>
+				</div>
+			</div>
+
+			<div class="xmux-buttons">
+				<button type="button" class="btn btn-secondary" id="xmuxResetBtn" onclick="resetXmuxDefaults()">还原默认参数</button>
+				<div class="xmux-btn-group">
+					<button type="button" class="btn btn-secondary" id="xmuxCancelBtn" onclick="closeXmuxModal()">取消</button>
+					<button type="button" class="btn btn-primary" id="xmuxSaveBtn" onclick="saveXmuxSettings()">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<script data-cfasync="false">
 		let currentConfig = {};
 		let originalConfig = {};
@@ -19019,6 +19446,7 @@
 		const CHAIN_PROXY_MIN_VERSION = 20260506175102;
 		const SKIP_VERIFY_WARNING_BYPASS_MIN_VERSION = 20260601154939;
 		const ALPN_FEATURE_MIN_VERSION = 20260904162413;
+		const XMUX_FEATURE_MIN_VERSION = 20261110232646;
 		const ECH_SUPPORTED_FINGERPRINTS = ['chrome', 'firefox'];
 		let cachedWorkerVersionRawText = '';
 		let cachedLatestOnlineVersion = 0;
@@ -19031,8 +19459,34 @@
 		let turnSstpProxyFeatureEnabled = false;
 		let chainProxyFeatureEnabled = false;
 		let alpnFeatureEnabled = false;
+		let xmuxFeatureEnabled = false;
+		let xmuxSaving = false;
 		let proxyFeatureAvailabilityInitialized = false;
 		const PROXY_PROTOCOLS = ['socks5', 'http', 'https', 'turn', 'sstp'];
+
+		// 连接复用（XHTTP xmux）：字段元数据，key 与后端配置键名保持一致
+		// allowRange：Xray 除 hKeepAlivePeriod 外均支持 "min-max" 范围写法（每次连接随机取一个值）
+		const XMUX_FIELD_KEYS = ['maxConnections', 'maxConcurrency', 'cMaxReuseTimes', 'hMaxRequestTimes', 'hMaxReusableSecs', 'hKeepAlivePeriod'];
+		const XMUX_FIELD_META = {
+			maxConnections: { inputId: 'xmuxMaxConnections', fieldId: 'xmuxFieldMaxConnections', errorId: 'xmuxErrMaxConnections', allowNegative: false, allowRange: true },
+			maxConcurrency: { inputId: 'xmuxMaxConcurrency', fieldId: 'xmuxFieldMaxConcurrency', errorId: 'xmuxErrMaxConcurrency', allowNegative: false, allowRange: true },
+			cMaxReuseTimes: { inputId: 'xmuxCMaxReuseTimes', fieldId: 'xmuxFieldCMaxReuseTimes', errorId: 'xmuxErrCMaxReuseTimes', allowNegative: false, allowRange: true },
+			hMaxRequestTimes: { inputId: 'xmuxHMaxRequestTimes', fieldId: 'xmuxFieldHMaxRequestTimes', errorId: 'xmuxErrHMaxRequestTimes', allowNegative: false, allowRange: true },
+			hMaxReusableSecs: { inputId: 'xmuxHMaxReusableSecs', fieldId: 'xmuxFieldHMaxReusableSecs', errorId: 'xmuxErrHMaxReusableSecs', allowNegative: false, allowRange: true },
+			hKeepAlivePeriod: { inputId: 'xmuxHKeepAlivePeriod', fieldId: 'xmuxFieldHKeepAlivePeriod', errorId: 'xmuxErrHKeepAlivePeriod', allowNegative: true, allowRange: false }
+		};
+		// 「还原默认设置」使用的默认值
+		const XMUX_DEFAULT_VALUES = {
+			maxConnections: 4,
+			maxConcurrency: 0,
+			cMaxReuseTimes: 0,
+			hMaxRequestTimes: 0,
+			hMaxReusableSecs: 3600,
+			hKeepAlivePeriod: 0
+		};
+		// Xray 这几个字段是 int32，归一化时做硬上界，避免超界导致后端配置解析失败
+		const XMUX_INT_MAX = 2147483647;
+		const XMUX_INT_MIN = -2147483647;
 
 		function parseForcedLowPerformanceMode() {
 			try {
@@ -19767,10 +20221,13 @@
 			turnSstpProxyFeatureEnabled = versionNumber >= TURN_SSTP_PROXY_MIN_VERSION;
 			chainProxyFeatureEnabled = versionNumber >= CHAIN_PROXY_MIN_VERSION;
 			alpnFeatureEnabled = versionNumber >= ALPN_FEATURE_MIN_VERSION;
+			xmuxFeatureEnabled = versionNumber >= XMUX_FEATURE_MIN_VERSION;
 			updateChainProxyButtonVisibility();
 			// 版本号是异步拿到的，sstp 胶囊要等这里才知道能不能显示，所以再渲染一次
 			renderChainLibProtocols();
 			updateALPNGroupVisibility();
+			// 连接复用的显隐同样依赖版本号，renderUI 执行时版本号还没到手，这里补一次刷新
+			syncXmuxFromConfig();
 
 			const httpsOption = document.getElementById('httpsProxyOption');
 			if (httpsOption) {
@@ -21126,6 +21583,7 @@
 			document.getElementById('protocol').value = currentConfig.协议类型 || 'vless';
 			syncTransportSettingsFromConfig();
 			updateProtocol();
+			syncXmuxFromConfig();
 
 			// 检查跳过证书验证字段是否存在
 			const skipVerifyGroup = document.getElementById('skipVerifyGroup');
@@ -21575,6 +22033,8 @@
 		function handleTransportChange() {
 			updateGrpcModeVisibility();
 			updateTransportGrpcTooltipVisibility(true);
+			// 只有 XHTTP 传输协议才显示「连接复用」
+			syncXmuxRowVisibility();
 			const protocolSelect = document.getElementById('protocol');
 			updateProtocolOptionAvailability(protocolSelect ? protocolSelect.value : '');
 			markModified('config');
@@ -21758,6 +22218,8 @@
 				transport.disabled = shouldLockTransport;
 				updateGrpcModeVisibility();
 				updateTransportGrpcTooltipVisibility(false);
+				// 协议切到 ss 会把传输协议强制改成 ws，这里同步刷新「连接复用」的显隐
+				syncXmuxRowVisibility();
 			}
 
 			// 协议/TLS 变化会影响 ECH 可用性
@@ -23286,6 +23748,343 @@
 			updateALPNGroupVisibility();
 		}
 
+		// ===== 连接复用（XHTTP xmux 参数）相关处理 =====
+		// 取 currentConfig['连接复用']，不存在或非对象时返回 null
+		function getXmuxConfig() {
+			if (!currentConfig || typeof currentConfig !== 'object') return null;
+			const xmuxConfig = currentConfig['连接复用'];
+			if (!xmuxConfig || typeof xmuxConfig !== 'object' || Array.isArray(xmuxConfig)) return null;
+			return xmuxConfig;
+		}
+
+		// 解析单个参数：支持整数或「min-max」范围写法，返回 { ok, value, message }
+		// value 为 number 或 "min-max" 字符串，直接对应后端 xmux 字段类型
+		function parseXmuxFieldValue(rawValue, key) {
+			const meta = XMUX_FIELD_META[key];
+			if (!meta) return { ok: true, value: 0 };
+			const text = String(rawValue === null || rawValue === undefined ? '' : rawValue).trim();
+			if (!text) return { ok: true, value: 0 };
+
+			if (/^[+-]?\d+$/.test(text)) {
+				let parsed = parseInt(text, 10);
+				if (!Number.isFinite(parsed)) return { ok: true, value: 0 };
+				if (!meta.allowNegative && parsed < 0) return { ok: false, message: '不能填负数' };
+				if (parsed > XMUX_INT_MAX) parsed = XMUX_INT_MAX;
+				if (parsed < XMUX_INT_MIN) parsed = XMUX_INT_MIN;
+				return { ok: true, value: parsed };
+			}
+
+			if (!meta.allowRange) return { ok: false, message: '只支持整数，不支持范围' };
+
+			const rangeMatch = text.match(/^(\d+)\s*-\s*(\d+)$/);
+			if (!rangeMatch) return { ok: false, message: '请填整数或范围，如 16-32' };
+			let rangeMin = Math.min(parseInt(rangeMatch[1], 10), XMUX_INT_MAX);
+			let rangeMax = Math.min(parseInt(rangeMatch[2], 10), XMUX_INT_MAX);
+			if (!Number.isFinite(rangeMin) || !Number.isFinite(rangeMax)) {
+				return { ok: false, message: '请填整数或范围，如 16-32' };
+			}
+			if (rangeMax < rangeMin) return { ok: false, message: '范围结束值需不小于起始值' };
+			if (rangeMin === rangeMax) return { ok: true, value: rangeMin };
+			return { ok: true, value: `${rangeMin}-${rangeMax}` };
+		}
+
+		// 该值是否算「已设置」：数字 > 0，或范围的上限 > 0
+		function isXmuxValueSet(value) {
+			if (typeof value === 'number') return value > 0;
+			if (typeof value === 'string') {
+				const parts = value.split('-');
+				const rangeMax = parseInt(parts[parts.length - 1], 10);
+				return Number.isFinite(rangeMax) && rangeMax > 0;
+			}
+			return false;
+		}
+
+		// 字段级错误提示：传空字符串即清除
+		function setXmuxFieldError(key, message) {
+			const meta = XMUX_FIELD_META[key];
+			if (!meta) return;
+			const field = document.getElementById(meta.fieldId);
+			const input = document.getElementById(meta.inputId);
+			const errorEl = document.getElementById(meta.errorId);
+			if (message) {
+				if (field) field.classList.add('is-invalid');
+				if (input) input.setAttribute('aria-invalid', 'true');
+				if (errorEl) errorEl.textContent = message;
+				return;
+			}
+			if (field) field.classList.remove('is-invalid');
+			if (input) input.removeAttribute('aria-invalid');
+			if (errorEl) errorEl.textContent = '';
+		}
+
+		// 显隐判定：版本达标 + 连接复用字段存在 + 传输协议为 xhttp + 传输协议组本身可见
+		function isXmuxRowVisible() {
+			if (!xmuxFeatureEnabled) return false;
+			const transportGroup = document.getElementById('transportGroup');
+			const transportSelect = document.getElementById('transport');
+			if (!transportGroup || !transportSelect) return false;
+			if (transportGroup.style.display === 'none') return false;
+			if (!getXmuxConfig()) return false;
+			return transportSelect.value === 'xhttp';
+		}
+
+		// 只负责刷新「连接复用」这一行的显隐
+		function syncXmuxRowVisibility() {
+			const xmuxRow = document.getElementById('xmuxRow');
+			if (!xmuxRow) return;
+			// 可见时清掉内联 display，交回 .module .form-group 的网格布局（勾选框才能与上方输入框左沿对齐）
+			if (isXmuxRowVisible()) {
+				xmuxRow.style.removeProperty('display');
+			} else {
+				xmuxRow.style.setProperty('display', 'none', 'important');
+			}
+		}
+
+		// 同步「启用」勾选状态 + 刷新显隐（renderUI / cancelEdit / 版本号到位后共用）
+		function syncXmuxFromConfig() {
+			const xmuxEnabledCheckbox = document.getElementById('xmuxEnabled');
+			const xmuxConfig = getXmuxConfig();
+			if (xmuxEnabledCheckbox) {
+				xmuxEnabledCheckbox.checked = !!(xmuxConfig && xmuxConfig['启用']);
+			}
+			syncXmuxRowVisibility();
+		}
+
+		// 勾选「启用」：只写 currentConfig 并标记 config 模块已修改，不直接提交
+		function handleXmuxEnabledChange(event) {
+			const checkbox = (event && event.target) ? event.target : document.getElementById('xmuxEnabled');
+			const xmuxConfig = getXmuxConfig();
+			if (!checkbox || !xmuxConfig) return;
+			xmuxConfig['启用'] = !!checkbox.checked;
+			markModified('config');
+		}
+
+		function getXmuxFieldElement(key) {
+			const meta = XMUX_FIELD_META[key];
+			if (!meta) return null;
+			return document.getElementById(meta.fieldId);
+		}
+
+		function clearXmuxConflictHighlight(fieldElement) {
+			if (!fieldElement) return;
+			fieldElement.classList.remove('is-conflict');
+		}
+
+		// 被归零的字段闪一下，提示用户该值被自动改动
+		function flashXmuxConflictHighlight(fieldElement) {
+			if (!fieldElement) return;
+			fieldElement.classList.remove('is-conflict');
+			// 强制回流，保证连续触发时动画能重新播放
+			void fieldElement.offsetWidth;
+			fieldElement.classList.add('is-conflict');
+			setTimeout(() => {
+				fieldElement.classList.remove('is-conflict');
+			}, 900);
+		}
+
+		// 用 currentConfig 里的当前值重新填充弹窗表单（打开时与关闭时都走这里）
+		function fillXmuxFormFromConfig() {
+			const xmuxConfig = getXmuxConfig();
+			const xmuxValues = (xmuxConfig && xmuxConfig.xmux && typeof xmuxConfig.xmux === 'object') ? xmuxConfig.xmux : {};
+			XMUX_FIELD_KEYS.forEach((key) => {
+				const meta = XMUX_FIELD_META[key];
+				clearXmuxConflictHighlight(getXmuxFieldElement(key));
+				const input = document.getElementById(meta.inputId);
+				if (!input) return;
+				setXmuxFieldError(key, '');
+				const rawValue = xmuxValues[key];
+				input.value = (rawValue === null || rawValue === undefined || rawValue === '') ? '0' : String(rawValue);
+			});
+		}
+
+		function openXmuxModal() {
+			const modal = document.getElementById('xmuxModal');
+			if (!modal) return;
+			if (!getXmuxConfig()) {
+				showToast('😢 当前后端版本不支持连接复用设置', 'error');
+				return;
+			}
+			fillXmuxFormFromConfig();
+			modal.classList.add('show');
+		}
+
+		// 关闭入口（×、遮罩、取消）：不写任何字段、不发请求，只把表单还原成 currentConfig 的当前值
+		function closeXmuxModal(event) {
+			if (event && event.target && event.target.id !== 'xmuxModal') return;
+			const modal = document.getElementById('xmuxModal');
+			if (!modal) return;
+			modal.classList.remove('show');
+			fillXmuxFormFromConfig();
+		}
+
+		// 互斥约束：maxConnections 与 maxConcurrency 不能同时设置，后改的生效、另一个归零
+		function enforceXmuxMutualExclusion(key) {
+			if (key !== 'maxConnections' && key !== 'maxConcurrency') return;
+			const pairKey = key === 'maxConnections' ? 'maxConcurrency' : 'maxConnections';
+			const pairMeta = XMUX_FIELD_META[pairKey];
+			const pairInput = document.getElementById(pairMeta.inputId);
+			if (!pairInput) return;
+			const parsed = parseXmuxFieldValue(pairInput.value, pairKey);
+			if (!parsed.ok || !isXmuxValueSet(parsed.value)) return;
+			pairInput.value = '0';
+			setXmuxFieldError(pairKey, '');
+			flashXmuxConflictHighlight(getXmuxFieldElement(pairKey));
+		}
+
+		// input 事件：只做互斥联动与错误清除，不改写用户正在输入的内容
+		function handleXmuxFieldInput(event, key) {
+			const input = (event && event.target) ? event.target : null;
+			if (!input || !XMUX_FIELD_META[key]) return;
+			const parsed = parseXmuxFieldValue(input.value, key);
+			if (!parsed.ok) return;
+			setXmuxFieldError(key, '');
+			if (isXmuxValueSet(parsed.value)) enforceXmuxMutualExclusion(key);
+		}
+
+		// change 事件：合法则规范化写法（" 16 - 32 " → "16-32"），非法则标红提示、保留原文供修改
+		function handleXmuxFieldCommit(event, key) {
+			const input = (event && event.target) ? event.target : null;
+			if (!input || !XMUX_FIELD_META[key]) return;
+			const parsed = parseXmuxFieldValue(input.value, key);
+			if (!parsed.ok) {
+				setXmuxFieldError(key, parsed.message);
+				return;
+			}
+			setXmuxFieldError(key, '');
+			input.value = String(parsed.value);
+			if (isXmuxValueSet(parsed.value)) enforceXmuxMutualExclusion(key);
+		}
+
+		// 收集并校验全部字段；firstInvalidKey 非空表示存在格式错误
+		function collectXmuxFormValues() {
+			const values = {};
+			let firstInvalidKey = null;
+			XMUX_FIELD_KEYS.forEach((key) => {
+				const meta = XMUX_FIELD_META[key];
+				const input = document.getElementById(meta.inputId);
+				const parsed = parseXmuxFieldValue(input ? input.value : '', key);
+				if (!parsed.ok) {
+					setXmuxFieldError(key, parsed.message);
+					if (!firstInvalidKey) firstInvalidKey = key;
+					return;
+				}
+				setXmuxFieldError(key, '');
+				values[key] = parsed.value;
+			});
+			return { values, firstInvalidKey };
+		}
+
+		// 保存中禁用三个按钮，防止重复提交
+		function setXmuxButtonsBusy(busy) {
+			['xmuxResetBtn', 'xmuxCancelBtn', 'xmuxSaveBtn'].forEach((id) => {
+				const button = document.getElementById(id);
+				if (button) button.disabled = !!busy;
+			});
+		}
+
+		// 保存：表单 -> 校验 -> currentConfig['连接复用'].xmux -> 立即 POST 整个配置
+		async function saveXmuxSettings() {
+			if (xmuxSaving) return;
+			const xmuxConfig = getXmuxConfig();
+			if (!xmuxConfig) {
+				showToast('😢 当前后端版本不支持连接复用设置', 'error');
+				return;
+			}
+
+			const collected = collectXmuxFormValues();
+			if (collected.firstInvalidKey) {
+				showToast('😢 有参数格式不正确，请检查标红的输入框', 'error');
+				const invalidInput = document.getElementById(XMUX_FIELD_META[collected.firstInvalidKey].inputId);
+				if (invalidInput) invalidInput.focus();
+				return;
+			}
+			const nextValues = collected.values;
+			// 互斥：任一字段「已设置」即算占用（数字 > 0，或范围上限 > 0）
+			if (isXmuxValueSet(nextValues.maxConnections) && isXmuxValueSet(nextValues.maxConcurrency)) {
+				showToast('😢 「最大连接数」与「最大并发数」不能同时设置，请把其中一个改成 0', 'error');
+				return;
+			}
+
+			const previousXmux = (xmuxConfig.xmux && typeof xmuxConfig.xmux === 'object')
+				? JSON.parse(JSON.stringify(xmuxConfig.xmux))
+				: null;
+
+			xmuxSaving = true;
+			setXmuxButtonsBusy(true);
+			xmuxConfig.xmux = Object.assign({}, previousXmux || {}, nextValues);
+
+			// 传输协议此刻可能只改在 DOM 里（模块尚未保存），这里按 saveConfig() 同语义回写一次，
+			// 否则会出现「传输协议=ws 且 连接复用.启用=true」这种服务端不会生效的自相矛盾配置
+			const hasTransportField = currentConfig['传输协议'] !== undefined;
+			const transportGroupEl = document.getElementById('transportGroup');
+			const transportSelectEl = document.getElementById('transport');
+			const shouldSyncTransport = hasTransportField
+				&& !!transportGroupEl
+				&& !!transportSelectEl
+				&& transportGroupEl.style.display !== 'none';
+			const previousTransport = hasTransportField ? currentConfig['传输协议'] : undefined;
+			let transportSynced = false;
+			if (shouldSyncTransport) {
+				currentConfig['传输协议'] = transportSelectEl.value;
+				transportSynced = true;
+			}
+
+			try {
+				const response = await fetch('/admin/config.json', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'Cache-Control': 'no-cache, no-store, must-revalidate',
+						'Pragma': 'no-cache',
+						'Expires': '0'
+					},
+					body: JSON.stringify(currentConfig)
+				});
+
+				if (!response.ok) throw new Error('保存失败');
+
+				// 已落盘：同步基准配置，避免之后点模块「取消」把已保存的值回滚成旧值
+				originalConfig['连接复用'] = JSON.parse(JSON.stringify(xmuxConfig));
+				if (transportSynced) {
+					originalConfig['传输协议'] = currentConfig['传输协议'];
+				}
+				closeXmuxModal();
+				showToast('✅ 连接复用设置已保存，请更新订阅，才能获取最新节点内容！', 'success');
+			} catch (error) {
+				// 未落盘：回滚内存中的 xmux 与传输协议，弹窗保持打开，用户已输入的内容仍留在表单里
+				if (previousXmux) {
+					xmuxConfig.xmux = previousXmux;
+				} else {
+					delete xmuxConfig.xmux;
+				}
+				if (transportSynced) {
+					if (previousTransport === undefined) {
+						delete currentConfig['传输协议'];
+					} else {
+						currentConfig['传输协议'] = previousTransport;
+					}
+				}
+				showToast('😢 ' + error.message + '，请检测网络环境，或关闭代理后再试！', 'error');
+			} finally {
+				xmuxSaving = false;
+				setXmuxButtonsBusy(false);
+			}
+		}
+
+		// 还原默认参数：只把默认值填进表单，不落盘 —— 由用户自己决定「保存」还是「取消」
+		function resetXmuxDefaults() {
+			if (xmuxSaving) return;
+			XMUX_FIELD_KEYS.forEach((key) => {
+				const meta = XMUX_FIELD_META[key];
+				clearXmuxConflictHighlight(getXmuxFieldElement(key));
+				setXmuxFieldError(key, '');
+				const input = document.getElementById(meta.inputId);
+				if (!input) return;
+				input.value = String(XMUX_DEFAULT_VALUES[key] === undefined ? 0 : XMUX_DEFAULT_VALUES[key]);
+			});
+			showToast('已填入默认参数，点击「保存」后才会生效', 'info');
+		}
+
 		// HOSTS 编辑模态框相关函数
 		function openHostsEditModal(event) {
 			if (event) event.stopPropagation();
@@ -23498,6 +24297,15 @@
 					currentConfig['TLS分片'] = 'Happ';
 				} else {
 					currentConfig['TLS分片'] = null;
+				}
+			}
+
+			// 保存连接复用「启用」状态（仅当字段存在且版本支持时写入，避免低版本后端写入无意义字段）
+			if (xmuxFeatureEnabled) {
+				const xmuxConfig = getXmuxConfig();
+				const xmuxEnabledCheckbox = document.getElementById('xmuxEnabled');
+				if (xmuxConfig && xmuxEnabledCheckbox) {
+					xmuxConfig['启用'] = !!xmuxEnabledCheckbox.checked;
 				}
 			}
 
@@ -28620,6 +29428,7 @@
 					updateProtocol();
 					syncFingerprintSelectFromConfig();
 					syncALPNSelectFromConfig();
+					syncXmuxFromConfig();
 				} else if (section === 'proxy') {
 					applyProxyConfigToForm();
 				} else if (section === 'convert') {

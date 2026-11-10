@@ -1,1 +1,111 @@
-{"TIME":"2025-11-02T04:46:32.555Z","HOST":"edt-pages.github.io","HOSTS":["edt1.pages.dev","edt2.pages.dev","edt3.pages.dev","edt4.pages.dev","edt5.pages.dev"],"UUID":"7b102311-43fd-4e8f-977e-8090623c101d","协议类型":"vless","传输协议":"ws","gRPC模式":"gun","gRPCUserAgent":"Mozilla/5.0","跳过证书验证":false,"启用0RTT":true,"TLS分片":"Shadowrocket","随机路径":false,"ECH":false,"ECHConfig":{"DNS":"https://doh.cmliussss.net/CMLiussss","SNI":null},"SS":{"加密方式":"aes-128-gcm","TLS":true},"Fingerprint":"chrome","优选订阅生成":{"local":true,"本地IP库":{"随机IP":true,"随机数量":16,"指定端口":-1},"SUB":null,"SUBNAME":"edgetunnel","SUBUpdateTime":6,"TOKEN":"f7e5edd21765267b329ee3f8eca1a557"},"订阅转换配置":{"SUBAPI":"https://subapi.cmliussss.net","SUBCONFIG":"https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/refs/heads/master/Clash/config/ACL4SSR_Online_Mini_MultiMode.ini","SUBEMOJI":false,"SUBLIST":false,"UDP":false,"XUDP":false,"TLS13":false,"APPEND_TYPE":false,"SORT":false},"反代":{"PROXYIP":"auto","SOCKS5":{"启用":null,"全局":false,"账号":"","白名单":["*tapecontent.net","*cloudatacdn.com","*.loadshare.org"]},"路径模板":{"PROXYIP":"proxyip={{IP:PORT}}","SOCKS5":{"全局":"socks5://{{IP:PORT}}","标准":"socks5={{IP:PORT}}"},"HTTP":{"全局":"http://{{IP:PORT}}","标准":"http={{IP:PORT}}"}}},"TG":{"启用":true,"BotToken":"820*****************************************TI","ChatID":"6946996027"},"CF":{"Email":null,"GlobalAPIKey":null,"AccountID":"6d7***************************90","APIToken":"duN***********************************fs","UsageAPI":null,"Usage":{"success":true,"pages":10900,"workers":9670,"total":20510,"max":100000}},"PATH":"/","完整节点路径":"/?ed=2560","LINK":"vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tls&type=ws&host=edt-pages.github.io&sni=edt-pages.github.io&path=%2F&fragment=1%2C40-60%2C30-50%2Ctlshello&encryption=none&allowInsecure=1#edgetunnel","加载时间":"278.00ms"}
+{
+    "TIME": "2025-11-02T04:46:32.555Z",
+    "HOST": "edt-pages.github.io",
+    "HOSTS": [
+        "edt1.pages.dev",
+        "edt2.pages.dev",
+        "edt3.pages.dev",
+        "edt4.pages.dev",
+        "edt5.pages.dev"
+    ],
+    "UUID": "7b102311-43fd-4e8f-977e-8090623c101d",
+    "协议类型": "vless",
+    "传输协议": "ws",
+    "gRPC模式": "gun",
+    "gRPCUserAgent": "Mozilla/5.0",
+    "跳过证书验证": false,
+    "启用0RTT": true,
+    "TLS分片": "Shadowrocket",
+    "随机路径": false,
+    "连接复用": {
+        "启用": false,
+        "xmux": {
+            "maxConnections": 4,
+            "maxConcurrency": 0,
+            "cMaxReuseTimes": 0,
+            "hMaxRequestTimes": 0,
+            "hMaxReusableSecs": 3600,
+            "hKeepAlivePeriod": 0
+        }
+    },
+    "ECH": false,
+    "ECHConfig": {
+        "DNS": "https://doh.cmliussss.net/CMLiussss",
+        "SNI": null
+    },
+    "SS": {
+        "加密方式": "aes-128-gcm",
+        "TLS": true
+    },
+    "Fingerprint": "chrome",
+    "优选订阅生成": {
+        "local": true,
+        "本地IP库": {
+            "随机IP": true,
+            "随机数量": 16,
+            "指定端口": -1
+        },
+        "SUB": null,
+        "SUBNAME": "edgetunnel",
+        "SUBUpdateTime": 6,
+        "TOKEN": "f7e5edd21765267b329ee3f8eca1a557"
+    },
+    "订阅转换配置": {
+        "SUBAPI": "https://subapi.cmliussss.net",
+        "SUBCONFIG": "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/refs/heads/master/Clash/config/ACL4SSR_Online_Mini_MultiMode.ini",
+        "SUBEMOJI": false,
+        "SUBLIST": false,
+        "UDP": false,
+        "XUDP": false,
+        "TLS13": false,
+        "APPEND_TYPE": false,
+        "SORT": false
+    },
+    "反代": {
+        "PROXYIP": "auto",
+        "SOCKS5": {
+            "启用": null,
+            "全局": false,
+            "账号": "",
+            "白名单": [
+                "*tapecontent.net",
+                "*cloudatacdn.com",
+                "*.loadshare.org"
+            ]
+        },
+        "路径模板": {
+            "PROXYIP": "proxyip={{IP:PORT}}",
+            "SOCKS5": {
+                "全局": "socks5://{{IP:PORT}}",
+                "标准": "socks5={{IP:PORT}}"
+            },
+            "HTTP": {
+                "全局": "http://{{IP:PORT}}",
+                "标准": "http={{IP:PORT}}"
+            }
+        }
+    },
+    "TG": {
+        "启用": true,
+        "BotToken": "820*****************************************TI",
+        "ChatID": "6946996027"
+    },
+    "CF": {
+        "Email": null,
+        "GlobalAPIKey": null,
+        "AccountID": "6d7***************************90",
+        "APIToken": "duN***********************************fs",
+        "UsageAPI": null,
+        "Usage": {
+            "success": true,
+            "pages": 10900,
+            "workers": 9670,
+            "total": 20510,
+            "max": 100000
+        }
+    },
+    "PATH": "/",
+    "完整节点路径": "/?ed=2560",
+    "LINK": "vless://7b102311-43fd-4e8f-977e-8090623c101d@edt-pages.github.io:443?security=tls&type=ws&host=edt-pages.github.io&sni=edt-pages.github.io&path=%2F&fragment=1%2C40-60%2C30-50%2Ctlshello&encryption=none&allowInsecure=1#edgetunnel",
+    "加载时间": "278.00ms"
+}

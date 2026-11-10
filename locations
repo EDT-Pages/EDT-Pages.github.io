@@ -29,7 +29,7 @@
     "lon": 6.598562,
     "cca2": "DZ",
     "region": "非洲",
-    "city": "Constantine"
+    "city": "君士坦丁"
   },
   {
     "iata": "ORN",
@@ -597,7 +597,7 @@
     "lon": -73.0444,
     "cca2": "CL",
     "region": "南美洲",
-    "city": "Concepción"
+    "city": "康塞普西翁"
   },
   {
     "iata": "SCL",
@@ -629,7 +629,7 @@
     "lon": -76.3816,
     "cca2": "CO",
     "region": "南美洲",
-    "city": "Cali"
+    "city": "卡利"
   },
   {
     "iata": "MDE",
@@ -765,7 +765,7 @@
     "lon": 38.78446,
     "cca2": "ET",
     "region": "非洲",
-    "city": "Addis Ababa"
+    "city": "亚的斯亚贝巴"
   },
   {
     "iata": "SUV",
@@ -941,7 +941,7 @@
     "lon": -87.9235992432,
     "cca2": "HN",
     "region": "南美洲",
-    "city": "San Pedro Sula"
+    "city": "圣佩德罗苏拉"
   },
   {
     "iata": "TGU",
@@ -1253,7 +1253,7 @@
     "lon": 57.224121,
     "cca2": "KZ",
     "region": "亚太地区",
-    "city": "Aktobe"
+    "city": "阿克托别"
   },
   {
     "iata": "ALA",
@@ -1269,7 +1269,7 @@
     "lon": 71.418893,
     "cca2": "KZ",
     "region": "亚太地区",
-    "city": "Astana"
+    "city": "阿斯塔纳"
   },
   {
     "iata": "MBA",
@@ -1309,7 +1309,7 @@
     "lon": 74.604613,
     "cca2": "KG",
     "region": "亚太地区",
-    "city": "Bishkek"
+    "city": "比什凯克"
   },
   {
     "iata": "VTE",
@@ -1373,7 +1373,7 @@
     "lon": 33.761462,
     "cca2": "MW",
     "region": "非洲",
-    "city": "Lilongwe"
+    "city": "利隆圭"
   },
   {
     "iata": "JHB",
@@ -1397,7 +1397,7 @@
     "lon": 110.353455,
     "cca2": "MY",
     "region": "亚太地区",
-    "city": "Kuching"
+    "city": "古晋"
   },
   {
     "iata": "MLE",
@@ -1933,7 +1933,7 @@
     "lon": 32.5816,
     "cca2": "UG",
     "region": "非洲",
-    "city": "Kampala"
+    "city": "坎帕拉"
   },
   {
     "iata": "KBP",
@@ -2373,7 +2373,7 @@
     "lon": 28.317837,
     "cca2": "ZM",
     "region": "非洲",
-    "city": "Lusaka"
+    "city": "卢萨卡"
   },
   {
     "iata": "HRE",

@@ -3747,7 +3747,8 @@
 		   层叠上下文，面板留在卡片内时 z-index 再大也会被后续兄弟卡片盖住；
 		   面板改 position:fixed，left/top/width 由 JS 依据输入框 rect 实时计算；
 		   z-index 取 500：浮于卡片之上，远低于模态遮罩 .modal-overlay 的 2000000000 级 */
-		#proxyIPSection .proxyip-picker-trigger {
+		#proxyIPSection .proxyip-picker-trigger,
+		#echModule .proxyip-picker-trigger {
 			position: absolute;
 			top: 2px;
 			right: 2px;
@@ -3767,32 +3768,38 @@
 			transition: color .2s ease, background .2s ease;
 		}
 
-		#proxyIPSection .proxyip-picker-trigger:hover {
+		#proxyIPSection .proxyip-picker-trigger:hover,
+		#echModule .proxyip-picker-trigger:hover {
 			color: #b45309;
 			background: rgba(250, 171, 65, .1);
 		}
 
-		#proxyIPSection .proxyip-picker-trigger:focus-visible {
+		#proxyIPSection .proxyip-picker-trigger:focus-visible,
+		#echModule .proxyip-picker-trigger:focus-visible {
 			outline: 2px solid #faab41;
 			outline-offset: -2px;
 		}
 
-		#proxyIPSection .proxyip-picker-trigger .proxyip-picker-chev {
+		#proxyIPSection .proxyip-picker-trigger .proxyip-picker-chev,
+		#echModule .proxyip-picker-trigger .proxyip-picker-chev {
 			transition: transform .2s ease;
 		}
 
 		/* 展开态：按钮琥珀底、箭头旋转、输入框获得聚焦环（与页面 input:focus 风格一致）
-		   注意带 #proxyIPSection 前缀提权，避免被上方含 ID 的基础规则压过 */
-		#proxyIPSection .proxyip-input-box.proxyip-picker-open .proxyip-picker-trigger {
+		   注意带 #proxyIPSection / #echModule 前缀提权，避免被上方含 ID 的基础规则压过 */
+		#proxyIPSection .proxyip-input-box.proxyip-picker-open .proxyip-picker-trigger,
+		#echModule .ech-picker-box.proxyip-picker-open .proxyip-picker-trigger {
 			color: #b45309;
 			background: rgba(250, 171, 65, .1);
 		}
 
-		.proxyip-input-box.proxyip-picker-open .proxyip-picker-chev {
+		.proxyip-input-box.proxyip-picker-open .proxyip-picker-chev,
+		.ech-picker-box.proxyip-picker-open .proxyip-picker-chev {
 			transform: rotate(180deg);
 		}
 
-		.proxyip-input-box.proxyip-picker-open #proxyIP {
+		.proxyip-input-box.proxyip-picker-open #proxyIP,
+		.ech-picker-box.proxyip-picker-open > input[type="text"] {
 			border-color: #faab41 !important;
 			box-shadow: 0 0 0 3px rgba(250, 171, 65, .1) !important;
 		}
@@ -3800,7 +3807,9 @@
 		/* 悬浮面板：fixed 定位，left/top/width 全部由 JS 依据 .proxyip-input-box 的
 		   getBoundingClientRect 计算——与文本框等宽等位、正下方 6px；
 		   下方空间不足且上方更大时翻转到输入框上方（.proxyip-picker-panel-flip） */
-		#proxyIPPresetPanel {
+		#proxyIPPresetPanel,
+		#echDNSPresetPanel,
+		#echSNIPresetPanel {
 			position: fixed;
 			left: 0;
 			top: 0;
@@ -3826,14 +3835,18 @@
 
 		/* 上翻模式：从底部原点向下展开（须写在展开态规则之前，
 		   展开态的 transform:none 才能以同级特异性后到覆盖） */
-		#proxyIPPresetPanel.proxyip-picker-panel-flip {
+		#proxyIPPresetPanel.proxyip-picker-panel-flip,
+		#echDNSPresetPanel.proxyip-picker-panel-flip,
+		#echSNIPresetPanel.proxyip-picker-panel-flip {
 			transform: translateY(4px) scale(.98);
 			transform-origin: bottom left;
 		}
 
 		/* 展开态：显隐 class 直接加在面板元素上——面板已 portal 到 body，
-		   不再是 .proxyip-input-box 的后代，原「box 开合 class + 后代选择器」失效 */
-		#proxyIPPresetPanel.proxyip-picker-panel-open {
+		   不再是 .proxyip-input-box / .ech-picker-box 的后代，原「box 开合 class + 后代选择器」失效 */
+		#proxyIPPresetPanel.proxyip-picker-panel-open,
+		#echDNSPresetPanel.proxyip-picker-panel-open,
+		#echSNIPresetPanel.proxyip-picker-panel-open {
 			opacity: 1;
 			transform: none;
 			pointer-events: auto;
@@ -3977,28 +3990,38 @@
 		/* ---------- 宽面板单行排版：输入框宽度 ≥ 420px 时由 JS 加 .proxyip-picker-wide ----------
 		   地区名靠左、域名 margin-left:auto 靠右、对勾与域名同排；
 		   窄面板（移动端/勾选自动获取挤压时）不加此 class，保持上方两行排版不变 */
-		#proxyIPPresetPanel.proxyip-picker-wide .proxyip-picker-item {
+		#proxyIPPresetPanel.proxyip-picker-wide .proxyip-picker-item,
+		#echDNSPresetPanel.proxyip-picker-wide .proxyip-picker-item,
+		#echSNIPresetPanel.proxyip-picker-wide .proxyip-picker-item {
 			padding: 9px 12px;
 		}
 
 		/* pbody 由纵向列改为横向行：地区名 nowrap 靠左，域名靠右，垂直居成一行 */
-		#proxyIPPresetPanel.proxyip-picker-wide .proxyip-picker-body {
+		#proxyIPPresetPanel.proxyip-picker-wide .proxyip-picker-body,
+		#echDNSPresetPanel.proxyip-picker-wide .proxyip-picker-body,
+		#echSNIPresetPanel.proxyip-picker-wide .proxyip-picker-body {
 			flex-direction: row;
 			align-items: center;
 		}
 
-		#proxyIPPresetPanel.proxyip-picker-wide .proxyip-picker-name {
+		#proxyIPPresetPanel.proxyip-picker-wide .proxyip-picker-name,
+		#echDNSPresetPanel.proxyip-picker-wide .proxyip-picker-name,
+		#echSNIPresetPanel.proxyip-picker-wide .proxyip-picker-name {
 			white-space: nowrap;
 			flex-shrink: 0;
 		}
 
-		#proxyIPPresetPanel.proxyip-picker-wide .proxyip-picker-domain {
+		#proxyIPPresetPanel.proxyip-picker-wide .proxyip-picker-domain,
+		#echDNSPresetPanel.proxyip-picker-wide .proxyip-picker-domain,
+		#echSNIPresetPanel.proxyip-picker-wide .proxyip-picker-domain {
 			margin-left: auto;
 			min-width: 0;
 		}
 
 		/* 对勾与域名同排放最右：item 自身 gap 为 10px，减 4px 使对勾与域名间距为 6px */
-		#proxyIPPresetPanel.proxyip-picker-wide .proxyip-picker-check {
+		#proxyIPPresetPanel.proxyip-picker-wide .proxyip-picker-check,
+		#echDNSPresetPanel.proxyip-picker-wide .proxyip-picker-check,
+		#echSNIPresetPanel.proxyip-picker-wide .proxyip-picker-check {
 			margin-left: -4px;
 		}
 
@@ -4018,25 +4041,31 @@
 		}
 
 		/* ---------- 夜间模式（html.dark-mode）覆盖 ---------- */
-		html.dark-mode #proxyIPSection .proxyip-picker-trigger {
+		html.dark-mode #proxyIPSection .proxyip-picker-trigger,
+		html.dark-mode #echModule .proxyip-picker-trigger {
 			color: #6b7280;
 		}
 
-		html.dark-mode #proxyIPSection .proxyip-picker-trigger:hover {
+		html.dark-mode #proxyIPSection .proxyip-picker-trigger:hover,
+		html.dark-mode #echModule .proxyip-picker-trigger:hover {
 			color: #faab41;
 			background: rgba(250, 171, 65, .15);
 		}
 
-		html.dark-mode #proxyIPSection .proxyip-input-box.proxyip-picker-open .proxyip-picker-trigger {
+		html.dark-mode #proxyIPSection .proxyip-input-box.proxyip-picker-open .proxyip-picker-trigger,
+		html.dark-mode #echModule .ech-picker-box.proxyip-picker-open .proxyip-picker-trigger {
 			color: #faab41;
 			background: rgba(250, 171, 65, .15);
 		}
 
-		html.dark-mode .proxyip-input-box.proxyip-picker-open #proxyIP {
+		html.dark-mode .proxyip-input-box.proxyip-picker-open #proxyIP,
+		html.dark-mode .ech-picker-box.proxyip-picker-open > input[type="text"] {
 			box-shadow: 0 0 0 3px rgba(250, 171, 65, .15) !important;
 		}
 
-		html.dark-mode #proxyIPPresetPanel {
+		html.dark-mode #proxyIPPresetPanel,
+		html.dark-mode #echDNSPresetPanel,
+		html.dark-mode #echSNIPresetPanel {
 			background: #212327;
 			border-color: #3a3d42;
 			box-shadow: 0 18px 44px rgba(0, 0, 0, .55);
@@ -4095,6 +4124,58 @@
 
 		html.dark-mode .proxyip-input-box #proxyIP.proxyip-picker-flash {
 			color: #faab41 !important;
+		}
+
+		/* ========== ECH 预设下拉：完全复用上方 .proxyip-picker-* 视觉 ==========
+		   两个 ECH form-group 是 display:grid（200px 1fr），.ech-picker-box 直接作网格项；
+		   右侧留给 44px 触发按钮的留白必须用 ID 提权——移动端媒体查询里的
+		   .module .form-group input 会覆盖普通类的 padding（PROXYIP 靠 #proxyIP 的 ID 压过去） */
+		.ech-picker-box {
+			position: relative;
+			display: flex;
+			flex: 1;
+			min-width: 0;
+		}
+
+		.ech-picker-box > input[type="text"] {
+			flex: 1;
+			min-width: 0;
+		}
+
+		#echDNSGroup .ech-picker-box > input[type="text"],
+		#echSNIGroup .ech-picker-box > input[type="text"] {
+			/* 右侧留给 44px 触发按钮 + 1px 分隔线 + 2px 边框内缩 */
+			padding-right: 48px;
+		}
+
+		/* 「自动获取」态：文本框只作展示，占位提示弱化成灰字 */
+		.ech-picker-box > input[type="text"].ech-auto-mode::placeholder {
+			color: #9ca3af;
+			opacity: 1;
+		}
+
+		html.dark-mode .ech-picker-box > input[type="text"].ech-auto-mode::placeholder {
+			color: var(--text-secondary, #9ca3af);
+		}
+
+		/* 选中反馈：输入框文字短暂染上琥珀色（JS 加/移除 .ech-picker-flash） */
+		.ech-picker-box > input[type="text"].ech-picker-flash {
+			color: #b45309 !important;
+		}
+
+		html.dark-mode .ech-picker-box > input[type="text"].ech-picker-flash {
+			color: #faab41 !important;
+		}
+
+		/* 说明行（如 SNI「自动获取」的用途说明）：不用等宽字体、正常字距、弱化灰 */
+		.proxyip-picker-domain.is-note {
+			font-family: inherit;
+			letter-spacing: 0;
+			color: #9ca3af;
+		}
+
+		html.dark-mode .proxyip-picker-domain.is-note {
+			color: #7d838c;
 		}
 
 		.grpc-ua-wrapper {
@@ -11930,65 +12011,45 @@
 
 					<div class="form-group" id="echDNSGroup" title="用于获取 EchConfig 的DNS服务"
 						style="display: none; align-items: start;">
-						<label for="echDNSSelect" style="padding-top: 10px;">EchConfig DNS服务</label>
-						<div class="input-wrapper" style="flex-direction: column; align-items: stretch;">
-							<select id="echDNSSelect" style="display: none;" onchange="onEchDNSSelectChange()">
-								<option value="udp://208.67.220.220:443" data-region="international">
-									udp://208.67.220.220:443（OpenDNS）</option>
-								<option value="udp://149.112.112.112:9953" data-region="international">
-									udp://149.112.112.112:9953（Quad9）</option>
-								<option value="udp://45.90.28.0:5353" data-region="international">
-									udp://45.90.28.0:5353（NextDNS）</option>
-								<option value="udp://188.166.206.224:5003" data-region="international">
-									udp://188.166.206.224:5003（Tiarap）</option>
-								<option value="https://doh.applied-privacy.net/query" data-region="international">
-									https://doh.applied-privacy.net/query（Applied Privacy DoH）</option>
-								<option value="https://odvr.nic.cz/doh" data-region="international">
-									https://odvr.nic.cz/doh（CZ.NIC DoH）</option>
-								<option value="https://dns.alidns.com/dns-query" data-region="domestic">
-									https://dns.alidns.com/dns-query（阿里 DoH：国内DNS需搭配设置ECH解析域名，是否可用需自行验证）小白推荐选这个！！！
-								</option>
-								<option value="https://sm2.doh.pub/dns-query" data-region="domestic">
-									https://sm2.doh.pub/dns-query（腾讯国密 DoH：国内DNS需搭配设置ECH解析域名，是否可用需自行验证）</option>
-								<option value="https://doh.360.cn/dns-query" data-region="domestic">
-									https://doh.360.cn/dns-query（360 DoH：国内DNS需搭配设置ECH解析域名，是否可用需自行验证）</option>
-								<option value="https://doh.onedns.net/dns-query" data-region="domestic">
-									https://doh.onedns.net/dns-query（OneDNS DoH：国内DNS需搭配设置ECH解析域名，是否可用需自行验证）</option>
-								<option value="custom">自定义</option>
-							</select>
-							<input type="text" id="echDNSCustomInput" title="自定义ECH DNS服务"
-								placeholder="udp://... 或 https://..." onchange="onEchDNSCustomInput()"
-								style="display: none; margin-top: 8px;">
-							<input type="hidden" id="echDNSValue">
+						<label for="echDNSInput" style="padding-top: 10px;">EchConfig DNS服务</label>
+						<div class="ech-picker-box">
+							<input type="text" id="echDNSInput" title="EchConfig DNS服务"
+								placeholder="udp://... 或 https://..." autocomplete="off" spellcheck="false"
+								oninput="onEchDNSInput()" onchange="onEchDNSInput()">
+							<button type="button" class="proxyip-picker-trigger" id="echDNSPresetTrigger"
+								aria-haspopup="listbox" aria-expanded="false" aria-controls="echDNSPresetPanel"
+								title="从常用 DNS 服务中选择">
+								<svg class="proxyip-picker-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"
+									stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+									<polyline points="6 9 12 15 18 9" />
+								</svg>
+							</button>
+							<div class="proxyip-picker-panel" id="echDNSPresetPanel" role="listbox"
+								aria-label="选择 EchConfig DNS 服务"></div>
 						</div>
+						<input type="hidden" id="echDNSValue">
 					</div>
 
 					<div class="form-group" id="echSNIGroup"
 						title="用于解析 EchConfig 的域名，并非ECH伪装域名！CF ECH伪装域名均为 cloudflare-ech.com ！！！"
 						style="display: none; align-items: start;">
-						<label for="echSNISelect" style="padding-top: 10px;">EchConfig 解析域名</label>
-						<div class="input-wrapper" style="flex-direction: column; align-items: stretch;">
-							<select id="echSNISelect" style="display: none;" onchange="onEchSNISelectChange()">
-								<option value="__AUTO__">自动获取（使用节点的伪装域名解析 EchConfig）</option>
-								<option value="cloudflare-ech.com">cloudflare-ech.com（Cloudflare ECH域名）小白推荐选这个！！！
-								</option>
-								<option value="crypto.cloudflare.com">crypto.cloudflare.com（Cloudflare密码学服务）</option>
-								<option value="encryptedsni.com">encryptedsni.com（Cloudflare加密SNI）</option>
-								<option value="icook.hk">icook.hk（愛料理 HK）</option>
-								<option value="cm.edu.kg">cm.edu.kg（CM科技大学）</option>
-								<option value="godotengine.org">godotengine.org（Godot 开源游戏引擎）</option>
-								<option value="www.britannica.com">www.britannica.com（大英百科全书）</option>
-								<option value="www.prometheus.io">www.prometheus.io（Prometheus 监控系统）</option>
-								<option value="www.kyocera.com">www.kyocera.com（Kyocera 集团官网）</option>
-								<option value="celestia.org">celestia.org（Celestia 模块化区块链）</option>
-								<option value="lido.fi">lido.fi（Lido 流动质押）</option>
-								<option value="custom">自定义</option>
-							</select>
-							<input type="text" id="echSNICustomInput" title="自定义ECH 解析域名"
-								placeholder="cloudflare-ech.com" onchange="onEchSNICustomInput()"
-								style="display: none; margin-top: 8px;">
-							<input type="hidden" id="echSNIValue">
+						<label for="echSNIInput" style="padding-top: 10px;">EchConfig 解析域名</label>
+						<div class="ech-picker-box">
+							<input type="text" id="echSNIInput" class="ech-auto-mode" title="EchConfig 解析域名"
+								placeholder="自动获取（使用节点的伪装域名解析 EchConfig）" autocomplete="off"
+								spellcheck="false" oninput="onEchSNIInput()" onchange="onEchSNIInput()">
+							<button type="button" class="proxyip-picker-trigger" id="echSNIPresetTrigger"
+								aria-haspopup="listbox" aria-expanded="false" aria-controls="echSNIPresetPanel"
+								title="从常用 ECH 解析域名中选择">
+								<svg class="proxyip-picker-chev" width="16" height="16" viewBox="0 0 24 24" fill="none"
+									stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+									<polyline points="6 9 12 15 18 9" />
+								</svg>
+							</button>
+							<div class="proxyip-picker-panel" id="echSNIPresetPanel" role="listbox"
+								aria-label="选择 EchConfig 解析域名"></div>
 						</div>
+						<input type="hidden" id="echSNIValue">
 					</div>
 
 					<div class="module-footer">
@@ -21799,14 +21860,12 @@
 			}
 		}
 
-		// 填充ECH DNS下拉框
+		// 填充 ECH DNS 字段（函数名沿用旧调用点：文本框可自由输入，同时同步隐藏域）
 		function populateEchDNSSelect() {
 			const formGroup = document.getElementById('echDNSGroup');
-			const select = document.getElementById('echDNSSelect');
-			const customInput = document.getElementById('echDNSCustomInput');
-			const hiddenValue = document.getElementById('echDNSValue');
+			const inputEl = document.getElementById('echDNSInput');
 
-			if (!select || !formGroup) return;
+			if (!inputEl || !formGroup) return;
 
 			// 检查ECHConfig.DNS字段是否存在
 			if (currentConfig.ECHConfig?.DNS === undefined) {
@@ -21814,43 +21873,21 @@
 				return;
 			}
 
-			// 显示form-group和下拉框
+			// 显示 form-group 并回填当前配置值
 			formGroup.style.display = 'grid';
-			select.style.display = 'block';
-
-			// 如果已有保存的DNS值，设置选中状态
-			const savedDNS = currentConfig.ECHConfig?.DNS || '';
-			if (savedDNS) {
-				// 尝试在下拉框中找到匹配的选项
-				select.value = savedDNS;
-
-				// 如果没有匹配到（值不在列表中），选择"自定义"并显示输入框
-				if (select.value !== savedDNS) {
-					select.value = 'custom';
-					customInput.value = savedDNS;
-					customInput.style.display = 'block';
-					hiddenValue.value = savedDNS;
-				} else {
-					// 匹配成功，隐藏自定义输入框
-					customInput.style.display = 'none';
-					customInput.value = '';
-					hiddenValue.value = savedDNS;
-				}
-			} else {
-				// 没有保存值，默认选择"自定义"
-				select.value = 'custom';
-				customInput.style.display = 'block';
-			}
+			// 回填阶段不触发「国内 DNS 自动改解析域名」的联动，也不标记为已修改
+			setEchDNSFieldValue(currentConfig.ECHConfig?.DNS || '', {
+				skipAutoAdjust: true,
+				skipMarkModified: true
+			});
 		}
 
-		// 填充ECH SNI下拉框
+		// 填充 ECH 解析域名字段（函数名沿用旧调用点：文本框为空即代表「自动获取」）
 		function populateEchSNISelect() {
 			const formGroup = document.getElementById('echSNIGroup');
-			const select = document.getElementById('echSNISelect');
-			const customInput = document.getElementById('echSNICustomInput');
-			const hiddenValue = document.getElementById('echSNIValue');
+			const inputEl = document.getElementById('echSNIInput');
 
-			if (!select || !formGroup) return;
+			if (!inputEl || !formGroup) return;
 
 			// 检查ECHConfig.SNI字段是否存在
 			if (currentConfig.ECHConfig?.SNI === undefined) {
@@ -21858,119 +21895,499 @@
 				return;
 			}
 
-			// 显示form-group和下拉框
+			// 显示 form-group 并回填当前配置值
 			formGroup.style.display = 'grid';
-			select.style.display = 'block';
-
-			// 如果已有保存的SNI值，设置选中状态
+			// null / 空字符串均表示「自动获取」：清空文本框进入自动态
 			const savedSNI = currentConfig.ECHConfig?.SNI;
-			if (savedSNI !== undefined) {
-				if (savedSNI === null) {
-					// 自动获取
-					select.value = '__AUTO__';
-					customInput.style.display = 'none';
-					customInput.value = '';
-					hiddenValue.value = null;
+			setEchSNIFieldValue((savedSNI === null || savedSNI === undefined) ? '' : savedSNI, {
+				skipMarkModified: true
+			});
+		}
+
+		// ========== ECH 预设下拉（自绘面板，与 PROXYIP 完全同款交互） ==========
+		// 预设值会写入 Worker 配置，必须与旧 <option> 逐字一致；
+		// region 用于「国内 DNS + 自动解析域名」联动判定，desc 缺省时用 value 当等宽说明行
+		const ECH_DNS_PRESET_GROUPS = [
+			{
+				label: '国际 DNS', items: [
+					{ value: 'udp://208.67.220.220:443', name: 'OpenDNS', flag: '🔓', region: 'international' },
+					{ value: 'udp://149.112.112.112:9953', name: 'Quad9', flag: '9️⃣', region: 'international' },
+					{ value: 'udp://45.90.28.0:5353', name: 'NextDNS', flag: '🎛️', region: 'international' },
+					{ value: 'udp://188.166.206.224:5003', name: 'Tiarap', flag: '🚧', region: 'international' },
+					{
+						value: 'https://doh.applied-privacy.net/query',
+						name: 'Applied Privacy DoH',
+						flag: '🕶️',
+						region: 'international'
+					},
+					{ value: 'https://odvr.nic.cz/doh', name: 'CZ.NIC DoH', flag: '🏛️', region: 'international' }
+				]
+			},
+			{
+				label: '国内 DNS（需搭配设置ECH解析域名，是否可用需自行验证）', items: [
+					{ value: 'https://dns.alidns.com/dns-query', name: '阿里 DoH', flag: '🅰️', region: 'domestic', recommended: true },
+					{ value: 'https://sm2.doh.pub/dns-query', name: '腾讯国密 DoH', flag: '🐧', region: 'domestic' },
+					{ value: 'https://doh.360.cn/dns-query', name: '360 DoH', flag: '🛡️', region: 'domestic' },
+					{ value: 'https://doh.onedns.net/dns-query', name: 'OneDNS DoH', flag: '1️⃣', region: 'domestic' }
+				]
+			}
+		];
+
+		const ECH_DNS_PANEL_FOOT = '国内 DNS 需搭配设置 ECH 解析域名（默认 cloudflare-ech.com），是否可用需自行验证。';
+
+		const ECH_SNI_PRESET_GROUPS = [
+			{
+				label: '✨ 推荐', accent: true, items: [
+					{
+						value: '__AUTO__',
+						name: '自动获取',
+						flag: '🔄',
+						desc: '使用节点的伪装域名解析 EchConfig',
+						descAsNote: true
+					},
+					{ value: 'cloudflare-ech.com', name: 'Cloudflare ECH 域名', flag: '🌐', recommended: true }
+				]
+			},
+			{
+				label: '其他 ECH 域名', items: [
+					{ value: 'crypto.cloudflare.com', name: 'Cloudflare 密码学服务', flag: '🔐' },
+					{ value: 'encryptedsni.com', name: 'Cloudflare 加密 SNI', flag: '🔒' },
+					{ value: 'icook.hk', name: '愛料理 HK', flag: '🍳' },
+					{ value: 'cm.edu.kg', name: 'CM科技大学', flag: '🎓' },
+					{ value: 'godotengine.org', name: 'Godot 开源游戏引擎', flag: '🎮' },
+					{ value: 'www.britannica.com', name: '大英百科全书', flag: '📚' },
+					{ value: 'www.prometheus.io', name: 'Prometheus 监控系统', flag: '📈' },
+					{ value: 'www.kyocera.com', name: 'Kyocera 集团官网', flag: '🏢' },
+					{ value: 'celestia.org', name: 'Celestia 模块化区块链', flag: '🛰️' },
+					{ value: 'lido.fi', name: 'Lido 流动质押', flag: '💧' }
+				]
+			}
+		];
+
+		const ECH_SNI_PANEL_FOOT = '此处域名仅用于解析 EchConfig，并非 ECH 伪装域名。';
+
+		// 「自动获取」的语义 = 文本框为空（隐藏域写 ''，保存时由 saveEch 转成 null）
+		const ECH_SNI_AUTO_VALUE = '__AUTO__';
+		const ECH_SNI_AUTO_PLACEHOLDER = '自动获取（使用节点的伪装域名解析 EchConfig）';
+		const ECH_SNI_DEFAULT_PLACEHOLDER = 'cloudflare-ech.com';
+		// 国内 DNS 与「自动获取」解析域名冲突时改用的兜底域名
+		const ECH_DOMESTIC_DNS_FALLBACK_SNI = 'cloudflare-ech.com';
+		const ECH_DOMESTIC_DNS_WARNING = '⚠️ ECH 配置提示\n\n默认使用节点HOST伪装域名 配合 国内 DNS 可能导致 ECH 解析失败。\n\n解决方案（任选其一）：\n① 将 ECH 解析域名改为 cloudflare-ech.com（推荐）\n② 将 ECH DNS 切换为国际服务（如 NextDNS）';
+
+		// 面板关闭函数注册表：保证同一时刻只允许一个 ECH 面板打开
+		const ECH_PICKER_CLOSERS = {};
+
+		// 在预设分组里按值查条目（用于国内 DNS 判定）
+		function findEchPreset(groups, value) {
+			const target = (value === undefined || value === null) ? '' : String(value).trim();
+			if (!target || !groups) return null;
+			for (let i = 0; i < groups.length; i++) {
+				const items = groups[i].items || [];
+				for (let j = 0; j < items.length; j++) {
+					if (items[j].value === target) return items[j];
+				}
+			}
+			return null;
+		}
+
+		// 当前 EchConfig DNS 服务的地区；自定义值/空值返回 null（与旧 select 的 data-region 行为一致）
+		function getEchDNSRegion(value) {
+			const matched = findEchPreset(ECH_DNS_PRESET_GROUPS, value);
+			return matched ? matched.region : null;
+		}
+
+		// 生成条目右侧的选中对勾（与 PROXYIP 面板同一套 svg）
+		function createEchPresetCheckIcon() {
+			const SVG_NS = 'http://www.w3.org/2000/svg';
+			const svg = document.createElementNS(SVG_NS, 'svg');
+			svg.setAttribute('class', 'proxyip-picker-check');
+			svg.setAttribute('width', '16');
+			svg.setAttribute('height', '16');
+			svg.setAttribute('viewBox', '0 0 24 24');
+			svg.setAttribute('fill', 'none');
+			svg.setAttribute('stroke', 'currentColor');
+			svg.setAttribute('stroke-width', '2.5');
+			svg.setAttribute('stroke-linecap', 'round');
+			svg.setAttribute('stroke-linejoin', 'round');
+			const polyline = document.createElementNS(SVG_NS, 'polyline');
+			polyline.setAttribute('points', '20 6 9 17 4 12');
+			svg.appendChild(polyline);
+			return svg;
+		}
+
+		// 渲染单个预设条目：data-value 存值（对标 PROXYIP 的 data-domain），data-region 存地区
+		function createEchPresetItem(preset) {
+			const item = document.createElement('button');
+			item.type = 'button';
+			item.className = 'proxyip-picker-item' + (preset.recommended ? ' recommended' : '');
+			item.setAttribute('role', 'option');
+			item.setAttribute('aria-selected', 'false');
+			item.setAttribute('data-value', preset.value);
+			if (preset.region) item.setAttribute('data-region', preset.region);
+
+			const flagEl = document.createElement('span');
+			flagEl.className = 'proxyip-picker-flag';
+			flagEl.textContent = preset.flag || '🌐';
+
+			const bodyEl = document.createElement('span');
+			bodyEl.className = 'proxyip-picker-body';
+
+			const nameEl = document.createElement('span');
+			nameEl.className = 'proxyip-picker-name';
+			nameEl.textContent = preset.name || preset.value;
+
+			const descEl = document.createElement('span');
+			descEl.className = 'proxyip-picker-domain' + (preset.descAsNote ? ' is-note' : '');
+			descEl.textContent = preset.desc || preset.value;
+			// 说明行用说明文字本身作 title；域名行用域名作 title（宽面板下可能被省略号截断）
+			if (preset.desc) descEl.title = preset.descAsNote ? preset.desc : preset.value;
+
+			bodyEl.appendChild(nameEl);
+			bodyEl.appendChild(descEl);
+			item.appendChild(flagEl);
+			item.appendChild(bodyEl);
+			item.appendChild(createEchPresetCheckIcon());
+			return item;
+		}
+
+		// 把分组数据渲染进面板（纯 DOM 构建，不拼 innerHTML）
+		function renderEchPresetPanel(panel, groups, footText) {
+			if (!panel || !groups) return;
+			panel.textContent = '';
+			const scrollEl = document.createElement('div');
+			scrollEl.className = 'proxyip-picker-scroll';
+			groups.forEach(function (group) {
+				const groupEl = document.createElement('div');
+				groupEl.className = 'proxyip-picker-group';
+
+				const labelEl = document.createElement('div');
+				labelEl.className = 'proxyip-picker-group-label' + (group.accent ? ' accent' : '');
+				labelEl.appendChild(document.createTextNode(group.label));
+				// 推荐组不加数量徽标（与 PROXYIP 面板一致）
+				if (!group.accent) {
+					const countEl = document.createElement('span');
+					countEl.className = 'proxyip-picker-count';
+					countEl.textContent = String((group.items || []).length);
+					labelEl.appendChild(countEl);
+				}
+				groupEl.appendChild(labelEl);
+
+				(group.items || []).forEach(function (preset) {
+					groupEl.appendChild(createEchPresetItem(preset));
+				});
+				scrollEl.appendChild(groupEl);
+			});
+			panel.appendChild(scrollEl);
+
+			if (footText) {
+				const footEl = document.createElement('div');
+				footEl.className = 'proxyip-picker-foot';
+				footEl.textContent = footText;
+				panel.appendChild(footEl);
+			}
+		}
+
+		// 按当前值同步面板选中态；isAutoMode 为真时命中「自动获取」条目
+		function syncEchPresetPanelSelection(panelId, value, isAutoMode) {
+			const panel = document.getElementById(panelId);
+			if (!panel) return;
+			const target = isAutoMode ? ECH_SNI_AUTO_VALUE : value;
+			const items = panel.querySelectorAll('.proxyip-picker-item');
+			Array.prototype.forEach.call(items, function (item) {
+				const hit = item.getAttribute('data-value') === target;
+				item.classList.toggle('is-selected', hit);
+				item.setAttribute('aria-selected', hit ? 'true' : 'false');
+			});
+		}
+
+		// 写入 EchConfig DNS 值：文本框、隐藏域、面板选中态收敛到这一处，避免多处改状态造成漂移
+		function setEchDNSFieldValue(value, opts) {
+			const options = opts || {};
+			const inputEl = document.getElementById('echDNSInput');
+			const hiddenValue = document.getElementById('echDNSValue');
+			const next = (value === undefined || value === null) ? '' : String(value).trim();
+
+			if (inputEl && inputEl.value !== next) inputEl.value = next;
+			if (hiddenValue) hiddenValue.value = next;
+			syncEchPresetPanelSelection('echDNSPresetPanel', next, false);
+
+			// 沿用旧「DNS 下拉框 change」行为：国内 DNS + 解析域名为「自动获取」时静默改成 cloudflare-ech.com
+			if (!options.skipAutoAdjust && getEchDNSRegion(next) === 'domestic') {
+				const sniInputEl = document.getElementById('echSNIInput');
+				if (sniInputEl && sniInputEl.value.trim() === '') {
+					setEchSNIFieldValue(ECH_DOMESTIC_DNS_FALLBACK_SNI, { skipMarkModified: true });
+				}
+			}
+
+			if (!options.skipMarkModified) markModified('ech');
+		}
+
+		// 写入 EchConfig 解析域名：空值即「自动获取」（隐藏域写 ''，保存时由 saveEch 转成 null）
+		function setEchSNIFieldValue(value, opts) {
+			const options = opts || {};
+			const inputEl = document.getElementById('echSNIInput');
+			const hiddenValue = document.getElementById('echSNIValue');
+			const next = (value === undefined || value === null || value === ECH_SNI_AUTO_VALUE)
+				? ''
+				: String(value).trim();
+
+			if (inputEl) {
+				if (inputEl.value !== next) inputEl.value = next;
+				if (next) {
+					inputEl.placeholder = ECH_SNI_DEFAULT_PLACEHOLDER;
+					inputEl.classList.remove('ech-auto-mode');
 				} else {
-					// 尝试在下拉框中找到匹配的选项
-					select.value = savedSNI;
+					inputEl.placeholder = ECH_SNI_AUTO_PLACEHOLDER;
+					inputEl.classList.add('ech-auto-mode');
+				}
+			}
+			if (hiddenValue) hiddenValue.value = next;
+			syncEchPresetPanelSelection('echSNIPresetPanel', next, next === '');
 
-					// 如果没有匹配到（值不在列表中），选择"自定义"并显示输入框
-					if (select.value !== savedSNI) {
-						select.value = 'custom';
-						customInput.value = savedSNI;
-						customInput.style.display = 'block';
-						hiddenValue.value = savedSNI;
+			if (!options.skipMarkModified) markModified('ech');
+			return next;
+		}
+
+		// EchConfig DNS服务 文本框输入（可自由输入任意 udp:// / https:// 地址）
+		function onEchDNSInput() {
+			const inputEl = document.getElementById('echDNSInput');
+			if (!inputEl) return;
+			setEchDNSFieldValue(inputEl.value);
+		}
+
+		// EchConfig 解析域名 文本框输入；清空即回到「自动获取」（手动清空不弹提示）
+		function onEchSNIInput() {
+			const inputEl = document.getElementById('echSNIInput');
+			if (!inputEl) return;
+			setEchSNIFieldValue(inputEl.value);
+		}
+
+		// 点选某个 ECH 预设条目：写入字段 → 关闭面板 → 焦点还给触发按钮 → 短暂琥珀色反馈
+		function selectEchPresetItem(kind, item) {
+			if (!item) return;
+			const isSni = kind === 'sni';
+			const rawValue = item.getAttribute('data-value') || '';
+			const inputEl = document.getElementById(isSni ? 'echSNIInput' : 'echDNSInput');
+			const trigger = document.getElementById(isSni ? 'echSNIPresetTrigger' : 'echDNSPresetTrigger');
+
+			if (isSni) {
+				if (rawValue === ECH_SNI_AUTO_VALUE) {
+					// 沿用旧「解析域名下拉框 change」行为：仅在「从面板点自动获取」时弹提示，
+					// 国内 DNS 与自动解析域名冲突 → 改用 cloudflare-ech.com
+					// （旧实现只改了 select 未同步隐藏域，这里一并写入）
+					const dnsInputEl = document.getElementById('echDNSInput');
+					if (dnsInputEl && getEchDNSRegion(dnsInputEl.value) === 'domestic') {
+						alert(ECH_DOMESTIC_DNS_WARNING);
+						setEchSNIFieldValue(ECH_DOMESTIC_DNS_FALLBACK_SNI);
 					} else {
-						// 匹配成功，隐藏自定义输入框
-						customInput.style.display = 'none';
-						customInput.value = '';
-						hiddenValue.value = savedSNI;
+						setEchSNIFieldValue('');
 					}
+				} else {
+					setEchSNIFieldValue(rawValue);
 				}
 			} else {
-				// 没有保存值，默认选择"自定义"
-				select.value = 'custom';
-				customInput.style.display = 'block';
+				setEchDNSFieldValue(rawValue);
 			}
+
+			// 选中反馈：输入框文字短暂染上琥珀色（约 900ms）
+			if (inputEl) {
+				inputEl.classList.add('ech-picker-flash');
+				setTimeout(function () {
+					inputEl.classList.remove('ech-picker-flash');
+				}, 900);
+			}
+
+			const closer = ECH_PICKER_CLOSERS[kind];
+			if (typeof closer === 'function') closer();
+			if (trigger) trigger.focus();
 		}
 
-		// ECH DNS select 变化处理
-		function onEchDNSSelectChange() {
-			const select = document.getElementById('echDNSSelect');
-			const customInput = document.getElementById('echDNSCustomInput');
-			const hiddenValue = document.getElementById('echDNSValue');
+		// 初始化单个 ECH 预设下拉：panel portal 到 body、JS fixed 定位与翻转、滚动跟随、键盘导航、外点关闭
+		function setupEchPresetPicker(config) {
+			const group = document.getElementById(config.groupId);
+			if (!group) return;
+			const box = group.querySelector('.ech-picker-box');
+			const inputEl = document.getElementById(config.inputId);
+			const trigger = document.getElementById(config.triggerId);
+			const panel = document.getElementById(config.panelId);
+			if (!box || !inputEl || !trigger || !panel) return;
 
-			if (select.value === 'custom') {
-				customInput.style.display = 'block';
-				hiddenValue.value = customInput.value;
-			} else {
-				customInput.style.display = 'none';
-				customInput.value = '';
-				hiddenValue.value = select.value;
+			// portal：面板移出模块卡片挂到 body 下，脱离 backdrop-filter 创建的层叠上下文
+			if (panel.parentElement !== document.body) {
+				document.body.appendChild(panel);
 			}
 
-			// 检查是否选择了国内DNS，若是则自动调整ECH解析域名
-			const selectedOption = select.options[select.selectedIndex];
-			const region = selectedOption.dataset.region;
+			const items = Array.prototype.slice.call(panel.querySelectorAll('.proxyip-picker-item'));
+			const PANEL_GAP = 6;         // 面板与输入框的垂直间距
+			const MIN_SPACE = 8;         // 翻转判定的安全余量
+			const WIDE_BREAKPOINT = 420; // 输入框宽度 ≥ 此值时面板切换单行排版
+			let rafId = 0;
+			let repositionHandler = null;
 
-			if (region === 'domestic') {
-				const echSNISelect = document.getElementById('echSNISelect');
-				// 如果当前选择是 __AUTO__，自动改为 cloudflare-ech.com
-				if (echSNISelect.value === '__AUTO__') {
-					echSNISelect.value = 'cloudflare-ech.com';
-					onEchSNISelectChange();
+			// 依据输入框位置计算面板 fixed 坐标（等宽等位，正下方 6px）；
+			// 下方剩余空间不足且上方更大时翻转到输入框上方。
+			// 面板收起时 visibility:hidden 但布局保留，offsetHeight 仍可测量：
+			// 先定位（含切换 wide 排版后测高）再展开，避免闪烁
+			function positionPanel() {
+				const rect = box.getBoundingClientRect();
+				// 视口钳制：防移动端横向溢出（视口左右各留 8px）
+				const maxW = document.documentElement.clientWidth - 16;
+				let width = Math.min(rect.width, maxW);
+				let left = rect.left;
+				if (left + width > maxW) left = Math.max(8, maxW - width);
+				// 宽面板单行排版开关（先切排版再测高，保证高度测量准确）
+				panel.classList.toggle('proxyip-picker-wide', rect.width >= WIDE_BREAKPOINT);
+				panel.style.left = Math.round(left) + 'px';
+				panel.style.width = Math.round(width) + 'px';
+				const panelH = panel.offsetHeight;
+				const spaceBelow = window.innerHeight - rect.bottom;
+				const spaceAbove = rect.top;
+				// 翻转策略：下方放得下 → 下方；否则上方放得下 → 上方；
+				// 两侧都不足（窄屏挤压）→ 选空间更大的一侧，再由下方钳制兜底
+				const flip = (spaceBelow >= panelH + MIN_SPACE)
+					? false
+					: (spaceAbove >= panelH + MIN_SPACE || spaceAbove > spaceBelow);
+				panel.classList.toggle('proxyip-picker-panel-flip', flip);
+				let top = flip ? rect.top - PANEL_GAP - panelH : rect.bottom + PANEL_GAP;
+				// 视口兜底钳制：任何情况下不越过视口上下缘（各留 8px 边距）
+				const maxTop = window.innerHeight - 8 - panelH;
+				top = Math.min(Math.max(top, 8), Math.max(8, maxTop));
+				panel.style.top = Math.round(top) + 'px';
+			}
+
+			// 打开期间实时跟随：捕获各层滚动 + 窗口缩放，rAF 节流重定位；关闭时解绑
+			function startFollow() {
+				if (repositionHandler) return;
+				repositionHandler = function () {
+					if (rafId) return;
+					rafId = requestAnimationFrame(function () {
+						rafId = 0;
+						positionPanel();
+					});
+				};
+				document.addEventListener('scroll', repositionHandler, true);
+				window.addEventListener('resize', repositionHandler);
+			}
+
+			function stopFollow() {
+				if (repositionHandler) {
+					document.removeEventListener('scroll', repositionHandler, true);
+					window.removeEventListener('resize', repositionHandler);
+					repositionHandler = null;
+				}
+				if (rafId) {
+					cancelAnimationFrame(rafId);
+					rafId = 0;
 				}
 			}
 
-			markModified('ech');
-		}
-
-		// ECH DNS 自定义输入框变化处理
-		function onEchDNSCustomInput() {
-			const customInput = document.getElementById('echDNSCustomInput');
-			const hiddenValue = document.getElementById('echDNSValue');
-			hiddenValue.value = customInput.value;
-			markModified('ech');
-		}
-
-		// ECH SNI select 变化处理
-		function onEchSNISelectChange() {
-			const select = document.getElementById('echSNISelect');
-			const customInput = document.getElementById('echSNICustomInput');
-			const hiddenValue = document.getElementById('echSNIValue');
-
-			if (select.value === '__AUTO__') {
-				customInput.style.display = 'none';
-				customInput.value = '';
-				hiddenValue.value = null;
-
-				// 检查当前DNS服务是否为国内DNS
-				const echDNSSelect = document.getElementById('echDNSSelect');
-				const selectedDNSOption = echDNSSelect.options[echDNSSelect.selectedIndex];
-				const dnsRegion = selectedDNSOption.dataset.region;
-
-				if (dnsRegion === 'domestic') {
-					alert('⚠️ ECH 配置提示\n\n默认使用节点HOST伪装域名 配合 国内 DNS 可能导致 ECH 解析失败。\n\n解决方案（任选其一）：\n① 将 ECH 解析域名改为 cloudflare-ech.com（推荐）\n② 将 ECH DNS 切换为国际服务（如 NextDNS）');
-					select.value = 'cloudflare-ech.com';
-				}
-			} else if (select.value === 'custom') {
-				customInput.style.display = 'block';
-				hiddenValue.value = customInput.value;
-			} else {
-				customInput.style.display = 'none';
-				customInput.value = '';
-				hiddenValue.value = select.value;
+			// 关闭面板并复位容器/面板的显隐 class 与触发按钮 aria 状态
+			function closePicker() {
+				box.classList.remove('proxyip-picker-open');
+				panel.classList.remove('proxyip-picker-panel-open');
+				trigger.setAttribute('aria-expanded', 'false');
+				stopFollow();
 			}
-			markModified('ech');
+
+			// 打开面板：先关掉另一个 ECH 面板（PROXYIP 面板由 document 外点关闭，此处不动它的逻辑）
+			function openPicker() {
+				Object.keys(ECH_PICKER_CLOSERS).forEach(function (key) {
+					if (key !== config.kind) ECH_PICKER_CLOSERS[key]();
+				});
+				const current = inputEl.value.trim();
+				syncEchPresetPanelSelection(config.panelId, current, config.kind === 'sni' && current === '');
+				// 先定位（面板尚不可见）再展开，最后挂跟随监听
+				positionPanel();
+				box.classList.add('proxyip-picker-open');
+				panel.classList.add('proxyip-picker-panel-open');
+				trigger.setAttribute('aria-expanded', 'true');
+				startFollow();
+			}
+
+			// 触发按钮点击开合（面板已 portal 到 body，外点关闭走包含性判断，无需 stopPropagation）
+			trigger.addEventListener('click', function () {
+				if (panel.classList.contains('proxyip-picker-panel-open')) {
+					closePicker();
+				} else {
+					openPicker();
+				}
+			});
+
+			// 面板条目点击走统一选中流程
+			panel.addEventListener('click', function (e) {
+				const item = e.target.closest('.proxyip-picker-item');
+				if (item) selectEchPresetItem(config.kind, item);
+			});
+
+			// 键盘导航：↑/↓ 在条目间移动焦点，Esc 关闭并还焦点，Tab 关闭。
+			// Enter/Space 由原生 button click 行为触发选中，无需额外处理。
+			function pickerKeydown(e) {
+				if (!panel.classList.contains('proxyip-picker-panel-open')) return;
+				if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+					e.preventDefault();
+					if (!items.length) return;
+					const index = items.indexOf(document.activeElement);
+					let next;
+					if (index === -1) {
+						next = items[0];
+					} else if (e.key === 'ArrowDown') {
+						next = items[(index + 1) % items.length];
+					} else {
+						next = items[(index - 1 + items.length) % items.length];
+					}
+					if (next) next.focus();
+				} else if (e.key === 'Escape') {
+					e.preventDefault();
+					closePicker();
+					trigger.focus(); // 焦点还给触发按钮
+				} else if (e.key === 'Tab') {
+					closePicker();
+				}
+			}
+			box.addEventListener('keydown', pickerKeydown);
+			panel.addEventListener('keydown', pickerKeydown);
+
+			// 点击面板与输入框容器之外的空白处：关闭面板（包含性判断）
+			document.addEventListener('click', function (e) {
+				if (!panel.classList.contains('proxyip-picker-panel-open')) return;
+				if (panel.contains(e.target) || box.contains(e.target)) return;
+				closePicker();
+			});
+
+			// Esc 全局兜底：焦点不在面板/容器内（如停留在页面其他位置）时也能关闭
+			document.addEventListener('keydown', function (e) {
+				if (e.key !== 'Escape') return;
+				if (!panel.classList.contains('proxyip-picker-panel-open')) return;
+				if (panel.contains(document.activeElement) || box.contains(document.activeElement)) return;
+				closePicker();
+			});
+
+			// 注册关闭函数：供「同一时刻只开一个面板」与选中流程复用
+			ECH_PICKER_CLOSERS[config.kind] = closePicker;
 		}
 
-		// ECH SNI 自定义输入框变化处理
-		function onEchSNICustomInput() {
-			const customInput = document.getElementById('echSNICustomInput');
-			const hiddenValue = document.getElementById('echSNIValue');
-			hiddenValue.value = customInput.value;
-			markModified('ech');
+		// 初始化 ECH 的两个预设下拉（DOMContentLoaded 时调用一次）
+		function initEchPresetPickers() {
+			renderEchPresetPanel(document.getElementById('echDNSPresetPanel'), ECH_DNS_PRESET_GROUPS, ECH_DNS_PANEL_FOOT);
+			renderEchPresetPanel(document.getElementById('echSNIPresetPanel'), ECH_SNI_PRESET_GROUPS, ECH_SNI_PANEL_FOOT);
+
+			setupEchPresetPicker({
+				kind: 'dns',
+				groupId: 'echDNSGroup',
+				inputId: 'echDNSInput',
+				triggerId: 'echDNSPresetTrigger',
+				panelId: 'echDNSPresetPanel'
+			});
+			setupEchPresetPicker({
+				kind: 'sni',
+				groupId: 'echSNIGroup',
+				inputId: 'echSNIInput',
+				triggerId: 'echSNIPresetTrigger',
+				panelId: 'echSNIPresetPanel'
+			});
+
+			// 初始为「自动获取」态（文本框空 + 灰色占位说明），配置加载后由 populate 覆盖
+			setEchSNIFieldValue('', { skipMarkModified: true });
 		}
 
 		// 「启用自动获取」勾选时，文本框不显示 auto，改为显示说明文案（提交时仍为 auto）
@@ -28907,6 +29324,8 @@
 			initVersionCopyEasterEgg();
 			// PROXYIP 预设下拉（自绘面板）：绑定开合/选中/键盘导航
 			initProxyIPPresetPicker();
+			// ECH 的两个预设下拉（与 PROXYIP 同款自绘面板）：渲染条目并绑定开合/选中/键盘导航
+			initEchPresetPickers();
 			// 按协议注册表生成公开库的协议胶囊（新增协议后无需改 HTML）
 			renderChainLibProtocols();
 			// 独立预加载 SubConfig 数据，不阻塞主流程

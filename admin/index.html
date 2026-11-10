@@ -12037,7 +12037,7 @@
 						<div class="ech-picker-box">
 							<input type="text" id="echSNIInput" class="ech-auto-mode" title="EchConfig 解析域名"
 								placeholder="自动获取（使用节点的伪装域名解析 EchConfig）" autocomplete="off"
-								spellcheck="false" oninput="onEchSNIInput()" onchange="onEchSNIInput()">
+								spellcheck="false" oninput="onEchSNIInput()" onchange="onEchSNIChange()">
 							<button type="button" class="proxyip-picker-trigger" id="echSNIPresetTrigger"
 								aria-haspopup="listbox" aria-expanded="false" aria-controls="echSNIPresetPanel"
 								title="从常用 ECH 解析域名中选择">
@@ -22122,14 +22122,42 @@
 			if (!options.skipMarkModified) markModified('ech');
 		}
 
+		// 解析域名只接受主机名：用户把整段 URL 粘进来（带协议/账号/端口/路径/查询参数）时
+		// 自动取出域名部分，例如
+		// https://mxdc.dvg.cn/career_skill_guide.php?build=ice-lightning → mxdc.dvg.cn
+		function normalizeEchSNIHost(value) {
+			let text = (value === undefined || value === null) ? '' : String(value).trim();
+			if (!text) return '';
+			// 1. 去掉协议前缀（http:// https:// wss:// quic:// 等任意 scheme://）
+			text = text.replace(/^[a-zA-Z][a-zA-Z0-9+.\-]*:\/\//, '');
+			// 2. 去掉协议相对写法 //host/path
+			if (text.indexOf('//') === 0) text = text.slice(2);
+			// 3. 去掉 user:pass@ 前缀：最后一个 @ 之后才是主机
+			const atIndex = text.lastIndexOf('@');
+			if (atIndex !== -1) text = text.slice(atIndex + 1);
+			// 4. 去掉路径、查询参数与锚点
+			text = text.split(/[\/?#]/)[0];
+			// 5. 去掉端口；IPv6 字面量只保留方括号内的地址
+			if (text.charAt(0) === '[') {
+				const closeBracket = text.indexOf(']');
+				if (closeBracket !== -1) text = text.slice(0, closeBracket + 1);
+			} else {
+				const colonIndex = text.indexOf(':');
+				if (colonIndex !== -1) text = text.slice(0, colonIndex);
+			}
+			return text.trim();
+		}
+
 		// 写入 EchConfig 解析域名：空值即「自动获取」（隐藏域写 ''，保存时由 saveEch 转成 null）
 		function setEchSNIFieldValue(value, opts) {
 			const options = opts || {};
 			const inputEl = document.getElementById('echSNIInput');
 			const hiddenValue = document.getElementById('echSNIValue');
-			const next = (value === undefined || value === null || value === ECH_SNI_AUTO_VALUE)
+			const raw = (value === undefined || value === null || value === ECH_SNI_AUTO_VALUE)
 				? ''
 				: String(value).trim();
+			// normalize 仅在失焦/保存兜底时开启：打字过程中不做裁剪，避免边输边被改
+			const next = (options.normalize && raw) ? normalizeEchSNIHost(raw) : raw;
 
 			if (inputEl) {
 				if (inputEl.value !== next) inputEl.value = next;
@@ -22160,6 +22188,17 @@
 			const inputEl = document.getElementById('echSNIInput');
 			if (!inputEl) return;
 			setEchSNIFieldValue(inputEl.value);
+		}
+
+		// 解析域名失焦/回车时清洗：整段 URL → 纯域名（打字过程中不裁剪，避免边输边被改）
+		function onEchSNIChange() {
+			const inputEl = document.getElementById('echSNIInput');
+			if (!inputEl) return;
+			const before = inputEl.value.trim();
+			const next = setEchSNIFieldValue(inputEl.value, { normalize: true });
+			if (next && next !== before) {
+				showToast('已自动清洗为纯域名：' + next, 'info');
+			}
 		}
 
 		// 点选某个 ECH 预设条目：写入字段 → 关闭面板 → 焦点还给触发按钮 → 短暂琥珀色反馈
@@ -23425,6 +23464,9 @@
 				}
 
 				if (currentConfig.ECHConfig?.SNI !== undefined) {
+					// 保存前兜底：输入框可能没触发 change（如脚本直接调保存），统一清洗为纯域名
+					const sniInputEl = document.getElementById('echSNIInput');
+					if (sniInputEl) setEchSNIFieldValue(sniInputEl.value, { normalize: true, skipMarkModified: true });
 					const sniValue = document.getElementById('echSNIValue').value;
 					currentConfig.ECHConfig.SNI = sniValue === '' ? null : sniValue;
 				}
@@ -23484,6 +23526,9 @@
 
 				// 保存ECHConfig.SNI（如果存在）
 				if (currentConfig.ECHConfig?.SNI !== undefined) {
+					// 保存前兜底：输入框可能没触发 change，统一清洗为纯域名
+					const sniInputEl = document.getElementById('echSNIInput');
+					if (sniInputEl) setEchSNIFieldValue(sniInputEl.value, { normalize: true, skipMarkModified: true });
 					const sniValue = document.getElementById('echSNIValue').value;
 					currentConfig.ECHConfig.SNI = sniValue === '' ? null : sniValue;
 				}

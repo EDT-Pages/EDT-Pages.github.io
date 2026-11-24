@@ -3358,6 +3358,12 @@
 			box-shadow: 0 4px 15px rgba(8, 145, 178, 0.3) !important;
 		}
 
+		html.dark-mode .btn-tg-import {
+			background: linear-gradient(135deg, #229ed9 0, #1a7fb0 100%) !important;
+			color: #fff !important;
+			box-shadow: 0 4px 15px rgba(34, 158, 217, 0.3) !important;
+		}
+
 		html.dark-mode .btn-mode-toggle {
 			background: #f3f4f6;
 			color: #1f2937;
@@ -5280,6 +5286,43 @@
 			box-shadow: 0 2px 10px rgba(6, 182, 212, 0.4);
 		}
 
+		/* TG WEB 代理：一键导入（唤起本地 Telegram） */
+		.btn-tg-import {
+			background: linear-gradient(135deg, #2aabee 0, #229ed9 100%);
+			color: #fff;
+			box-shadow: 0 4px 15px rgba(42, 171, 238, 0.4);
+		}
+
+		.btn-tg-import:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 6px 25px rgba(42, 171, 238, 0.5);
+		}
+
+		.btn-tg-import:active {
+			transform: translateY(0);
+			box-shadow: 0 2px 10px rgba(42, 171, 238, 0.4);
+		}
+
+		/* 订阅链接模块：操作按钮统一宽高
+		   「📱二维码」带 emoji 会比「一键导入」宽一截，行与行之间就参差不齐，
+		   这里用 min-width + 固定高度把同模块内所有按钮拉到同一尺寸；
+		   移动端（max-width:768px）规则只覆盖 flex/display/margin，不会与这里冲突 */
+		.subscription-link-wrapper .btn-container {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			flex: none;
+		}
+
+		.subscription-link-wrapper .btn-container .btn {
+			min-width: 112px;
+			height: 41px;
+			padding: 0 16px;
+			line-height: 41px;
+			text-align: center;
+			white-space: nowrap;
+		}
+
 		.btn-api-optimize {
 			background: linear-gradient(135deg, #3b82f6 0, #1d4ed8 100%);
 			color: #fff;
@@ -7120,6 +7163,12 @@
 		/* 隐藏元素 */
 		.hidden-section {
 			display: none;
+		}
+
+		/* TG WEB 代理：.module .form-group 的 display:grid 优先级高于 .hidden-section，
+		   版本号不满足时必须用更高优先级的独立类才能真正隐藏 */
+		.module .form-group.tg-web-proxy-hidden {
+			display: none !important;
 		}
 
 		/* 简单模式 - 隐藏高级模块 */
@@ -12002,6 +12051,18 @@
 									onclick="showQRCode('singboxLink')">📱二维码</button>
 								<button type="button" class="btn btn-primary"
 									onclick="copySubscription('singboxLink')">复制订阅</button>
+							</div>
+						</div>
+					</div>
+					<div class="form-group tg-web-proxy-hidden" id="tgWebProxyGroup">
+						<label for="tgWebProxyLink">TG WEB代理</label>
+						<div class="input-wrapper subscription-link-wrapper">
+							<input type="text" id="tgWebProxyLink" title="TG WEB代理" readonly>
+							<div class="btn-container">
+								<button type="button" class="btn btn-tg-import"
+									onclick="importTGWebProxy()">一键导入</button>
+								<button type="button" class="btn btn-primary"
+									onclick="copySubscription('tgWebProxyLink')">复制链接</button>
 							</div>
 						</div>
 					</div>
@@ -19447,6 +19508,9 @@
 		const SKIP_VERIFY_WARNING_BYPASS_MIN_VERSION = 20260601154939;
 		const ALPN_FEATURE_MIN_VERSION = 20260904162413;
 		const XMUX_FEATURE_MIN_VERSION = 20261110232646;
+		// TG WEB 代理（Telegram Desktop 实验特性）：面板挂出 t.me / tg:// webproxy 链接
+		const TG_WEB_PROXY_MIN_VERSION = 20261124194656;
+		const TG_WEB_PROXY_SECRET_PREFIX = 'dd';
 		const ECH_SUPPORTED_FINGERPRINTS = ['chrome', 'firefox'];
 		let cachedWorkerVersionRawText = '';
 		let cachedLatestOnlineVersion = 0;
@@ -19460,6 +19524,7 @@
 		let chainProxyFeatureEnabled = false;
 		let alpnFeatureEnabled = false;
 		let xmuxFeatureEnabled = false;
+		let tgWebProxyFeatureEnabled = false;
 		let xmuxSaving = false;
 		let proxyFeatureAvailabilityInitialized = false;
 		const PROXY_PROTOCOLS = ['socks5', 'http', 'https', 'turn', 'sstp'];
@@ -20222,12 +20287,15 @@
 			chainProxyFeatureEnabled = versionNumber >= CHAIN_PROXY_MIN_VERSION;
 			alpnFeatureEnabled = versionNumber >= ALPN_FEATURE_MIN_VERSION;
 			xmuxFeatureEnabled = versionNumber >= XMUX_FEATURE_MIN_VERSION;
+			tgWebProxyFeatureEnabled = versionNumber >= TG_WEB_PROXY_MIN_VERSION;
 			updateChainProxyButtonVisibility();
 			// 版本号是异步拿到的，sstp 胶囊要等这里才知道能不能显示，所以再渲染一次
 			renderChainLibProtocols();
 			updateALPNGroupVisibility();
 			// 连接复用的显隐同样依赖版本号，renderUI 执行时版本号还没到手，这里补一次刷新
 			syncXmuxFromConfig();
+			// TG WEB 代理入口同样依赖版本号，这里补一次显隐刷新
+			updateTGWebProxyField();
 
 			const httpsOption = document.getElementById('httpsProxyOption');
 			if (httpsOption) {
@@ -21533,6 +21601,8 @@
 			document.getElementById('base64Link').value = `https://${host}/sub?token=${token}&b64`;
 			document.getElementById('clashLink').value = `https://${host}/sub?token=${token}&clash`;
 			document.getElementById('singboxLink').value = `https://${host}/sub?token=${token}&sb`;
+			// TG WEB 代理：版本号未到手时先隐藏，setHttpsProxyFeatureAvailability 会补一次
+			updateTGWebProxyField();
 
 			// 编辑订阅生成
 			const local = currentConfig.优选订阅生成?.local ?? true;
@@ -23562,6 +23632,70 @@
 		function resetAllButtons() {
 			document.querySelectorAll('[id^="save"]').forEach(btn => btn.disabled = true);
 			document.querySelectorAll('[id^="cancel"]').forEach(btn => btn.disabled = true);
+		}
+
+		// ==================== TG WEB 代理（Telegram Desktop 实验特性） ====================
+		// secret = "dd" + UUID（去掉所有横杠）；server = 当前访问域名的 hostname（不含端口）
+		function buildTGWebProxySecret(uuid) {
+			const compact = String(uuid ?? '').replace(/-/g, '').trim();
+			if (!compact) return '';
+			return `${TG_WEB_PROXY_SECRET_PREFIX}${compact}`;
+		}
+
+		function getTGWebProxyParams() {
+			const server = String(window.location.hostname || '').trim();
+			const uuidInput = document.getElementById('nodeUUID');
+			const uuid = currentConfig?.UUID || (uuidInput ? uuidInput.value : '');
+			const secret = buildTGWebProxySecret(uuid);
+			if (!server || !secret) return null;
+
+			const query = `server=${encodeURIComponent(server)}&secret=${encodeURIComponent(secret)}`;
+			return {
+				server,
+				secret,
+				shareUrl: `https://t.me/webproxy?${query}`,
+				importUrl: `tg://webproxy?${query}`
+			};
+		}
+
+		function updateTGWebProxyField() {
+			const group = document.getElementById('tgWebProxyGroup');
+			const input = document.getElementById('tgWebProxyLink');
+			if (!group || !input) return;
+
+			const params = getTGWebProxyParams();
+			if (!tgWebProxyFeatureEnabled || !params) {
+				group.classList.add('tg-web-proxy-hidden');
+				input.value = '';
+				return;
+			}
+
+			input.value = params.shareUrl;
+			group.classList.remove('tg-web-proxy-hidden');
+		}
+
+		// 唤起本地 Telegram（tg://webproxy 需客户端支持，通常由 Telegram Desktop dev 版提供）
+		function importTGWebProxy() {
+			const params = getTGWebProxyParams();
+			if (!params) {
+				showToast('缺少 UUID，无法生成 TG WEB 代理链接', 'error');
+				return;
+			}
+
+			const anchor = document.createElement('a');
+			anchor.href = params.importUrl;
+			anchor.rel = 'noopener';
+			anchor.style.display = 'none';
+			document.body.appendChild(anchor);
+			try {
+				anchor.click();
+				showToast('正在唤起 Telegram…', 'info');
+			} catch (error) {
+				console.warn('[TG Web Proxy] 唤起失败，回退到 location 跳转:', error);
+				window.location.href = params.importUrl;
+			} finally {
+				anchor.remove();
+			}
 		}
 
 		function copySubscription(elementId) {

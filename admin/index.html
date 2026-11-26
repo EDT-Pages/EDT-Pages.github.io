@@ -6117,6 +6117,34 @@
 			z-index: 1500;
 		}
 
+		/* ===== 喷泉 emoji 的宿主层：让粒子在图标「之下」 =====
+		   图标被关在 .page-wrapper(position:fixed; z-index:1) 这个堆叠上下文里，
+		   body 级粒子挂多低的 z-index 都压不到图标下面（低于 1 就会被整张卡片盖住），
+		   所以喷泉粒子必须挂进 .card-container 内部，并且 DOM 排在社交图标之前：
+		   粒子和图标同属「定位元素 z-index:0」这一档，同档内 DOM 在后的后绘制、
+		   也就是画在上面 —— 图标于是盖住了从它身位里飞出来的粒子，
+		   观感变成「图标背后在往外喷」，而不是「鼠标在喷射」。
+		   层与卡片同尺寸同原点，粒子直接用卡片局部坐标，不受页面滚动影响 */
+		.tg-egg-fountain-layer {
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 0;
+			overflow: visible;
+			pointer-events: none;
+		}
+
+		/* 宿主层自身就是一个堆叠上下文，层内粒子 z-index 再大也出不去；
+		   这里显式归零，避免 9e9 / 1500 两条全局层级规则在层内排序时让人误读。
+		   不影响 UUID 火箭彩蛋：那些粒子仍然直接挂在 body 上 */
+		body.tg-egg-fx-layer .tg-egg-fountain-layer .uuid-gift-fx,
+		.tg-egg-fountain-layer .uuid-gift-fx {
+			position: absolute;
+			z-index: 0;
+		}
+
 		/* 低性能模式有一条 html.low-performance-mode * { animation: none !important }，
 		   会把彩蛋的抖动与粒子一起灭掉 —— 手机上就会变成「长按没反应，然后突然弹出面板」。
 		   彩蛋是用户主动触发的、一次性 4 秒的效果，这里单独放行；闪白仍在 JS 里跳过，
@@ -25731,6 +25759,9 @@
 		// 粒子作用域类：挂到 body 上把本次彩蛋的粒子压到低于弹窗遮罩的层级，
 		// 不改 .uuid-* 原规则，避免影响 UUID 火箭彩蛋
 		const TG_EGG_FX_LAYER_CLASS = 'tg-egg-fx-layer';
+		// 喷泉粒子的宿主层：挂进 .card-container 且排在社交图标之前，
+		// 靠「同一档内 DOM 在后的画在上面」让图标盖住粒子（详见 CSS 里的说明）
+		const TG_EGG_FOUNTAIN_LAYER_CLASS = 'tg-egg-fountain-layer';
 		const TG_EGG_FX_LAYER_LINGER_MS = 1800;
 		const TG_EGG_CLOSE_GUARD_MS = 450;
 
@@ -25741,6 +25772,8 @@
 		let tgEggSuppressClick = false;
 		let tgEggTimers = [];
 		let tgEggFountainTimer = 0;
+		// 喷泉粒子宿主层，一次彩蛋只建一个，teardown 时连同余留粒子一起摘掉
+		let tgEggFountainLayer = null;
 		let tgEggInitialized = false;
 		// 面板弹出时刻：触摸端 touchend 会补一个 click，落点此时已被遮罩覆盖，
 		// 不挡这 450ms 的话刚弹出的面板会被自己的关闭判定关掉
@@ -25782,6 +25815,7 @@
 			tgEggClearTimers();
 			tgEggResetVisuals();
 			if (document.body) document.body.classList.remove(TG_EGG_FX_LAYER_CLASS);
+			tgEggDropFountainLayer();
 			tgEggState = 'idle';
 			tgEggPointerId = null;
 		}
@@ -25826,20 +25860,62 @@
 			};
 		}
 
+		// 喷泉粒子的宿主层：挂进 .card-container，且 DOM 排在社交图标之前。
+		// 建不出来（页面结构被改过）就返回 null，调用方退回 body + 视口坐标，
+		// 表现与改动前一致 —— 只是粒子又盖在图标之上了。
+		function tgEggGetFountainLayer() {
+			if (tgEggFountainLayer && tgEggFountainLayer.isConnected) return tgEggFountainLayer;
+
+			const link = tgEggGetLinkEl();
+			const host = link ? link.closest('.card-container') : null;
+			if (!host) return null;
+
+			const layer = document.createElement('div');
+			layer.className = TG_EGG_FOUNTAIN_LAYER_CLASS;
+			layer.setAttribute('aria-hidden', 'true');
+			// 关键：必须插在社交图标那一段之前。粒子和图标同处 z-index:0 这一档，
+			// 同档内 DOM 在后的先绘制，插到图标后面就又跑回图标上面了
+			const socialLinks = host.querySelector('.social-links');
+			if (socialLinks && socialLinks.parentElement === host) {
+				host.insertBefore(layer, socialLinks);
+			} else {
+				host.insertBefore(layer, host.firstChild);
+			}
+			tgEggFountainLayer = layer;
+			return layer;
+		}
+
+		function tgEggDropFountainLayer() {
+			if (!tgEggFountainLayer) return;
+			tgEggFountainLayer.remove();
+			tgEggFountainLayer = null;
+		}
+
 		function tgEggSpawnFountainEmoji() {
 			const origin = tgEggGetOrigin();
+			// 有宿主层就换算成卡片局部坐标（层与卡片同尺寸同原点），
+			// 拿不到就退回改动前的 body + 视口坐标
+			const layer = tgEggGetFountainLayer();
+			let baseX = origin.x;
+			let baseY = origin.y;
+			if (layer) {
+				const box = layer.getBoundingClientRect();
+				baseX = origin.x - box.left;
+				baseY = origin.y - box.top;
+			}
+
 			const node = document.createElement('span');
 			node.className = 'uuid-gift-fx';
 			node.textContent = TG_EGG_EMOJI_POOL[Math.floor(Math.random() * TG_EGG_EMOJI_POOL.length)];
-			node.style.left = (origin.x + (Math.random() * 18 - 9)).toFixed(1) + 'px';
-			node.style.top = (origin.y + (Math.random() * 8 - 4)).toFixed(1) + 'px';
+			node.style.left = (baseX + (Math.random() * 18 - 9)).toFixed(1) + 'px';
+			node.style.top = (baseY + (Math.random() * 8 - 4)).toFixed(1) + 'px';
 			// 原生 .uuid-gift-fx 是 24px，对 44px 的图标来说太大，这里压到 12~20px
 			node.style.fontSize = (12 + Math.random() * 8).toFixed(1) + 'px';
 			node.style.setProperty('--gift-x-drift', (Math.random() * 90 - 45).toFixed(1) + 'px');
 			node.style.setProperty('--gift-y-lift', (140 + Math.random() * 40).toFixed(1) + 'px');
 			node.style.setProperty('--gift-rotate', (Math.random() * 70 - 35).toFixed(1) + 'deg');
 			node.style.setProperty('--gift-duration', (640 + Math.random() * 240).toFixed(0) + 'ms');
-			document.body.appendChild(node);
+			(layer || document.body).appendChild(node);
 			window.setTimeout(() => node.remove(), 1300);
 		}
 

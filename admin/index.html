@@ -1994,6 +1994,8 @@
 			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 			-webkit-user-select: none;
 			user-select: none;
+			/* 移动端长按不要弹 iOS 的链接预览/气泡（Android 的菜单由 JS 拦 contextmenu） */
+			-webkit-touch-callout: none;
 		}
 
 		.social-link::before {
@@ -5301,6 +5303,718 @@
 		.btn-tg-import:active {
 			transform: translateY(0);
 			box-shadow: 0 2px 10px rgba(42, 171, 238, 0.4);
+		}
+
+		/* ===== 页脚 Telegram 图标彩蛋：长按 1s 唤起 TG WEB 代理面板 =====
+		   入口已从「📋 获取节点链接」面板迁移到这里，只有版本号达到
+		   TG_WEB_PROXY_MIN_VERSION 时才可触发，否则长按完全无反应 */
+		#tgEasterEggLink {
+			/* 长按期间不能让浏览器把手势解释成滚动/缩放，否则会直接 pointercancel */
+			touch-action: none;
+		}
+
+		/* 抖动开始之前刻意不给任何视觉反馈：没有进度环、没有按下缩放、没有描边变色。
+		   彩蛋是隐藏的，长按的第一秒必须和普通点击完全一样，否则太容易被试出来 */
+		.social-link.tg-egg-shaking,
+		.social-link.tg-egg-hot {
+			border-color: rgba(246, 130, 31, 0.75);
+			color: #f6821f;
+			box-shadow: 0 0 0 3px rgba(246, 130, 31, 0.16), 0 8px 22px rgba(246, 130, 31, 0.32);
+		}
+
+		.social-link.tg-egg-shaking {
+			animation: tgEggShake 0.42s linear infinite;
+		}
+
+		.social-link.tg-egg-hot {
+			animation-name: tgEggShakeHot;
+			animation-duration: 0.24s;
+		}
+
+		@keyframes tgEggShake {
+			0% {
+				transform: scale(0.98) translate3d(0, 0, 0) rotate(0deg);
+			}
+
+			20% {
+				transform: scale(0.98) translate3d(-1.4px, 0.6px, 0) rotate(-1.6deg);
+			}
+
+			40% {
+				transform: scale(0.98) translate3d(1.4px, -0.6px, 0) rotate(1.6deg);
+			}
+
+			60% {
+				transform: scale(0.98) translate3d(-1.1px, -0.5px, 0) rotate(-1.2deg);
+			}
+
+			80% {
+				transform: scale(0.98) translate3d(1.1px, 0.5px, 0) rotate(1.2deg);
+			}
+
+			100% {
+				transform: scale(0.98) translate3d(0, 0, 0) rotate(0deg);
+			}
+		}
+
+		@keyframes tgEggShakeHot {
+			0% {
+				transform: scale(0.99) translate3d(0, 0, 0) rotate(0deg);
+			}
+
+			25% {
+				transform: scale(0.99) translate3d(-2.6px, 1px, 0) rotate(-2.8deg);
+			}
+
+			50% {
+				transform: scale(0.99) translate3d(0, -1.6px, 0) rotate(0deg);
+			}
+
+			75% {
+				transform: scale(0.99) translate3d(2.6px, 1px, 0) rotate(2.8deg);
+			}
+
+			100% {
+				transform: scale(0.99) translate3d(0, 0, 0) rotate(0deg);
+			}
+		}
+
+		.social-link.tg-egg-glowing {
+			border-color: rgba(246, 130, 31, 0.85);
+			color: #f6821f;
+			/* 只叠静态光晕，绝不能写成 animation —— 抖动是 transform 动画，
+			   同一元素上再挂一个 animation 会把它顶掉，图标就停住了 */
+			box-shadow: 0 0 0 4px rgba(250, 171, 65, 0.16), 0 10px 28px rgba(246, 130, 31, 0.42);
+		}
+
+		/* 爆开的 emoji：固定定位挂 body，避免被 .social-link 的 overflow 裁掉 */
+		.tg-egg-burst-emoji {
+			position: fixed;
+			left: 0;
+			top: 0;
+			pointer-events: none;
+			z-index: 9000000004;
+			line-height: 1;
+			opacity: 0;
+			will-change: transform, opacity;
+			animation: tgEggBurstEmoji var(--tg-egg-duration, 960ms) cubic-bezier(0.16, 0.84, 0.3, 1) forwards;
+		}
+
+		@keyframes tgEggBurstEmoji {
+			0% {
+				opacity: 0;
+				transform: translate(-50%, -50%) scale(0.4);
+			}
+
+			14% {
+				opacity: 1;
+				transform: translate(-50%, -50%) scale(1.12);
+			}
+
+			100% {
+				opacity: 0;
+				transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, 0px))) scale(0.72) rotate(var(--rot, 0deg));
+			}
+		}
+
+		/* 彩蛋粒子层级：本次彩蛋的所有粒子挂在 body.tg-egg-fx-layer 作用域下统一压到 1500，
+		   低于 .modal-overlay(2e9)，面板弹出后不会被仍在飞的余留粒子盖住；
+		   不去改 .uuid-* 原规则，避免把 UUID 火箭彩蛋的粒子一起降级 */
+		body.tg-egg-fx-layer .uuid-gift-fx,
+		body.tg-egg-fx-layer .uuid-firework-burst,
+		body.tg-egg-fx-layer .uuid-firework-ring,
+		body.tg-egg-fx-layer .uuid-firework-flash,
+		body.tg-egg-fx-layer .tg-egg-burst-emoji {
+			z-index: 1500;
+		}
+
+		/* 低性能模式有一条 html.low-performance-mode * { animation: none !important }，
+		   会把彩蛋的抖动与粒子一起灭掉 —— 手机上就会变成「长按没反应，然后突然弹出面板」。
+		   彩蛋是用户主动触发的、一次性 4 秒的效果，这里单独放行；闪白仍在 JS 里跳过，
+		   粒子数量也仍按低性能减半，只是不让它彻底静止 */
+		html.low-performance-mode .social-link.tg-egg-shaking {
+			animation: tgEggShake 0.42s linear infinite !important;
+		}
+
+		html.low-performance-mode .social-link.tg-egg-hot {
+			animation: tgEggShakeHot 0.24s linear infinite !important;
+		}
+
+		html.low-performance-mode body.tg-egg-fx-layer .uuid-gift-fx {
+			animation: uuidGiftFountain var(--gift-duration, 0.92s) cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+		}
+
+		html.low-performance-mode body.tg-egg-fx-layer .uuid-firework-particle {
+			animation: uuidFireworkParticle var(--particle-duration, 1000ms) cubic-bezier(0.16, 0.84, 0.3, 1) forwards !important;
+		}
+
+		html.low-performance-mode body.tg-egg-fx-layer .uuid-firework-ring {
+			animation: uuidFireworkRing 0.82s ease-out forwards !important;
+		}
+
+		html.low-performance-mode body.tg-egg-fx-layer .uuid-firework-flash {
+			animation: uuidFireworkFlash 0.56s ease-out forwards !important;
+		}
+
+		html.low-performance-mode body.tg-egg-fx-layer .tg-egg-burst-emoji {
+			animation: tgEggBurstEmoji var(--tg-egg-duration, 960ms) cubic-bezier(0.16, 0.84, 0.3, 1) forwards !important;
+		}
+
+		/* ===== 彩蛋面板（TG WEB 代理）===== */
+		#tgEasterEggModal .modal {
+			width: 560px;
+			max-width: calc(100vw - 24px);
+			padding: 0;
+			border-radius: 16px;
+			border: 1px solid #e2e6ee;
+			text-align: left;
+			overflow: hidden;
+			background: #fff;
+			box-shadow: 0 24px 64px rgba(15, 23, 42, 0.22);
+		}
+
+		#tgEasterEggModal .tg-proxy-sheet {
+			position: relative;
+			display: block;
+			background: #fff;
+			color: #1f2937;
+			animation: tgProxySheetIn 380ms cubic-bezier(0.16, 1, 0.3, 1) both;
+		}
+
+		@keyframes tgProxySheetIn {
+			0% {
+				opacity: 0;
+				transform: translateY(14px) scale(0.965);
+			}
+
+			100% {
+				opacity: 1;
+				transform: translateY(0) scale(1);
+			}
+		}
+
+		#tgEasterEggModal .tg-proxy-sheet::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			right: 0;
+			left: 0;
+			height: 2px;
+			z-index: 3;
+			background: linear-gradient(90deg, #faab41 0%, #f6821f 32%, #2aabee 100%);
+		}
+
+		#tgEasterEggModal .tg-proxy-head {
+			position: relative;
+			display: flex;
+			align-items: flex-start;
+			gap: 12px;
+			padding: 18px 18px 14px;
+			border-bottom: 1px solid #eef1f6;
+			background: linear-gradient(135deg, rgba(250, 171, 65, 0.10), rgba(42, 171, 238, 0.11) 72%);
+		}
+
+		#tgEasterEggModal .tg-proxy-chip {
+			flex: none;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 44px;
+			height: 44px;
+			border-radius: 14px;
+			color: #fff;
+			background-color: #2aabee;
+			background-image: linear-gradient(135deg, #2aabee 0%, #1d93cf 100%);
+			box-shadow: 0 8px 18px rgba(42, 171, 238, 0.32);
+		}
+
+		#tgEasterEggModal .tg-proxy-chip svg {
+			width: 22px;
+			height: 22px;
+		}
+
+		#tgEasterEggModal .tg-proxy-head-text {
+			flex: 1 1 auto;
+			min-width: 0;
+		}
+
+		#tgEasterEggModal .tg-proxy-eyebrow {
+			margin: 0 0 3px;
+			font-size: 10px;
+			line-height: 1.2;
+			font-weight: 600;
+			letter-spacing: 0.14em;
+			text-transform: uppercase;
+			color: #f6821f;
+		}
+
+		#tgEasterEggModal .tg-proxy-title {
+			margin: 0;
+			font-size: 18px;
+			line-height: 1.3;
+			font-weight: 600;
+			color: #1f2937;
+		}
+
+		#tgEasterEggModal .tg-proxy-subtitle {
+			margin: 4px 0 0;
+			font-size: 12px;
+			line-height: 1.5;
+			color: #6b7280;
+		}
+
+		#tgEasterEggModal .tg-proxy-close {
+			flex: none;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 28px;
+			height: 28px;
+			margin: 0 0 0 auto;
+			padding: 0;
+			border: 1px solid transparent;
+			border-radius: 8px;
+			background: transparent;
+			color: #6b7280;
+			font-size: 16px;
+			line-height: 1;
+			cursor: pointer;
+			transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+		}
+
+		#tgEasterEggModal .tg-proxy-close svg {
+			width: 16px;
+			height: 16px;
+		}
+
+		#tgEasterEggModal .tg-proxy-close:hover {
+			background: rgba(15, 23, 42, 0.06);
+			border-color: #e2e6ee;
+			color: #1f2937;
+		}
+
+		#tgEasterEggModal .tg-proxy-close:focus-visible,
+		#tgEasterEggModal .tg-proxy-field:focus-visible {
+			outline: 2px solid rgba(42, 171, 238, 0.6);
+			outline-offset: 2px;
+		}
+
+		#tgEasterEggModal .tg-proxy-body {
+			padding: 16px 18px 4px;
+		}
+
+		#tgEasterEggModal .tg-proxy-qrrow {
+			display: flex;
+			align-items: flex-start;
+			gap: 16px;
+			padding-bottom: 14px;
+		}
+
+		#tgEasterEggModal .tg-proxy-qrblock {
+			flex: none;
+			width: 168px;
+		}
+
+		#tgEasterEggModal .tg-proxy-qrtile {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 168px;
+			height: 168px;
+			padding: 10px;
+			box-sizing: border-box;
+			border-radius: 14px;
+			/* 夜间也保持纯白，反色会直接拉低扫码识别率 */
+			background: #ffffff;
+			border: 1px solid #e2e6ee;
+			box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+		}
+
+		#tgEasterEggModal .tg-proxy-qr {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 148px;
+			height: 148px;
+			overflow: hidden;
+		}
+
+		#tgEasterEggModal .tg-proxy-qr canvas,
+		#tgEasterEggModal .tg-proxy-qr img {
+			width: 148px !important;
+			height: 148px !important;
+			border-radius: 6px;
+		}
+
+		#tgEasterEggModal .tg-proxy-qrfallback {
+			margin: 0;
+			padding: 0 6px;
+			font-size: 11px;
+			line-height: 1.6;
+			color: #6b7280;
+			text-align: center;
+		}
+
+		#tgEasterEggModal .tg-proxy-qrcap {
+			margin: 8px 0 0;
+			font-size: 11px;
+			line-height: 1.4;
+			color: #6b7280;
+			text-align: center;
+		}
+
+		#tgEasterEggModal .tg-proxy-meta {
+			flex: 1 1 auto;
+			align-self: stretch;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			gap: 10px;
+			min-width: 0;
+		}
+
+		#tgEasterEggModal .tg-proxy-metaline {
+			display: flex;
+			flex-direction: column;
+			gap: 3px;
+			min-width: 0;
+		}
+
+		#tgEasterEggModal .tg-proxy-metalabel {
+			font-size: 10px;
+			font-weight: 600;
+			letter-spacing: 0.1em;
+			color: #6b7280;
+		}
+
+		#tgEasterEggModal .tg-proxy-metavalue {
+			font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+			font-size: 12px;
+			line-height: 1.5;
+			color: #1f2937;
+			word-break: break-all;
+		}
+
+		#tgEasterEggModal .tg-proxy-fields {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			padding: 4px 0 14px;
+		}
+
+		#tgEasterEggModal .tg-proxy-field {
+			border-radius: 12px;
+			cursor: pointer;
+			outline: none;
+		}
+
+		#tgEasterEggModal .tg-proxy-field-head {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 8px;
+			margin-bottom: 5px;
+		}
+
+		#tgEasterEggModal .tg-proxy-field-label {
+			font-size: 11px;
+			font-weight: 600;
+			color: #1f2937;
+		}
+
+		#tgEasterEggModal .tg-proxy-field-hint {
+			font-size: 10px;
+			color: #9aa3af;
+		}
+
+		#tgEasterEggModal .tg-proxy-field-inputwrap {
+			position: relative;
+			display: flex;
+			align-items: center;
+			height: 42px;
+			border-radius: 10px;
+			border: 1px solid #e5e7eb;
+			background: #f3f4f6;
+			overflow: hidden;
+			transition: border-color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+		}
+
+		#tgEasterEggModal .tg-proxy-input {
+			flex: 1 1 auto;
+			width: 100%;
+			min-width: 0;
+			height: 100%;
+			margin: 0;
+			padding: 0 8px 0 12px;
+			box-sizing: border-box;
+			border: 0;
+			background: transparent;
+			color: #1f2937;
+			font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+			font-size: 11px;
+			letter-spacing: -0.1px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			cursor: pointer;
+		}
+
+		#tgEasterEggModal .tg-proxy-input:focus {
+			outline: none;
+		}
+
+		#tgEasterEggModal .tg-proxy-copy {
+			flex: none;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 34px;
+			height: 100%;
+			border-left: 1px solid #e5e7eb;
+			background: rgba(255, 255, 255, 0.6);
+			color: #6b7280;
+			transition: color 0.22s ease, border-color 0.22s ease;
+		}
+
+		#tgEasterEggModal .tg-proxy-copy svg {
+			width: 15px;
+			height: 15px;
+		}
+
+		#tgEasterEggModal .tg-proxy-check-icon {
+			display: none;
+			color: #10b981;
+		}
+
+		#tgEasterEggModal .tg-proxy-field.is-copied .tg-proxy-copy-icon {
+			display: none;
+		}
+
+		#tgEasterEggModal .tg-proxy-field.is-copied .tg-proxy-check-icon {
+			display: block;
+		}
+
+		#tgEasterEggModal .tg-proxy-field.is-copied .tg-proxy-field-inputwrap {
+			border-color: #10b981;
+			background: rgba(16, 185, 129, 0.08);
+			box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.14);
+		}
+
+		#tgEasterEggModal .tg-proxy-field.is-copied .tg-proxy-copy {
+			border-left-color: rgba(16, 185, 129, 0.35);
+			color: #10b981;
+		}
+
+		#tgEasterEggModal .tg-proxy-field-progress {
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			width: 0;
+			height: 2px;
+			background: #10b981;
+			opacity: 0;
+		}
+
+		#tgEasterEggModal .tg-proxy-field.is-copied .tg-proxy-field-progress {
+			opacity: 1;
+			animation: tgProxyCopyProgress 1.4s linear forwards;
+		}
+
+		@keyframes tgProxyCopyProgress {
+			0% {
+				width: 0;
+			}
+
+			100% {
+				width: 100%;
+			}
+		}
+
+		#tgEasterEggModal .tg-proxy-foot {
+			padding: 14px 18px 16px;
+			border-top: 1px solid #eef1f6;
+			background: #fbfcfd;
+		}
+
+		#tgEasterEggModal .tg-proxy-import {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			width: 100%;
+			height: 46px;
+			border: 0;
+			border-radius: 12px;
+			color: #fff;
+			font-size: 15px;
+			font-weight: 600;
+			cursor: pointer;
+			/* 纯色兜底，避免个别环境不支持渐变时按钮变透明 */
+			background-color: #f6821f;
+			background-image: linear-gradient(135deg, #faab41, #f6821f);
+			box-shadow: 0 8px 20px rgba(246, 130, 31, 0.32);
+			transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.22s ease, filter 0.22s ease;
+		}
+
+		#tgEasterEggModal .tg-proxy-import svg {
+			flex: none;
+			width: 17px;
+			height: 17px;
+		}
+
+		#tgEasterEggModal .tg-proxy-import:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 12px 26px rgba(246, 130, 31, 0.42);
+			filter: saturate(1.08);
+		}
+
+		#tgEasterEggModal .tg-proxy-import:active {
+			transform: translateY(0);
+			box-shadow: 0 4px 12px rgba(246, 130, 31, 0.32);
+		}
+
+		#tgEasterEggModal .tg-proxy-footnote {
+			margin: 10px 0 0;
+			font-size: 11px;
+			line-height: 1.55;
+			color: #6b7280;
+			text-align: center;
+		}
+
+		html.dark-mode #tgEasterEggModal {
+			background: rgba(0, 0, 0, 0.70);
+			-webkit-backdrop-filter: blur(8px);
+			backdrop-filter: blur(8px);
+		}
+
+		html.dark-mode #tgEasterEggModal .modal {
+			background: var(--bg-secondary);
+			border-color: #333;
+			box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+		}
+
+		html.dark-mode #tgEasterEggModal .tg-proxy-sheet {
+			background: var(--bg-secondary);
+			color: #e5e5e5;
+		}
+
+		html.dark-mode #tgEasterEggModal .tg-proxy-head {
+			border-bottom-color: #333;
+			background: linear-gradient(135deg, rgba(250, 171, 65, 0.14), rgba(42, 171, 238, 0.16) 72%);
+		}
+
+		html.dark-mode #tgEasterEggModal .tg-proxy-title,
+		html.dark-mode #tgEasterEggModal .tg-proxy-metavalue,
+		html.dark-mode #tgEasterEggModal .tg-proxy-field-label,
+		html.dark-mode #tgEasterEggModal .tg-proxy-input {
+			color: #e5e5e5;
+		}
+
+		html.dark-mode #tgEasterEggModal .tg-proxy-subtitle,
+		html.dark-mode #tgEasterEggModal .tg-proxy-qrcap,
+		html.dark-mode #tgEasterEggModal .tg-proxy-qrfallback,
+		html.dark-mode #tgEasterEggModal .tg-proxy-metalabel,
+		html.dark-mode #tgEasterEggModal .tg-proxy-footnote,
+		html.dark-mode #tgEasterEggModal .tg-proxy-field-hint,
+		html.dark-mode #tgEasterEggModal .tg-proxy-close {
+			color: #a0a0a0;
+		}
+
+		html.dark-mode #tgEasterEggModal .tg-proxy-field-inputwrap {
+			border-color: #444;
+			background: #2a2a2a;
+		}
+
+		html.dark-mode #tgEasterEggModal .tg-proxy-copy {
+			border-left-color: #444;
+			background: rgba(255, 255, 255, 0.04);
+			color: #a0a0a0;
+		}
+
+		html.dark-mode #tgEasterEggModal .tg-proxy-close:hover {
+			border-color: #444;
+			background: rgba(255, 255, 255, 0.08);
+			color: #e5e5e5;
+		}
+
+		html.dark-mode #tgEasterEggModal .tg-proxy-foot {
+			border-top-color: #333;
+			background: rgba(255, 255, 255, 0.02);
+		}
+
+		html.dark-mode #tgEasterEggModal .tg-proxy-qrtile {
+			border-color: #333;
+			background: #ffffff;
+			box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+		}
+
+		@media (max-width: 560px) {
+			#tgEasterEggModal .modal {
+				width: calc(100vw - 24px);
+				max-width: calc(100vw - 24px);
+				max-height: 92vh;
+			}
+
+			#tgEasterEggModal .tg-proxy-head {
+				padding: 14px 14px 12px;
+			}
+
+			#tgEasterEggModal .tg-proxy-body {
+				max-height: 70vh;
+				overflow: auto;
+				padding: 14px 14px 4px;
+			}
+
+			#tgEasterEggModal .tg-proxy-qrrow {
+				flex-direction: column;
+				align-items: center;
+				gap: 12px;
+			}
+
+			#tgEasterEggModal .tg-proxy-qrblock {
+				width: 132px;
+				margin: 0 auto;
+			}
+
+			#tgEasterEggModal .tg-proxy-qrtile {
+				width: 132px;
+				height: 132px;
+				padding: 8px;
+			}
+
+			#tgEasterEggModal .tg-proxy-qr {
+				width: 116px;
+				height: 116px;
+			}
+
+			#tgEasterEggModal .tg-proxy-qr canvas,
+			#tgEasterEggModal .tg-proxy-qr img {
+				width: 116px !important;
+				height: 116px !important;
+			}
+
+			#tgEasterEggModal .tg-proxy-meta {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 8px 12px;
+				width: 100%;
+			}
+
+			#tgEasterEggModal .tg-proxy-foot {
+				padding: 12px 14px 14px;
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.social-link.tg-egg-shaking,
+			.social-link.tg-egg-hot,
+			.tg-egg-burst-emoji {
+				animation: none;
+			}
+
+			#tgEasterEggModal .tg-proxy-sheet {
+				animation: none;
+			}
 		}
 
 		/* 订阅链接模块：操作按钮统一宽高
@@ -12054,18 +12768,6 @@
 							</div>
 						</div>
 					</div>
-					<div class="form-group tg-web-proxy-hidden" id="tgWebProxyGroup">
-						<label for="tgWebProxyLink">TG WEB代理</label>
-						<div class="input-wrapper subscription-link-wrapper">
-							<input type="text" id="tgWebProxyLink" title="TG WEB代理" readonly>
-							<div class="btn-container">
-								<button type="button" class="btn btn-tg-import"
-									onclick="importTGWebProxy()">一键导入</button>
-								<button type="button" class="btn btn-primary"
-									onclick="copySubscription('tgWebProxyLink')">复制链接</button>
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 
@@ -13095,7 +13797,8 @@
 					</svg>
 				</a>
 				<!-- Telegram 链接 -->
-				<a href="https://t.me/CMLiussss" target="_blank" rel="noopener" class="social-link" title="Telegram">
+				<a href="https://t.me/CMLiussss" target="_blank" rel="noopener" class="social-link" title="Telegram"
+					id="tgEasterEggLink">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 						<path fill="currentColor"
 							d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12a12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472c-.18 1.898-.962 6.502-1.36 8.627c-.168.9-.499 1.201-.82 1.23c-.696.065-1.225-.46-1.9-.902c-1.056-.693-1.653-1.124-2.678-1.8c-1.185-.78-.417-1.21.258-1.91c.177-.184 3.247-2.977 3.307-3.23c.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345c-.48.33-.913.49-1.302.48c-.428-.008-1.252-.241-1.865-.44c-.752-.245-1.349-.374-1.297-.789c.027-.216.325-.437.893-.663c3.498-1.524 5.83-2.529 6.998-3.014c3.332-1.386 4.025-1.627 4.476-1.635z" />
@@ -13113,6 +13816,114 @@
 							stroke-linejoin="round" d="M12 19V5M5 12l7-7l7 7" />
 					</svg>
 				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- TG WEB 代理彩蛋弹窗（页脚 Telegram 图标长按 1s 触发） -->
+	<div class="modal-overlay" id="tgEasterEggModal" onclick="tgEasterEggClose(event)">
+		<div class="modal tg-proxy-modal" role="dialog" aria-modal="true" aria-labelledby="tgEasterEggTitle"
+			onclick="event.stopPropagation()">
+			<div class="tg-proxy-sheet">
+				<div class="tg-proxy-head">
+					<span class="tg-proxy-chip" aria-hidden="true">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+							<path fill="currentColor"
+								d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12a12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472c-.18 1.898-.962 6.502-1.36 8.627c-.168.9-.499 1.201-.82 1.23c-.696.065-1.225-.46-1.9-.902c-1.056-.693-1.653-1.124-2.678-1.8c-1.185-.78-.417-1.21.258-1.91c.177-.184 3.247-2.977 3.307-3.23c.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345c-.48.33-.913.49-1.302.48c-.428-.008-1.252-.241-1.865-.44c-.752-.245-1.349-.374-1.297-.789c.027-.216.325-.437.893-.663c3.498-1.524 5.83-2.529 6.998-3.014c3.332-1.386 4.025-1.627 4.476-1.635z" />
+						</svg>
+					</span>
+					<div class="tg-proxy-head-text">
+						<p class="tg-proxy-eyebrow">隐藏彩蛋 · EASTER EGG</p>
+						<h2 class="tg-proxy-title" id="tgEasterEggTitle">Telegram Web 代理</h2>
+						<p class="tg-proxy-subtitle">扫码或复制链接，导入到任意客户端</p>
+					</div>
+					<button type="button" class="tg-proxy-close" aria-label="关闭" onclick="tgEasterEggClose()">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+							<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+								d="M6 6l12 12M18 6L6 18" />
+						</svg>
+					</button>
+				</div>
+				<div class="tg-proxy-body">
+					<div class="tg-proxy-qrrow">
+						<div class="tg-proxy-qrblock">
+							<div class="tg-proxy-qrtile">
+								<div class="tg-proxy-qr" id="tgEasterEggQr"></div>
+							</div>
+							<p class="tg-proxy-qrcap">在 Telegram 内扫码</p>
+						</div>
+						<div class="tg-proxy-meta">
+							<div class="tg-proxy-metaline">
+								<span class="tg-proxy-metalabel">服务器 SERVER</span>
+								<span class="tg-proxy-metavalue" id="tgEasterEggServer">—</span>
+							</div>
+							<div class="tg-proxy-metaline">
+								<span class="tg-proxy-metalabel">密钥 SECRET</span>
+								<span class="tg-proxy-metavalue" id="tgEasterEggSecret">—</span>
+							</div>
+						</div>
+					</div>
+					<div class="tg-proxy-fields">
+						<div class="tg-proxy-field" role="button" tabindex="0" title="点击复制 tg:// 深度链接"
+							onclick="tgEasterEggCopyRow(this)" onkeydown="tgEasterEggCopyRowKey(event, this)">
+							<div class="tg-proxy-field-head">
+								<span class="tg-proxy-field-label">tg:// 深度链接</span>
+								<span class="tg-proxy-field-hint">点击整行复制</span>
+							</div>
+							<div class="tg-proxy-field-inputwrap">
+								<input type="text" class="tg-proxy-input" id="tgEasterEggImportInput" readonly
+									spellcheck="false" aria-label="tg:// 深度链接">
+								<span class="tg-proxy-copy" aria-hidden="true">
+									<svg class="tg-proxy-copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+										<rect x="9" y="9" width="11" height="11" rx="2" fill="none"
+											stroke="currentColor" stroke-width="2" />
+										<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+											d="M15 5.5A1.5 1.5 0 0 0 13.5 4H6a1.5 1.5 0 0 0-1.5 1.5v7A1.5 1.5 0 0 0 6 14" />
+									</svg>
+									<svg class="tg-proxy-check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+										<path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
+											stroke-linejoin="round" d="M5 12.5l4.5 4.5L19 7" />
+									</svg>
+								</span>
+								<span class="tg-proxy-field-progress" aria-hidden="true"></span>
+							</div>
+						</div>
+						<div class="tg-proxy-field" role="button" tabindex="0" title="点击复制 https:// 分享链接"
+							onclick="tgEasterEggCopyRow(this)" onkeydown="tgEasterEggCopyRowKey(event, this)">
+							<div class="tg-proxy-field-head">
+								<span class="tg-proxy-field-label">https:// 分享链接</span>
+								<span class="tg-proxy-field-hint">点击整行复制</span>
+							</div>
+							<div class="tg-proxy-field-inputwrap">
+								<input type="text" class="tg-proxy-input" id="tgEasterEggShareInput" readonly
+									spellcheck="false" aria-label="https:// 分享链接">
+								<span class="tg-proxy-copy" aria-hidden="true">
+									<svg class="tg-proxy-copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+										<rect x="9" y="9" width="11" height="11" rx="2" fill="none"
+											stroke="currentColor" stroke-width="2" />
+										<path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+											d="M15 5.5A1.5 1.5 0 0 0 13.5 4H6a1.5 1.5 0 0 0-1.5 1.5v7A1.5 1.5 0 0 0 6 14" />
+									</svg>
+									<svg class="tg-proxy-check-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+										<path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
+											stroke-linejoin="round" d="M5 12.5l4.5 4.5L19 7" />
+									</svg>
+								</span>
+								<span class="tg-proxy-field-progress" aria-hidden="true"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tg-proxy-foot">
+					<button type="button" class="tg-proxy-import" onclick="importTGWebProxy()">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+							<path fill="currentColor"
+								d="M21.9 3.4a1.2 1.2 0 0 0-1.3-.2L2.7 10.6c-.9.4-.9 1.6.1 1.9l4.6 1.5l1.7 5.4c.3.9 1.4 1.1 2 .4l2.5-2.7l4.4 3.2c.7.5 1.7.1 1.9-.8l2.5-14.9c.1-.5-.1-.9-.5-1.2zM9.6 13.2l7.6-4.7l-6.2 5.6l-.3 3.1l-1.1-4z" />
+						</svg>
+						<span>一键导入 TG WEB 代理</span>
+					</button>
+					<p class="tg-proxy-footnote">需要已安装 Telegram 客户端 · 未唤起时复制 tg:// 链接在 App 内粘贴打开</p>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -23658,6 +24469,8 @@
 			};
 		}
 
+		// 面板里的 TG WEB 代理入口已迁移到页脚 Telegram 图标彩蛋（长按 1s 触发），
+		// 这个函数保留下来配合版本号刷新，DOM 已不存在，开头的自守卫会直接 return。
 		function updateTGWebProxyField() {
 			const group = document.getElementById('tgWebProxyGroup');
 			const input = document.getElementById('tgWebProxyLink');
@@ -23696,6 +24509,629 @@
 			} finally {
 				anchor.remove();
 			}
+		}
+
+		// ===== 页脚 Telegram 图标彩蛋 =====
+		// 入口从「📋 获取节点链接」面板迁移至此，版本号不达标的站点长按完全无反应。
+		//
+		// 【时间轴】下面 8 个参数单位都是毫秒，除 HOLD 外全是「相对上一个节点」的延迟，
+		// 改一个会连带后面整体平移，调的时候对着这张表算：
+		//   开始抖动  = HOLD
+		//   振幅加大  = HOLD + HOT_DELAY
+		//   喷第一枚  = HOLD + FOUNTAIN_DELAY + FIRST_EMOJI
+		//   爆开      = 上一行 + FOUNTAIN_MS
+		//   弹窗出现  = 上一行 + PANEL_DELAY
+		// 当前值代入：1000 → 1750 → 2620 → 4120 → 4370ms
+
+		// 长按多久才算触发，唯一从「手指按下」起算的绝对值。
+		// 太短手指滑动时容易误触，太长用户以为没反应就松手了；这段是刻意零反馈的。
+		// 建议 600–1600。
+		const TG_EGG_HOLD_MS = 618;
+
+		// 抖动开始后多久把振幅从 ±1.5px 提到 ±2.5px（即切到 tg-egg-hot 的时刻）。
+		// 只影响「抖得更猛」的时点，与喷泉无关。建议取 HOLD 的 30%–60%。
+		const TG_EGG_HOT_DELAY_MS = 750;
+
+		// 抖动开始后多久进入喷泉阶段（此时图标仍在抖，只是叠了一层光晕）。
+		// 必须 ≥ HOT_DELAY_MS，否则还没加幅就直接开喷。想缩短总时长优先压这个。
+		const TG_EGG_FOUNTAIN_DELAY_MS = 1382;
+
+		// 进入喷泉阶段后隔多久喷出第一枚 emoji，越大越像「先蓄一口再喷」。
+		// 它会计入爆开时间，建议 0–200。
+		const TG_EGG_FOUNTAIN_FIRST_EMOJI_MS = 120;
+
+		// 喷泉持续多久，时间一到立刻爆开。想拉长「喷」的观感就加这个。
+		// 建议 800–3000，太长会变成只有喷没有炸。
+		const TG_EGG_FOUNTAIN_MS = 618;
+
+		// 喷泉的发射间隔，越小喷得越密；从 START 线性过渡到 END。
+		// START 是刚开喷时的间隔、END 是快结束时，所以 START > END 才是「越喷越急」。
+		// 当前约等于每秒 12 枚 → 18 枚；手机端再往下压会明显掉帧。
+		const TG_EGG_EMOJI_INTERVAL_START_MS = 83;
+		const TG_EGG_EMOJI_INTERVAL_END_MS = 56;
+
+		// 爆开后多久弹出面板。0 = 爆炸与弹窗同时发生（容易糊在一起），
+		// 250 约 15 帧，刚好看清冲击环炸开再接面板。建议 0–600。
+		const TG_EGG_PANEL_DELAY_MS = 250;
+		const TG_EGG_BURST_EMOJI_COUNT = 18;
+		const TG_EGG_BURST_PARTICLE_COUNT = 16;
+		const TG_EGG_MOVE_CANCEL_PX = 8;
+		const TG_EGG_EMOJI_POOL = ['✈️', '✈️', '✈️', '✨', '✨', '⚡️', '📨', '💌', '🌐'];
+		// 品牌橙 + 品牌蓝，禁止彩虹色
+		const TG_EGG_PARTICLE_HUES = [28, 24, 42, 200, 196];
+		// 粒子作用域类：挂到 body 上把本次彩蛋的粒子压到低于弹窗遮罩的层级，
+		// 不改 .uuid-* 原规则，避免影响 UUID 火箭彩蛋
+		const TG_EGG_FX_LAYER_CLASS = 'tg-egg-fx-layer';
+		const TG_EGG_FX_LAYER_LINGER_MS = 1800;
+		const TG_EGG_CLOSE_GUARD_MS = 450;
+
+		let tgEggState = 'idle';
+		let tgEggPointerId = null;
+		let tgEggStartX = 0;
+		let tgEggStartY = 0;
+		let tgEggSuppressClick = false;
+		let tgEggTimers = [];
+		let tgEggFountainTimer = 0;
+		let tgEggInitialized = false;
+		// 面板弹出时刻：触摸端 touchend 会补一个 click，落点此时已被遮罩覆盖，
+		// 不挡这 450ms 的话刚弹出的面板会被自己的关闭判定关掉
+		let tgEggPanelOpenedAt = 0;
+		// 只有「面板打开之后在遮罩上重新按下过」才算用户真的点了遮罩。
+		// 触摸端的兼容 click 不会补 pointerdown，所以长按后隔多久松手都不会误关
+		let tgEggOverlayTapArmed = false;
+
+		function tgEggGetLinkEl() {
+			return document.getElementById('tgEasterEggLink');
+		}
+
+		function tgEggSchedule(fn, delay) {
+			const id = window.setTimeout(() => {
+				tgEggTimers = tgEggTimers.filter((timerId) => timerId !== id);
+				fn();
+			}, delay);
+			tgEggTimers.push(id);
+			return id;
+		}
+
+		function tgEggClearTimers() {
+			tgEggTimers.forEach((id) => window.clearTimeout(id));
+			tgEggTimers = [];
+			if (tgEggFountainTimer) {
+				window.clearTimeout(tgEggFountainTimer);
+				tgEggFountainTimer = 0;
+			}
+		}
+
+		function tgEggResetVisuals() {
+			const link = tgEggGetLinkEl();
+			if (link) {
+				link.classList.remove('tg-egg-holding', 'tg-egg-shaking', 'tg-egg-hot', 'tg-egg-glowing');
+			}
+		}
+
+		function tgEggTeardown() {
+			tgEggClearTimers();
+			tgEggResetVisuals();
+			if (document.body) document.body.classList.remove(TG_EGG_FX_LAYER_CLASS);
+			tgEggState = 'idle';
+			tgEggPointerId = null;
+		}
+
+		function tgEggVibrate(pattern) {
+			try {
+				if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+					navigator.vibrate(pattern);
+				}
+			} catch (error) {
+				// iOS Safari 等环境不支持振动，忽略即可
+				console.warn('[TG Easter Egg] 振动不可用:', error);
+			}
+		}
+
+		function tgEggPrefersReducedMotion() {
+			try {
+				return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+			} catch (error) {
+				return false;
+			}
+		}
+
+		function tgEggIsLowPerformance() {
+			return document.documentElement.classList.contains('low-performance-mode');
+		}
+
+		function tgEggGetOrigin() {
+			const link = tgEggGetLinkEl();
+			if (link) {
+				const rect = link.getBoundingClientRect();
+				if (rect.width > 0 && rect.height > 0) {
+					return {
+						x: rect.left + rect.width / 2,
+						y: rect.top + rect.height / 2
+					};
+				}
+			}
+			return {
+				x: window.innerWidth / 2,
+				y: window.innerHeight * 0.8
+			};
+		}
+
+		function tgEggSpawnFountainEmoji() {
+			const origin = tgEggGetOrigin();
+			const node = document.createElement('span');
+			node.className = 'uuid-gift-fx';
+			node.textContent = TG_EGG_EMOJI_POOL[Math.floor(Math.random() * TG_EGG_EMOJI_POOL.length)];
+			node.style.left = (origin.x + (Math.random() * 18 - 9)).toFixed(1) + 'px';
+			node.style.top = (origin.y + (Math.random() * 8 - 4)).toFixed(1) + 'px';
+			// 原生 .uuid-gift-fx 是 24px，对 44px 的图标来说太大，这里压到 12~20px
+			node.style.fontSize = (12 + Math.random() * 8).toFixed(1) + 'px';
+			node.style.setProperty('--gift-x-drift', (Math.random() * 90 - 45).toFixed(1) + 'px');
+			node.style.setProperty('--gift-y-lift', (140 + Math.random() * 40).toFixed(1) + 'px');
+			node.style.setProperty('--gift-rotate', (Math.random() * 70 - 35).toFixed(1) + 'deg');
+			node.style.setProperty('--gift-duration', (640 + Math.random() * 240).toFixed(0) + 'ms');
+			document.body.appendChild(node);
+			window.setTimeout(() => node.remove(), 1300);
+		}
+
+		function tgEggSpawnBurst() {
+			if (tgEggPrefersReducedMotion()) return;
+			const origin = tgEggGetOrigin();
+			const lowPerformance = tgEggIsLowPerformance();
+
+			// 全屏闪白在低性能模式下直接跳过
+			if (!lowPerformance) {
+				const flash = document.createElement('div');
+				flash.className = 'uuid-firework-flash';
+				flash.style.left = origin.x.toFixed(1) + 'px';
+				flash.style.top = origin.y.toFixed(1) + 'px';
+				document.body.appendChild(flash);
+				window.setTimeout(() => flash.remove(), 700);
+			}
+
+			// 双冲击环：第二环延后 120ms 出，做出「双响」的层次
+			[0, 120].forEach((delay) => {
+				window.setTimeout(() => {
+					const ring = document.createElement('div');
+					ring.className = 'uuid-firework-ring';
+					ring.style.left = origin.x.toFixed(1) + 'px';
+					ring.style.top = origin.y.toFixed(1) + 'px';
+					document.body.appendChild(ring);
+					window.setTimeout(() => ring.remove(), 1000);
+				}, delay);
+			});
+
+			const emojiCount = lowPerformance ? Math.round(TG_EGG_BURST_EMOJI_COUNT / 2) : TG_EGG_BURST_EMOJI_COUNT;
+			for (let i = 0; i < emojiCount; i++) {
+				const angle = (Math.PI * 2 * i) / emojiCount + (Math.random() * 0.16 - 0.08);
+				const distance = 40 + Math.random() * 56;
+				const node = document.createElement('span');
+				node.className = 'tg-egg-burst-emoji';
+				node.textContent = TG_EGG_EMOJI_POOL[Math.floor(Math.random() * TG_EGG_EMOJI_POOL.length)];
+				node.style.left = origin.x.toFixed(1) + 'px';
+				node.style.top = origin.y.toFixed(1) + 'px';
+				node.style.fontSize = (16 + Math.random() * 12).toFixed(1) + 'px';
+				node.style.setProperty('--dx', (Math.cos(angle) * distance).toFixed(1) + 'px');
+				node.style.setProperty('--dy', (Math.sin(angle) * distance).toFixed(1) + 'px');
+				node.style.setProperty('--rot', (Math.random() * 60 - 30).toFixed(1) + 'deg');
+				node.style.setProperty('--tg-egg-duration', (780 + Math.random() * 400).toFixed(0) + 'ms');
+				document.body.appendChild(node);
+				window.setTimeout(() => node.remove(), 1400);
+			}
+
+			const particleCount = lowPerformance ? Math.round(TG_EGG_BURST_PARTICLE_COUNT / 2) : TG_EGG_BURST_PARTICLE_COUNT;
+			const burst = document.createElement('div');
+			burst.className = 'uuid-firework-burst';
+			burst.style.left = origin.x.toFixed(1) + 'px';
+			burst.style.top = origin.y.toFixed(1) + 'px';
+			for (let i = 0; i < particleCount; i++) {
+				const angle = (Math.PI * 2 * i) / particleCount + (Math.random() * 0.2 - 0.1);
+				const distance = 40 + Math.random() * 56;
+				const particle = document.createElement('span');
+				particle.className = 'uuid-firework-particle';
+				particle.style.setProperty('--dx', (Math.cos(angle) * distance).toFixed(1) + 'px');
+				particle.style.setProperty('--dy', (Math.sin(angle) * distance).toFixed(1) + 'px');
+				particle.style.setProperty('--hue', String(TG_EGG_PARTICLE_HUES[i % TG_EGG_PARTICLE_HUES.length]));
+				particle.style.setProperty('--particle-duration', (780 + Math.random() * 400).toFixed(0) + 'ms');
+				burst.appendChild(particle);
+			}
+			document.body.appendChild(burst);
+			window.setTimeout(() => burst.remove(), 1500);
+		}
+
+		function tgEggStartFountain() {
+			if (tgEggState !== 'fountain') return;
+			const startedAt = Date.now();
+			tgEggSchedule(tgEggEnterBurst, TG_EGG_FOUNTAIN_MS);
+
+			const tick = () => {
+				if (tgEggState !== 'fountain') return;
+				tgEggSpawnFountainEmoji();
+				const ratio = Math.min(1, (Date.now() - startedAt) / TG_EGG_FOUNTAIN_MS);
+				// 12 枚/秒 → 18 枚/秒，越喷越急
+				const interval = TG_EGG_EMOJI_INTERVAL_START_MS
+					+ (TG_EGG_EMOJI_INTERVAL_END_MS - TG_EGG_EMOJI_INTERVAL_START_MS) * ratio;
+				tgEggFountainTimer = window.setTimeout(tick, interval);
+			};
+			tick();
+		}
+
+		function tgEggEnterHot() {
+			if (tgEggState !== 'shaking') return;
+			const link = tgEggGetLinkEl();
+			if (link) link.classList.add('tg-egg-hot');
+		}
+
+		function tgEggEnterFountain() {
+			if (tgEggState !== 'shaking') return;
+			tgEggState = 'fountain';
+			const link = tgEggGetLinkEl();
+			if (link) {
+				// 抖动全程不停：这里只叠加光晕，不能移除 shaking/hot，
+				// 否则喷泉一开始图标就定住了
+				link.classList.add('tg-egg-glowing');
+			}
+			tgEggSchedule(tgEggStartFountain, TG_EGG_FOUNTAIN_FIRST_EMOJI_MS);
+		}
+
+		function tgEggEnterShaking() {
+			if (tgEggState !== 'holding') return;
+			tgEggState = 'shaking';
+			// 过了 1000ms 就算「已触发」，这次点击要吞掉，否则会跳转 t.me
+			tgEggSuppressClick = true;
+
+			const link = tgEggGetLinkEl();
+			if (link) {
+				link.classList.remove('tg-egg-holding');
+				link.classList.add('tg-egg-shaking');
+			}
+			tgEggVibrate(12);
+
+			if (tgEggPrefersReducedMotion()) {
+				// 用户显式要求减少动效：长按判定通过后直接开面板
+				tgEggSchedule(tgEggOpenPanel, 200);
+				return;
+			}
+			tgEggSchedule(tgEggEnterHot, TG_EGG_HOT_DELAY_MS);
+			tgEggSchedule(tgEggEnterFountain, TG_EGG_FOUNTAIN_DELAY_MS);
+		}
+
+		function tgEggEnterBurst() {
+			if (tgEggState !== 'fountain') return;
+			if (tgEggFountainTimer) {
+				window.clearTimeout(tgEggFountainTimer);
+				tgEggFountainTimer = 0;
+			}
+			tgEggState = 'burst';
+			// 爆开阶段不再给图标加缩放动画（.tg-egg-burst）：那会和抖动抢 transform，
+			// 让图标在爆炸那一下定住。抖动保持到面板弹出为止。
+			tgEggVibrate([20, 40, 20]);
+			tgEggSpawnBurst();
+			tgEggSchedule(tgEggOpenPanel, TG_EGG_PANEL_DELAY_MS);
+		}
+
+		function tgEggShowQRFallback(host, message) {
+			host.classList.add('is-fallback');
+			const tip = document.createElement('p');
+			tip.className = 'tg-proxy-qrfallback';
+			tip.textContent = message;
+			host.appendChild(tip);
+		}
+
+		function tgEggRenderQR(text) {
+			const host = document.getElementById('tgEasterEggQr');
+			if (!host) return;
+			host.innerHTML = '';
+			host.classList.remove('is-fallback');
+
+			// QRCode 是异步加载的，缺席时只降级，绝不抛错打断弹窗
+			if (typeof QRCode === 'undefined') {
+				tgEggShowQRFallback(host, '二维码组件未加载，请复制下方链接导入');
+				return;
+			}
+
+			try {
+				const correctLevel = (QRCode.CorrectLevel && typeof QRCode.CorrectLevel.M !== 'undefined')
+					? QRCode.CorrectLevel.M
+					: 0;
+				new QRCode(host, {
+					text: text,
+					width: 148,
+					height: 148,
+					colorDark: '#0f172a',
+					colorLight: '#ffffff',
+					correctLevel: correctLevel
+				});
+			} catch (error) {
+				console.warn('[TG Easter Egg] 二维码生成失败:', error);
+				host.innerHTML = '';
+				tgEggShowQRFallback(host, '二维码生成失败，请复制下方链接导入');
+			}
+		}
+
+		function tgEggFillPanel(params) {
+			const serverEl = document.getElementById('tgEasterEggServer');
+			const secretEl = document.getElementById('tgEasterEggSecret');
+			const importInput = document.getElementById('tgEasterEggImportInput');
+			const shareInput = document.getElementById('tgEasterEggShareInput');
+			if (serverEl) serverEl.textContent = params.server;
+			if (secretEl) secretEl.textContent = params.secret;
+			if (importInput) importInput.value = params.importUrl;
+			if (shareInput) shareInput.value = params.shareUrl;
+			tgEggRenderQR(params.importUrl);
+		}
+
+		function tgEggOpenPanel() {
+			if (tgEggState === 'idle') return;
+			tgEggTeardown();
+
+			const params = getTGWebProxyParams();
+			if (!params) {
+				showToast('缺少 UUID，无法生成 TG WEB 代理链接', 'error');
+				return;
+			}
+			tgEggFillPanel(params);
+
+			const overlay = document.getElementById('tgEasterEggModal');
+			if (!overlay) return;
+			overlay.classList.add('show');
+			tgEggPanelOpenedAt = Date.now();
+			tgEggOverlayTapArmed = false;
+			// 上面 teardown 已经把作用域类摘掉了，这里重新挂回来：让面板初开那一瞬仍在飞的余留粒子
+			// 继续压在弹窗之下（否则会突然跳到 9e9 层级盖住面板），1.8s 后它们消散再移除；
+			// 若这期间又起了新一轮长按，就跳过移除，交给那次自己的 teardown 处理
+			document.body.classList.add(TG_EGG_FX_LAYER_CLASS);
+			tgEggSchedule(() => {
+				if (tgEggState !== 'idle') return;
+				document.body.classList.remove(TG_EGG_FX_LAYER_CLASS);
+			}, TG_EGG_FX_LAYER_LINGER_MS);
+			const closeBtn = overlay.querySelector('.tg-proxy-close');
+			if (closeBtn && typeof closeBtn.focus === 'function') {
+				try {
+					closeBtn.focus({ preventScroll: true });
+				} catch (error) {
+					closeBtn.focus();
+				}
+			}
+		}
+
+		function tgEggCopyTextFallback(text) {
+			let textarea = null;
+			try {
+				textarea = document.createElement('textarea');
+				textarea.value = text;
+				textarea.setAttribute('readonly', 'readonly');
+				textarea.style.position = 'fixed';
+				textarea.style.left = '-9999px';
+				textarea.style.top = '0';
+				document.body.appendChild(textarea);
+				textarea.select();
+				textarea.setSelectionRange(0, text.length);
+				return !!document.execCommand('copy');
+			} catch (error) {
+				return false;
+			} finally {
+				if (textarea) textarea.remove();
+			}
+		}
+
+		function tgEggCopyText(text) {
+			if (!text) return Promise.resolve(false);
+			try {
+				if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function' && window.isSecureContext) {
+					return navigator.clipboard.writeText(text).then(() => true).catch(() => tgEggCopyTextFallback(text));
+				}
+			} catch (error) {
+				return Promise.resolve(tgEggCopyTextFallback(text));
+			}
+			return Promise.resolve(tgEggCopyTextFallback(text));
+		}
+
+		function tgEggMarkRowCopied(row) {
+			row.classList.add('is-copied');
+			if (row.__tgEggCopyTimer) window.clearTimeout(row.__tgEggCopyTimer);
+			row.__tgEggCopyTimer = window.setTimeout(() => {
+				row.classList.remove('is-copied');
+				row.__tgEggCopyTimer = 0;
+			}, 1400);
+		}
+
+		// 彩蛋弹窗内不复用全局 toast，避免「弹窗里再弹一个弹窗」的视觉重复
+		function tgEasterEggCopyRow(row) {
+			if (!row) return;
+			const input = row.querySelector('input');
+			if (!input) return;
+			const text = String(input.value || '');
+			if (!text) return;
+
+			tgEggCopyText(text).then((ok) => {
+				if (!ok) {
+					try {
+						input.select();
+					} catch (error) {
+						// 只读输入框在个别浏览器不可选中，忽略
+					}
+					showToast('复制失败，请手动复制', 'error');
+					return;
+				}
+				tgEggMarkRowCopied(row);
+			});
+		}
+
+		function tgEasterEggCopyRowKey(event, row) {
+			if (!event) return;
+			if (event.key !== 'Enter' && event.key !== ' ') return;
+			event.preventDefault();
+			tgEasterEggCopyRow(row);
+		}
+
+		function tgEasterEggClose(event) {
+			// 触摸端的兼容 click 落在 touchend 坐标，此时那里已被遮罩覆盖，
+			// 会把刚弹出的面板立刻关掉，所以弹窗后 450ms 内忽略「点遮罩」这一路；
+			// × 按钮与 Escape 传入的 event 为空或不是遮罩，不受影响
+			if (event && event.target && event.target.id === 'tgEasterEggModal') {
+				if (Date.now() - tgEggPanelOpenedAt < TG_EGG_CLOSE_GUARD_MS) return;
+				// 手指按太久（面板出现 450ms 之后才松手）时上面那条时间窗就失效了，
+				// 所以再加一道：必须有「打开面板之后新按下遮罩」才算点击遮罩
+				if (!tgEggOverlayTapArmed) return;
+				tgEggOverlayTapArmed = false;
+			}
+			if (event && event.target && event.target.id !== 'tgEasterEggModal') return;
+			const overlay = document.getElementById('tgEasterEggModal');
+			if (!overlay) return;
+
+			overlay.classList.remove('show');
+			overlay.querySelectorAll('.tg-proxy-field.is-copied').forEach((row) => {
+				row.classList.remove('is-copied');
+				if (row.__tgEggCopyTimer) {
+					window.clearTimeout(row.__tgEggCopyTimer);
+					row.__tgEggCopyTimer = 0;
+				}
+			});
+
+			// 焦点回到触发它的 Telegram 图标，键盘操作不丢位置
+			const link = tgEggGetLinkEl();
+			if (link && typeof link.focus === 'function') {
+				try {
+					link.focus({ preventScroll: true });
+				} catch (error) {
+					link.focus();
+				}
+			}
+		}
+
+		function tgEggOnDocumentKeydown(event) {
+			if (!event || event.key !== 'Escape') return;
+			const overlay = document.getElementById('tgEasterEggModal');
+			if (!overlay || !overlay.classList.contains('show')) return;
+			tgEasterEggClose();
+		}
+
+		function tgEggOnPointerDown(event) {
+			// 门禁：版本号未就绪或低于 TG_WEB_PROXY_MIN_VERSION 时彻底无反应
+			if (!tgWebProxyFeatureEnabled) return;
+			if (tgEggState !== 'idle') return;
+			if (event && typeof event.button === 'number' && event.button !== 0) return;
+			if (event && event.isPrimary === false) return;
+
+			const link = tgEggGetLinkEl();
+			if (!link) return;
+
+			// 上一次长按可能没有产生 click（例如手指滑出了图标），这里顺手清掉残留标志
+			tgEggSuppressClick = false;
+			tgEggState = 'holding';
+			tgEggPointerId = event && typeof event.pointerId === 'number' ? event.pointerId : null;
+			tgEggStartX = event && typeof event.clientX === 'number' ? event.clientX : 0;
+			tgEggStartY = event && typeof event.clientY === 'number' ? event.clientY : 0;
+
+			// 本次彩蛋的所有粒子都挂在这一层作用域下，层级压到弹窗遮罩之下
+			document.body.classList.add(TG_EGG_FX_LAYER_CLASS);
+			link.classList.add('tg-egg-holding');
+			tgEggSchedule(tgEggEnterShaking, TG_EGG_HOLD_MS);
+		}
+
+		function tgEggOnPointerMove(event) {
+			if (tgEggState !== 'holding' || !event) return;
+			const dx = event.clientX - tgEggStartX;
+			const dy = event.clientY - tgEggStartY;
+			if (Math.sqrt(dx * dx + dy * dy) > TG_EGG_MOVE_CANCEL_PX) tgEggTeardown();
+		}
+
+		function tgEggOnPointerUp() {
+			// 1000ms 前松手视为放弃；1000ms 之后松手不打断，让它跑完
+			if (tgEggState !== 'holding') return;
+			tgEggTeardown();
+		}
+
+		function tgEggOnPointerCancel() {
+			if (tgEggState === 'idle') return;
+			// 蓄力阶段（还没开始抖）的 pointercancel 基本都是浏览器/系统接管了手势：
+			// iOS 长按链接的画面预览、Android 的系统菜单、手势导航等。这时手指并没有离开屏幕，
+			// 直接 teardown 会让彩蛋在手机上永远触发不了。真被手指拖走的情况，
+			// tgEggOnPointerMove 的 8px 阈值已经先一步处理掉了，这里放行即可。
+			if (tgEggState === 'holding') return;
+			tgEggTeardown();
+		}
+
+		function tgEggOnContextMenu(event) {
+			// 移动端长按 500ms 会弹系统菜单，蓄力期间必须拦掉；idle 时不动它
+			if (tgEggState === 'idle') return;
+			if (event && typeof event.preventDefault === 'function') event.preventDefault();
+		}
+
+		function tgEggOnLinkClick(event) {
+			if (!tgEggSuppressClick) return;
+			tgEggSuppressClick = false;
+			if (event && typeof event.preventDefault === 'function') {
+				event.preventDefault();
+				event.stopPropagation();
+			}
+		}
+
+		// 长按那次松手时 click 目标可能不在链接上（拖出图标、被遮罩接管……），
+		// link 自己的 click 处理器就跑不到，标志位会一直挂着，把下一次键盘 Enter 也吞掉。
+		// 这里在 document 捕获阶段兜底复位；不能用定时器自动清零——1s 置位、4s 才松手，
+		// 任何短定时器都会让那次本该被吞掉的 click 漏过去跳转。
+		function tgEggOnDocumentClick(event) {
+			if (!tgEggSuppressClick) return;
+			const link = tgEggGetLinkEl();
+			if (link && (event.target === link || link.contains(event.target))) return;
+			tgEggSuppressClick = false;
+		}
+
+		function initTGEasterEgg() {
+			if (tgEggInitialized) return;
+			const link = tgEggGetLinkEl();
+			if (!link) return;
+			tgEggInitialized = true;
+
+			link.addEventListener('pointerdown', tgEggOnPointerDown);
+			// 捕获阶段先拦，确保没有被其它监听器抢先跳转
+			link.addEventListener('click', tgEggOnLinkClick, true);
+			link.addEventListener('contextmenu', tgEggOnContextMenu);
+			window.addEventListener('pointermove', tgEggOnPointerMove);
+			window.addEventListener('pointerup', tgEggOnPointerUp);
+			window.addEventListener('pointercancel', tgEggOnPointerCancel);
+			document.addEventListener('keydown', tgEggOnDocumentKeydown);
+			document.addEventListener('click', tgEggOnDocumentClick, true);
+
+			// 遮罩上的「新手指按下」才给这次点击关窗的资格（见 tgEasterEggClose）
+			const overlay = document.getElementById('tgEasterEggModal');
+			if (overlay) {
+				overlay.addEventListener('pointerdown', () => {
+					tgEggOverlayTapArmed = true;
+				});
+			}
+		}
+
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', initTGEasterEgg);
+		} else {
+			initTGEasterEgg();
+		}
+
+		// 页脚的 GitHub / Telegram 是 <a>，移动端长按会被浏览器当成「链接手势」，
+		// 弹出「打开链接 / 复制链接」的系统菜单（主题切换、返回顶部是 <button>，所以没有）。
+		// 这里只拦触摸与触控笔：桌面右键菜单保持原样，"复制链接地址"还能用。
+		function initSocialLinkLongPressGuard() {
+			const links = document.querySelectorAll('.social-links a.social-link');
+			links.forEach((link) => {
+				let lastPointerType = '';
+				link.addEventListener('pointerdown', (event) => {
+					lastPointerType = (event && event.pointerType) ? event.pointerType : '';
+				}, { passive: true });
+				link.addEventListener('contextmenu', (event) => {
+					if (lastPointerType === 'touch' || lastPointerType === 'pen') {
+						event.preventDefault();
+					}
+				});
+			});
+		}
+
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', initSocialLinkLongPressGuard);
+		} else {
+			initSocialLinkLongPressGuard();
 		}
 
 		function copySubscription(elementId) {

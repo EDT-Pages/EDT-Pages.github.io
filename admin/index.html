@@ -1778,10 +1778,6 @@
 			line-height: 1.7;
 		}
 
-		#qrcodeModal .modal {
-			background: #808080;
-		}
-
 		.modal-close {
 			position: absolute;
 			top: 15px;
@@ -3037,10 +3033,6 @@
 			background: var(--bg-secondary);
 			color: var(--text-primary);
 			border-color: var(--border-color)
-		}
-
-		html.dark-mode #qrcodeModal .modal {
-			background: #808080;
 		}
 
 		html.dark-mode .modal input,
@@ -7913,14 +7905,459 @@
 			display: none;
 		}
 
-		/* QRCode 容器 */
-		.qrcode-container {
-			margin: 30px 0;
+		/* ===== 二维码弹窗（扫码导入卡片） ===== */
+		#qrcodeModal .qr-modal {
+			/* 浅色令牌 */
+			--qr-surface: #ffffff;
+			--qr-stage: #f1f7f9;
+			--qr-stage-line: #e2edf1;
+			--qr-t1: #0f172a;
+			--qr-t2: #64748b;
+			--qr-t3: #94a3b8;
+			--qr-line: #e9edf3;
+			--qr-accent: #06b6d4;
+			--qr-accent-ink: #0e7490;
+			--qr-accent-soft: rgba(6, 182, 212, 0.10);
+			--qr-accent-line: rgba(6, 182, 212, 0.22);
+			--qr-ghost-t: #334155;
+			--qr-ghost-bd: #dfe4eb;
+			--qr-ghost-hover: #f2f5f9;
+			--qr-card-shadow: 0 0 0 1px rgba(15, 23, 42, 0.035), 0 2px 4px rgba(15, 23, 42, 0.05), 0 10px 28px rgba(15, 23, 42, 0.08);
+			--qr-x-hover: rgba(15, 23, 42, 0.055);
+			--qr-warn: #b45309;
+			--qr-warn-soft: rgba(245, 158, 11, 0.12);
+			--qr-warn-line: rgba(245, 158, 11, 0.30);
+			max-width: 440px;
+			width: 100%;
+			min-width: 0;
+			padding: 0;
+			box-sizing: border-box;
+			border-radius: 20px;
+			background: var(--qr-surface);
+			text-align: left;
+			/* 横屏手机（如 812×375）会被 640 断点判为桌面布局，
+			   这里兜底：视口矮时内部滚动，不让弹窗上下溢出到不可达 */
+			max-height: calc(100vh - 24px);
+			max-height: calc(100dvh - 24px);
+			overflow-x: hidden;
+			overflow-y: auto;
+		}
+
+		html.dark-mode #qrcodeModal .qr-modal {
+			--qr-surface: #171512;
+			--qr-stage: #0c1113;
+			--qr-stage-line: #1b2529;
+			--qr-t1: #efece7;
+			--qr-t2: #9c968d;
+			--qr-t3: #8a857d;
+			--qr-line: #282521;
+			--qr-accent: #22d3ee;
+			--qr-accent-ink: #67e8f9;
+			--qr-accent-soft: rgba(34, 211, 238, 0.12);
+			--qr-accent-line: rgba(34, 211, 238, 0.24);
+			--qr-ghost-t: #d6d1c9;
+			--qr-ghost-bd: #332f29;
+			--qr-ghost-hover: #211e1a;
+			--qr-card-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 10px 28px rgba(0, 0, 0, 0.55);
+			--qr-x-hover: rgba(255, 255, 255, 0.07);
+			--qr-warn: #fbbf24;
+			--qr-warn-soft: rgba(251, 191, 36, 0.13);
+			--qr-warn-line: rgba(251, 191, 36, 0.30);
+			border: 1px solid rgba(255, 255, 255, 0.055);
+		}
+
+		#qrcodeModal [hidden] {
+			display: none !important;
+		}
+
+		/* 头部 */
+		#qrcodeModal .qr-modal-hd {
 			display: flex;
-			justify-content: center;
+			align-items: flex-start;
+			gap: 12px;
+			padding: 20px 20px 16px;
+		}
+
+		#qrcodeModal .qr-modal-icon {
+			flex: 0 0 auto;
+			width: 36px;
+			height: 36px;
+			border-radius: 11px;
+			display: flex;
 			align-items: center;
-			min-height: 350px;
-			background: #808080;
+			justify-content: center;
+			background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+			box-shadow: 0 4px 12px rgba(6, 182, 212, 0.28);
+			color: #fff;
+			transition: background 0.2s ease, box-shadow 0.2s ease;
+		}
+
+		#qrcodeModal .qr-modal-icon svg {
+			width: 19px;
+			height: 19px;
+			display: block;
+		}
+
+		/* 错误态：图标砖由青转琥珀，语义不靠新增布局分支 */
+		#qrcodeModal .qr-modal.is-error .qr-modal-icon {
+			background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+			box-shadow: 0 4px 12px rgba(245, 158, 11, 0.28);
+		}
+
+		#qrcodeModal .qr-modal-titles {
+			flex: 1;
+			min-width: 0;
+			padding-top: 1px;
+		}
+
+		#qrcodeModal .qr-modal-title {
+			margin: 0;
+			font-size: 16.5px;
+			font-weight: 650;
+			letter-spacing: -0.005em;
+			line-height: 1.3;
+			color: var(--qr-t1);
+		}
+
+		#qrcodeModal .qr-modal-sub {
+			margin: 3px 0 0;
+			font-size: 12.5px;
+			font-weight: 500;
+			line-height: 1.4;
+			color: var(--qr-t2);
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		#qrcodeModal .qr-modal-close {
+			flex: 0 0 auto;
+			width: 32px;
+			height: 32px;
+			margin: -4px -4px 0 0;
+			padding: 0;
+			border: 0;
+			background: transparent;
+			border-radius: 9px;
+			color: var(--qr-t3);
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: background 0.16s ease, color 0.16s ease;
+		}
+
+		#qrcodeModal .qr-modal-close:hover {
+			background: var(--qr-x-hover);
+			color: var(--qr-t1);
+		}
+
+		#qrcodeModal .qr-modal-close:focus-visible {
+			outline: 2px solid var(--qr-accent);
+			outline-offset: 2px;
+		}
+
+		#qrcodeModal .qr-modal-close svg {
+			width: 15px;
+			height: 15px;
+			display: block;
+		}
+
+		#qrcodeModal .qr-modal-divider {
+			height: 1px;
+			background: var(--qr-line);
+		}
+
+		/* 主体 */
+		#qrcodeModal .qr-modal-body {
+			padding: 22px 20px 20px;
+		}
+
+		#qrcodeModal .qr-stage {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			min-width: 0;
+			padding: 14px;
+			box-sizing: border-box;
+			border-radius: 18px;
+			background: var(--qr-stage);
+			border: 1px solid var(--qr-stage-line);
+		}
+
+		/* 错误态：舞台改为虚线占位框，和「有码」形态区分开 */
+		#qrcodeModal .qr-stage.is-empty {
+			padding: 0;
+			border-style: dashed;
+			border-color: var(--qr-warn-line);
+			background: transparent;
+		}
+
+		/* 二维码永远白底（扫描鲁棒性 > 主题一致性），深浅主题共用。
+		   width 用 min() 而不是固定值：窄屏能跟着容器收，避免 flex 撑破弹窗 */
+		#qrcodeModal .qr-card {
+			flex: 0 1 auto;
+			min-width: 0;
+			width: min(324px, 100%);
+			padding: 12px;
+			box-sizing: border-box;
+			background: #ffffff;
+			border-radius: 14px;
+			box-shadow: var(--qr-card-shadow);
+			line-height: 0;
+		}
+
+		/* QRCode 挂载点：宽度跟随白卡，canvas 与 img 叠放
+		   —— 库最终只会显示其中一个（另一个走内联 display:none），
+		   所以两个都绝对定位铺满，避免"看不到的那个"把高度撑成两倍 */
+		#qrcodeModal .qrcode-container {
+			position: relative;
+			width: 100%;
+			aspect-ratio: 1 / 1;
+			line-height: 0;
+		}
+
+		#qrcodeModal .qrcode-container canvas,
+		#qrcodeModal .qrcode-container img {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100% !important;
+			height: 100% !important;
+		}
+
+		/* 元信息 chips */
+		#qrcodeModal .qr-meta {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 6px;
+			margin-top: 16px;
+		}
+
+		#qrcodeModal .qr-chip {
+			display: inline-flex;
+			align-items: center;
+			gap: 5px;
+			padding: 5px 10px;
+			border-radius: 999px;
+			font-size: 11.5px;
+			font-weight: 600;
+			letter-spacing: 0.01em;
+			white-space: nowrap;
+			background: var(--qr-accent-soft);
+			border: 1px solid var(--qr-accent-line);
+			color: var(--qr-accent-ink);
+		}
+
+		#qrcodeModal .qr-chip::before {
+			content: '';
+			width: 4px;
+			height: 4px;
+			border-radius: 50%;
+			background: currentColor;
+			opacity: 0.55;
+			flex: 0 0 auto;
+		}
+
+		#qrcodeModal .qr-chip.is-mute {
+			background: transparent;
+			border-color: var(--qr-line);
+			color: var(--qr-t2);
+		}
+
+		#qrcodeModal .qr-chip.is-mute::before {
+			display: none;
+		}
+
+		html.dark-mode #qrcodeModal .qr-chip.is-mute {
+			border-color: rgba(255, 255, 255, 0.13);
+			color: #a8a29a;
+		}
+
+		#qrcodeModal .qr-chip.is-warn {
+			background: var(--qr-warn-soft);
+			border-color: var(--qr-warn-line);
+			color: var(--qr-warn);
+		}
+
+		#qrcodeModal .qr-hint {
+			margin: 13px 0 0;
+			text-align: center;
+			font-size: 12px;
+			font-weight: 500;
+			line-height: 1.6;
+			color: var(--qr-t2);
+		}
+
+		/* 底部按钮 */
+		#qrcodeModal .qr-modal-ft {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 10px;
+			padding: 0 20px 20px;
+		}
+
+		#qrcodeModal .qr-btn-ghost,
+		#qrcodeModal .qr-btn-primary {
+			height: 44px;
+			border-radius: 12px;
+			border: 0;
+			cursor: pointer;
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+			font-size: 14px;
+			font-weight: 600;
+			letter-spacing: 0.01em;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 7px;
+			transition: transform 0.15s ease, box-shadow 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+			-webkit-appearance: none;
+			appearance: none;
+		}
+
+		#qrcodeModal .qr-btn-ghost svg,
+		#qrcodeModal .qr-btn-primary svg {
+			width: 15px;
+			height: 15px;
+			flex: 0 0 auto;
+		}
+
+		#qrcodeModal .qr-btn-ghost {
+			background: transparent;
+			color: var(--qr-ghost-t);
+			border: 1px solid var(--qr-ghost-bd);
+		}
+
+		#qrcodeModal .qr-btn-ghost:hover {
+			background: var(--qr-ghost-hover);
+		}
+
+		#qrcodeModal .qr-btn-primary {
+			background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+			color: #fff;
+			box-shadow: 0 3px 12px rgba(6, 182, 212, 0.30);
+		}
+
+		#qrcodeModal .qr-btn-primary:hover {
+			transform: translateY(-1px);
+			box-shadow: 0 6px 20px rgba(6, 182, 212, 0.42);
+		}
+
+		#qrcodeModal .qr-btn-primary:active {
+			transform: translateY(0);
+			box-shadow: 0 2px 8px rgba(6, 182, 212, 0.32);
+		}
+
+		/* 错误态没有码可存：禁用主按钮并压掉所有 hover/active 反馈 */
+		#qrcodeModal .qr-btn-primary:disabled,
+		#qrcodeModal .qr-btn-primary:disabled:hover,
+		#qrcodeModal .qr-btn-primary:disabled:active {
+			opacity: 0.42;
+			box-shadow: none;
+			transform: none;
+			cursor: not-allowed;
+		}
+
+		#qrcodeModal .qr-btn-ghost:focus-visible,
+		#qrcodeModal .qr-btn-primary:focus-visible {
+			outline: 2px solid var(--qr-accent);
+			outline-offset: 2px;
+		}
+
+		/* 错误态内容块 */
+		#qrcodeModal .qr-error {
+			width: 100%;
+			min-height: 352px;
+			padding: 34px 24px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 12px;
+			text-align: center;
+		}
+
+		#qrcodeModal .qr-error-icon {
+			width: 48px;
+			height: 48px;
+			border-radius: 14px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: var(--qr-warn-soft);
+			border: 1px solid var(--qr-warn-line);
+			color: var(--qr-warn);
+		}
+
+		#qrcodeModal .qr-error-icon svg {
+			width: 23px;
+			height: 23px;
+		}
+
+		#qrcodeModal .qr-error-title {
+			font-size: 14px;
+			font-weight: 650;
+			color: var(--qr-t1);
+		}
+
+		#qrcodeModal .qr-error-desc {
+			max-width: 280px;
+			font-size: 12.5px;
+			line-height: 1.7;
+			color: var(--qr-t2);
+		}
+
+		#qrcodeModal .qr-error-desc strong {
+			color: var(--qr-t1);
+			font-weight: 600;
+		}
+
+		/* 小屏：贴底抽屉形态（同一套 DOM，仅改对齐与圆角） */
+		@media (max-width: 640px) {
+			#qrcodeModal {
+				align-items: flex-end;
+				padding: 0;
+			}
+
+			#qrcodeModal .qr-modal {
+				max-width: 100%;
+				width: 100%;
+				border-radius: 22px 22px 0 0;
+				padding-bottom: env(safe-area-inset-bottom);
+			}
+
+			#qrcodeModal .qr-modal-hd {
+				padding: 16px 14px 12px;
+			}
+
+			#qrcodeModal .qr-modal-body {
+				padding: 16px 14px 14px;
+			}
+
+			#qrcodeModal .qr-stage {
+				padding: 8px;
+			}
+
+			#qrcodeModal .qr-card {
+				width: min(300px, 100%);
+				padding: 8px;
+			}
+
+			#qrcodeModal .qr-meta {
+				margin-top: 13px;
+			}
+
+			#qrcodeModal .qr-modal-ft {
+				padding: 0 14px 16px;
+			}
+
+			#qrcodeModal .qr-btn-ghost,
+			#qrcodeModal .qr-btn-primary {
+				height: 42px;
+				font-size: 13px;
+			}
 		}
 
 		/* 重置配置弹窗 */
@@ -9415,10 +9852,6 @@
 		/* 深色模式倒计时文字样式 */
 		html.dark-mode .countdown-text {
 			color: #9ca3af;
-		}
-
-		html.dark-mode .qrcode-container {
-			background: #808080;
 		}
 
 		/* 网络信息卡片样式 */
@@ -11921,11 +12354,6 @@
 				font-size: 12px;
 			}
 
-			.qrcode-container {
-				min-height: 260px;
-				margin: 18px 0;
-			}
-
 			.qrcode-container img,
 			.qrcode-container canvas {
 				max-width: 100%;
@@ -13930,10 +14358,64 @@
 
 	<!-- 二维码弹窗 -->
 	<div class="modal-overlay" id="qrcodeModal" onclick="closeQRCode(event)">
-		<div class="modal" onclick="event.stopPropagation()">
-			<button type="button" class="modal-close" onclick="closeQRCode()">×</button>
-			<div id="qrcodeContainer" class="qrcode-container"></div>
-			<button type="button" class="btn btn-primary btn-close-modal" onclick="closeQRCode()">关闭</button>
+		<div class="modal qr-modal" onclick="event.stopPropagation()">
+			<div class="qr-modal-hd">
+				<div class="qr-modal-icon" aria-hidden="true">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
+						stroke-linecap="round" stroke-linejoin="round">
+						<rect x="3" y="3" width="7" height="7" rx="1.4" />
+						<rect x="14" y="3" width="7" height="7" rx="1.4" />
+						<rect x="3" y="14" width="7" height="7" rx="1.4" />
+						<path d="M14 14h3v3h-3zM20 14h1M14 20h3M20 18v3" />
+					</svg>
+				</div>
+				<div class="qr-modal-titles">
+					<h2 class="qr-modal-title" id="qrcodeTitle">扫码导入</h2>
+					<p class="qr-modal-sub" id="qrcodeSubtitle">正在生成二维码…</p>
+				</div>
+				<button type="button" class="qr-modal-close" onclick="closeQRCode()" aria-label="关闭二维码弹窗">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round">
+						<path d="M6 6l12 12M18 6L6 18" />
+					</svg>
+				</button>
+			</div>
+			<div class="qr-modal-divider"></div>
+			<div class="qr-modal-body">
+				<div class="qr-stage">
+					<div class="qr-card">
+						<div id="qrcodeContainer" class="qrcode-container"></div>
+					</div>
+					<div class="qr-error" id="qrcodeError" hidden>
+						<div class="qr-error-icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+								stroke-linecap="round" stroke-linejoin="round">
+								<path d="M12 9v4M12 17h.01" />
+								<path d="M10.3 3.9 1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" />
+							</svg>
+						</div>
+						<div class="qr-error-title" id="qrcodeErrorTitle">链接过长</div>
+						<div class="qr-error-desc" id="qrcodeErrorDesc"></div>
+					</div>
+				</div>
+				<div class="qr-meta" id="qrcodeMeta">
+					<span class="qr-chip" id="qrcodeChipType">订阅链接</span>
+					<span class="qr-chip is-mute" id="qrcodeChipLen">—</span>
+					<span class="qr-chip is-mute" id="qrcodeChipLevel">纠错 高</span>
+				</div>
+				<p class="qr-hint" id="qrcodeHint">用手机相机，或在客户端内「扫一扫」导入</p>
+			</div>
+			<div class="qr-modal-ft">
+				<button type="button" class="qr-btn-ghost" onclick="closeQRCode()">关闭</button>
+				<button type="button" class="qr-btn-primary" id="qrcodeSaveBtn" onclick="saveQRCode()">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
+						stroke-linecap="round" stroke-linejoin="round">
+						<path d="M12 3.5v10.5" />
+						<path d="m7.6 9.9 4.4 4.4 4.4-4.4" />
+						<path d="M4.5 17.5V19a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-1.5" />
+					</svg>
+					保存二维码
+				</button>
+			</div>
 		</div>
 	</div>
 
@@ -25158,6 +25640,117 @@
 			}
 		}
 
+		// 二维码弹窗：elementId → 可读类型名 + 导出文件名
+		// （与页面上 5 个「📱二维码」按钮一一对应）
+		const QRCODE_META = {
+			LinkURL: { label: '节点链接', sub: '单节点 · 导入任意客户端', file: 'node-link' },
+			subLink: { label: '自适应订阅', sub: '按客户端自动下发格式', file: 'auto-sub' },
+			base64Link: { label: 'Base64 订阅', sub: '通用格式 · 手动粘贴导入', file: 'base64-sub' },
+			clashLink: { label: 'Clash 订阅', sub: 'Clash / Mihomo 系客户端', file: 'clash-sub' },
+			singboxLink: { label: 'SingBox 订阅', sub: 'Sing-box 客户端专用', file: 'singbox-sub' }
+		};
+		let qrcodeSourceId = '';
+
+		function getQRCodeModal() {
+			return document.querySelector('#qrcodeModal .qr-modal');
+		}
+
+		// 复原成「有码」形态：每次打开都先复位，避免上一次的错误态残留
+		function resetQRCodeModal() {
+			getQRCodeModal().classList.remove('is-error');
+			document.querySelector('#qrcodeModal .qr-stage').classList.remove('is-empty');
+			document.querySelector('#qrcodeModal .qr-card').hidden = false;
+			document.getElementById('qrcodeError').hidden = true;
+			document.getElementById('qrcodeSaveBtn').disabled = false;
+		}
+
+		// 内容超出二维码容量：复用同一个容器与按钮位，只把图标砖转琥珀
+		function renderQRCodeError(length) {
+			getQRCodeModal().classList.add('is-error');
+			document.querySelector('#qrcodeModal .qr-stage').classList.add('is-empty');
+			document.querySelector('#qrcodeModal .qr-card').hidden = true;
+			document.getElementById('qrcodeError').hidden = false;
+			// 没有码可存，主按钮禁用——点了没反应比灰掉更让人困惑
+			document.getElementById('qrcodeSaveBtn').disabled = true;
+			document.getElementById('qrcodeTitle').textContent = '无法生成二维码';
+			document.getElementById('qrcodeSubtitle').textContent = '内容超出二维码容量上限';
+			document.getElementById('qrcodeErrorTitle').textContent =
+				'链接长度 ' + length.toLocaleString('zh-CN') + ' 字符';
+			document.getElementById('qrcodeErrorDesc').innerHTML =
+				'已超过二维码最大容量。关闭弹窗后，用输入框旁的<strong>「复制订阅」</strong>手动导入。';
+			document.getElementById('qrcodeHint').textContent = '这不是故障，是内容本身的物理限制';
+			// chips 保留（类型 / 长度 / 超限），避免错误态比正常态矮一截造成高度跳动
+			const levelChip = document.getElementById('qrcodeChipLevel');
+			levelChip.textContent = '超出容量';
+			levelChip.classList.remove('is-mute');
+			levelChip.classList.add('is-warn');
+		}
+
+		// 保存二维码：把弹窗里的码导出成 PNG。
+		// 输入框旁边已经有「复制订阅」，弹窗这里的价值是把图存下来发给别人，
+		// 所以只做下载，不再重复一遍复制。
+		function saveQRCode() {
+			const wrap = document.getElementById('qrcodeContainer');
+			const canvas = wrap.querySelector('canvas');
+			const img = wrap.querySelector('img');
+
+			// canvas 才是库真实绘制的那一份（被内联 display:none 藏起来，但像素还在）；
+			// img 只是它的 data URL 副本，放第二顺位兜底。
+			let source = null;
+			let sw = 0;
+			let sh = 0;
+			if (canvas && canvas.width) {
+				source = canvas;
+				sw = canvas.width;
+				sh = canvas.height;
+			} else if (img && img.complete && img.naturalWidth) {
+				source = img;
+				sw = img.naturalWidth;
+				sh = img.naturalHeight;
+			}
+
+			if (!source || !sw || !sh) {
+				showToast('二维码还没生成好，请稍后再试', 'error');
+				return;
+			}
+
+			const meta = QRCODE_META[qrcodeSourceId] || {};
+
+			try {
+				// 2 倍重绘：分享出去在聊天窗里放大也不糊。
+				// 关掉插值让模块保持硬边，插值放大后边缘发灰反而更难扫。
+				const scale = 2;
+				const out = document.createElement('canvas');
+				out.width = sw * scale;
+				out.height = sh * scale;
+				const ctx = out.getContext('2d');
+				ctx.fillStyle = '#ffffff';
+				ctx.fillRect(0, 0, out.width, out.height);
+				ctx.imageSmoothingEnabled = false;
+				ctx.drawImage(source, 0, 0, out.width, out.height);
+
+				// 用同步的 toDataURL：600×600 的 PNG 只有几十 KB，
+				// 比 toBlob 少一层异步回调，点击后立刻就有结果。
+				const dataUrl = out.toDataURL('image/png');
+				const filename = 'edgetunnel-' + (meta.file || 'qrcode') + '.png';
+
+				const link = document.createElement('a');
+				link.href = dataUrl;
+				link.download = filename;
+				document.body.appendChild(link);
+				link.click();
+				// 立刻移除会让部分浏览器取不到 blob，留一帧再清
+				setTimeout(function () {
+					if (link.parentNode) link.parentNode.removeChild(link);
+				}, 200);
+
+				showToast('二维码已保存', 'success');
+			} catch (error) {
+				console.error('保存二维码失败:', error);
+				showToast('导出失败，请长按二维码图片保存', 'error');
+			}
+		}
+
 		function showQRCode(elementId) {
 			// QRCode 变成异步到达：用户点得快、或全部镜像都失败时它可能缺席。
 			// 不挡一下，下面 QRCode.CorrectLevel 会抛 ReferenceError 把整个弹窗流程打断。
@@ -25165,18 +25758,45 @@
 				showToast('二维码组件加载失败，请检查网络后刷新重试', 'error');
 				return;
 			}
-			const text = document.getElementById(elementId).value;
-			const container = document.getElementById('qrcodeContainer');
-			container.innerHTML = '';
+
+			const source = document.getElementById(elementId);
+			if (!source) return;
+
+			const text = source.value || '';
+			const meta = QRCODE_META[elementId] || { label: '订阅链接', sub: '扫码导入到客户端' };
+			qrcodeSourceId = elementId;
+
+			resetQRCodeModal();
+			document.getElementById('qrcodeTitle').textContent = '扫码导入';
+			document.getElementById('qrcodeSubtitle').textContent = meta.sub;
+			document.getElementById('qrcodeChipType').textContent = meta.label;
+			document.getElementById('qrcodeChipLen').textContent =
+				text.length.toLocaleString('zh-CN') + ' 字符';
 
 			// 如果文本过长，使用较低的纠错等级来支持更长的内容
 			let correctLevel = QRCode.CorrectLevel.H;
+			let levelLabel = '纠错 高';
 			if (text.length > 1500) {
 				correctLevel = QRCode.CorrectLevel.M;
+				levelLabel = '纠错 中';
 			}
 			if (text.length > 2500) {
 				correctLevel = QRCode.CorrectLevel.L;
+				levelLabel = '纠错 低 · 请靠近扫描';
 			}
+
+			const levelChip = document.getElementById('qrcodeChipLevel');
+			levelChip.textContent = levelLabel;
+			// 降级时切琥珀告警，与「静默降纠错」的老行为区分开
+			levelChip.classList.toggle('is-mute', text.length <= 1500);
+			levelChip.classList.toggle('is-warn', text.length > 1500);
+
+			document.getElementById('qrcodeHint').textContent = text.length > 1500
+				? '内容较长，扫描时请保持手机稳定、镜头贴近'
+				: '用手机相机，或在客户端内「扫一扫」导入';
+
+			const container = document.getElementById('qrcodeContainer');
+			container.innerHTML = '';
 
 			try {
 				new QRCode(container, {
@@ -25187,13 +25807,14 @@
 					colorLight: '#fff',
 					correctLevel: correctLevel
 				});
-				document.getElementById('qrcodeModal').classList.add('show');
 			} catch (error) {
-				// 如果文本过长，显示错误提示
+				// 超出物理容量：降到错误态，但弹窗照常打开，
+				// 让用户知道原因、并明确指向输入框旁的「复制订阅」（老实现只弹 toast、窗口根本不出现）
 				console.error('二维码生成失败:', error);
-				showToast('链接过长，无法生成二维码。联系项目作者修复问题。', 'error');
-				container.innerHTML = '<div style="padding:20px;text-align:center;color:#f44336;">二维码生成失败：内容过长</div>';
+				renderQRCodeError(text.length);
 			}
+
+			document.getElementById('qrcodeModal').classList.add('show');
 		}
 
 		function closeQRCode(event) {

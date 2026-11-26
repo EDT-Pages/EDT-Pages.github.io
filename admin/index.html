@@ -6562,12 +6562,32 @@
 			box-shadow: 0 4px 12px rgba(246, 130, 31, 0.32);
 		}
 
-		#tgEasterEggModal .tg-proxy-footnote {
-			margin: 10px 0 0;
-			font-size: 11px;
+		/* 致谢行：比原脚注小半档、链接色深一档 + 极细下划线，可点但不与主按钮抢层级 */
+		#tgEasterEggModal .tg-proxy-credit {
+			margin: 7px 0 0;
+			font-size: 10.5px;
 			line-height: 1.55;
 			color: #6b7280;
 			text-align: center;
+		}
+
+		#tgEasterEggModal .tg-proxy-credit-link {
+			color: #4b5563;
+			font-weight: 500;
+			text-decoration: none;
+			border-bottom: 1px solid rgba(107, 114, 128, 0.3);
+			transition: color 0.2s ease, border-color 0.2s ease;
+		}
+
+		#tgEasterEggModal .tg-proxy-credit-link:hover {
+			color: #1d93cf;
+			border-bottom-color: rgba(42, 171, 238, 0.55);
+		}
+
+		#tgEasterEggModal .tg-proxy-credit-link:focus-visible {
+			outline: 2px solid rgba(42, 171, 238, 0.6);
+			outline-offset: 2px;
+			border-radius: 3px;
 		}
 
 		html.dark-mode #tgEasterEggModal {
@@ -6603,10 +6623,20 @@
 		html.dark-mode #tgEasterEggModal .tg-proxy-qrcap,
 		html.dark-mode #tgEasterEggModal .tg-proxy-qrfallback,
 		html.dark-mode #tgEasterEggModal .tg-proxy-metalabel,
-		html.dark-mode #tgEasterEggModal .tg-proxy-footnote,
+		html.dark-mode #tgEasterEggModal .tg-proxy-credit,
 		html.dark-mode #tgEasterEggModal .tg-proxy-field-hint,
 		html.dark-mode #tgEasterEggModal .tg-proxy-close {
 			color: #a0a0a0;
+		}
+
+		html.dark-mode #tgEasterEggModal .tg-proxy-credit-link {
+			color: #c9cfd8;
+			border-bottom-color: rgba(201, 207, 216, 0.28);
+		}
+
+		html.dark-mode #tgEasterEggModal .tg-proxy-credit-link:hover {
+			color: #4fb3e8;
+			border-bottom-color: rgba(79, 179, 232, 0.6);
 		}
 
 		html.dark-mode #tgEasterEggModal .tg-proxy-field-inputwrap {
@@ -15047,7 +15077,10 @@
 						</svg>
 						<span>一键导入 TG WEB 代理</span>
 					</button>
-					<p class="tg-proxy-footnote">需要已安装 Telegram 客户端 · 未唤起时复制 tg:// 链接在 App 内粘贴打开</p>
+					<p class="tg-proxy-credit">代理实现基于开源项目
+						<a class="tg-proxy-credit-link" href="https://github.com/ToiCF/CF-Workers-TGProxy"
+							target="_blank" rel="noopener noreferrer">ToiCF / CF-Workers-TGProxy</a>
+					</p>
 				</div>
 			</div>
 		</div>

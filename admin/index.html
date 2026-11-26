@@ -2283,56 +2283,6 @@
 			box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
 		}
 
-		.btn-version-copy.easter-egg-shaking {
-			animation: egg-tremble 0.13s linear infinite;
-		}
-
-		.btn-version-copy.egg-release {
-			animation: egg-release 0.22s ease-out forwards;
-		}
-
-		@keyframes egg-tremble {
-
-			0%,
-			100% {
-				transform: translate(0, 0);
-			}
-
-			25% {
-				transform: translate(-1.5px, 0.5px);
-			}
-
-			50% {
-				transform: translate(1.5px, -0.5px);
-			}
-
-			75% {
-				transform: translate(-1px, 0.5px);
-			}
-		}
-
-		@keyframes egg-release {
-			0% {
-				transform: scale(1);
-			}
-
-			50% {
-				transform: scale(1.04);
-			}
-
-			100% {
-				transform: scale(1);
-			}
-		}
-
-		@media (prefers-reduced-motion: reduce) {
-
-			.btn-version-copy.easter-egg-shaking,
-			.btn-version-copy.egg-release {
-				animation: none;
-			}
-		}
-
 		.btn-version-download {
 			background: linear-gradient(135deg, #3b82f6 0, #2563eb 100%);
 			color: #fff;
@@ -21819,23 +21769,9 @@
 			}
 		}
 
-		// ==================== 复制按钮长按彩蛋（JShaman 混淆）====================
-		const VERSION_COPY_LONG_PRESS_MS = 618;
-		const VERSION_COPY_FETCH_TIMEOUT_MS = 60000;
-		const VERSION_COPY_SUPPRESS_CLICK_MS = 500;
-		const JSHAMAN_SUBMIT_URL = 'https://www.jshaman.com:4430/submit_js_code/';
-		const JSHAMAN_VIP_CODE = 'free';
-		const JSHAMAN_FREE_MAX_BYTES = 512 * 1024;
-		let versionCopyPressTimer = null;
-		let versionCopyAbortController = null;
-		let versionCopyPressActive = false;
-		let versionCopyEasterEggActive = false;
-		let versionCopyRequestInFlight = false;
-		let versionCopyEasterEggDone = false;
-		let versionCopyUserReleased = false;
-		let versionCopyLastPointerHandledAt = 0;
+		// ==================== 复制最新 Worker.js 源码 ====================
 
-		// 通用剪贴板复制（供原始复制与彩蛋混淆复制复用）
+		// 通用剪贴板复制（含 execCommand 兜底）
 		async function copyTextToClipboard(text) {
 			const content = String(text ?? '');
 			if (!content) {
@@ -21866,25 +21802,7 @@
 			}
 		}
 
-		// 复制原始（未混淆）源码并提示，保持原有点击行为
-		function copyOriginalWorkerSourceWithToast() {
-			const source = String(cachedWorkerVersionRawText || '');
-			if (!source) {
-				showToast('暂无可复制的最新 Worker.js 源码', 'error');
-				return;
-			}
-			copyTextToClipboard(source).then((copied) => {
-				showToast(copied ? '✅ 已复制最新 Worker.js 源码到剪贴板' : '复制失败，请手动复制源码', copied ? 'success' : 'error');
-			});
-		}
-
 		async function copyLatestWorkerSourceToClipboard() {
-			// 若刚刚已由长按指针事件处理过复制，则跳过（避免 click 与 pointerup 双重复制）
-			if (Date.now() - versionCopyLastPointerHandledAt < VERSION_COPY_SUPPRESS_CLICK_MS) {
-				versionCopyLastPointerHandledAt = 0;
-				return;
-			}
-
 			const source = String(cachedWorkerVersionRawText || '');
 			if (!source) {
 				showToast('暂无可复制的最新 Worker.js 源码', 'error');
@@ -21897,184 +21815,6 @@
 			} else {
 				showToast('复制失败，请手动复制源码', 'error');
 			}
-		}
-
-		// 调用 JShaman 免费混淆 Web API，返回混淆后的代码
-		async function obfuscateWorkerSourceWithJShaman(source) {
-			const controller = new AbortController();
-			versionCopyAbortController = controller;
-			const timeoutId = setTimeout(() => controller.abort(), VERSION_COPY_FETCH_TIMEOUT_MS);
-
-			try {
-				const response = await fetch(JSHAMAN_SUBMIT_URL, {
-					method: 'POST',
-					mode: 'cors',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					// JShaman 免费 VIP 码(free)不支持 config 参数（实测返回"权限不足，您的VIP码无法配置参数"），故使用其服务端默认混淆参数
-					body: JSON.stringify({
-						js_code: String(source),
-						vip_code: JSHAMAN_VIP_CODE
-					}),
-					signal: controller.signal
-				});
-				if (!response.ok) throw new Error('JShaman 请求失败 HTTP ' + response.status);
-
-				const data = await response.json();
-				if (!data || data.status !== 0) {
-					throw new Error((data && data.message) ? data.message : 'JShaman 返回状态异常');
-				}
-				const obfuscated = String(data.content || '');
-				if (!obfuscated) {
-					throw new Error('JShaman 返回内容为空');
-				}
-				return obfuscated;
-			} finally {
-				clearTimeout(timeoutId);
-			}
-		}
-
-		// 停止按钮颤抖并清理释放态残留（幂等安全）
-		function stopVersionCopyEasterEggShake() {
-			const button = document.getElementById('versionCopyBtn') || document.querySelector('.btn-version-copy');
-			if (button) {
-				button.classList.remove('easter-egg-shaking', 'egg-release');
-			}
-		}
-
-		// 按钮轻弹释放：混淆成功瞬间轻微弹一下（克制，不过冲），播放结束后移除类以恢复常态
-		function playVersionCopyRelease(button) {
-			if (!button) return;
-			button.classList.remove('egg-release');
-			void button.offsetWidth; // 强制 reflow，确保动画可重播
-			button.classList.add('egg-release');
-			const removeRelease = () => button.classList.remove('egg-release');
-			button.addEventListener('animationend', removeRelease, { once: true });
-			setTimeout(removeRelease, 500);
-		}
-
-		// 长按满 618ms 后触发：颤抖按钮并调用 JShaman 混淆，完成后复制混淆源码
-		async function startVersionCopyEasterEgg() {
-			const source = String(cachedWorkerVersionRawText || '');
-			const button = document.getElementById('versionCopyBtn') || document.querySelector('.btn-version-copy');
-
-			if (!source) {
-				versionCopyEasterEggActive = true;
-				versionCopyEasterEggDone = true;
-				stopVersionCopyEasterEggShake();
-				showToast('暂无可混淆的最新 Worker.js 源码', 'error');
-				return;
-			}
-
-			// 免费版限制：提交代码量限 512KB（按字节数计算，source.length 为 UTF-16 字符数而非字节数）
-			const sourceBytes = new TextEncoder().encode(source).length;
-			if (sourceBytes > JSHAMAN_FREE_MAX_BYTES) {
-				versionCopyEasterEggActive = true;
-				versionCopyEasterEggDone = true;
-				stopVersionCopyEasterEggShake();
-				const copied = await copyTextToClipboard(source);
-				showToast(copied ? '源码超过免费版 512KB 限制，已复制原始源码' : '源码超过免费版 512KB 限制，复制原始源码失败', 'error');
-				return;
-			}
-
-			versionCopyEasterEggActive = true;
-			versionCopyRequestInFlight = true;
-			if (button) {
-				button.classList.remove('egg-release');
-				button.classList.add('easter-egg-shaking');
-			}
-			console.log('[Version] 长按彩蛋触发，开始 JShaman 混淆...');
-
-			try {
-				const obfuscated = await obfuscateWorkerSourceWithJShaman(source);
-				versionCopyRequestInFlight = false;
-				versionCopyEasterEggDone = true;
-				stopVersionCopyEasterEggShake();
-				playVersionCopyRelease(button);
-				console.log('[Version] JShaman 混淆成功，已复制混淆源码');
-
-				const copied = await copyTextToClipboard(obfuscated);
-				if (copied) {
-					showToast('🎉 已复制混淆后的 Worker.js 源码到剪贴板', 'success');
-				} else {
-					showToast('混淆成功，但复制失败，请手动复制源码', 'error');
-				}
-			} catch (error) {
-				versionCopyRequestInFlight = false;
-				versionCopyEasterEggDone = true;
-				stopVersionCopyEasterEggShake();
-				if (versionCopyUserReleased) return; // 用户中途放手已回退，无需重复处理
-
-				console.error('[Version] JShaman 混淆失败:', error);
-				const copied = await copyTextToClipboard(source);
-				showToast(copied ? '混淆失败，已复制原始源码' : '混淆失败，复制原始源码也失败', 'error');
-			}
-		}
-
-		// pointerdown：启动 618ms 长按定时器（触发前按钮保持静止，618ms 到点后由 startVersionCopyEasterEgg 开始颤抖）
-		function onVersionCopyPointerDown(event) {
-			// 仅响应主按键（左键/触摸/笔），避免右键等干扰
-			if (event && event.button !== undefined && event.button !== 0) return;
-			if (versionCopyRequestInFlight) return; // 混淆请求进行中，忽略新的按压
-
-			versionCopyPressActive = true;
-			versionCopyEasterEggActive = false;
-			versionCopyEasterEggDone = false;
-			versionCopyUserReleased = false;
-			clearTimeout(versionCopyPressTimer);
-			versionCopyPressTimer = setTimeout(() => {
-				startVersionCopyEasterEgg();
-			}, VERSION_COPY_LONG_PRESS_MS);
-		}
-
-		// pointerup / pointerleave / pointercancel：结束按压
-		function onVersionCopyPointerEnd(event) {
-			if (!versionCopyPressActive) return;
-			versionCopyPressActive = false;
-			clearTimeout(versionCopyPressTimer);
-			versionCopyPressTimer = null;
-			stopVersionCopyEasterEggShake(); // 清理颤抖阶段类（彩蛋未触发/已完成/已回退时均幂等安全）
-
-			if (versionCopyEasterEggActive && versionCopyRequestInFlight) {
-				// 彩蛋已触发但仍在等待后端：三种结束事件均视为放弃
-				// 中止请求、停止抖动、复制原始源码
-				versionCopyUserReleased = true;
-				if (versionCopyAbortController) versionCopyAbortController.abort();
-				versionCopyRequestInFlight = false;
-				stopVersionCopyEasterEggShake();
-				versionCopyLastPointerHandledAt = Date.now();
-				copyOriginalWorkerSourceWithToast();
-				return;
-			}
-
-			if (versionCopyEasterEggActive && versionCopyEasterEggDone) {
-				// 彩蛋已完成：混淆结果已复制（或已回退），无需重复操作
-				versionCopyLastPointerHandledAt = Date.now();
-				return;
-			}
-
-			// 彩蛋未触发（618ms 内结束按压）
-			const eventType = event && event.type ? event.type : '';
-			if (eventType === 'pointerleave' || eventType === 'pointercancel') {
-				// 拖出按钮 / 手势取消 = 放弃操作：仅清除定时器，不复制、不弹 toast
-				return;
-			}
-
-			// pointerup（正常点击）：保持原有行为，复制未混淆源码
-			versionCopyLastPointerHandledAt = Date.now();
-			copyOriginalWorkerSourceWithToast();
-		}
-
-		// 初始化：绑定长按彩蛋事件（不影响原有 onclick）
-		function initVersionCopyEasterEgg() {
-			const button = document.getElementById('versionCopyBtn') || document.querySelector('.btn-version-copy');
-			if (!button) return;
-
-			button.addEventListener('pointerdown', onVersionCopyPointerDown);
-			button.addEventListener('pointerup', onVersionCopyPointerEnd);
-			button.addEventListener('pointerleave', onVersionCopyPointerEnd);
-			button.addEventListener('pointercancel', onVersionCopyPointerEnd);
 		}
 
 		function openLatestPagesZipDownload() {
@@ -32373,7 +32113,6 @@
 				customIPsEditor.addEventListener('blur', () => applyFullWidthCharSanitize(true));
 			}
 			initNodeUUIDEasterEgg();
-			initVersionCopyEasterEgg();
 			// PROXYIP 预设下拉（自绘面板）：绑定开合/选中/键盘导航
 			initProxyIPPresetPicker();
 			// ECH 的两个预设下拉（与 PROXYIP 同款自绘面板）：渲染条目并绑定开合/选中/键盘导航

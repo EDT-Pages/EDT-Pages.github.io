@@ -2584,6 +2584,12 @@
 			margin: 0 0 6px;
 		}
 
+		.version-changelog-content del {
+			text-decoration: line-through;
+			text-decoration-thickness: 1px;
+			opacity: 0.62;
+		}
+
 		.version-changelog-content code {
 			padding: 1px 6px;
 			border-radius: 6px;
@@ -22103,6 +22109,7 @@
 			const formatInlineText = (text) => {
 				return escapeMarkdownHtml(text)
 					.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+					.replace(/~~([^~]+)~~/g, '<del>$1</del>')
 					.replace(/`([^`]+)`/g, '<code>$1</code>');
 			};
 

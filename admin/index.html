@@ -2214,6 +2214,8 @@
 			border-radius: 18px;
 			box-shadow: 0 28px 64px -28px rgba(15, 23, 42, 0.34), 0 2px 8px rgba(15, 23, 42, 0.05);
 			text-align: left;
+			/* overflow: hidden 裁切 ::before 顶条沿 17px 内圆角，修复圆角穿模；与移动端 .modal overflow-y:auto 行为一致 */
+			overflow: hidden;
 		}
 
 		/* 顶部品牌渐变细线，呼应页头 header 的 border-image */

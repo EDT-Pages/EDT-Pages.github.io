@@ -4331,10 +4331,10 @@
 			margin-bottom: 20px;
 			color: #1f2937;
 			display: flex;
-			justify-content: space-between;
+			justify-content: flex-start;
 			align-items: center;
 			cursor: pointer;
-			gap: 10px;
+			gap: 12px;
 		}
 
 		.module-title.non-collapsible {
@@ -4355,6 +4355,45 @@
 			transform: rotate(0deg);
 			transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, fill 0.2s ease, box-shadow 0.2s ease;
 		}
+
+		.module-icon {
+			width: 34px;
+			height: 34px;
+			flex: 0 0 34px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			box-sizing: border-box;
+			border-radius: 10px;
+			color: var(--ic-light, #6b7280);
+			background: rgba(var(--ic-rgb, 107, 114, 128), 0.12);
+			border: 1px solid rgba(var(--ic-rgb, 107, 114, 128), 0.26);
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+		}
+
+		.module-icon svg {
+			width: 21px;
+			height: 21px;
+			display: block;
+		}
+
+		html.dark-mode .module-icon {
+			color: var(--ic-dark, #9ca3af);
+			background: rgba(var(--ic-rgb, 107, 114, 128), 0.16);
+			border-color: rgba(var(--ic-rgb, 107, 114, 128), 0.34);
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+		}
+
+		.module-icon--usage { --ic-light: #f6821f; --ic-dark: #fb923c; --ic-rgb: 246, 130, 31; }
+		.module-icon--network { --ic-light: #0ea5e9; --ic-dark: #38bdf8; --ic-rgb: 14, 165, 233; }
+		.module-icon--link { --ic-light: #6366f1; --ic-dark: #818cf8; --ic-rgb: 99, 102, 241; }
+		.module-icon--bolt { --ic-light: #f59e0b; --ic-dark: #fbbf24; --ic-rgb: 245, 158, 11; }
+		.module-icon--config { --ic-light: #64748b; --ic-dark: #94a3b8; --ic-rgb: 100, 116, 139; }
+		.module-icon--ech { --ic-light: #059669; --ic-dark: #34d399; --ic-rgb: 5, 150, 105; }
+		.module-icon--cdn { --ic-light: #f97316; --ic-dark: #fb923c; --ic-rgb: 249, 115, 22; }
+		.module-icon--convert { --ic-light: #14b8a6; --ic-dark: #2dd4bf; --ic-rgb: 20, 184, 166; }
+		.module-icon--notify { --ic-light: #f43f5e; --ic-dark: #fb7185; --ic-rgb: 244, 63, 94; }
+		.module-icon--log { --ic-light: #8b5cf6; --ic-dark: #a78bfa; --ic-rgb: 139, 92, 246; }
 
 		.module-title:not(.non-collapsible):hover .collapse-icon {
 			background: #f9fafb;
@@ -12776,6 +12815,18 @@
 				line-height: 1.35;
 			}
 
+			.module-icon {
+				width: 30px;
+				height: 30px;
+				flex-basis: 30px;
+				border-radius: 9px;
+			}
+
+			.module-icon svg {
+				width: 18px;
+				height: 18px;
+			}
+
 			.module .form-group,
 			#portSection {
 				gap: 7px;
@@ -13167,6 +13218,18 @@
 				gap: 6px;
 				margin-bottom: 11px;
 				font-size: 15px;
+			}
+
+			.module-icon {
+				width: 28px;
+				height: 28px;
+				flex-basis: 28px;
+				border-radius: 8px;
+			}
+
+			.module-icon svg {
+				width: 17px;
+				height: 17px;
 			}
 
 			.module-title .collapse-icon {
@@ -13743,7 +13806,10 @@
 			<!-- Cloudflare Workers/Pages 使用统计模块 -->
 			<div class="module cf-usage-module collapsed" id="cfUsageModule">
 				<div class="module-title" onclick="toggleModule(this)">
-					Workers/Pages 请求使用情况
+					<span class="module-icon module-icon--usage" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.7 16.2A7.8 7.8 0 1 1 19.3 16.2" stroke-width="2.4"/><path d="M12 13.6 16 8.4" stroke-width="2.1"/><circle cx="12" cy="13.6" r="1.8" fill="currentColor" stroke="none"/></svg>
+					</span>
+					<span class="module-label">W/P 请求使用情况</span>
 					<svg class="collapse-icon" viewBox="0 0 24 24">
 						<path d="M7 10l5 5 5-5z" />
 					</svg>
@@ -13801,7 +13867,10 @@
 			<!-- 网络信息模块 -->
 			<div class="module network-detail-collapsed">
 				<div class="module-title" onclick="toggleNetworkModule(this)">
-					🌍 当前网络信息
+					<span class="module-icon module-icon--network" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11.4" cy="12.4" r="7.6" fill="currentColor" fill-opacity=".09"/><circle cx="11.4" cy="12.4" r="7.6"/><path d="M3.8 12.4h15.2" opacity=".5"/><path d="M11.4 4.8a3.3 7.6 0 0 0 0 15.2 3.3 7.6 0 0 0 0-15.2Z" opacity=".5"/></svg>
+					</span>
+					<span class="module-label">当前网络信息</span>
 					<svg class="collapse-icon" viewBox="0 0 24 24" style="transform: rotate(90deg);">
 						<path d="M7 10l5 5 5-5z" />
 					</svg>
@@ -13891,7 +13960,10 @@
 			<!-- 模块1: 订阅链接 -->
 			<div class="module">
 				<div class="module-title" onclick="toggleModule(this)">
-					📋 获取节点链接
+					<span class="module-icon module-icon--link" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 13.8a4.2 4.2 0 0 0 5.94 0l2.9-2.9a4.2 4.2 0 0 0-5.94-5.94l-1.4 1.4"/><path d="M13.8 10.2a4.2 4.2 0 0 0-5.94 0l-2.9 2.9a4.2 4.2 0 0 0 5.94 5.94l1.4-1.4" opacity=".55"/></svg>
+					</span>
+					<span class="module-label">获取节点链接</span>
 					<svg class="collapse-icon" viewBox="0 0 24 24">
 						<path d="M7 10l5 5 5-5z" />
 					</svg>
@@ -13965,7 +14037,10 @@
 			<!-- 模块2: 编辑订阅生成 -->
 			<div class="module" id="preferredSubscriptionModule">
 				<div class="module-title non-collapsible">
-					⚡️ 优选订阅生成
+					<span class="module-icon module-icon--bolt" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13.6 3.1 6.5 12.9h4.4l-1.4 8 7.1-9.8h-4.4l1.4-8Z" fill="currentColor" fill-opacity=".12"/></svg>
+					</span>
+					<span class="module-label">优选订阅生成</span>
 				</div>
 				<div class="module-content">
 
@@ -14056,7 +14131,10 @@
 			<!-- 模块3: 详细配置信息 -->
 			<div class="module collapsed advanced-module mode-always-visible">
 				<div class="module-title" onclick="toggleModule(this)">
-					⚙️ 详细配置信息
+					<span class="module-icon module-icon--config" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7.4h5.1M14.7 7.4H20" opacity=".3" stroke-width="1.9"/><circle cx="11.7" cy="7.4" r="2.7" fill="currentColor" stroke="none"/><path d="M4 16.6h8.2M16 16.6H20" opacity=".3" stroke-width="1.9"/><circle cx="14.1" cy="16.6" r="2.7" fill="currentColor" stroke="none"/></svg>
+					</span>
+					<span class="module-label">详细配置信息</span>
 					<svg class="collapse-icon" viewBox="0 0 24 24">
 						<path d="M7 10l5 5 5-5z" />
 					</svg>
@@ -14265,7 +14343,10 @@
 			<!-- 模块3.5: ECH 设置(实验性质) -->
 			<div class="module collapsed advanced-module mode-always-visible" id="echModule" style="display: none;">
 				<div class="module-title" onclick="toggleModule(this)">
-					🔐 Encrypted Client Hello
+					<span class="module-icon module-icon--ech" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.4" y="10.1" width="15.2" height="9.8" rx="3.2" fill="currentColor" fill-opacity=".09"/><rect x="4.4" y="10.1" width="15.2" height="9.8" rx="3.2"/><path d="M8.1 10.1V7.8a3.9 3.9 0 0 1 7.8 0v2.3"/><circle cx="12" cy="14.3" r="1.4" fill="currentColor" stroke="none"/><path d="M12 15.5v1.9"/></svg>
+					</span>
+					<span class="module-label">Encrypted Client Hello</span>
 					<svg class="collapse-icon" viewBox="0 0 24 24">
 						<path d="M7 10l5 5 5-5z" />
 					</svg>
@@ -14345,7 +14426,10 @@
 			<!-- 模块4: 反代落地设置 -->
 			<div class="module collapsed advanced-module">
 				<div class="module-title" onclick="toggleModule(this)">
-					🌐 Cloudflare CDN 访问设置
+					<span class="module-icon module-icon--cdn" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 18.5h9.2a4.2 4.2 0 0 0 .4-8.38 6.2 6.2 0 0 0-11.9.9A4 4 0 0 0 7.5 18.5Z" fill="currentColor" fill-opacity=".08"/><path d="M12.5 11.3v4.2"/><path d="M10.7 13.6 12.5 15.4 14.3 13.6"/></svg>
+					</span>
+					<span class="module-label">Cloudflare CDN 访问设置</span>
 					<svg class="collapse-icon" viewBox="0 0 24 24">
 						<path d="M7 10l5 5 5-5z" />
 					</svg>
@@ -14772,7 +14856,10 @@
 			<!-- 模块5: 订阅转换配置 -->
 			<div class="module collapsed advanced-module">
 				<div class="module-title" onclick="toggleModule(this)">
-					🔄 订阅转换配置
+					<span class="module-icon module-icon--convert" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.2 8.7h12"/><path d="M13.4 6.1 16.4 8.7 13.4 11.3"/><path d="M19.8 15.3H7.8"/><path d="M10.6 12.7 7.6 15.3 10.6 17.9"/></svg>
+					</span>
+					<span class="module-label">订阅转换配置</span>
 					<svg class="collapse-icon" viewBox="0 0 24 24">
 						<path d="M7 10l5 5 5-5z" />
 					</svg>
@@ -14888,7 +14975,10 @@
 			<!-- 模块6: 消息通知设置 -->
 			<div class="module collapsed advanced-module">
 				<div class="module-title" onclick="toggleModule(this)">
-					🔔 消息通知设置
+					<span class="module-icon module-icon--notify" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.9 9.5a5.9 5.9 0 1 0-11.8 0c0 4.2-1.7 5.5-1.7 5.5h15.2s-1.7-1.3-1.7-5.5Z" fill="currentColor" fill-opacity=".09"/><path d="M9.7 18.2a2.6 2.6 0 0 0 4.6 0"/></svg>
+					</span>
+					<span class="module-label">消息通知设置</span>
 					<svg class="collapse-icon" viewBox="0 0 24 24">
 						<path d="M7 10l5 5 5-5z" />
 					</svg>
@@ -14940,7 +15030,10 @@
 			<!-- 模块7: 查看所有日志 -->
 			<div class="module collapsed advanced-module">
 				<div class="module-title" onclick="toggleModule(this); loadLogsOnExpand(this)">
-					📋 查看操作日志
+					<span class="module-icon module-icon--log" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6.2 5.6v12.8" opacity=".28"/><circle cx="6.2" cy="7.4" r="1.5" fill="currentColor" stroke="none"/><circle cx="6.2" cy="12" r="1.5" fill="currentColor" stroke="none" opacity=".45"/><circle cx="6.2" cy="16.6" r="1.5" fill="currentColor" stroke="none" opacity=".45"/><path d="M10.4 7.4h8.2"/><path d="M10.4 12h8.2" opacity=".5"/><path d="M10.4 16.6h8.2" opacity=".5"/></svg>
+					</span>
+					<span class="module-label">查看操作日志</span>
 					<svg class="collapse-icon" viewBox="0 0 24 24">
 						<path d="M7 10l5 5 5-5z" />
 					</svg>
@@ -27927,9 +28020,9 @@
 		function saveModuleStates() {
 			const states = {};
 			document.querySelectorAll('.module').forEach((module, index) => {
-				const title = module.querySelector('.module-title')?.textContent?.trim() || ('module-' + index);
+				const title = module.querySelector('.module-label')?.textContent?.trim() || module.querySelector('.module-title')?.textContent?.trim() || ('module-' + index);
 				// 不保存"查看操作日志"和"当前网络信息"模块的状态
-				if (title !== '📋 查看操作日志' && title !== '🌍 当前网络信息' && module.id !== 'preferredSubscriptionModule') {
+				if (title !== '查看操作日志' && title !== '当前网络信息' && module.id !== 'preferredSubscriptionModule') {
 					states[title] = !module.classList.contains('collapsed');
 				}
 			});
@@ -27945,13 +28038,13 @@
 			const isFirstVisit = !savedStates;
 
 			document.querySelectorAll('.module').forEach((module, index) => {
-				const title = module.querySelector('.module-title')?.textContent?.trim() || ('module-' + index);
+				const title = module.querySelector('.module-label')?.textContent?.trim() || module.querySelector('.module-title')?.textContent?.trim() || ('module-' + index);
 				let shouldBeExpanded;
 
 				// "查看操作日志"模块始终保持折叠状态，"当前网络信息"模块始终展开
-				if (title === '📋 查看操作日志') {
+				if (title === '查看操作日志') {
 					shouldBeExpanded = false;
-				} else if (title === '🌍 当前网络信息') {
+				} else if (title === '当前网络信息') {
 					shouldBeExpanded = true;
 				} else if (module.id === 'preferredSubscriptionModule') {
 					shouldBeExpanded = true;

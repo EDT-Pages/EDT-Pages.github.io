@@ -5201,20 +5201,6 @@
 				margin-bottom: 10px;
 			}
 
-			.ech-tabs::-webkit-scrollbar {
-				height: 3px;
-			}
-
-			.ech-tab {
-				padding: 7px 12px;
-				font-size: 12px;
-			}
-
-			.ech-tab-content {
-				min-height: 80px;
-				max-height: calc(100vh - 220px);
-			}
-
 			/* 📋 获取节点链接 模块移动端优化 */
 			/* 使用新增的subscription-link-wrapper class来精确控制订阅链接的移动端布局 */
 
@@ -5258,20 +5244,6 @@
 				width: 18px;
 				height: 18px;
 				padding: 4px;
-			}
-
-			.ech-tabs::-webkit-scrollbar {
-				height: 2px;
-			}
-
-			.ech-tab {
-				padding: 6px 10px;
-				font-size: 11px;
-			}
-
-			.ech-tab-content {
-				min-height: 60px;
-				max-height: calc(100vh - 240px);
 			}
 		}
 
@@ -7827,10 +7799,20 @@
 		}
 
 		.ech-help-modal {
-			max-width: 1200px;
-			width: 90vw;
-			max-height: 100vh;
+			/* 宽度/高度由 echdlg 设计稿接管：左右各留 16px、上下各留 20px */
+			width: min(1000px, calc(100vw - 32px));
+			max-width: none;
+			max-height: calc(100vh - 40px);
 			overflow-y: auto;
+		}
+
+		/* 高权重兜底：@media(max-width:768px)/(max-width:480px) 里的通用
+		   .modal{max-width:calc(100vw - 24px/12px)} 与 .modal{width:...}
+		   因同权重且更靠后会压掉 .echdlg 的宽度（390 下左右仅剩 6px）。
+		   这里用 ID 权重固定为「左右各留 16px」，768 / 390 均生效。 */
+		#echHelpModal .echdlg {
+			width: min(1000px, calc(100vw - 32px));
+			max-width: none;
 		}
 
 		#authTokenHelpModal .auth-help-modal {
@@ -9542,80 +9524,1267 @@
 			flex: 1;
 		}
 
-		.ech-tabs {
-			display: flex;
-			gap: 6px;
-			margin-bottom: 15px;
-			flex-wrap: nowrap;
-			overflow-x: auto;
-			overflow-y: hidden;
-			padding-bottom: 8px;
-			scroll-behavior: smooth;
-			cursor: grab;
-			-webkit-user-select: none;
-			user-select: none;
+		/* ============================================================
+		   ECH 帮助弹窗（echdlg · 设计稿 v1）
+		   令牌策略：默认亮色令牌；html.dark-mode 覆盖为暗色令牌
+		   ============================================================ */
+		.echdlg {
+			/* --- 亮色令牌 --- */
+			--dlg-bg: #ffffff;
+			--surface: #f9fafb;
+			--surface-2: #f4f6f9;
+			--surface-3: #eef1f5;
+			--line: #e7eaf0;
+			--line-2: #d8dde6;
+			--t1: #101828;
+			--t2: #556070;
+			--t3: #8a94a4;
+			--brand: #2563eb;
+			--brand-2: #1d4ed8;
+			--ok: #15803d;
+			--ok-bg: #f0fdf4;
+			--ok-line: #bbf7d0;
+			--bad: #dc2626;
+			--bad-bg: #fef2f2;
+			--bad-line: #fecaca;
+			--warn: #b45309;
+			--warn-bg: #fffbeb;
+			--warn-line: #fde68a;
+			--redact: #1f2937;
+			--shadow: 0 30px 70px rgba(16, 24, 40, .18), 0 0 0 1px rgba(16, 24, 40, .06);
+
+			container-type: inline-size;
+			width: min(1000px, calc(100vw - 32px));
+			max-width: none;
+			max-height: calc(100vh - 40px);
+			padding: 26px 26px 20px;
+			border-radius: 20px;
+			background: var(--dlg-bg);
+			color: var(--t1);
+			text-align: left;
+			box-shadow: var(--shadow);
+			position: relative;
 		}
 
-		.ech-tabs.dragging {
+		/* --- 暗色令牌 --- */
+		html.dark-mode .echdlg {
+			--dlg-bg: #12151a;
+			--surface: #171b21;
+			--surface-2: #1c2129;
+			--surface-3: #212731;
+			--line: rgba(255, 255, 255, .085);
+			--line-2: rgba(255, 255, 255, .15);
+			--t1: #f0f4f9;
+			--t2: #a7b1c0;
+			--t3: #7b8696;
+			--brand: #60a5fa;
+			--brand-2: #3b82f6;
+			--ok: #4ade80;
+			--ok-bg: rgba(74, 222, 128, .10);
+			--ok-line: rgba(74, 222, 128, .28);
+			--bad: #f87171;
+			--bad-bg: rgba(248, 113, 113, .10);
+			--bad-line: rgba(248, 113, 113, .26);
+			--warn: #fbbf24;
+			--warn-bg: rgba(251, 191, 36, .10);
+			--warn-line: rgba(251, 191, 36, .26);
+			--redact: #cbd2dc;
+			--shadow: 0 34px 90px rgba(0, 0, 0, .62), 0 0 0 1px rgba(255, 255, 255, .05);
+
+			/* 兜底覆盖通用 .modal 与旧 .ech-help-modal 的背景/文字色 */
+			background: var(--dlg-bg);
+			color: var(--t1);
+		}
+
+		/* --- 关闭按钮（沿用站内 .modal-close 类名） --- */
+		#echHelpModal .modal-close {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			width: 30px;
+			height: 30px;
+			padding: 0;
+			display: grid;
+			place-items: center;
+			border: 0;
+			border-radius: 9px;
+			background: transparent;
+			color: var(--t3);
+			font-size: 19px;
+			line-height: 1;
+			cursor: pointer;
+			transition: .18s;
+		}
+
+		#echHelpModal .modal-close:hover {
+			background: var(--surface-2);
+			color: var(--t1);
+		}
+
+		/* --- 头部 --- */
+		.echdlg .dlg-head {
+			display: flex;
+			align-items: flex-start;
+			gap: 13px;
+			padding-right: 44px;
+			margin-bottom: 20px;
+		}
+
+		.echdlg .dlg-ico {
+			flex: 0 0 auto;
+			width: 38px;
+			height: 38px;
+			border-radius: 11px;
+			display: grid;
+			place-items: center;
+			background: linear-gradient(140deg, rgba(96, 165, 250, .20), rgba(59, 130, 246, .06));
+			border: 1px solid rgba(96, 165, 250, .26);
+			color: var(--brand);
+		}
+
+		.echdlg .dlg-ico svg {
+			width: 19px;
+			height: 19px;
+		}
+
+		.echdlg .dlg-head h2 {
+			margin: 0 0 4px;
+			font-size: 17px;
+			line-height: 1.35;
+			font-weight: 680;
+			letter-spacing: -.01em;
+			color: var(--t1);
+		}
+
+		.echdlg .dlg-head p {
+			margin: 0;
+			font-size: 12.5px;
+			line-height: 1.6;
+			color: var(--t3);
+		}
+
+		.echdlg .dlg-time {
+			margin-left: auto;
+			flex: 0 0 auto;
+			padding: 4px 9px;
+			border-radius: 999px;
+			border: 1px solid var(--line);
+			background: var(--surface-2);
+			font-size: 11px;
+			font-weight: 600;
+			color: var(--t3);
+			white-space: nowrap;
+		}
+
+		/* --- 分段选项卡 --- */
+		.echdlg .ech-tabs {
+			display: flex;
+			gap: 4px;
+			padding: 4px;
+			margin-bottom: 18px;
+			border-radius: 12px;
+			background: var(--surface-2);
+			border: 1px solid var(--line);
+		}
+
+		.echdlg .ech-tabs.dragging {
 			cursor: grabbing;
 		}
 
-		.ech-tabs::-webkit-scrollbar {
-			height: 4px;
-		}
-
-		.ech-tabs::-webkit-scrollbar-track {
+		.echdlg .ech-tab {
+			flex: 1 1 0;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 7px;
+			min-width: 0;
+			padding: 9px 10px;
+			border: 0;
+			border-radius: 9px;
 			background: transparent;
-		}
-
-		.ech-tabs::-webkit-scrollbar-thumb {
-			background: #d1d5db;
-			border-radius: 2px;
-		}
-
-		.ech-tabs::-webkit-scrollbar-thumb:hover {
-			background: #9ca3af;
-		}
-
-		.ech-tab {
-			padding: 8px 14px;
-			border: 2px solid #e5e7eb;
-			border-radius: 8px;
-			background: white;
-			cursor: pointer;
+			font: inherit;
 			font-size: 13px;
 			font-weight: 600;
-			transition: all 0.3s ease;
+			color: var(--t2);
+			cursor: pointer;
+			transition: background .18s, color .18s, box-shadow .18s;
 			white-space: nowrap;
-			flex-shrink: 0;
-			pointer-events: auto;
 		}
 
-		.ech-tab:hover {
-			border-color: #3b82f6;
+		.echdlg .ech-tab svg {
+			width: 15px;
+			height: 15px;
+			flex: 0 0 auto;
+			opacity: .8;
 		}
 
-		.ech-tab.active {
-			background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-			color: white;
-			border-color: #3b82f6;
+		.echdlg .ech-tab:hover {
+			color: var(--t1);
+			background: rgba(127, 127, 127, .07);
 		}
 
-		.ech-tab-content {
-			background: #f9fafb;
-			border-radius: 8px;
-			padding: 15px;
-			min-height: 100px;
-			max-height: calc(100vh - 200px);
+		.echdlg .ech-tab.active,
+		.echdlg .ech-tab[aria-selected="true"] {
+			background: var(--dlg-bg);
+			color: var(--t1);
+			box-shadow: 0 1px 2px rgba(0, 0, 0, .16), 0 0 0 1px var(--line);
+		}
+
+		.echdlg .ech-tab.active svg,
+		.echdlg .ech-tab[aria-selected="true"] svg {
+			opacity: 1;
+			color: var(--brand);
+		}
+
+		.echdlg .ech-tab:focus-visible {
+			outline: 2px solid var(--brand);
+			outline-offset: 1px;
+		}
+
+		/* --- 内容区 --- */
+		.echdlg .ech-content {
+			/* 236 = 设计稿给出的非内容高度估值；本站实测非内容高度为 248px
+			   （padding 46 + head 47+20 + tabs 47+18 + foot 54+16），
+			   再留 8px 余量，保证弹窗刚好落在 max-height:calc(100vh - 40px) 内、不出现外层滚动条 */
+			max-height: calc(100vh - 296px);
+			min-height: 0;
+			margin: 0;
 			overflow-y: auto;
+			overscroll-behavior: contain;
+			padding: 2px 4px 6px 2px;
+			scrollbar-width: thin;
+			scrollbar-color: var(--line-2) transparent;
 		}
 
-		.ech-tab-pane {
+		.echdlg .ech-content::-webkit-scrollbar {
+			width: 8px;
+		}
+
+		.echdlg .ech-content::-webkit-scrollbar-thumb {
+			background: var(--line-2);
+			border-radius: 99px;
+			border: 2px solid transparent;
+			background-clip: padding-box;
+		}
+
+		.echdlg .ech-tab-pane {
 			display: none;
 		}
 
-		.ech-tab-pane.active {
+		.echdlg .ech-tab-pane.active {
 			display: block;
+			animation: fade .22s ease;
+		}
+
+		@keyframes fade {
+			from {
+				opacity: 0;
+				transform: translateY(4px)
+			}
+
+			to {
+				opacity: 1;
+				transform: none
+			}
+		}
+
+		/* --- 通用排版 --- */
+		.echdlg .eyebrow {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			margin-bottom: 9px;
+			font-size: 10.5px;
+			font-weight: 700;
+			letter-spacing: .14em;
+			text-transform: uppercase;
+			color: var(--brand);
+		}
+
+		.echdlg .eyebrow::before {
+			content: "";
+			width: 14px;
+			height: 1.5px;
+			border-radius: 2px;
+			background: currentColor;
+			opacity: .7;
+		}
+
+		.echdlg h3.hero {
+			text-wrap: balance;
+			margin: 0 0 8px;
+			font-size: clamp(17px, 2.1cqi, 21px);
+			line-height: 1.45;
+			font-weight: 680;
+			letter-spacing: -.015em;
+			color: var(--t1);
+		}
+
+		.echdlg h3.hero mark {
+			background: linear-gradient(transparent 62%, rgba(96, 165, 250, .28) 62%);
+			color: inherit;
+			padding: 0 2px;
+		}
+
+		.echdlg .hero-sub {
+			margin: 0;
+			font-size: 13.5px;
+			line-height: 1.85;
+			color: var(--t2);
+			max-width: 74ch;
+			text-wrap: pretty;
+		}
+
+		.echdlg .hero-sub strong {
+			color: var(--t1);
+			font-weight: 650;
+		}
+
+		.echdlg .nw {
+			white-space: nowrap;
+		}
+
+		.echdlg .hero-wrap {
+			margin-bottom: 20px;
+		}
+
+		.echdlg .sec {
+			margin: 24px 0 12px;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			font-size: 13.5px;
+			font-weight: 680;
+			color: var(--t1);
+		}
+
+		.echdlg .sec::after {
+			content: "";
+			flex: 1;
+			height: 1px;
+			background: var(--line);
+		}
+
+		.echdlg code {
+			padding: 1.5px 6px;
+			border-radius: 5px;
+			background: var(--surface-3);
+			border: 1px solid var(--line);
+			font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+			font-size: .88em;
+			color: var(--t1);
+			white-space: nowrap;
+		}
+
+		/* --- 信封对比 --- */
+		.echdlg .compare {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 12px;
+		}
+
+		@container (min-width:700px) {
+			.echdlg .compare {
+				grid-template-columns: 1fr 1fr;
+			}
+		}
+
+		.echdlg .ccard {
+			padding: 14px;
+			border-radius: 14px;
+			border: 1px solid var(--line);
+			background: var(--surface);
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+		}
+
+		.echdlg .ccard.is-bad {
+			border-color: var(--bad-line);
+			background: linear-gradient(180deg, var(--bad-bg), transparent 58%), var(--surface);
+		}
+
+		.echdlg .ccard.is-ok {
+			border-color: var(--ok-line);
+			background: linear-gradient(180deg, var(--ok-bg), transparent 58%), var(--surface);
+		}
+
+		.echdlg .ccard-head {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.echdlg .ccard-head h4 {
+			margin: 0;
+			font-size: 13px;
+			font-weight: 680;
+			color: var(--t1);
+		}
+
+		.echdlg .pill {
+			margin-left: auto;
+			padding: 2.5px 8px;
+			border-radius: 999px;
+			font-size: 10.5px;
+			font-weight: 700;
+			letter-spacing: .02em;
+			border: 1px solid transparent;
+			white-space: nowrap;
+		}
+
+		.echdlg .pill.bad {
+			color: var(--bad);
+			background: var(--bad-bg);
+			border-color: var(--bad-line);
+		}
+
+		.echdlg .pill.ok {
+			color: var(--ok);
+			background: var(--ok-bg);
+			border-color: var(--ok-line);
+		}
+
+		.echdlg .pill.plain {
+			color: var(--t3);
+			background: var(--surface-2);
+			border-color: var(--line);
+		}
+
+		/* 信封 */
+		.echdlg .env {
+			border: 1px solid var(--line-2);
+			border-radius: 11px;
+			background: var(--surface-2);
+			overflow: hidden;
+		}
+
+		.echdlg .env-top {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 8px 10px;
+			border-bottom: 1px dashed var(--line-2);
+			font-size: 10px;
+			font-weight: 600;
+			letter-spacing: .1em;
+			text-transform: uppercase;
+			color: var(--t3);
+		}
+
+		.echdlg .stamp {
+			margin-left: auto;
+			width: 18px;
+			height: 15px;
+			border: 1px solid var(--line-2);
+			border-radius: 3px;
+			background: repeating-linear-gradient(45deg, transparent 0 3px, var(--line-2) 3px 4px);
+		}
+
+		.echdlg .env-body {
+			padding: 11px 12px 12px;
+		}
+
+		.echdlg .addr-row {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			min-height: 24px;
+		}
+
+		.echdlg .addr {
+			font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+			font-size: 12.5px;
+			font-weight: 600;
+			letter-spacing: -.01em;
+			padding-bottom: 2px;
+			border-bottom: 1px solid currentColor;
+		}
+
+		.echdlg .addr.is-bad {
+			color: var(--bad);
+		}
+
+		.echdlg .addr.is-ok {
+			color: var(--ok);
+		}
+
+		.echdlg .addr.redacted {
+			color: var(--t3);
+			background: transparent;
+			border-bottom-color: transparent;
+			letter-spacing: .06em;
+			user-select: none;
+		}
+
+		.echdlg .env-note {
+			margin: 8px 0 0;
+			font-size: 11.5px;
+			line-height: 1.6;
+			color: var(--t3);
+		}
+
+		.echdlg .env-lock {
+			display: inline-flex;
+			align-items: center;
+			gap: 5px;
+			margin-top: 9px;
+			padding: 4px 8px;
+			border-radius: 6px;
+			background: var(--surface-3);
+			font-size: 11px;
+			color: var(--t2);
+		}
+
+		.echdlg .env-lock svg {
+			width: 12px;
+			height: 12px;
+			color: var(--ok);
+			flex: 0 0 auto;
+		}
+
+		.echdlg .verdict {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+
+		.echdlg .verdict li {
+			display: flex;
+			align-items: flex-start;
+			gap: 7px;
+			font-size: 12px;
+			line-height: 1.6;
+			color: var(--t2);
+		}
+
+		.echdlg .verdict svg {
+			width: 13px;
+			height: 13px;
+			flex: 0 0 auto;
+			margin-top: 3px;
+		}
+
+		.echdlg .verdict .v-ok svg {
+			color: var(--ok);
+		}
+
+		.echdlg .verdict .v-no svg {
+			color: var(--bad);
+		}
+
+		/* --- 链路流程 --- */
+		.echdlg .flows {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+		}
+
+		.echdlg .flow {
+			padding: 12px 13px;
+			border-radius: 12px;
+			border: 1px solid var(--line);
+			background: var(--surface);
+		}
+
+		.echdlg .flow.bad {
+			border-color: var(--bad-line);
+		}
+
+		.echdlg .flow.ok {
+			border-color: var(--ok-line);
+		}
+
+		.echdlg .flow-tag {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			margin-bottom: 9px;
+			font-size: 11px;
+			font-weight: 700;
+			letter-spacing: .04em;
+		}
+
+		.echdlg .flow.bad .flow-tag {
+			color: var(--bad);
+		}
+
+		.echdlg .flow.ok .flow-tag {
+			color: var(--ok);
+		}
+
+		.echdlg .flow-tag i {
+			width: 6px;
+			height: 6px;
+			border-radius: 50%;
+			background: currentColor;
+		}
+
+		.echdlg .track {
+			display: flex;
+			align-items: stretch;
+			gap: 0;
+			flex-wrap: wrap;
+		}
+
+		.echdlg .node {
+			flex: 1 1 0;
+			min-width: 110px;
+			padding: 9px 10px;
+			border-radius: 9px;
+			background: var(--surface-2);
+			border: 1px solid var(--line);
+			font-size: 11.5px;
+			line-height: 1.55;
+			color: var(--t2);
+			text-align: center;
+		}
+
+		.echdlg .node b {
+			display: block;
+			font-size: 12px;
+			font-weight: 650;
+			color: var(--t1);
+			margin-bottom: 2px;
+		}
+
+		.echdlg .flow.bad .node b {
+			color: var(--bad);
+		}
+
+		.echdlg .flow.ok .node b {
+			color: var(--ok);
+		}
+
+		.echdlg .node.dim {
+			opacity: .85;
+		}
+
+		.echdlg .arw {
+			display: grid;
+			place-items: center;
+			width: 26px;
+			flex: 0 0 26px;
+			color: var(--t3);
+			font-size: 13px;
+		}
+
+		@container (max-width:640px) {
+			.echdlg .track {
+				flex-direction: column;
+			}
+
+			.echdlg .node {
+				width: 100%;
+			}
+
+			.echdlg .arw {
+				width: 100%;
+				height: 20px;
+				flex: 0 0 20px;
+				transform: rotate(90deg);
+			}
+		}
+
+		/* --- 金句 --- */
+		.echdlg .oneliner {
+			position: relative;
+			margin: 18px 0 0;
+			padding: 15px 16px 15px 17px;
+			border-radius: 12px;
+			border: 1px solid var(--line);
+			border-left: 3px solid var(--brand);
+			background: var(--surface);
+		}
+
+		.echdlg .oneliner span {
+			display: block;
+			margin-bottom: 6px;
+			font-size: 10px;
+			font-weight: 700;
+			letter-spacing: .14em;
+			text-transform: uppercase;
+			color: var(--brand);
+		}
+
+		.echdlg .oneliner p {
+			margin: 0;
+			font-size: 14px;
+			line-height: 1.7;
+			font-weight: 600;
+			color: var(--t1);
+		}
+
+		/* --- 折叠 --- */
+		.echdlg .acc {
+			margin-top: 9px;
+			border: 1px solid var(--line);
+			border-radius: 11px;
+			background: var(--surface);
+			overflow: hidden;
+		}
+
+		.echdlg .acc+.acc {
+			margin-top: 8px;
+		}
+
+		.echdlg .acc summary {
+			display: flex;
+			align-items: center;
+			gap: 9px;
+			padding: 11px 13px;
+			cursor: pointer;
+			list-style: none;
+			font-size: 12.5px;
+			font-weight: 620;
+			color: var(--t1);
+			transition: background .16s;
+		}
+
+		.echdlg .acc summary::-webkit-details-marker {
+			display: none;
+		}
+
+		.echdlg .acc summary:hover {
+			background: var(--surface-2);
+		}
+
+		.echdlg .acc summary::after {
+			content: "+";
+			margin-left: auto;
+			width: 18px;
+			height: 18px;
+			flex: 0 0 18px;
+			display: grid;
+			place-items: center;
+			border-radius: 5px;
+			background: var(--surface-3);
+			color: var(--t2);
+			font-size: 13px;
+			font-weight: 600;
+			line-height: 1;
+		}
+
+		.echdlg .acc[open] summary::after {
+			content: "−";
+		}
+
+		.echdlg .acc summary:focus-visible {
+			outline: 2px solid var(--brand);
+			outline-offset: -2px;
+		}
+
+		.echdlg .acc-body {
+			padding: 0 13px 13px;
+			font-size: 12.5px;
+			line-height: 1.85;
+			color: var(--t2);
+			text-wrap: pretty;
+		}
+
+		.echdlg .acc-body p {
+			margin: 0 0 8px;
+		}
+
+		.echdlg .acc-body p:last-child {
+			margin-bottom: 0;
+		}
+
+		.echdlg .acc-body b {
+			color: var(--t1);
+			font-weight: 650;
+		}
+
+		/* 术语表 */
+		.echdlg .glossary {
+			margin: 0;
+			display: grid;
+			gap: 9px;
+		}
+
+		.echdlg .glossary>div {
+			display: grid;
+			grid-template-columns: 88px 1fr;
+			gap: 10px;
+			align-items: start;
+			padding-bottom: 9px;
+			border-bottom: 1px dashed var(--line);
+		}
+
+		.echdlg .glossary>div:last-child {
+			padding-bottom: 0;
+			border-bottom: 0;
+		}
+
+		.echdlg .glossary dt {
+			font-family: ui-monospace, Consolas, monospace;
+			font-size: 11.5px;
+			font-weight: 700;
+			color: var(--brand);
+			letter-spacing: .01em;
+		}
+
+		.echdlg .glossary dd {
+			margin: 0;
+			font-size: 12px;
+			line-height: 1.75;
+			color: var(--t2);
+		}
+
+		@container (max-width:520px) {
+			.echdlg .glossary>div {
+				grid-template-columns: 1fr;
+				gap: 3px;
+			}
+		}
+
+		/* --- 步骤 --- */
+		.echdlg .steps {
+			display: flex;
+			flex-direction: column;
+			gap: 9px;
+		}
+
+		.echdlg .step {
+			display: flex;
+			gap: 11px;
+			padding: 12px 13px;
+			border-radius: 12px;
+			border: 1px solid var(--line);
+			background: var(--surface);
+		}
+
+		.echdlg .num {
+			flex: 0 0 22px;
+			width: 22px;
+			height: 22px;
+			border-radius: 7px;
+			display: grid;
+			place-items: center;
+			background: linear-gradient(140deg, rgba(96, 165, 250, .22), rgba(59, 130, 246, .07));
+			border: 1px solid rgba(96, 165, 250, .28);
+			color: var(--brand);
+			font-size: 11.5px;
+			font-weight: 800;
+		}
+
+		.echdlg .step h4 {
+			margin: 0 0 3px;
+			font-size: 12.5px;
+			font-weight: 650;
+			color: var(--t1);
+			line-height: 1.5;
+		}
+
+		.echdlg .step p {
+			margin: 0;
+			font-size: 11.5px;
+			line-height: 1.7;
+			color: var(--t3);
+		}
+
+		/* --- 客户端 --- */
+		.echdlg .clients {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 9px;
+		}
+
+		@container (min-width:640px) {
+			.echdlg .clients {
+				grid-template-columns: repeat(2, 1fr);
+			}
+		}
+
+		.echdlg .client {
+			display: flex;
+			flex-direction: column;
+			gap: 3px;
+			padding: 11px 12px;
+			border-radius: 11px;
+			border: 1px solid var(--line);
+			background: var(--surface);
+			text-decoration: none;
+			transition: .16s;
+		}
+
+		.echdlg .client:hover {
+			border-color: var(--line-2);
+			transform: translateY(-1px);
+		}
+
+		.echdlg .client span {
+			font-size: 10px;
+			font-weight: 700;
+			letter-spacing: .1em;
+			text-transform: uppercase;
+			color: var(--t3);
+		}
+
+		.echdlg .client strong {
+			font-size: 12.5px;
+			font-weight: 680;
+			color: var(--t1);
+		}
+
+		.echdlg .client em {
+			font-style: normal;
+			font-family: ui-monospace, Consolas, monospace;
+			font-size: 11px;
+			color: var(--brand);
+		}
+
+		.echdlg .client small {
+			font-size: 11px;
+			color: var(--t3);
+			line-height: 1.5;
+		}
+
+		/* --- 提示条 --- */
+		.echdlg .callout {
+			display: flex;
+			gap: 10px;
+			margin-top: 14px;
+			padding: 12px 13px;
+			border-radius: 11px;
+			border: 1px solid var(--warn-line);
+			background: var(--warn-bg);
+		}
+
+		.echdlg .callout svg {
+			width: 15px;
+			height: 15px;
+			flex: 0 0 15px;
+			margin-top: 1px;
+			color: var(--warn);
+		}
+
+		.echdlg .callout h4 {
+			margin: 0 0 3px;
+			font-size: 12px;
+			font-weight: 700;
+			color: var(--t1);
+		}
+
+		.echdlg .callout p {
+			margin: 0;
+			font-size: 11.5px;
+			line-height: 1.7;
+			color: var(--t2);
+		}
+
+		/* --- 判据卡 --- */
+		.echdlg .judge {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 10px;
+		}
+
+		@container (min-width:640px) {
+			.echdlg .judge {
+				grid-template-columns: 1fr 1fr;
+			}
+		}
+
+		.echdlg .jcard {
+			padding: 14px;
+			border-radius: 13px;
+			border: 1px solid var(--line);
+			background: var(--surface);
+			display: flex;
+			flex-direction: column;
+			gap: 7px;
+		}
+
+		.echdlg .jcard.ok {
+			border-color: var(--ok-line);
+			background: linear-gradient(180deg, var(--ok-bg), transparent 62%), var(--surface);
+		}
+
+		.echdlg .jcard.no {
+			border-color: var(--bad-line);
+			background: linear-gradient(180deg, var(--bad-bg), transparent 62%), var(--surface);
+		}
+
+		.echdlg .jcard-k {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			font-size: 10.5px;
+			font-weight: 700;
+			letter-spacing: .1em;
+			text-transform: uppercase;
+			color: var(--t3);
+		}
+
+		.echdlg .jcard .val {
+			font-family: ui-monospace, Consolas, monospace;
+			font-size: 13.5px;
+			font-weight: 700;
+			letter-spacing: -.01em;
+			word-break: break-all;
+		}
+
+		.echdlg .jcard.ok .val {
+			color: var(--ok);
+		}
+
+		.echdlg .jcard.no .val {
+			color: var(--bad);
+		}
+
+		.echdlg .jcard-r {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			font-size: 12px;
+			font-weight: 650;
+			margin-top: auto;
+			padding-top: 3px;
+		}
+
+		.echdlg .jcard-r svg {
+			width: 14px;
+			height: 14px;
+			flex: 0 0 14px;
+		}
+
+		.echdlg .jcard.ok .jcard-r {
+			color: var(--ok);
+		}
+
+		.echdlg .jcard.no .jcard-r {
+			color: var(--bad);
+		}
+
+		/* --- 工具卡 --- */
+		.echdlg .tool {
+			display: flex;
+			gap: 13px;
+			margin-top: 16px;
+			padding: 15px;
+			border-radius: 14px;
+			border: 1px solid rgba(96, 165, 250, .30);
+			background: linear-gradient(140deg, rgba(96, 165, 250, .11), rgba(59, 130, 246, .03) 62%), var(--surface);
+		}
+
+		.echdlg .tool-ico {
+			flex: 0 0 40px;
+			width: 40px;
+			height: 40px;
+			border-radius: 11px;
+			display: grid;
+			place-items: center;
+			background: var(--dlg-bg);
+			border: 1px solid rgba(96, 165, 250, .3);
+			color: var(--brand);
+		}
+
+		.echdlg .tool-ico svg {
+			width: 20px;
+			height: 20px;
+		}
+
+		.echdlg .tool-main {
+			flex: 1;
+			min-width: 0;
+		}
+
+		.echdlg .tool-head {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			flex-wrap: wrap;
+			margin-bottom: 4px;
+		}
+
+		.echdlg .tool-head h4 {
+			margin: 0;
+			font-size: 13.5px;
+			font-weight: 700;
+			color: var(--t1);
+		}
+
+		.echdlg .tool p {
+			margin: 0 0 11px;
+			font-size: 12px;
+			line-height: 1.7;
+			color: var(--t2);
+		}
+
+		.echdlg .tool-actions {
+			display: flex;
+			align-items: center;
+			gap: 9px;
+			flex-wrap: wrap;
+		}
+
+		/* --- 按钮 --- */
+		.echdlg .btn {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			padding: 8px 14px;
+			border-radius: 9px;
+			border: 1px solid transparent;
+			font: inherit;
+			font-size: 12.5px;
+			font-weight: 650;
+			letter-spacing: 0;
+			text-decoration: none;
+			cursor: pointer;
+			transition: transform .16s, box-shadow .16s, background .16s, border-color .16s;
+		}
+
+		.echdlg .btn svg {
+			width: 14px;
+			height: 14px;
+		}
+
+		.echdlg .btn.primary,
+		.echdlg .btn-primary {
+			background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+			color: #fff;
+			box-shadow: 0 6px 16px -6px rgba(37, 99, 235, .7);
+		}
+
+		.echdlg .btn.primary:hover,
+		.echdlg .btn-primary:hover {
+			transform: translateY(-1px);
+			box-shadow: 0 10px 22px -8px rgba(37, 99, 235, .85);
+		}
+
+		/* 覆盖通用 .btn-primary 的高光扫过伪元素 */
+		.echdlg .btn-primary::before {
+			content: none;
+		}
+
+		.echdlg .btn.ghost {
+			background: transparent;
+			border-color: var(--line-2);
+			color: var(--t2);
+		}
+
+		.echdlg .btn.ghost:hover {
+			border-color: var(--brand);
+			color: var(--t1);
+			background: rgba(96, 165, 250, .07);
+		}
+
+		.echdlg .btn:focus-visible {
+			outline: 2px solid var(--brand);
+			outline-offset: 2px;
+		}
+
+		/* --- 小提示列表 --- */
+		.echdlg .hints {
+			margin-top: 12px;
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+
+		.echdlg .hints div {
+			display: flex;
+			gap: 7px;
+			font-size: 11.5px;
+			line-height: 1.7;
+			color: var(--t3);
+		}
+
+		.echdlg .hints svg {
+			width: 13px;
+			height: 13px;
+			flex: 0 0 13px;
+			margin-top: 3px;
+			color: var(--t3);
+		}
+
+		.echdlg .hints b {
+			color: var(--t2);
+			font-weight: 650;
+		}
+
+		/* --- 底部 --- */
+		.echdlg .dlg-foot {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			margin-top: 16px;
+			padding-top: 14px;
+			border-top: 1px solid var(--line);
+		}
+
+		.echdlg .dlg-foot .hint {
+			font-size: 11.5px;
+			color: var(--t3);
+			line-height: 1.6;
+		}
+
+		.echdlg .dlg-foot .hint a {
+			color: var(--brand);
+			text-decoration: none;
+			font-weight: 600;
+		}
+
+		.echdlg .dlg-foot .hint a:hover {
+			text-decoration: underline;
+		}
+
+		.echdlg .dlg-foot .btn {
+			margin-left: auto;
+			margin-top: 0;
+			width: auto;
+			padding: 9px 20px;
+		}
+
+		/* 注意：容器查询无法查询容器自身，弹窗自身的 padding/border-radius
+		   必须走视口媒体查询（见下方 @media (max-width:520px) 的 #echHelpModal .echdlg） */
+		@container (max-width:520px) {
+			.echdlg .dlg-time {
+				display: none;
+			}
+
+			.echdlg .ech-tab {
+				font-size: 12px;
+				padding: 8px 6px;
+				gap: 5px;
+			}
+
+			.echdlg .ech-tab svg {
+				display: none;
+			}
+
+			.echdlg .ech-content {
+				max-height: none;
+				overflow: visible;
+			}
+
+			.echdlg .tool {
+				flex-direction: column;
+			}
+
+			.echdlg .dlg-foot {
+				flex-wrap: wrap;
+			}
+
+			.echdlg .dlg-foot .btn {
+				width: 100%;
+				margin-left: 0;
+			}
+		}
+
+		/* 窄屏下弹窗自身的 padding / 圆角：必须用视口媒体查询 + ID 权重，
+		   才能同时压过 @media(max-width:768px) 与 (max-width:480px) 的通用 .modal 规则 */
+		@media (max-width:520px) {
+			#echHelpModal .echdlg {
+				padding: 20px 16px 16px;
+				border-radius: 16px;
+			}
 		}
 
 		#onlineOptimizeModal {
@@ -10255,29 +11424,6 @@
 		html.dark-mode .online-optimize-fallback-close:hover {
 			background: #111827;
 			color: #ffffff;
-		}
-
-		html.dark-mode .ech-tab {
-			background: var(--input-bg);
-			border-color: var(--border-color);
-			color: var(--text-primary);
-		}
-
-		html.dark-mode .ech-tab.active {
-			background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-			color: white;
-		}
-
-		html.dark-mode .ech-tab-content {
-			background: var(--input-bg);
-		}
-
-		html.dark-mode .ech-tabs::-webkit-scrollbar-thumb {
-			background: #4b5563;
-		}
-
-		html.dark-mode .ech-tabs::-webkit-scrollbar-thumb:hover {
-			background: #6b7280;
 		}
 
 		/* 消息通知设置样式 */
@@ -20914,252 +22060,456 @@
 
 	<!-- ECH 帮助模态框 -->
 	<div class="modal-overlay" id="echHelpModal" onclick="closeECHHelpModal(event)">
-		<div class="modal ech-help-modal" onclick="event.stopPropagation()">
-			<button type="button" class="modal-close" onclick="closeECHHelpModal()">×</button>
+		<div class="modal ech-help-modal echdlg" role="dialog" aria-modal="true" aria-labelledby="echDlgTitle"
+			onclick="event.stopPropagation()">
+			<button type="button" class="modal-close" onclick="closeECHHelpModal()" aria-label="关闭">×</button>
 
-			<!-- 选项卡 -->
-			<div class="ech-tabs">
-				<button class="ech-tab active" onclick="switchECHTab(0)">什么是ECH？</button>
-				<button class="ech-tab" onclick="switchECHTab(1)">如何使用？</button>
-				<button class="ech-tab" onclick="switchECHTab(2)">如何确认 ECH 是否已经生效？</button>
+			<!-- 头部 -->
+			<div class="dlg-head">
+				<div class="dlg-ico" aria-hidden="true">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+						stroke-linecap="round" stroke-linejoin="round">
+						<rect x="3.5" y="10" width="17" height="10.5" rx="2.6" />
+						<path d="M7.8 10V7.4a4.2 4.2 0 0 1 8.4 0V10" />
+						<circle cx="12" cy="15.3" r="1.5" />
+					</svg>
+				</div>
+				<div>
+					<h2 id="echDlgTitle">ECH 小课堂</h2>
+					<p>不用懂技术名词，用人话讲清楚它是啥、为啥要开、怎么验</p>
+				</div>
+				<span class="dlg-time">约 3 分钟</span>
 			</div>
 
-			<!-- 选项卡内容 -->
-			<div class="ech-tab-content">
-				<div class="ech-tab-pane active" id="echTab0">
-					<div class="api-docs">
-						<h2 class="section-title">🔐 什么是 ECH？</h2>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							<strong>ECH（Encrypted Client Hello，加密客户端问候）</strong> 是 TLS 的一项新特性，用来
-							<strong>将原本会明文暴露的域名信息一起加密</strong>。
-						</p>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							如果你希望了解更完整、偏技术细节的说明，可以参考 Cloudflare 官方博客：<br>
-							👉 <a href="https://blog.cloudflare.com/zh-cn/announcing-encrypted-client-hello/"
-								target="_blank" rel="noopener"
-								style="color: var(--primary-color); text-decoration: none;">https://blog.cloudflare.com/zh-cn/announcing-encrypted-client-hello/</a>
-						</p>
-
-						<h3 style="color: var(--text-primary); margin: 24px 0 16px;">📖 背景说明</h3>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							当我们使用 <strong>WS + TLS</strong> 的节点进行代理时：
-						</p>
-
-						<ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
-							<li style="margin-bottom: 8px; color: var(--text-secondary);">✅ 实际通信内容已经被 TLS 加密，GFW
-								<strong>无法看到你访问的具体内容</strong>
-							</li>
-							<li style="color: var(--text-secondary);">❌ 但在 TLS 握手阶段，仍然会暴露一个关键信息：<strong>SNI</strong>
-							</li>
-						</ul>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							<strong>SNI 就是节点的伪装域名（HOST）</strong>
-						</p>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							也就是说：
-						</p>
-
-						<div class="code-block"
-							style="background: #fff3cd; color: #856404; border-left-color: #ffc107;">
-							GFW 虽然不知道你在访问什么，但知道你在"扶墙"，并且知道你连接的是哪个域名。
-						</div>
-
-						<h3 style="color: var(--text-primary); margin: 24px 0 16px;">⚠️ 会带来什么问题？</h3>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							这就是为什么在以下场景中经常出现异常情况：
-						</p>
-
-						<ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
-							<li style="margin-bottom: 8px; color: var(--text-secondary);">❌ v2rayN 批量测试真链接延迟</li>
-							<li style="color: var(--text-secondary);">❌ Clash 策略组自动选择节点</li>
-						</ul>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							表现通常为：
-						</p>
-
-						<div class="code-block"
-							style="background: #f8d7da; color: #721c24; border-left-color: #dc3545;">
-							所有节点瞬间 -1，全部无法使用
-						</div>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							其原因并不是节点真的失效，而是 <strong>运营商 / GFW 通过阻断节点域名的访问来干扰代理连接</strong>。<br>
-							由于这种阻断大多是自动化策略，容易误判，因此 <strong>过一段时间节点又可能恢复正常</strong>，反复循环。
-						</p>
-
-						<h3 style="color: var(--text-primary); margin: 24px 0 16px;">💡 ECH 的作用</h3>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							ECH 的核心作用是：
-						</p>
-
-						<div class="code-block"
-							style="background: #d1ecf1; color: #0c5460; border-left-color: #17a2b8;">
-							将 SNI（也就是节点域名）加密
-						</div>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							启用 ECH 后：
-						</p>
-
-						<ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
-							<li style="margin-bottom: 8px; color: var(--text-secondary);">✅ GFW
-								<strong>无法获取真实的节点域名</strong>
-							</li>
-							<li style="color: var(--text-secondary);">✅ 外部观察到的域名将统一显示为：<code
-									style="background: #e9ecef; padding: 2px 4px; border-radius: 3px;">cloudflare-ech.com</code>
-							</li>
-						</ul>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							这从源头上 <strong>阻断了通过域名精准封锁节点的手段</strong>。
-						</p>
-
-						<h3 style="color: var(--text-primary); margin: 24px 0 16px;">🤔 ECH 会不会被封？</h3>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							理论上，GFW 只需 <strong>直接阻断 <code>cloudflare-ech.com</code></strong> 即可。
-						</p>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							但这样会：
-						</p>
-
-						<ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
-							<li style="margin-bottom: 8px; color: var(--text-secondary);">❌ 误伤大量正常使用 ECH 的网站和服务</li>
-							<li style="color: var(--text-secondary);">❌ 带来较高的封锁成本和副作用</li>
-						</ul>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							因此，<strong>ECH 能持续多久，取决于 GFW 的取舍与策略</strong>，至少在目前阶段仍然非常有效。
-						</p>
-					</div>
-				</div>
-
-				<div class="ech-tab-pane" id="echTab1">
-					<div class="api-docs">
-						<h2 class="section-title">🚀 如何使用 ECH？</h2>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							使用 ECH 非常简单，只需要 <strong>ECH 设置</strong> 为 <strong>开启</strong> 后更新订阅即可。
-						</p>
-
-						<h3 style="color: var(--text-primary); margin: 24px 0 16px;">📱 支持 ECH 的客户端</h3>
-
-						<h4 style="color: var(--text-primary); margin: 20px 0 12px;">Windows：</h4>
-						<ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
-							<li style="margin-bottom: 8px; color: var(--text-secondary);">
-								<strong>v2rayN ≥ v7.17.0</strong><br>
-								<a href="https://github.com/2dust/v2rayN/releases" target="_blank" rel="noopener"
-									style="color: var(--primary-color); text-decoration: none;">https://github.com/2dust/v2rayN/releases</a>
-							</li>
-						</ul>
-
-						<h4 style="color: var(--text-primary); margin: 20px 0 12px;">Android：</h4>
-						<ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
-							<li style="margin-bottom: 8px; color: var(--text-secondary);">
-								<strong>v2rayNG ≥ v2.0.0</strong><br>
-								<a href="https://github.com/2dust/v2rayNG/releases" target="_blank" rel="noopener"
-									style="color: var(--primary-color); text-decoration: none;">https://github.com/2dust/v2rayNG/releases</a>
-							</li>
-						</ul>
-
-						<h4 style="color: var(--text-primary); margin: 20px 0 12px;">Clash.Meta（mihomo 内核）：</h4>
-						<ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
-							<li style="margin-bottom: 8px; color: var(--text-secondary);">
-								所有使用 <strong>clash.meta / mihomo 内核</strong> 的客户端均支持 ECH
-							</li>
-							<li style="color: var(--text-secondary);">
-								⚠️ <strong>需要 DNS 配合使用</strong>
-							</li>
-						</ul>
-
-						<h3 style="color: var(--text-primary); margin: 24px 0 16px;">⚠️ Clash 用户注意事项</h3>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							当前订阅配置中已 <strong>内置 ECH 所需的 DNS 设置</strong>。
-						</p>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							如果出现以下情况：
-						</p>
-
-						<ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
-							<li style="margin-bottom: 8px; color: var(--text-secondary);">✅ 已开启 ECH</li>
-							<li style="margin-bottom: 8px; color: var(--text-secondary);">✅ 已更新订阅</li>
-							<li style="color: var(--text-secondary);">❌ ECH 节点仍然无法使用</li>
-						</ul>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							请检查：
-						</p>
-
-						<div class="code-block"
-							style="background: #fff3cd; color: #856404; border-left-color: #ffc107;">
-							是否在更新订阅时覆盖了原有的 DNS 配置
-						</div>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							建议：<strong>不要覆盖订阅中自带的 DNS 设置</strong>
-						</p>
-					</div>
-				</div>
-
-				<div class="ech-tab-pane" id="echTab2">
-					<div class="api-docs">
-						<h2 class="section-title">🔍 如何确认 ECH 是否已经生效？</h2>
-
-						<p style="margin-bottom: 16px; line-height: 1.8; color: var(--text-secondary);">
-							可以通过一个 <strong>简单且直观的方法</strong> 来验证 ECH 是否正常工作。
-						</p>
-
-						<h3 style="color: var(--text-primary); margin: 24px 0 16px;">📋 验证步骤</h3>
-
-						<ol style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
-							<li style="margin-bottom: 12px; color: var(--text-secondary);">打开节点的 <strong>「⚙️
-									详细配置信息」</strong></li>
-							<li style="margin-bottom: 12px; color: var(--text-secondary);">在 <strong>HOST</strong>
-								中手动填写一个 <strong>你当前项目的已被墙的域名</strong>，例如： <code
-									style="background: #e9ecef; padding: 2px 4px; border-radius: 3px;">*.workers.dev</code>
-							</li>
-							<li style="margin-bottom: 12px; color: var(--text-secondary);">保存配置后 <strong>重新更新订阅</strong>
-							</li>
-							<li style="color: var(--text-secondary);">在节点列表中查找：
-								<ul style="margin: 8px 0 0 20px; padding-left: 0;">
-									<li style="margin-bottom: 4px;">- HOST 为 <code
-											style="background: #e9ecef; padding: 2px 4px; border-radius: 3px;">*.workers.dev</code>
-										的节点</li>
-									<li>- 并尝试连接该节点</li>
-								</ul>
-							</li>
-						</ol>
-
-						<h3 style="color: var(--text-primary); margin: 24px 0 16px;">✅ 如何判断结果？</h3>
-
-						<ul style="margin: 12px 0 16px; padding-left: 20px; line-height: 1.8;">
-							<li style="margin-bottom: 12px; color: var(--text-secondary);">
-								<strong style="color: #28a745;">✅ 如果节点可以正常连接使用</strong><br>
-								说明 <strong>ECH 已成功生效</strong>，真实被墙的域名已被隐藏，对外仅显示为 <code
-									style="background: #e9ecef; padding: 2px 4px; border-radius: 3px;">cloudflare-ech.com</code>
-							</li>
-							<li style="color: var(--text-secondary);">
-								<strong style="color: #dc3545;">❌ 如果节点无法连接</strong><br>
-								说明 ECH 未生效，或客户端版本、DNS 配置存在问题
-							</li>
-						</ul>
-					</div>
-				</div>
+			<!-- 分段选项卡 -->
+			<div class="ech-tabs" role="tablist" aria-label="ECH 帮助">
+				<button type="button" class="ech-tab active" role="tab" aria-selected="true" aria-controls="echTab0"
+					onclick="switchECHTab(0)">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+						stroke-linecap="round" stroke-linejoin="round">
+						<path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H12v16H6.5A2.5 2.5 0 0 1 4 17.5v-11Z" />
+						<path d="M20 6.5A2.5 2.5 0 0 0 17.5 4H12v16h5.5A2.5 2.5 0 0 0 20 17.5v-11Z" />
+					</svg>
+					什么是 ECH
+				</button>
+				<button type="button" class="ech-tab" role="tab" aria-selected="false" aria-controls="echTab1"
+					onclick="switchECHTab(1)">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+						stroke-linecap="round" stroke-linejoin="round">
+						<circle cx="12" cy="12" r="3.2" />
+						<path
+							d="M12 3.5v2.2M12 18.3v2.2M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M3.5 12h2.2M18.3 12h2.2M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6" />
+					</svg>
+					怎么开启
+				</button>
+				<button type="button" class="ech-tab" role="tab" aria-selected="false" aria-controls="echTab2"
+					onclick="switchECHTab(2)">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"
+						stroke-linecap="round" stroke-linejoin="round">
+						<circle cx="11" cy="11" r="6.5" />
+						<path d="m16 16 4 4" />
+						<path d="m8.4 11 1.9 1.9 3.4-3.6" />
+					</svg>
+					怎么验证
+				</button>
 			</div>
 
-			<button type="button" class="btn btn-primary btn-close-modal" onclick="closeECHHelpModal()"
-				style="margin-top: 20px;">关闭</button>
+			<!-- 选项卡内容（滚动区） -->
+			<div class="ech-content">
+				<!-- ===== Tab 0：什么是 ECH ===== -->
+				<section class="ech-tab-pane active" id="echTab0" role="tabpanel" aria-label="什么是 ECH">
+					<div class="hero-wrap">
+						<span class="eyebrow">一句话版本</span>
+						<h3 class="hero">你连节点时，会把<mark>节点域名</mark>明晃晃地写在信封上</h3>
+						<p class="hero-sub">
+							信纸已经封好，没人拆得开；但信封上的收件地址，路过的人都能看见。
+							<span class="nw">ECH 只做一件事：</span><strong>把这个地址也一起遮住。</strong>
+						</p>
+					</div>
+
+					<div class="compare">
+						<article class="ccard is-bad">
+							<div class="ccard-head">
+								<h4>没开 ECH</h4>
+								<span class="pill bad">地址暴露</span>
+							</div>
+							<div class="env">
+								<div class="env-top">信封正面 · 收件地址<i class="stamp"></i></div>
+								<div class="env-body">
+									<div class="addr-row"><span class="addr is-bad">edt-pages.github.io</span></div>
+									<div class="env-lock">
+										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
+											stroke-linecap="round" stroke-linejoin="round">
+											<rect x="4" y="10.5" width="16" height="9.5" rx="2.2" />
+											<path d="M8 10.5V7.6a4 4 0 0 1 8 0v2.9" />
+										</svg>
+										信的内容已加密，别人看不到
+									</div>
+									<p class="env-note">地址栏是明文，任何人都能读，包括中间那个检查站。</p>
+								</div>
+							</div>
+							<ul class="verdict">
+								<li class="v-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+										stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+										<path d="m5 12.5 4.4 4.4L19 7.5" />
+									</svg>你聊了什么，没人知道</li>
+								<li class="v-no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+										stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+										<path d="M6.5 6.5l11 11M17.5 6.5l-11 11" />
+									</svg>你连的是哪个域名，全网可见</li>
+								<li class="v-no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+										stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+										<path d="M6.5 6.5l11 11M17.5 6.5l-11 11" />
+									</svg>域名一被拉黑，整条节点跟着掉线</li>
+							</ul>
+						</article>
+
+						<article class="ccard is-ok">
+							<div class="ccard-head">
+								<h4>开了 ECH</h4>
+								<span class="pill ok">地址已隐藏</span>
+							</div>
+							<div class="env">
+								<div class="env-top">信封正面 · 收件地址<i class="stamp"></i></div>
+								<div class="env-body">
+									<div class="addr-row">
+										<span class="addr redacted" aria-label="原始域名已隐藏">█████████████████</span>
+										<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+											stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+											style="color:var(--ok);flex:0 0 13px">
+											<path d="m5 12.5 4.4 4.4L19 7.5" />
+										</svg>
+									</div>
+									<p class="env-note" style="margin-top:9px">真实域名被加密，信封上统一印成：</p>
+									<div class="addr-row" style="margin-top:6px"><span
+											class="addr is-ok">cloudflare-ech.com</span></div>
+									<div class="env-lock">
+										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
+											stroke-linecap="round" stroke-linejoin="round">
+											<rect x="4" y="10.5" width="16" height="9.5" rx="2.2" />
+											<path d="M8 10.5V7.6a4 4 0 0 1 8 0v2.9" />
+										</svg>
+										信的内容依旧加密，地址也一起藏了
+									</div>
+								</div>
+							</div>
+							<ul class="verdict">
+								<li class="v-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+										stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+										<path d="m5 12.5 4.4 4.4L19 7.5" />
+									</svg>连的是哪个域名，外人看不见</li>
+								<li class="v-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+										stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+										<path d="m5 12.5 4.4 4.4L19 7.5" />
+									</svg>别人能看到的，只有那个公共地址</li>
+							</ul>
+						</article>
+					</div>
+
+					<div class="sec">节点为什么会突然全红（-1）</div>
+					<div class="flows">
+						<div class="flow bad">
+							<span class="flow-tag"><i></i>没开 ECH 的线路</span>
+							<div class="track">
+								<div class="node"><b>握手时报出</b>节点域名</div>
+								<span class="arw" aria-hidden="true">→</span>
+								<div class="node"><b>被按域名</b>精准阻断</div>
+								<span class="arw" aria-hidden="true">→</span>
+								<div class="node"><b>测速全 -1</b>过一阵又恢复</div>
+							</div>
+						</div>
+						<div class="flow ok">
+							<span class="flow-tag"><i></i>开了 ECH 的线路</span>
+							<div class="track">
+								<div class="node"><b>握手只报</b>cloudflare-ech.com</div>
+								<span class="arw" aria-hidden="true">→</span>
+								<div class="node"><b>封锁失去目标</b>没有域名可封</div>
+								<span class="arw" aria-hidden="true">→</span>
+								<div class="node"><b>节点稳定可用</b>不再反复掉线</div>
+							</div>
+						</div>
+					</div>
+
+					<blockquote class="oneliner">
+						<span>记住这一句就够了</span>
+						<p>外面的人只看得见 <code>cloudflare-ech.com</code>，看不见你自己的域名。</p>
+					</blockquote>
+
+					<div class="sec">再问几句</div>
+
+					<details class="acc">
+						<summary>那直接把 cloudflare-ech.com 封掉，不就完了？</summary>
+						<div class="acc-body">
+							<p>理论上可以，但代价很大：<b>大量正常网站和正规业务也在用 ECH</b>，一刀切会误伤一片，成本和副作用都很高。</p>
+							<p>所以它不是"绝对安全"，而是"当前阶段非常划算"。<b>当成一层好用的伪装，别当成永久保险。</b></p>
+						</div>
+					</details>
+
+					<details class="acc">
+						<summary>这里要填的「EchConfig 解析域名」，和节点域名是一回事吗？</summary>
+						<div class="acc-body">
+							<p>不是。用一句话区分：<b>一个是去取钥匙，一个是给信封上锁。</b></p>
+							<p>客户端得先找一个域名，问它要一份「钥匙」（ECHConfig），才有力气把地址加密。个别地区会把这个取钥匙的请求掐掉，所以可以换
+								<code>cm.edu.kg</code> 这类别的 Cloudflare 域名去取——<b>只是换了个取钥匙的地方，锁还是同一把。</b>
+							</p>
+							<p>抓包看到的是上锁之后的结果，所以不管你从哪儿取的钥匙，信封上印的都是 <code>cloudflare-ech.com</code>。</p>
+						</div>
+					</details>
+
+					<details class="acc">
+						<summary>我浏览器显示支持 ECH，是不是节点也开了？</summary>
+						<div class="acc-body">
+							<p><b>不是，两件完全不同的事。</b>浏览器开不开 ECH，是浏览器自己的设置，和你的节点没有任何关系。</p>
+							<p>所以拿「打开测试网页看看安不安全」来判断节点，是测错了对象——它测的是浏览器，节点该露的地址照样在露。</p>
+						</div>
+					</details>
+
+					<details class="acc">
+						<summary>术语小抄（看不懂名词时翻这里）</summary>
+						<div class="acc-body">
+							<dl class="glossary">
+								<div>
+									<dt>SNI</dt>
+									<dd>连服务器时报出的域名，相当于信封上的收件地址。</dd>
+								</div>
+								<div>
+									<dt>TLS / 握手</dt>
+									<dd>连上之前先"对个暗号"的过程，域名就是在这一步报出去的。</dd>
+								</div>
+								<div>
+									<dt>ClientHello</dt>
+									<dd>握手时客户端说的第一句话，SNI 就藏在这句话里。</dd>
+								</div>
+								<div>
+									<dt>ECH</dt>
+									<dd>Encrypted Client Hello。把上面那句话整段加密，域名自然也就藏住了。</dd>
+								</div>
+								<div>
+									<dt>GFW</dt>
+									<dd>中间那个只看信封、不拆信的检查站。</dd>
+								</div>
+							</dl>
+						</div>
+					</details>
+
+					<details class="acc">
+						<summary>想看更技术一点的原文</summary>
+						<div class="acc-body">
+							<p>Cloudflare 官方公告（英文/中文都有）：<br>
+								<a href="https://blog.cloudflare.com/zh-cn/announcing-encrypted-client-hello/"
+									target="_blank" rel="noopener"
+									style="color:var(--brand);text-decoration:none;word-break:break-all">blog.cloudflare.com/zh-cn/announcing-encrypted-client-hello/</a>
+							</p>
+						</div>
+					</details>
+				</section>
+
+				<!-- ===== Tab 1：怎么开启 ===== -->
+				<section class="ech-tab-pane" id="echTab1" role="tabpanel" aria-label="怎么开启">
+					<div class="hero-wrap">
+						<span class="eyebrow">两步就够</span>
+						<h3 class="hero">打开开关、更新订阅，<mark>就这两件事</mark></h3>
+						<p class="hero-sub">
+							面板里的开关，只决定<strong>「下发给你的订阅里带不带 ECH」</strong>；真正让它跑起来，还得靠一次订阅更新，
+							加一个够新的客户端。
+						</p>
+					</div>
+
+					<div class="steps">
+						<div class="step">
+							<span class="num">1</span>
+							<div>
+								<h4>在本页把「ECH 设置」勾上「启用」，然后保存</h4>
+								<p>保存后，订阅配置里会多出 ECH 相关参数。只勾不保存，后面全白搭。</p>
+							</div>
+						</div>
+						<div class="step">
+							<span class="num">2</span>
+							<div>
+								<h4>回到客户端，更新一次订阅</h4>
+								<p>让客户端重新拉一遍配置，新的 ECH 参数才会进到节点里。</p>
+							</div>
+						</div>
+						<div class="step">
+							<span class="num">3</span>
+							<div>
+								<h4>确认客户端版本够新</h4>
+								<p>版本太老的话，配置里有 ECH 它也读不懂，节点会直接连不上。</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="sec">对一下你的客户端</div>
+					<div class="clients">
+						<a class="client" href="https://github.com/2dust/v2rayN/releases" target="_blank" rel="noopener">
+							<span>Windows</span>
+							<strong>v2rayN</strong>
+							<em>≥ v7.17.0</em>
+							<small>低于这个版本请先升级</small>
+						</a>
+						<a class="client" href="https://github.com/2dust/v2rayNG/releases" target="_blank" rel="noopener">
+							<span>Android</span>
+							<strong>v2rayNG</strong>
+							<em>≥ v2.0.0</em>
+							<small>低于这个版本请先升级</small>
+						</a>
+						<div class="client">
+							<span>Clash / 桌面端</span>
+							<strong>Clash.Meta · mihomo 内核</strong>
+							<em>全系支持</em>
+							<small>必须配合 DNS 一起用</small>
+						</div>
+						<div class="client">
+							<span>跨平台</span>
+							<strong>Sing-box</strong>
+							<em>支持 ECH</em>
+							<small>需在配置里明确启用</small>
+						</div>
+					</div>
+
+					<div class="callout">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+							stroke-linejoin="round">
+							<path d="M12 4.5 21 19.5H3L12 4.5Z" />
+							<path d="M12 10v4" />
+							<circle cx="12" cy="17" r=".9" fill="currentColor" stroke="none" />
+						</svg>
+						<div>
+							<h4>Clash 用户：别把订阅自带的 DNS 覆盖掉</h4>
+							<p>当前订阅里已经内置了 ECH 需要的 DNS 设置。如果你在更新订阅时勾了「覆盖 DNS」，ECH 节点大概率会连不上——保持订阅自带的 DNS 就好。</p>
+						</div>
+					</div>
+
+					<div class="sec">开了还是连不上？按这三条查</div>
+					<details class="acc" open>
+						<summary>排查清单</summary>
+						<div class="acc-body">
+							<p>1. 面板里的 ECH 开关<b>确实保存成功</b>了（不是只点开没保存）。</p>
+							<p>2. 客户端<b>重新更新过订阅</b>，且节点详情里能看到 ECH 相关字段。</p>
+							<p>3. 客户端版本达标；Clash 系还要确认 <b>DNS 没被覆盖</b>，且有可用的 DNS 解析。</p>
+						</div>
+					</details>
+				</section>
+
+				<!-- ===== Tab 2：怎么验证 ===== -->
+				<section class="ech-tab-pane" id="echTab2" role="tabpanel" aria-label="怎么验证">
+					<div class="hero-wrap">
+						<span class="eyebrow">验证只需要看一眼</span>
+						<h3 class="hero">看它握手时，<mark>报的是谁的名字</mark></h3>
+						<p class="hero-sub">
+							让节点去跟服务器打一次招呼，然后在旁边偷偷瞄一眼它报的域名——这个动作就叫「抓包」。
+							嫌抓包麻烦没关系，<strong>我做了个小工具，把抓包做成了一个窗口，三步出结果。</strong>
+						</p>
+					</div>
+
+					<div class="judge">
+						<div class="jcard ok">
+							<span class="jcard-k">抓到的是这个</span>
+							<span class="val">cloudflare-ech.com</span>
+							<span class="jcard-r">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+									stroke-linecap="round" stroke-linejoin="round">
+									<path d="m5 12.5 4.4 4.4L19 7.5" />
+								</svg>
+								ECH 已生效，地址藏好了
+							</span>
+						</div>
+						<div class="jcard no">
+							<span class="jcard-k">抓到的是这个</span>
+							<span class="val">你自己的节点域名</span>
+							<span class="jcard-r">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+									stroke-linecap="round" stroke-linejoin="round">
+									<path d="M6.5 6.5l11 11M17.5 6.5l-11 11" />
+								</svg>
+								还没生效，地址在裸奔
+							</span>
+						</div>
+					</div>
+
+					<div class="tool">
+						<div class="tool-ico" aria-hidden="true">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+								stroke-linecap="round" stroke-linejoin="round">
+								<path d="M3 8.5h4l2-3h6l2 3h4v10.5H3V8.5Z" />
+								<circle cx="12" cy="13.2" r="3.2" />
+							</svg>
+						</div>
+						<div class="tool-main">
+							<div class="tool-head">
+								<h4>SNI-Tap · SNI 域名探测器</h4>
+								<span class="pill plain">免费小工具</span>
+							</div>
+							<p>把节点的流量"拐"进工具里，工具替你转发，顺便看一眼握手里的域名。填地址、填端口、点一下，就完事。</p>
+							<div class="tool-actions">
+								<a class="btn primary"
+									href="https://blog.cmliussss.com/p/CheckECH/#%F0%9F%93%9D-%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B"
+									target="_blank" rel="noopener">
+									打开使用教程
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+										stroke-linecap="round" stroke-linejoin="round">
+										<path d="M5 12h13" />
+										<path d="m12.5 6 6 6-6 6" />
+									</svg>
+								</a>
+								<a class="btn ghost" href="https://github.com/CMToolbox/SNI-Tap" target="_blank"
+									rel="noopener">
+									项目地址
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1"
+										stroke-linecap="round" stroke-linejoin="round">
+										<path d="M13.6 5H19v5.4" />
+										<path d="M19 5l-7.6 7.6" />
+										<path d="M18 14.6V18a1.6 1.6 0 0 1-1.6 1.6H6.4A1.6 1.6 0 0 1 4.8 18V7.6A1.6 1.6 0 0 1 6.4 6H10" />
+									</svg>
+								</a>
+							</div>
+						</div>
+					</div>
+
+					<div class="hints">
+						<div>
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+								stroke-linecap="round" stroke-linejoin="round">
+								<circle cx="12" cy="12" r="8.5" />
+								<path d="M12 11v5.5" />
+								<circle cx="12" cy="8" r=".9" fill="currentColor" stroke="none" />
+							</svg>
+							<span><b>测完记得改回来。</b>把节点地址改回原来的值，否则关掉工具后节点就连不上了。</span>
+						</div>
+						<div>
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+								stroke-linecap="round" stroke-linejoin="round">
+								<circle cx="12" cy="12" r="8.5" />
+								<path d="M12 11v5.5" />
+								<circle cx="12" cy="8" r=".9" fill="currentColor" stroke="none" />
+							</svg>
+							<span><b>工具跟着电脑走。</b>换一台机器要重新配一次，步骤完全一样。</span>
+						</div>
+					</div>
+
+					<div class="sec">两个常见误区</div>
+					<details class="acc">
+						<summary>为什么不能用 Cloudflare 那个测试网页判断？</summary>
+						<div class="acc-body">
+							<p>因为它测的是<b>你的浏览器</b>有没有开 ECH，跟你连的节点半毛钱关系都没有。页面显示"安全"，节点该露的域名照样在露。</p>
+							<p>就算挂着梯子打开它也没用——梯子只是假装成浏览器，网页最终还是浏览器渲染的，测来测去还是浏览器。</p>
+						</div>
+					</details>
+					<details class="acc">
+						<summary>工具抓不到包、列表是空的？</summary>
+						<div class="acc-body">
+							<p>按顺序看三处：工具左上角是不是「监听中」；梯子里的地址端口有没有改成 <code>127.0.0.1:1234</code>；节点本身是不是能正常连上。</p>
+						</div>
+					</details>
+				</section>
+			</div>
+
+			<!-- 底部 -->
+			<div class="dlg-foot">
+				<span class="hint">完整教程在博文：<a href="https://blog.cmliussss.com/p/CheckECH/" target="_blank"
+						rel="noopener">如何验证节点是否真的开启了 ECH</a></span>
+				<button type="button" class="btn btn-primary btn-close-modal" onclick="closeECHHelpModal()">关闭</button>
+			</div>
 		</div>
 	</div>
 
@@ -31701,40 +33051,6 @@
 		// ECH 帮助模态框函数
 		function showECHHelpModal() {
 			document.getElementById('echHelpModal').classList.add('show');
-
-			// 计算并设置内容高度以适应浏览器高度
-			setTimeout(() => {
-				calculateECHContentHeight();
-				// 窗口大小改变时重新计算
-				window.addEventListener('resize', calculateECHContentHeight);
-			}, 0);
-		}
-
-		function calculateECHContentHeight() {
-			const modal = document.querySelector('.ech-help-modal');
-			const tabContent = document.querySelector('.ech-tab-content');
-			const tabs = document.querySelector('.ech-tabs');
-			const closeBtn = document.querySelector('#echHelpModal .modal-close');
-			const bottomBtn = document.querySelector('#echHelpModal .btn-close-modal');
-
-			if (!modal || !tabContent) return;
-
-			// 获取浏览器视口高度
-			const viewportHeight = window.innerHeight;
-
-			// 计算各个元素的高度（带上下文margin/padding）
-			const modalPadding = 20; // 模态框内边距
-			const tabsHeight = tabs ? tabs.offsetHeight + 15 : 50; // 选项卡高度 + margin
-			const closeBtnHeight = 40; // 关闭按钮高度
-			const bottomBtnHeight = bottomBtn ? bottomBtn.offsetHeight + 20 : 60; // 底部按钮高度 + margin
-			const headerHeight = 20; // 其他上边距
-
-			// 计算可用的内容高度
-			// viewportHeight - (顶部padding + 选项卡 + 底部按钮 + 底部padding)
-			const availableHeight = viewportHeight - (modalPadding * 2 + tabsHeight + bottomBtnHeight + headerHeight);
-
-			// 设置最大高度，确保不超出视口
-			tabContent.style.maxHeight = Math.max(200, availableHeight) + 'px';
 		}
 
 		function closeECHHelpModal(event) {
@@ -31780,14 +33096,16 @@
 		}
 
 		function switchECHTab(tabIndex) {
-			// 切换选项卡按钮状态
+			// 切换选项卡按钮状态（同步 active 类与 aria-selected）
 			const tabs = document.querySelectorAll('.ech-tab');
 			tabs.forEach((tab, index) => {
-				if (index === tabIndex) {
+				const isActive = index === tabIndex;
+				if (isActive) {
 					tab.classList.add('active');
 				} else {
 					tab.classList.remove('active');
 				}
+				tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
 			});
 
 			// 切换选项卡内容
@@ -31800,11 +33118,17 @@
 				}
 			});
 
-			// 自动滚动到活跃选项卡
+			// 切换后把内容区滚回顶部（限定在 ECH 弹窗内，避免命中页面上其它 .ech-content）
+			const contentEl = document.querySelector('#echHelpModal .ech-content');
+			if (contentEl) {
+				contentEl.scrollTop = 0;
+			}
+
+			// 自动滚动到活跃选项卡（分段控件不需要滚动时跳过）
 			const activeTab = tabs[tabIndex];
 			if (activeTab) {
 				const tabsContainer = document.querySelector('.ech-tabs');
-				if (tabsContainer) {
+				if (tabsContainer && tabsContainer.scrollWidth > tabsContainer.clientWidth + 2) {
 					activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 				}
 			}
@@ -31813,7 +33137,8 @@
 		// ECH 选项卡拖拽功能
 		function initECHTabsDrag() {
 			const tabsContainer = document.querySelector('.ech-tabs');
-			if (!tabsContainer) return;
+			// 分段控件没有横向溢出时直接退出，避免吞掉选项卡的点击
+			if (!tabsContainer || tabsContainer.scrollWidth <= tabsContainer.clientWidth + 2) return;
 
 			let isDown = false;
 			let startX;
